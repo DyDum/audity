@@ -1,0 +1,10 @@
+[package]
+name = "audity"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+
+[dependencies.quick-xml]
+version = "0.22.0"
+features = ["serialize"]

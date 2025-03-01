@@ -28,3 +28,7 @@ tests/*
 
 # Binaries
 bin/*
+
+# Added by cargo
+
+/target
