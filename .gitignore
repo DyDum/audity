@@ -23,9 +23,6 @@ Cargo.lock
 # Reports files
 reports/*
 
-# tests files
-tests/*
-
 # Binaries
 bin/*
 
