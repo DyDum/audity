@@ -26,7 +26,7 @@ fn main() {
     match package_management::xml_report::generate_xml_report(total_installed, &installed_packages, &upgradable_packages) {
         Ok(xml_data) => {
             // If the XML data is successfully generated, write it to a file.
-            std::fs::write("report.xml", xml_data).expect("Failed to write XML report");
+            std::fs::write("./reports/report.xml", xml_data).expect("Failed to write XML report");
             println!("XML report generated successfully and saved to 'report.xml'.");
         },
         Err(e) => {

@@ -1,0 +1,805 @@
+<packages>
+    <installed>723</installed>
+    <upgradable>74</upgradable>
+    <total>
+        <package name="7zip" version="22.01+dfsg-8+deb12u1"/>
+        <package name="adduser" version="3.134"/>
+        <package name="adwaita-icon-theme" version="43-1"/>
+        <package name="alsa-topology-conf" version="1.2.5.1-2"/>
+        <package name="alsa-ucm-conf" version="1.2.8-1"/>
+        <package name="anacron" version="2.3-36"/>
+        <package name="apparmor" version="3.0.8-3"/>
+        <package name="apt" version="2.6.1"/>
+        <package name="apt-listchanges" version="3.24"/>
+        <package name="apt-utils" version="2.6.1"/>
+        <package name="aspell" version="0.60.8-4+b1"/>
+        <package name="aspell-fr" version="0.50-3-8.1"/>
+        <package name="at-spi2-common" version="2.46.0-5"/>
+        <package name="at-spi2-core" version="2.46.0-5"/>
+        <package name="avahi-autoipd" version="0.8-10"/>
+        <package name="base-files" version="12.4+deb12u8"/>
+        <package name="base-passwd" version="3.6.1"/>
+        <package name="bash" version="5.2.15-2+b7"/>
+        <package name="bash-completion" version="1:2.11-6"/>
+        <package name="bind9-dnsutils" version="1:9.18.28-1~deb12u2"/>
+        <package name="bind9-host" version="1:9.18.28-1~deb12u2"/>
+        <package name="bind9-libs:amd64" version="1:9.18.28-1~deb12u2"/>
+        <package name="binutils" version="2.40-2"/>
+        <package name="binutils-common:amd64" version="2.40-2"/>
+        <package name="binutils-x86-64-linux-gnu" version="2.40-2"/>
+        <package name="bluetooth" version="5.66-1+deb12u2"/>
+        <package name="bluez" version="5.66-1+deb12u2"/>
+        <package name="bsdextrautils" version="2.38.1-5+deb12u2"/>
+        <package name="bsdutils" version="1:2.38.1-5+deb12u2"/>
+        <package name="busybox" version="1:1.35.0-4+b3"/>
+        <package name="bzip2" version="1.0.8-5+b1"/>
+        <package name="ca-certificates" version="20230311"/>
+        <package name="cargo" version="0.66.0+ds1-1"/>
+        <package name="console-setup" version="1.221"/>
+        <package name="console-setup-linux" version="1.221"/>
+        <package name="coreutils" version="9.1-1"/>
+        <package name="cpio" version="2.13+dfsg-7.1"/>
+        <package name="cpp" version="4:12.2.0-3"/>
+        <package name="cpp-12" version="12.2.0-14"/>
+        <package name="cron" version="3.0pl1-162"/>
+        <package name="cron-daemon-common" version="3.0pl1-162"/>
+        <package name="curl" version="7.88.1-10+deb12u8"/>
+        <package name="dash" version="0.5.12-2"/>
+        <package name="dbus" version="1.14.10-1~deb12u1"/>
+        <package name="dbus-bin" version="1.14.10-1~deb12u1"/>
+        <package name="dbus-daemon" version="1.14.10-1~deb12u1"/>
+        <package name="dbus-session-bus-common" version="1.14.10-1~deb12u1"/>
+        <package name="dbus-system-bus-common" version="1.14.10-1~deb12u1"/>
+        <package name="dbus-user-session" version="1.14.10-1~deb12u1"/>
+        <package name="dconf-gsettings-backend:amd64" version="0.40.0-4"/>
+        <package name="dconf-service" version="0.40.0-4"/>
+        <package name="debconf" version="1.5.82"/>
+        <package name="debconf-i18n" version="1.5.82"/>
+        <package name="debian-archive-keyring" version="2023.3+deb12u1"/>
+        <package name="debian-faq" version="11.1"/>
+        <package name="debianutils" version="5.7-0.5~deb12u1"/>
+        <package name="dictionaries-common" version="1.29.5"/>
+        <package name="diffutils" version="1:3.8-4"/>
+        <package name="discover" version="2.1.2-10"/>
+        <package name="discover-data" version="2.2013.01.13"/>
+        <package name="distro-info-data" version="0.58+deb12u3"/>
+        <package name="dmidecode" version="3.4-1"/>
+        <package name="dmsetup" version="2:1.02.185-2"/>
+        <package name="doc-debian" version="11.3+nmu1"/>
+        <package name="dosfstools" version="4.2-1"/>
+        <package name="dpkg" version="1.21.22"/>
+        <package name="e2fsprogs" version="1.47.0-2"/>
+        <package name="eject" version="2.38.1-5+deb12u2"/>
+        <package name="emacsen-common" version="3.0.5"/>
+        <package name="fdisk" version="2.38.1-5+deb12u2"/>
+        <package name="file" version="1:5.44-3"/>
+        <package name="findutils" version="4.9.0-4"/>
+        <package name="firmware-linux-free" version="20200122-1"/>
+        <package name="fontconfig" version="2.14.1-4"/>
+        <package name="fontconfig-config" version="2.14.1-4"/>
+        <package name="fonts-dejavu-core" version="2.37-6"/>
+        <package name="gcc" version="4:12.2.0-3"/>
+        <package name="gcc-12" version="12.2.0-14"/>
+        <package name="gcc-12-base:amd64" version="12.2.0-14"/>
+        <package name="gdb" version="13.1-3"/>
+        <package name="gettext-base" version="0.21-12"/>
+        <package name="git" version="1:2.39.5-0+deb12u1"/>
+        <package name="git-man" version="1:2.39.5-0+deb12u1"/>
+        <package name="glib-networking:amd64" version="2.74.0-4"/>
+        <package name="glib-networking-common" version="2.74.0-4"/>
+        <package name="glib-networking-services" version="2.74.0-4"/>
+        <package name="gpgv" version="2.2.40-1.1"/>
+        <package name="grep" version="3.8-5"/>
+        <package name="groff-base" version="1.22.4-10"/>
+        <package name="grub-common" version="2.06-13+deb12u1"/>
+        <package name="grub-pc" version="2.06-13+deb12u1"/>
+        <package name="grub-pc-bin" version="2.06-13+deb12u1"/>
+        <package name="grub2-common" version="2.06-13+deb12u1"/>
+        <package name="gsettings-desktop-schemas" version="43.0-1"/>
+        <package name="gstreamer1.0-libav:amd64" version="1.22.0-2"/>
+        <package name="gstreamer1.0-plugins-base:amd64" version="1.22.0-3+deb12u2"/>
+        <package name="gstreamer1.0-plugins-good:amd64" version="1.22.0-5+deb12u1"/>
+        <package name="gstreamer1.0-x:amd64" version="1.22.0-3+deb12u2"/>
+        <package name="gtk-update-icon-cache" version="3.24.38-2~deb12u3"/>
+        <package name="gzip" version="1.12-1"/>
+        <package name="hicolor-icon-theme" version="0.17-2"/>
+        <package name="hostname" version="3.23+nmu1"/>
+        <package name="i965-va-driver:amd64" version="2.4.1+dfsg1-1"/>
+        <package name="ibverbs-providers:amd64" version="44.0-2"/>
+        <package name="icu-devtools" version="72.1-3"/>
+        <package name="ifrench-gut" version="1:1.0-32.2"/>
+        <package name="ifupdown" version="0.8.41"/>
+        <package name="inetutils-telnet" version="2:2.4-2+deb12u1"/>
+        <package name="init" version="1.65.2"/>
+        <package name="init-system-helpers" version="1.65.2"/>
+        <package name="initramfs-tools" version="0.142+deb12u1"/>
+        <package name="initramfs-tools-core" version="0.142+deb12u1"/>
+        <package name="installation-report" version="2.89"/>
+        <package name="intel-media-va-driver:amd64" version="23.1.1+dfsg1-1"/>
+        <package name="intel-microcode" version="3.20240910.1~deb12u1"/>
+        <package name="iproute2" version="6.1.0-3"/>
+        <package name="iputils-ping" version="3:20221126-1+deb12u1"/>
+        <package name="ipxe-qemu" version="1.0.0+git-20190125.36a4c85-5.1"/>
+        <package name="isc-dhcp-client" version="4.4.3-P1-2"/>
+        <package name="isc-dhcp-common" version="4.4.3-P1-2"/>
+        <package name="iso-codes" version="4.15.0-1"/>
+        <package name="ispell" version="3.4.05-1"/>
+        <package name="iucode-tool" version="2.3.1-3"/>
+        <package name="iw" version="5.19-1"/>
+        <package name="kbd" version="2.5.1-1+b1"/>
+        <package name="keyboard-configuration" version="1.221"/>
+        <package name="klibc-utils" version="2.0.12-1"/>
+        <package name="kmod" version="30+20221128-1"/>
+        <package name="krb5-locales" version="1.20.1-2+deb12u2"/>
+        <package name="laptop-detect" version="0.16"/>
+        <package name="less" version="590-2.1~deb12u2"/>
+        <package name="libaa1:amd64" version="1.4p5-50"/>
+        <package name="libaacs0:amd64" version="0.11.1-2"/>
+        <package name="libabsl20220623:amd64" version="20220623.1-1"/>
+        <package name="libacl1:amd64" version="2.3.1-3"/>
+        <package name="libaio1:amd64" version="0.3.113-4"/>
+        <package name="libaom3:amd64" version="3.6.0-1+deb12u1"/>
+        <package name="libapparmor1:amd64" version="3.0.8-3"/>
+        <package name="libapt-pkg6.0:amd64" version="2.6.1"/>
+        <package name="libargon2-1:amd64" version="0~20171227-0.3+deb12u1"/>
+        <package name="libasan8:amd64" version="12.2.0-14"/>
+        <package name="libasound2:amd64" version="1.2.8-1+b1"/>
+        <package name="libasound2-data" version="1.2.8-1"/>
+        <package name="libaspell15:amd64" version="0.60.8-4+b1"/>
+        <package name="libass9:amd64" version="1:0.17.1-1"/>
+        <package name="libasyncns0:amd64" version="0.8-6+b3"/>
+        <package name="libatk-bridge2.0-0:amd64" version="2.46.0-5"/>
+        <package name="libatk1.0-0:amd64" version="2.46.0-5"/>
+        <package name="libatomic1:amd64" version="12.2.0-14"/>
+        <package name="libatspi2.0-0:amd64" version="2.46.0-5"/>
+        <package name="libattr1:amd64" version="1:2.5.1-4"/>
+        <package name="libaudit-common" version="1:3.0.9-1"/>
+        <package name="libaudit1:amd64" version="1:3.0.9-1"/>
+        <package name="libavahi-client3:amd64" version="0.8-10"/>
+        <package name="libavahi-common-data:amd64" version="0.8-10"/>
+        <package name="libavahi-common3:amd64" version="0.8-10"/>
+        <package name="libavc1394-0:amd64" version="0.5.4-5"/>
+        <package name="libavcodec59:amd64" version="7:5.1.6-0+deb12u1"/>
+        <package name="libavfilter8:amd64" version="7:5.1.6-0+deb12u1"/>
+        <package name="libavformat59:amd64" version="7:5.1.6-0+deb12u1"/>
+        <package name="libavif15:amd64" version="0.11.1-1"/>
+        <package name="libavutil57:amd64" version="7:5.1.6-0+deb12u1"/>
+        <package name="libbabeltrace1:amd64" version="1.5.11-1+b2"/>
+        <package name="libbdplus0:amd64" version="0.2.0-3"/>
+        <package name="libbinutils:amd64" version="2.40-2"/>
+        <package name="libblas3:amd64" version="3.11.0-2"/>
+        <package name="libblkid1:amd64" version="2.38.1-5+deb12u2"/>
+        <package name="libbluray2:amd64" version="1:1.3.4-1"/>
+        <package name="libboost-iostreams1.74.0:amd64" version="1.74.0+ds1-21"/>
+        <package name="libboost-regex1.74.0:amd64" version="1.74.0+ds1-21"/>
+        <package name="libboost-thread1.74.0:amd64" version="1.74.0+ds1-21"/>
+        <package name="libbpf1:amd64" version="1:1.1.0-1"/>
+        <package name="libbrlapi0.8:amd64" version="6.5-7+deb12u1"/>
+        <package name="libbrotli1:amd64" version="1.0.9-2+b6"/>
+        <package name="libbs2b0:amd64" version="3.1.0+dfsg-7"/>
+        <package name="libbsd0:amd64" version="0.11.7-2"/>
+        <package name="libbz2-1.0:amd64" version="1.0.8-5+b1"/>
+        <package name="libc-bin" version="2.36-9+deb12u9"/>
+        <package name="libc-dev-bin" version="2.36-9+deb12u9"/>
+        <package name="libc-devtools" version="2.36-9+deb12u9"/>
+        <package name="libc-l10n" version="2.36-9+deb12u9"/>
+        <package name="libc6:amd64" version="2.36-9+deb12u9"/>
+        <package name="libc6-dbg:amd64" version="2.36-9+deb12u9"/>
+        <package name="libc6-dev:amd64" version="2.36-9+deb12u9"/>
+        <package name="libcaca0:amd64" version="0.99.beta20-3"/>
+        <package name="libcacard0:amd64" version="1:2.8.0-3"/>
+        <package name="libcairo-gobject2:amd64" version="1.16.0-7"/>
+        <package name="libcairo2:amd64" version="1.16.0-7"/>
+        <package name="libcap-ng0:amd64" version="0.8.3-1+b3"/>
+        <package name="libcap2:amd64" version="1:2.66-4"/>
+        <package name="libcap2-bin" version="1:2.66-4"/>
+        <package name="libcapstone4:amd64" version="4.0.2-5"/>
+        <package name="libcbor0.8:amd64" version="0.8.0-2+b1"/>
+        <package name="libcc1-0:amd64" version="12.2.0-14"/>
+        <package name="libcdparanoia0:amd64" version="3.10.2+debian-14"/>
+        <package name="libchromaprint1:amd64" version="1.5.1-2+b1"/>
+        <package name="libcjson1:amd64" version="1.7.15-1+deb12u2"/>
+        <package name="libclang-cpp14" version="1:14.0.6-12"/>
+        <package name="libcodec2-1.0:amd64" version="1.0.5-1"/>
+        <package name="libcolord2:amd64" version="1.4.6-2.2"/>
+        <package name="libcom-err2:amd64" version="1.47.0-2"/>
+        <package name="libcrypt-dev:amd64" version="1:4.4.33-2"/>
+        <package name="libcrypt1:amd64" version="1:4.4.33-2"/>
+        <package name="libcryptsetup12:amd64" version="2:2.6.1-4~deb12u2"/>
+        <package name="libctf-nobfd0:amd64" version="2.40-2"/>
+        <package name="libctf0:amd64" version="2.40-2"/>
+        <package name="libcups2:amd64" version="2.4.2-3+deb12u8"/>
+        <package name="libcurl3-gnutls:amd64" version="7.88.1-10+deb12u8"/>
+        <package name="libcurl3-nss:amd64" version="7.88.1-10+deb12u8"/>
+        <package name="libcurl4:amd64" version="7.88.1-10+deb12u8"/>
+        <package name="libdaemon0:amd64" version="0.14-7.1"/>
+        <package name="libdatrie1:amd64" version="0.2.13-2+b1"/>
+        <package name="libdav1d6:amd64" version="1.0.0-2+deb12u1"/>
+        <package name="libdaxctl1:amd64" version="76.1-1"/>
+        <package name="libdb5.3:amd64" version="5.3.28+dfsg2-1"/>
+        <package name="libdbus-1-3:amd64" version="1.14.10-1~deb12u1"/>
+        <package name="libdconf1:amd64" version="0.40.0-4"/>
+        <package name="libde265-0:amd64" version="1.0.11-1+deb12u2"/>
+        <package name="libdebconfclient0:amd64" version="0.270"/>
+        <package name="libdebuginfod-common" version="0.188-2.1"/>
+        <package name="libdebuginfod1:amd64" version="0.188-2.1"/>
+        <package name="libdecor-0-0:amd64" version="0.1.1-2"/>
+        <package name="libdecor-0-plugin-1-cairo:amd64" version="0.1.1-2"/>
+        <package name="libdeflate0:amd64" version="1.14-1"/>
+        <package name="libdevmapper1.02.1:amd64" version="2:1.02.185-2"/>
+        <package name="libdiscover2" version="2.1.2-10"/>
+        <package name="libdrm-amdgpu1:amd64" version="2.4.114-1+b1"/>
+        <package name="libdrm-common" version="2.4.114-1"/>
+        <package name="libdrm-intel1:amd64" version="2.4.114-1+b1"/>
+        <package name="libdrm-nouveau2:amd64" version="2.4.114-1+b1"/>
+        <package name="libdrm-radeon1:amd64" version="2.4.114-1+b1"/>
+        <package name="libdrm2:amd64" version="2.4.114-1+b1"/>
+        <package name="libdv4:amd64" version="1.0.0-15"/>
+        <package name="libdw1:amd64" version="0.188-2.1"/>
+        <package name="libedit2:amd64" version="3.1-20221030-2"/>
+        <package name="libefiboot1:amd64" version="37-6"/>
+        <package name="libefivar1:amd64" version="37-6"/>
+        <package name="libelf1:amd64" version="0.188-2.1"/>
+        <package name="libepoxy0:amd64" version="1.5.10-1"/>
+        <package name="liberror-perl" version="0.17029-2"/>
+        <package name="libexecs0:amd64" version="1.3-2"/>
+        <package name="libexpat1:amd64" version="2.5.0-1+deb12u1"/>
+        <package name="libext2fs2:amd64" version="1.47.0-2"/>
+        <package name="libfdisk1:amd64" version="2.38.1-5+deb12u2"/>
+        <package name="libfdt1:amd64" version="1.6.1-4+b1"/>
+        <package name="libffi-dev:amd64" version="3.4.4-1"/>
+        <package name="libffi8:amd64" version="3.4.4-1"/>
+        <package name="libfido2-1:amd64" version="1.12.0-2+b1"/>
+        <package name="libflac12:amd64" version="1.4.2+ds-2"/>
+        <package name="libflite1:amd64" version="2.2-5"/>
+        <package name="libfmt9:amd64" version="9.1.0+ds1-2"/>
+        <package name="libfontconfig1:amd64" version="2.14.1-4"/>
+        <package name="libfreetype6:amd64" version="2.12.1+dfsg-5+deb12u3"/>
+        <package name="libfribidi0:amd64" version="1.0.8-2.1"/>
+        <package name="libfstrm0:amd64" version="0.6.1-1"/>
+        <package name="libfuse2:amd64" version="2.9.9-6+b1"/>
+        <package name="libfuse3-3:amd64" version="3.14.0-4"/>
+        <package name="libgav1-1:amd64" version="0.18.0-1+b1"/>
+        <package name="libgbm1:amd64" version="22.3.6-1+deb12u1"/>
+        <package name="libgcc-12-dev:amd64" version="12.2.0-14"/>
+        <package name="libgcc-s1:amd64" version="12.2.0-14"/>
+        <package name="libgcrypt20:amd64" version="1.10.1-3"/>
+        <package name="libgd3:amd64" version="2.3.3-9"/>
+        <package name="libgdbm-compat4:amd64" version="1.23-3"/>
+        <package name="libgdbm6:amd64" version="1.23-3"/>
+        <package name="libgdk-pixbuf-2.0-0:amd64" version="2.42.10+dfsg-1+deb12u1"/>
+        <package name="libgdk-pixbuf2.0-bin" version="2.42.10+dfsg-1+deb12u1"/>
+        <package name="libgdk-pixbuf2.0-common" version="2.42.10+dfsg-1+deb12u1"/>
+        <package name="libgfapi0:amd64" version="10.3-5"/>
+        <package name="libgfortran5:amd64" version="12.2.0-14"/>
+        <package name="libgfrpc0:amd64" version="10.3-5"/>
+        <package name="libgfxdr0:amd64" version="10.3-5"/>
+        <package name="libgit2-1.5:amd64" version="1.5.1+ds-1+deb12u1"/>
+        <package name="libgl1:amd64" version="1.6.0-1"/>
+        <package name="libgl1-mesa-dri:amd64" version="22.3.6-1+deb12u1"/>
+        <package name="libglapi-mesa:amd64" version="22.3.6-1+deb12u1"/>
+        <package name="libglib2.0-0:amd64" version="2.74.6-2+deb12u4"/>
+        <package name="libglib2.0-data" version="2.74.6-2+deb12u4"/>
+        <package name="libglusterfs0:amd64" version="10.3-5"/>
+        <package name="libglvnd0:amd64" version="1.6.0-1"/>
+        <package name="libglx-mesa0:amd64" version="22.3.6-1+deb12u1"/>
+        <package name="libglx0:amd64" version="1.6.0-1"/>
+        <package name="libgme0:amd64" version="0.6.3-6"/>
+        <package name="libgmp10:amd64" version="2:6.2.1+dfsg1-1.1"/>
+        <package name="libgnutls30:amd64" version="3.7.9-2+deb12u3"/>
+        <package name="libgomp1:amd64" version="12.2.0-14"/>
+        <package name="libgpg-error0:amd64" version="1.46-1"/>
+        <package name="libgpm2:amd64" version="1.20.7-10+b1"/>
+        <package name="libgprofng0:amd64" version="2.40-2"/>
+        <package name="libgraphite2-3:amd64" version="1.3.14-1"/>
+        <package name="libgsm1:amd64" version="1.0.22-1"/>
+        <package name="libgssapi-krb5-2:amd64" version="1.20.1-2+deb12u2"/>
+        <package name="libgstreamer-plugins-base1.0-0:amd64" version="1.22.0-3+deb12u2"/>
+        <package name="libgstreamer1.0-0:amd64" version="1.22.0-2"/>
+        <package name="libgtk-3-0:amd64" version="3.24.38-2~deb12u3"/>
+        <package name="libgtk-3-bin" version="3.24.38-2~deb12u3"/>
+        <package name="libgtk-3-common" version="3.24.38-2~deb12u3"/>
+        <package name="libgudev-1.0-0:amd64" version="237-2"/>
+        <package name="libharfbuzz0b:amd64" version="6.0.0+dfsg-3"/>
+        <package name="libheif1:amd64" version="1.15.1-1+deb12u1"/>
+        <package name="libhogweed6:amd64" version="3.8.1-2"/>
+        <package name="libhttp-parser2.9:amd64" version="2.9.4-5"/>
+        <package name="libhwy1:amd64" version="1.0.3-3+deb12u1"/>
+        <package name="libibverbs1:amd64" version="44.0-2"/>
+        <package name="libicu-dev:amd64" version="72.1-3"/>
+        <package name="libicu72:amd64" version="72.1-3"/>
+        <package name="libidn2-0:amd64" version="2.3.3-1+b1"/>
+        <package name="libiec61883-0:amd64" version="1.2.0-6+b1"/>
+        <package name="libigdgmm12:amd64" version="22.3.3+ds1-1"/>
+        <package name="libip4tc2:amd64" version="1.8.9-2"/>
+        <package name="libipt2" version="2.0.5-1"/>
+        <package name="libiscsi7:amd64" version="1.19.0-3"/>
+        <package name="libisl23:amd64" version="0.25-1.1"/>
+        <package name="libitm1:amd64" version="12.2.0-14"/>
+        <package name="libiw30:amd64" version="30~pre9-14"/>
+        <package name="libjack-jackd2-0:amd64" version="1.9.21~dfsg-3"/>
+        <package name="libjansson4:amd64" version="2.14-2"/>
+        <package name="libjbig0:amd64" version="2.1-6.1"/>
+        <package name="libjemalloc2:amd64" version="5.3.0-1"/>
+        <package name="libjpeg62-turbo:amd64" version="1:2.1.5-2"/>
+        <package name="libjson-c5:amd64" version="0.16-2"/>
+        <package name="libjxl0.7:amd64" version="0.7.0-10"/>
+        <package name="libk5crypto3:amd64" version="1.20.1-2+deb12u2"/>
+        <package name="libkeyutils1:amd64" version="1.6.3-2"/>
+        <package name="libklibc:amd64" version="2.0.12-1"/>
+        <package name="libkmod2:amd64" version="30+20221128-1"/>
+        <package name="libkrb5-3:amd64" version="1.20.1-2+deb12u2"/>
+        <package name="libkrb5support0:amd64" version="1.20.1-2+deb12u2"/>
+        <package name="liblapack3:amd64" version="3.11.0-2"/>
+        <package name="liblcms2-2:amd64" version="2.14-2"/>
+        <package name="libldap-2.5-0:amd64" version="2.5.13+dfsg-5"/>
+        <package name="libldap-common" version="2.5.13+dfsg-5"/>
+        <package name="liblerc4:amd64" version="4.0.0+ds-2"/>
+        <package name="liblilv-0-0:amd64" version="0.24.14-1"/>
+        <package name="libllvm14:amd64" version="1:14.0.6-12"/>
+        <package name="libllvm15:amd64" version="1:15.0.6-4+b1"/>
+        <package name="liblmdb0:amd64" version="0.9.24-1"/>
+        <package name="liblocale-gettext-perl" version="1.07-5"/>
+        <package name="liblockfile-bin" version="1.17-1+b1"/>
+        <package name="liblsan0:amd64" version="12.2.0-14"/>
+        <package name="liblz4-1:amd64" version="1.9.4-1"/>
+        <package name="liblzma5:amd64" version="5.4.1-0.2"/>
+        <package name="libmagic-mgc" version="1:5.44-3"/>
+        <package name="libmagic1:amd64" version="1:5.44-3"/>
+        <package name="libmaxminddb0:amd64" version="1.7.1-1"/>
+        <package name="libmbedcrypto7:amd64" version="2.28.3-1"/>
+        <package name="libmbedtls14:amd64" version="2.28.3-1"/>
+        <package name="libmbedx509-1:amd64" version="2.28.3-1"/>
+        <package name="libmd0:amd64" version="1.0.4-2"/>
+        <package name="libmfx1:amd64" version="22.5.4-1"/>
+        <package name="libmnl0:amd64" version="1.0.4-3"/>
+        <package name="libmount1:amd64" version="2.38.1-5+deb12u2"/>
+        <package name="libmp3lame0:amd64" version="3.100-6"/>
+        <package name="libmpc3:amd64" version="1.3.1-1"/>
+        <package name="libmpfr6:amd64" version="4.2.0-1"/>
+        <package name="libmpg123-0:amd64" version="1.31.2-1+deb12u1"/>
+        <package name="libmysofa1:amd64" version="1.3.1~dfsg0-1"/>
+        <package name="libncurses-dev:amd64" version="6.4-4"/>
+        <package name="libncurses6:amd64" version="6.4-4"/>
+        <package name="libncursesw6:amd64" version="6.4-4"/>
+        <package name="libndctl6:amd64" version="76.1-1"/>
+        <package name="libnettle8:amd64" version="3.8.1-2"/>
+        <package name="libnewt0.52:amd64" version="0.52.23-1+b1"/>
+        <package name="libnfs13:amd64" version="4.0.0-1"/>
+        <package name="libnftables1:amd64" version="1.0.6-2+deb12u2"/>
+        <package name="libnftnl11:amd64" version="1.2.4-2"/>
+        <package name="libnghttp2-14:amd64" version="1.52.0-1+deb12u2"/>
+        <package name="libnl-3-200:amd64" version="3.7.0-0.2+b1"/>
+        <package name="libnl-genl-3-200:amd64" version="3.7.0-0.2+b1"/>
+        <package name="libnl-route-3-200:amd64" version="3.7.0-0.2+b1"/>
+        <package name="libnorm1:amd64" version="1.5.9+dfsg-2"/>
+        <package name="libnsl-dev:amd64" version="1.3.0-2"/>
+        <package name="libnsl2:amd64" version="1.3.0-2"/>
+        <package name="libnspr4:amd64" version="2:4.35-1"/>
+        <package name="libnss-systemd:amd64" version="252.31-1~deb12u1"/>
+        <package name="libnss3:amd64" version="2:3.87.1-1+deb12u1"/>
+        <package name="libnuma1:amd64" version="2.0.16-1"/>
+        <package name="libogg0:amd64" version="1.3.5-3"/>
+        <package name="libopenjp2-7:amd64" version="2.5.0-2"/>
+        <package name="libopenmpt0:amd64" version="0.6.9-1"/>
+        <package name="libopus0:amd64" version="1.3.1-3"/>
+        <package name="liborc-0.4-0:amd64" version="1:0.4.33-2"/>
+        <package name="libp11-kit0:amd64" version="0.24.1-2"/>
+        <package name="libpam-modules:amd64" version="1.5.2-6+deb12u1"/>
+        <package name="libpam-modules-bin" version="1.5.2-6+deb12u1"/>
+        <package name="libpam-runtime" version="1.5.2-6+deb12u1"/>
+        <package name="libpam-systemd:amd64" version="252.31-1~deb12u1"/>
+        <package name="libpam0g:amd64" version="1.5.2-6+deb12u1"/>
+        <package name="libpango-1.0-0:amd64" version="1.50.12+ds-1"/>
+        <package name="libpangocairo-1.0-0:amd64" version="1.50.12+ds-1"/>
+        <package name="libpangoft2-1.0-0:amd64" version="1.50.12+ds-1"/>
+        <package name="libpci3:amd64" version="1:3.9.0-4"/>
+        <package name="libpciaccess0:amd64" version="0.17-2"/>
+        <package name="libpcre2-8-0:amd64" version="10.42-1"/>
+        <package name="libpcsclite1:amd64" version="1.9.9-2"/>
+        <package name="libperl5.36:amd64" version="5.36.0-7+deb12u1"/>
+        <package name="libpfm4:amd64" version="4.13.0-1"/>
+        <package name="libpgm-5.3-0:amd64" version="5.3.128~dfsg-2"/>
+        <package name="libpipeline1:amd64" version="1.5.7-1"/>
+        <package name="libpixman-1-0:amd64" version="0.42.2-1"/>
+        <package name="libplacebo208:amd64" version="4.208.0-3"/>
+        <package name="libpmem1:amd64" version="1.12.1-2"/>
+        <package name="libpng16-16:amd64" version="1.6.39-2"/>
+        <package name="libpocketsphinx3:amd64" version="0.8+5prealpha+1-15"/>
+        <package name="libpopt0:amd64" version="1.19+dfsg-1"/>
+        <package name="libpostproc56:amd64" version="7:5.1.6-0+deb12u1"/>
+        <package name="libproc2-0:amd64" version="2:4.0.2-3"/>
+        <package name="libprotobuf-c1:amd64" version="1.4.1-1+b1"/>
+        <package name="libproxy1v5:amd64" version="0.4.18-1.2"/>
+        <package name="libpsl5:amd64" version="0.21.2-1"/>
+        <package name="libpulse0:amd64" version="16.1+dfsg1-2+b1"/>
+        <package name="libpython3-stdlib:amd64" version="3.11.2-1+b1"/>
+        <package name="libpython3.11:amd64" version="3.11.2-6+deb12u4"/>
+        <package name="libpython3.11-minimal:amd64" version="3.11.2-6+deb12u4"/>
+        <package name="libpython3.11-stdlib:amd64" version="3.11.2-6+deb12u4"/>
+        <package name="libquadmath0:amd64" version="12.2.0-14"/>
+        <package name="librabbitmq4:amd64" version="0.11.0-1+b1"/>
+        <package name="librados2" version="16.2.11+ds-2"/>
+        <package name="librav1e0:amd64" version="0.5.1-6"/>
+        <package name="libraw1394-11:amd64" version="2.1.2-2"/>
+        <package name="librbd1" version="16.2.11+ds-2"/>
+        <package name="librdmacm1:amd64" version="44.0-2"/>
+        <package name="libreadline8:amd64" version="8.2-1.3"/>
+        <package name="librist4:amd64" version="0.2.7+dfsg-1"/>
+        <package name="librsvg2-2:amd64" version="2.54.7+dfsg-1~deb12u1"/>
+        <package name="librsvg2-common:amd64" version="2.54.7+dfsg-1~deb12u1"/>
+        <package name="librtmp1:amd64" version="2.4+20151223.gitfa8646d.1-2+b2"/>
+        <package name="librubberband2:amd64" version="3.1.2+dfsg0-1"/>
+        <package name="libsamplerate0:amd64" version="0.2.2-3"/>
+        <package name="libsasl2-2:amd64" version="2.1.28+dfsg-10"/>
+        <package name="libsasl2-modules:amd64" version="2.1.28+dfsg-10"/>
+        <package name="libsasl2-modules-db:amd64" version="2.1.28+dfsg-10"/>
+        <package name="libsdl2-2.0-0:amd64" version="2.26.5+dfsg-1"/>
+        <package name="libseccomp2:amd64" version="2.5.4-1+deb12u1"/>
+        <package name="libselinux1:amd64" version="3.4-1+b6"/>
+        <package name="libsemanage-common" version="3.4-1"/>
+        <package name="libsemanage2:amd64" version="3.4-1+b5"/>
+        <package name="libsensors-config" version="1:3.6.0-7.1"/>
+        <package name="libsensors5:amd64" version="1:3.6.0-7.1"/>
+        <package name="libsepol2:amd64" version="3.4-2.1"/>
+        <package name="libserd-0-0:amd64" version="0.30.16-1"/>
+        <package name="libshine3:amd64" version="3.1.1-2"/>
+        <package name="libshout3:amd64" version="2.4.6-1+b1"/>
+        <package name="libslang2:amd64" version="2.3.3-3"/>
+        <package name="libslirp0:amd64" version="4.7.0-1"/>
+        <package name="libsmartcols1:amd64" version="2.38.1-5+deb12u2"/>
+        <package name="libsnappy1v5:amd64" version="1.1.9-3"/>
+        <package name="libsndfile1:amd64" version="1.2.0-1"/>
+        <package name="libsndio7.0:amd64" version="1.9.0-0.3+b2"/>
+        <package name="libsodium23:amd64" version="1.0.18-1"/>
+        <package name="libsord-0-0:amd64" version="0.16.14+git221008-1"/>
+        <package name="libsoup2.4-1:amd64" version="2.74.3-1"/>
+        <package name="libsoup2.4-common" version="2.74.3-1"/>
+        <package name="libsource-highlight-common" version="3.1.9-4.2"/>
+        <package name="libsource-highlight4v5:amd64" version="3.1.9-4.2+b3"/>
+        <package name="libsoxr0:amd64" version="0.1.3-4"/>
+        <package name="libspeex1:amd64" version="1.2.1-2"/>
+        <package name="libsphinxbase3:amd64" version="0.8+5prealpha+1-16"/>
+        <package name="libspice-server1:amd64" version="0.15.1-1"/>
+        <package name="libsqlite3-0:amd64" version="3.40.1-2+deb12u1"/>
+        <package name="libsratom-0-0:amd64" version="0.6.14-1"/>
+        <package name="libsrt1.5-gnutls:amd64" version="1.5.1-1"/>
+        <package name="libss2:amd64" version="1.47.0-2"/>
+        <package name="libssh-4:amd64" version="0.10.6-0+deb12u1"/>
+        <package name="libssh-gcrypt-4:amd64" version="0.10.6-0+deb12u1"/>
+        <package name="libssh2-1:amd64" version="1.10.0-3+b1"/>
+        <package name="libssl3:amd64" version="3.0.15-1~deb12u1"/>
+        <package name="libstd-rust-1.63:amd64" version="1.63.0+dfsg1-2"/>
+        <package name="libstd-rust-dev:amd64" version="1.63.0+dfsg1-2"/>
+        <package name="libstdc++6:amd64" version="12.2.0-14"/>
+        <package name="libsvtav1enc1:amd64" version="1.4.1+dfsg-1"/>
+        <package name="libswresample4:amd64" version="7:5.1.6-0+deb12u1"/>
+        <package name="libswscale6:amd64" version="7:5.1.6-0+deb12u1"/>
+        <package name="libsystemd-shared:amd64" version="252.31-1~deb12u1"/>
+        <package name="libsystemd0:amd64" version="252.31-1~deb12u1"/>
+        <package name="libtag1v5:amd64" version="1.13-2"/>
+        <package name="libtag1v5-vanilla:amd64" version="1.13-2"/>
+        <package name="libtasn1-6:amd64" version="4.19.0-2"/>
+        <package name="libtext-charwidth-perl:amd64" version="0.04-11"/>
+        <package name="libtext-iconv-perl:amd64" version="1.7-8"/>
+        <package name="libtext-wrapi18n-perl" version="0.06-10"/>
+        <package name="libthai-data" version="0.1.29-1"/>
+        <package name="libthai0:amd64" version="0.1.29-1"/>
+        <package name="libtheora0:amd64" version="1.1.1+dfsg.1-16.1+b1"/>
+        <package name="libtiff6:amd64" version="4.5.0-6+deb12u1"/>
+        <package name="libtinfo-dev:amd64" version="6.4-4"/>
+        <package name="libtinfo6:amd64" version="6.4-4"/>
+        <package name="libtirpc-common" version="1.3.3+ds-1"/>
+        <package name="libtirpc-dev:amd64" version="1.3.3+ds-1"/>
+        <package name="libtirpc3:amd64" version="1.3.3+ds-1"/>
+        <package name="libtsan2:amd64" version="12.2.0-14"/>
+        <package name="libtwolame0:amd64" version="0.4.0-2"/>
+        <package name="libubsan1:amd64" version="12.2.0-14"/>
+        <package name="libuchardet0:amd64" version="0.0.7-1"/>
+        <package name="libudev1:amd64" version="252.31-1~deb12u1"/>
+        <package name="libudfread0:amd64" version="1.1.2-1"/>
+        <package name="libunistring2:amd64" version="1.0-2"/>
+        <package name="libunwind8:amd64" version="1.6.2-3"/>
+        <package name="liburing2:amd64" version="2.3-3"/>
+        <package name="libusb-1.0-0:amd64" version="2:1.0.26-1"/>
+        <package name="libusbredirparser1:amd64" version="0.13.0-2"/>
+        <package name="libuuid1:amd64" version="2.38.1-5+deb12u2"/>
+        <package name="libuv1:amd64" version="1.44.2-1+deb12u1"/>
+        <package name="libv4l-0:amd64" version="1.22.1-5+b2"/>
+        <package name="libv4lconvert0:amd64" version="1.22.1-5+b2"/>
+        <package name="libva-drm2:amd64" version="2.17.0-1"/>
+        <package name="libva-x11-2:amd64" version="2.17.0-1"/>
+        <package name="libva2:amd64" version="2.17.0-1"/>
+        <package name="libvdeplug2:amd64" version="4.0.1-4"/>
+        <package name="libvdpau-va-gl1:amd64" version="0.4.2-1+b1"/>
+        <package name="libvdpau1:amd64" version="1.5-2"/>
+        <package name="libvidstab1.1:amd64" version="1.1.0-2+b1"/>
+        <package name="libvirglrenderer1:amd64" version="0.10.4-1"/>
+        <package name="libvisual-0.4-0:amd64" version="0.4.0-19"/>
+        <package name="libvorbis0a:amd64" version="1.3.7-1"/>
+        <package name="libvorbisenc2:amd64" version="1.3.7-1"/>
+        <package name="libvorbisfile3:amd64" version="1.3.7-1"/>
+        <package name="libvpx7:amd64" version="1.12.0-1+deb12u3"/>
+        <package name="libvte-2.91-0:amd64" version="0.70.6-2~deb12u1"/>
+        <package name="libvte-2.91-common" version="0.70.6-2~deb12u1"/>
+        <package name="libvulkan1:amd64" version="1.3.239.0-1"/>
+        <package name="libwavpack1:amd64" version="5.6.0-1"/>
+        <package name="libwayland-client0:amd64" version="1.21.0-1"/>
+        <package name="libwayland-cursor0:amd64" version="1.21.0-1"/>
+        <package name="libwayland-egl1:amd64" version="1.21.0-1"/>
+        <package name="libwayland-server0:amd64" version="1.21.0-1"/>
+        <package name="libwebp7:amd64" version="1.2.4-0.2+deb12u1"/>
+        <package name="libwebpmux3:amd64" version="1.2.4-0.2+deb12u1"/>
+        <package name="libwrap0:amd64" version="7.6.q-32"/>
+        <package name="libx11-6:amd64" version="2:1.8.4-2+deb12u2"/>
+        <package name="libx11-data" version="2:1.8.4-2+deb12u2"/>
+        <package name="libx11-xcb1:amd64" version="2:1.8.4-2+deb12u2"/>
+        <package name="libx264-164:amd64" version="2:0.164.3095+gitbaee400-3"/>
+        <package name="libx265-199:amd64" version="3.5-2+b1"/>
+        <package name="libxau6:amd64" version="1:1.0.9-1"/>
+        <package name="libxcb-dri2-0:amd64" version="1.15-1"/>
+        <package name="libxcb-dri3-0:amd64" version="1.15-1"/>
+        <package name="libxcb-glx0:amd64" version="1.15-1"/>
+        <package name="libxcb-present0:amd64" version="1.15-1"/>
+        <package name="libxcb-randr0:amd64" version="1.15-1"/>
+        <package name="libxcb-render0:amd64" version="1.15-1"/>
+        <package name="libxcb-shm0:amd64" version="1.15-1"/>
+        <package name="libxcb-sync1:amd64" version="1.15-1"/>
+        <package name="libxcb-xfixes0:amd64" version="1.15-1"/>
+        <package name="libxcb1:amd64" version="1.15-1"/>
+        <package name="libxcomposite1:amd64" version="1:0.4.5-1"/>
+        <package name="libxcursor1:amd64" version="1:1.2.1-1"/>
+        <package name="libxdamage1:amd64" version="1:1.1.6-1"/>
+        <package name="libxdmcp6:amd64" version="1:1.1.2-3"/>
+        <package name="libxext6:amd64" version="2:1.3.4-1+b1"/>
+        <package name="libxfixes3:amd64" version="1:6.0.0-2"/>
+        <package name="libxi6:amd64" version="2:1.8-1+b1"/>
+        <package name="libxinerama1:amd64" version="2:1.1.4-3"/>
+        <package name="libxkbcommon0:amd64" version="1.5.0-1"/>
+        <package name="libxml2:amd64" version="2.9.14+dfsg-1.3~deb12u1"/>
+        <package name="libxml2-dev:amd64" version="2.9.14+dfsg-1.3~deb12u1"/>
+        <package name="libxmuu1:amd64" version="2:1.1.3-3"/>
+        <package name="libxpm4:amd64" version="1:3.5.12-1.1+deb12u1"/>
+        <package name="libxrandr2:amd64" version="2:1.5.2-2+b1"/>
+        <package name="libxrender1:amd64" version="1:0.9.10-1.1"/>
+        <package name="libxshmfence1:amd64" version="1.3-1"/>
+        <package name="libxss1:amd64" version="1:1.2.3-1"/>
+        <package name="libxtables12:amd64" version="1.8.9-2"/>
+        <package name="libxtst6:amd64" version="2:1.2.3-1.1"/>
+        <package name="libxv1:amd64" version="2:1.0.11-1.1"/>
+        <package name="libxvidcore4:amd64" version="2:1.3.7-1"/>
+        <package name="libxxf86vm1:amd64" version="1:1.1.4-1+b2"/>
+        <package name="libxxhash0:amd64" version="0.8.1-1"/>
+        <package name="libyaml-0-2:amd64" version="0.2.5-1"/>
+        <package name="libyuv0:amd64" version="0.0~git20230123.b2528b0-1"/>
+        <package name="libz3-4:amd64" version="4.8.12-3.1"/>
+        <package name="libz3-dev:amd64" version="4.8.12-3.1"/>
+        <package name="libzimg2:amd64" version="3.0.4+ds1-1"/>
+        <package name="libzmq5:amd64" version="4.3.4-6"/>
+        <package name="libzstd1:amd64" version="1.5.4+dfsg2-5"/>
+        <package name="libzvbi-common" version="0.2.41-1"/>
+        <package name="libzvbi0:amd64" version="0.2.41-1"/>
+        <package name="linux-base" version="4.9"/>
+        <package name="linux-image-6.1.0-18-amd64" version="6.1.76-1"/>
+        <package name="linux-image-6.1.0-28-amd64" version="6.1.119-1"/>
+        <package name="linux-image-amd64" version="6.1.119-1"/>
+        <package name="linux-libc-dev:amd64" version="6.1.119-1"/>
+        <package name="llvm-14" version="1:14.0.6-12"/>
+        <package name="llvm-14-dev" version="1:14.0.6-12"/>
+        <package name="llvm-14-linker-tools" version="1:14.0.6-12"/>
+        <package name="llvm-14-runtime" version="1:14.0.6-12"/>
+        <package name="llvm-14-tools" version="1:14.0.6-12"/>
+        <package name="locales" version="2.36-9+deb12u9"/>
+        <package name="login" version="1:4.13+dfsg1-1+b1"/>
+        <package name="logrotate" version="3.21.0-1"/>
+        <package name="logsave" version="1.47.0-2"/>
+        <package name="lsb-release" version="12.0-1"/>
+        <package name="lsof" version="4.95.0-1"/>
+        <package name="mailcap" version="3.70+nmu1"/>
+        <package name="make" version="4.3-4.1"/>
+        <package name="man-db" version="2.11.2-2"/>
+        <package name="manpages" version="6.03-2"/>
+        <package name="manpages-dev" version="6.03-2"/>
+        <package name="manpages-fr" version="4.18.1-1"/>
+        <package name="mawk" version="1.3.4.20200120-3.1"/>
+        <package name="media-types" version="10.0.0"/>
+        <package name="mesa-va-drivers:amd64" version="22.3.6-1+deb12u1"/>
+        <package name="mesa-vdpau-drivers:amd64" version="22.3.6-1+deb12u1"/>
+        <package name="mesa-vulkan-drivers:amd64" version="22.3.6-1+deb12u1"/>
+        <package name="mime-support" version="3.66"/>
+        <package name="mount" version="2.38.1-5+deb12u2"/>
+        <package name="nano" version="7.2-1+deb12u1"/>
+        <package name="nasm" version="2.16.01-1"/>
+        <package name="ncurses-base" version="6.4-4"/>
+        <package name="ncurses-bin" version="6.4-4"/>
+        <package name="ncurses-term" version="6.4-4"/>
+        <package name="net-tools" version="2.10-0.1"/>
+        <package name="netbase" version="6.4"/>
+        <package name="netcat-traditional" version="1.10-47"/>
+        <package name="nftables" version="1.0.6-2+deb12u2"/>
+        <package name="nss-plugin-pem:amd64" version="1.0.8+1-1"/>
+        <package name="ocl-icd-libopencl1:amd64" version="2.3.1-1"/>
+        <package name="openssh-client" version="1:9.2p1-2+deb12u3"/>
+        <package name="openssh-server" version="1:9.2p1-2+deb12u3"/>
+        <package name="openssh-sftp-server" version="1:9.2p1-2+deb12u3"/>
+        <package name="openssl" version="3.0.15-1~deb12u1"/>
+        <package name="os-prober" version="1.81"/>
+        <package name="ovmf" version="2022.11-6+deb12u1"/>
+        <package name="passwd" version="1:4.13+dfsg1-1+b1"/>
+        <package name="patch" version="2.7.6-7"/>
+        <package name="pci.ids" version="0.0~2023.04.11-1"/>
+        <package name="pciutils" version="1:3.9.0-4"/>
+        <package name="perl" version="5.36.0-7+deb12u1"/>
+        <package name="perl-base" version="5.36.0-7+deb12u1"/>
+        <package name="perl-modules-5.36" version="5.36.0-7+deb12u1"/>
+        <package name="pocketsphinx-en-us" version="0.8+5prealpha+1-15"/>
+        <package name="powertop" version="2.14-1+b2"/>
+        <package name="procps" version="2:4.0.2-3"/>
+        <package name="publicsuffix" version="20230209.2326-1"/>
+        <package name="python-apt-common" version="2.6.0"/>
+        <package name="python3" version="3.11.2-1+b1"/>
+        <package name="python3-apt" version="2.6.0"/>
+        <package name="python3-certifi" version="2022.9.24-1"/>
+        <package name="python3-chardet" version="5.1.0+dfsg-2"/>
+        <package name="python3-charset-normalizer" version="3.0.1-2"/>
+        <package name="python3-debconf" version="1.5.82"/>
+        <package name="python3-debian" version="0.1.49"/>
+        <package name="python3-debianbts" version="4.0.1"/>
+        <package name="python3-httplib2" version="0.20.4-3"/>
+        <package name="python3-idna" version="3.3-1+deb12u1"/>
+        <package name="python3-minimal" version="3.11.2-1+b1"/>
+        <package name="python3-pkg-resources" version="66.1.1-1"/>
+        <package name="python3-pycurl" version="7.45.2-3"/>
+        <package name="python3-pygments" version="2.14.0+dfsg-1"/>
+        <package name="python3-pyparsing" version="3.0.9-1"/>
+        <package name="python3-pysimplesoap" version="1.16.2-5"/>
+        <package name="python3-reportbug" version="12.0.0"/>
+        <package name="python3-requests" version="2.28.1+dfsg-1"/>
+        <package name="python3-six" version="1.16.0-4"/>
+        <package name="python3-urllib3" version="1.26.12-1"/>
+        <package name="python3-yaml" version="6.0-3+b2"/>
+        <package name="python3.11" version="3.11.2-6+deb12u4"/>
+        <package name="python3.11-minimal" version="3.11.2-6+deb12u4"/>
+        <package name="qemu-block-extra" version="1:7.2+dfsg-7+deb12u7"/>
+        <package name="qemu-efi-aarch64" version="2022.11-6+deb12u1"/>
+        <package name="qemu-efi-arm" version="2022.11-6+deb12u1"/>
+        <package name="qemu-system" version="1:7.2+dfsg-7+deb12u7"/>
+        <package name="qemu-system-arm" version="1:7.2+dfsg-7+deb12u7"/>
+        <package name="qemu-system-common" version="1:7.2+dfsg-7+deb12u7"/>
+        <package name="qemu-system-data" version="1:7.2+dfsg-7+deb12u7"/>
+        <package name="qemu-system-gui" version="1:7.2+dfsg-7+deb12u7"/>
+        <package name="qemu-system-mips" version="1:7.2+dfsg-7+deb12u7"/>
+        <package name="qemu-system-misc" version="1:7.2+dfsg-7+deb12u7"/>
+        <package name="qemu-system-ppc" version="1:7.2+dfsg-7+deb12u7"/>
+        <package name="qemu-system-sparc" version="1:7.2+dfsg-7+deb12u7"/>
+        <package name="qemu-system-x86" version="1:7.2+dfsg-7+deb12u7"/>
+        <package name="qemu-utils" version="1:7.2+dfsg-7+deb12u7"/>
+        <package name="readline-common" version="8.2-1.3"/>
+        <package name="reportbug" version="12.0.0"/>
+        <package name="rpcsvc-proto" version="1.4.3-1"/>
+        <package name="runit-helper" version="2.15.2"/>
+        <package name="rustc" version="1.63.0+dfsg1-2"/>
+        <package name="seabios" version="1.16.2-1"/>
+        <package name="sed" version="4.9-1"/>
+        <package name="sensible-utils" version="0.0.17+nmu1"/>
+        <package name="shared-mime-info" version="2.2-1"/>
+        <package name="sudo" version="1.9.13p3-1+deb12u1"/>
+        <package name="systemd" version="252.31-1~deb12u1"/>
+        <package name="systemd-sysv" version="252.31-1~deb12u1"/>
+        <package name="systemd-timesyncd" version="252.31-1~deb12u1"/>
+        <package name="sysvinit-utils" version="3.06-4"/>
+        <package name="tar" version="1.34+dfsg-1.2+deb12u1"/>
+        <package name="task-french" version="3.73"/>
+        <package name="task-laptop" version="3.73"/>
+        <package name="task-ssh-server" version="3.73"/>
+        <package name="tasksel" version="3.73"/>
+        <package name="tasksel-data" version="3.73"/>
+        <package name="traceroute" version="1:2.1.2-1"/>
+        <package name="tzdata" version="2024b-0+deb12u1"/>
+        <package name="ucf" version="3.0043+nmu1"/>
+        <package name="udev" version="252.31-1~deb12u1"/>
+        <package name="unzip" version="6.0-28"/>
+        <package name="usbutils" version="1:014-1+deb12u1"/>
+        <package name="usr-is-merged" version="37~deb12u1"/>
+        <package name="util-linux" version="2.38.1-5+deb12u2"/>
+        <package name="util-linux-extra" version="2.38.1-5+deb12u2"/>
+        <package name="util-linux-locales" version="2.38.1-5+deb12u2"/>
+        <package name="va-driver-all:amd64" version="2.17.0-1"/>
+        <package name="vdpau-driver-all:amd64" version="1.5-2"/>
+        <package name="vim" version="2:9.0.1378-2"/>
+        <package name="vim-common" version="2:9.0.1378-2"/>
+        <package name="vim-runtime" version="2:9.0.1378-2"/>
+        <package name="vim-tiny" version="2:9.0.1378-2"/>
+        <package name="wamerican" version="2020.12.07-2"/>
+        <package name="wfrench" version="1.2.7-2"/>
+        <package name="wget" version="1.21.3-1+b2"/>
+        <package name="whiptail" version="0.52.23-1+b1"/>
+        <package name="wireless-regdb" version="2022.06.06-1"/>
+        <package name="wireless-tools" version="30~pre9-14"/>
+        <package name="wpasupplicant" version="2:2.10-12+deb12u2"/>
+        <package name="x11-common" version="1:7.7+23"/>
+        <package name="xauth" version="1:1.1.2-1"/>
+        <package name="xdg-user-dirs" version="0.18-1"/>
+        <package name="xkb-data" version="2.35.1-1"/>
+        <package name="xz-utils" version="5.4.1-0.2"/>
+        <package name="zip" version="3.0-13"/>
+        <package name="zlib1g:amd64" version="1:1.2.13.dfsg-1"/>
+        <package name="zstd" version="1.5.4+dfsg2-5"/>
+    </total>
+    <upgrade>
+        <package name="avahi-autoipd/stable"/>
+        <package name="base-files/stable"/>
+        <package name="bind9-dnsutils/stable-security"/>
+        <package name="bind9-host/stable-security"/>
+        <package name="bind9-libs/stable-security"/>
+        <package name="bsdextrautils/stable"/>
+        <package name="bsdutils/stable"/>
+        <package name="eject/stable"/>
+        <package name="fdisk/stable"/>
+        <package name="git-man/stable-security"/>
+        <package name="git/stable-security"/>
+        <package name="gstreamer1.0-plugins-base/stable"/>
+        <package name="gstreamer1.0-plugins-good/stable,stable-security"/>
+        <package name="gstreamer1.0-x/stable"/>
+        <package name="intel-microcode/stable"/>
+        <package name="libavahi-client3/stable"/>
+        <package name="libavahi-common-data/stable"/>
+        <package name="libavahi-common3/stable"/>
+        <package name="libblkid1/stable"/>
+        <package name="libfdisk1/stable"/>
+        <package name="libglib2.0-0/stable"/>
+        <package name="libglib2.0-data/stable"/>
+        <package name="libgnutls30/stable-security"/>
+        <package name="libgstreamer-plugins-base1.0-0/stable"/>
+        <package name="libgstreamer1.0-0/stable,stable-security"/>
+        <package name="libmount1/stable"/>
+        <package name="libnss-systemd/stable"/>
+        <package name="libopenjp2-7/stable-security"/>
+        <package name="libpam-systemd/stable"/>
+        <package name="libpython3.11-minimal/stable"/>
+        <package name="libpython3.11-stdlib/stable"/>
+        <package name="libpython3.11/stable"/>
+        <package name="librados2/stable,stable-security"/>
+        <package name="librbd1/stable,stable-security"/>
+        <package name="libsmartcols1/stable"/>
+        <package name="libsoup2.4-1/stable"/>
+        <package name="libsoup2.4-common/stable"/>
+        <package name="libsrt1.5-gnutls/stable"/>
+        <package name="libsystemd-shared/stable"/>
+        <package name="libsystemd0/stable"/>
+        <package name="libtasn1-6/stable-security"/>
+        <package name="libtiff6/stable"/>
+        <package name="libudev1/stable"/>
+        <package name="libuuid1/stable"/>
+        <package name="linux-image-amd64/stable-security"/>
+        <package name="linux-libc-dev/stable-security"/>
+        <package name="mount/stable"/>
+        <package name="openssh-client/stable-security"/>
+        <package name="openssh-server/stable-security"/>
+        <package name="openssh-sftp-server/stable-security"/>
+        <package name="python3-pkg-resources/stable"/>
+        <package name="python3-urllib3/stable"/>
+        <package name="python3.11-minimal/stable"/>
+        <package name="python3.11/stable"/>
+        <package name="qemu-block-extra/stable"/>
+        <package name="qemu-system-arm/stable"/>
+        <package name="qemu-system-common/stable"/>
+        <package name="qemu-system-data/stable"/>
+        <package name="qemu-system-gui/stable"/>
+        <package name="qemu-system-mips/stable"/>
+        <package name="qemu-system-misc/stable"/>
+        <package name="qemu-system-ppc/stable"/>
+        <package name="qemu-system-sparc/stable"/>
+        <package name="qemu-system-x86/stable"/>
+        <package name="qemu-system/stable"/>
+        <package name="qemu-utils/stable"/>
+        <package name="systemd-sysv/stable"/>
+        <package name="systemd-timesyncd/stable"/>
+        <package name="systemd/stable"/>
+        <package name="ucf/stable"/>
+        <package name="udev/stable"/>
+        <package name="util-linux-extra/stable"/>
+        <package name="util-linux-locales/stable"/>
+        <package name="util-linux/stable"/>
+    </upgrade>
+</packages>
