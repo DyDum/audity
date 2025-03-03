@@ -30,6 +30,7 @@
 ### Installation from source
 ```bash
 git clone https://github.com/DyDum/audity.git
+
 cd audity
 cargo build
 ```
