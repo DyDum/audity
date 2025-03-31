@@ -1,0 +1,50 @@
+<RulesCIS>
+    <Rule id="2.2.1">
+        <BasePath>/usr/bin/</BasePath>
+        <FileName>nis</FileName>
+        <NonCompliantComment>The NIS client is installed, increasing the potential attack surface.</NonCompliantComment>
+        <CorrectiveComment>Uninstall the NIS client package.</CorrectiveComment>
+        <Correction>apt-get purge -y nis</Correction>
+        <Verification>dpkg -l | grep -q '^ii\s*nis\s' && echo 1 || echo 0</Verification>
+    </Rule>
+    <Rule id="2.2.2">
+        <BasePath>/usr/bin/</BasePath>
+        <FileName>rsh-client</FileName>
+        <NonCompliantComment>The rsh client is installed, which may allow insecure remote shell access.</NonCompliantComment>
+        <CorrectiveComment>Uninstall the rsh client package.</CorrectiveComment>
+        <Correction>apt-get purge -y rsh-client</Correction>
+        <Verification>dpkg -l | grep -q '^ii\s*rsh-client\s' && echo 1 || echo 0</Verification>
+    </Rule>
+    <Rule id="2.2.3">
+        <BasePath>/usr/bin/</BasePath>
+        <FileName>talk</FileName>
+        <NonCompliantComment>The talk client is installed, which could be used for unauthorized communication.</NonCompliantComment>
+        <CorrectiveComment>Uninstall the talk client package.</CorrectiveComment>
+        <Correction>apt-get purge -y talk</Correction>
+        <Verification>dpkg -l | grep -q '^ii\s*talk\s' && echo 1 || echo 0</Verification>
+    </Rule>
+    <Rule id="2.2.4">
+        <BasePath>/usr/bin/</BasePath>
+        <FileName>telnet</FileName>
+        <NonCompliantComment>The telnet client is installed, which transmits data in clear text.</NonCompliantComment>
+        <CorrectiveComment>Uninstall the telnet client package.</CorrectiveComment>
+        <Correction>apt-get purge -y telnet</Correction>
+        <Verification>dpkg -l | grep -q '^ii\s*telnet\s' && echo 1 || echo 0</Verification>
+    </Rule>
+    <Rule id="2.2.5">
+        <BasePath>/usr/bin/</BasePath>
+        <FileName>ldap-utils</FileName>
+        <NonCompliantComment>The LDAP client is installed, which may expose sensitive directory queries.</NonCompliantComment>
+        <CorrectiveComment>Uninstall the LDAP client package if it is not required.</CorrectiveComment>
+        <Correction>apt-get purge -y ldap-utils</Correction>
+        <Verification>dpkg -l | grep -q '^ii\s*ldap-utils\s' && echo 1 || echo 0</Verification>
+    </Rule>
+    <Rule id="2.2.6">
+        <BasePath>/usr/bin/</BasePath>
+        <FileName>ftp</FileName>
+        <NonCompliantComment>The FTP client is installed, which may transmit data insecurely.</NonCompliantComment>
+        <CorrectiveComment>Uninstall the FTP client package.</CorrectiveComment>
+        <Correction>apt-get purge -y ftp</Correction>
+        <Verification>dpkg -l | grep -q '^ii\s*ftp\s' && echo 1 || echo 0</Verification>
+    </Rule>
+</RulesCIS>

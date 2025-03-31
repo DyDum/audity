@@ -1,0 +1,26 @@
+<RulesCIS>
+    <Rule id="1.2.1.1">
+        <BasePath>/etc/apt/trusted.gpg.d/</BasePath>
+        <FileName>package-keys.gpg</FileName>
+        <NonCompliantComment> GPG keys for package verification are not properly configured, which may allow installation of unsigned packages. </NonCompliantComment>
+        <CorrectiveComment> Import and configure the necessary GPG keys to ensure that packages are verified. </CorrectiveComment>
+        <Correction> apt-key adv --keyserver keyserver.ubuntu.com --recv-keys YOUR_KEY_ID </Correction>
+        <Verification> apt-key list | grep -q "YOUR_KEY_ID" && echo 0 || echo 1 </Verification>
+    </Rule>
+    <Rule id="1.2.1.2">
+        <BasePath>/etc/apt/</BasePath>
+        <FileName>sources.list</FileName>
+        <NonCompliantComment> Package manager repositories are not correctly configured, which can lead to missing updates. </NonCompliantComment>
+        <CorrectiveComment> Configure the appropriate repository entries in the sources.list file. </CorrectiveComment>
+        <Correction> echo "deb http://deb.debian.org/debian stable main" >> /etc/apt/sources.list; apt-get update </Correction>
+        <Verification> grep -q "deb http://deb.debian.org/debian" /etc/apt/sources.list && echo 0 || echo 1 </Verification>
+    </Rule>
+    <Rule id="1.2.2.1">
+        <BasePath>/</BasePath>
+        <FileName>update.sh</FileName>
+        <NonCompliantComment> The system is not updated with the latest patches and security updates, exposing it to vulnerabilities. </NonCompliantComment>
+        <CorrectiveComment> Install all available updates, patches, and additional security software. </CorrectiveComment>
+        <Correction> apt-get update && apt-get upgrade -y </Correction>
+        <Verification> apt-get -s upgrade | grep -q "0 upgraded" && echo 0 || echo 1 </Verification>
+    </Rule>
+</RulesCIS>
