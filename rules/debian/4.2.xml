@@ -1,0 +1,58 @@
+<RulesCIS>
+    <Rule id="4.2.1">
+        <BasePath>/usr/sbin/</BasePath>
+        <FileName>ufw</FileName>
+        <NonCompliantComment>UFW is not installed, leaving the system without a basic firewall solution.</NonCompliantComment>
+        <CorrectiveComment>Install UFW to provide basic firewall functionality.</CorrectiveComment>
+        <Correction>apt-get install -y ufw</Correction>
+        <Verification>dpkg -l | grep -q ufw && echo 0 || echo 1</Verification>
+    </Rule>
+    <Rule id="4.2.2">
+        <BasePath>/usr/sbin/</BasePath>
+        <FileName>iptables-persistent</FileName>
+        <NonCompliantComment>iptables-persistent is installed alongside UFW, which may cause configuration conflicts.</NonCompliantComment>
+        <CorrectiveComment>Remove iptables-persistent when using UFW.</CorrectiveComment>
+        <Correction>apt-get purge -y iptables-persistent</Correction>
+        <Verification>dpkg -l | grep -q iptables-persistent && echo 1 || echo 0</Verification>
+    </Rule>
+    <Rule id="4.2.3">
+        <BasePath>/etc/systemd/system/</BasePath>
+        <FileName>ufw.service</FileName>
+        <NonCompliantComment>The UFW service is not enabled or running, so firewall rules might not be enforced.</NonCompliantComment>
+        <CorrectiveComment>Enable and start the UFW service.</CorrectiveComment>
+        <Correction>systemctl enable ufw; systemctl start ufw</Correction>
+        <Verification>systemctl is-active ufw | grep -q "active" && echo 0 || echo 1</Verification>
+    </Rule>
+    <Rule id="4.2.4">
+    <BasePath>/etc/ufw/</BasePath>
+        <FileName>rules</FileName>
+        <NonCompliantComment>Loopback traffic is not explicitly allowed, potentially blocking internal communications.</NonCompliantComment>
+        <CorrectiveComment>Configure UFW to allow incoming and outgoing traffic on the loopback interface.</CorrectiveComment>
+        <Correction>ufw allow in on lo; ufw allow out on lo</Correction>
+        <Verification>ufw status verbose | grep -q "lo" && echo 0 || echo 1</Verification>
+    </Rule>
+    <Rule id="4.2.5">
+        <BasePath>/etc/ufw/</BasePath>
+        <FileName>rules</FileName>
+        <NonCompliantComment>Outbound connections are not explicitly configured, which might block legitimate outgoing traffic.</NonCompliantComment>
+        <CorrectiveComment>Manually configure outbound rules as per system requirements.</CorrectiveComment>
+        <Correction>echo "Manual configuration required: review and configure UFW outbound rules"</Correction>
+        <Verification>echo "Manual verification required"</Verification>
+    </Rule>
+    <Rule id="4.2.6">
+        <BasePath>/etc/ufw/</BasePath>
+        <FileName>rules</FileName>
+        <NonCompliantComment>Some open ports may not have corresponding UFW rules, increasing the risk of unauthorized access.</NonCompliantComment>
+        <CorrectiveComment>Ensure UFW rules are defined for all open ports.</CorrectiveComment>
+        <Correction>echo "Manual configuration required: review open ports and add corresponding UFW rules"</Correction>
+        <Verification>echo "Manual verification required"</Verification>
+    </Rule>
+    <Rule id="4.2.7">
+        <BasePath>/etc/ufw/</BasePath>
+        <FileName>ufw.conf</FileName>
+        <NonCompliantComment>The default incoming policy is not set to deny, leaving the system exposed to unsolicited connections.</NonCompliantComment>
+        <CorrectiveComment>Set UFW's default policy to deny incoming connections and allow outgoing traffic.</CorrectiveComment>
+        <Correction>ufw default deny incoming; ufw default allow outgoing; ufw reload</Correction>
+        <Verification>ufw status | grep -q "Default: deny (incoming)" && echo 0 || echo 1</Verification>
+    </Rule>
+</RulesCIS>

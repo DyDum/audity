@@ -1,0 +1,10 @@
+<RulesCIS>
+    <Rule id="4.1.1">
+        <BasePath>/etc/</BasePath>
+        <FileName>firewall_utilities</FileName>
+        <NonCompliantComment> Multiple firewall configuration utilities are installed, which may lead to conflicts in firewall rules and overall security management. </NonCompliantComment>
+        <CorrectiveComment> Ensure only a single firewall configuration utility is in use by identifying and removing any unnecessary or conflicting firewall packages. </CorrectiveComment>
+        <Correction> Manual review required: use package management tools (e.g., dpkg -l) to list installed firewall utilities (such as ufw, iptables, nftables) and remove conflicting packages. </Correction>
+        <Verification> echo "Manual review required" </Verification>
+    </Rule>
+</RulesCIS>

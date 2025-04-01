@@ -1,0 +1,58 @@
+<RulesCIS>
+  <Rule id="6.1">
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>Error log filename and severity level are not configured per best practices.</NonCompliantComment>
+    <CorrectiveComment>Set LogLevel to "notice core:info" and configure the ErrorLog directive appropriately.</CorrectiveComment>
+    <Correction>sed -i 's/^LogLevel .*/LogLevel notice core:info/' /etc/httpd/conf/httpd.conf; echo 'ErrorLog "logs/error_log"' >> /etc/httpd/conf/httpd.conf; systemctl restart httpd</Correction>
+    <Verification>grep -q "^LogLevel notice core:info" /etc/httpd/conf/httpd.conf && grep -q "ErrorLog" /etc/httpd/conf/httpd.conf && echo 0 || echo 1</Verification>
+  </Rule>
+  <Rule id="6.2">
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>Error logs are not being sent to a syslog facility.</NonCompliantComment>
+    <CorrectiveComment>Configure the ErrorLog directive to send logs to a syslog facility (e.g., syslog:local1).</CorrectiveComment>
+    <Correction>sed -i 's/^ErrorLog .*/ErrorLog "syslog:local1"/' /etc/httpd/conf/httpd.conf; systemctl restart httpd</Correction>
+    <Verification>grep -q '^ErrorLog "syslog:local1"' /etc/httpd/conf/httpd.conf && echo 0 || echo 1</Verification>
+  </Rule>
+  <Rule id="6.3">
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>The server access log is not configured with the proper log format.</NonCompliantComment>
+    <CorrectiveComment>Define a proper LogFormat and configure CustomLog to log all necessary tokens.</CorrectiveComment>
+    <Correction>echo 'LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined' >> /etc/httpd/conf/httpd.conf; echo 'CustomLog "logs/access_log" combined' >> /etc/httpd/conf/httpd.conf; systemctl restart httpd</Correction>
+    <Verification>grep -q "CustomLog \"logs/access_log\" combined" /etc/httpd/conf/httpd.conf && echo 0 || echo 1</Verification>
+  </Rule>
+  <Rule id="6.4">
+    <BasePath>/etc/logrotate.d</BasePath>
+    <FileName>httpd</FileName>
+    <NonCompliantComment>Log rotation is not configured to retain logs for at least 3 months.</NonCompliantComment>
+    <CorrectiveComment>Configure logrotate for Apache logs to rotate weekly and retain at least 13 rotations.</CorrectiveComment>
+    <Correction>echo "/var/log/httpd/*log { weekly rotate 13 missingok notifempty compress }" &gt;&gt; /etc/logrotate.d/httpd</Correction>
+    <Verification>grep -q "rotate 13" /etc/logrotate.d/httpd && echo 0 || echo 1</Verification>
+  </Rule>
+  <Rule id="6.5">
+    <BasePath>/etc/httpd</BasePath>
+    <FileName>apache_version</FileName>
+    <NonCompliantComment>Apache patches are not up-to-date, leaving the server vulnerable.</NonCompliantComment>
+    <CorrectiveComment>Apply all available security patches within one month of release.</CorrectiveComment>
+    <Correction>Manual update required; verify vendor updates and apply via the package manager or source upgrade</Correction>
+    <Verification>Manual verification required</Verification>
+  </Rule>
+  <Rule id="6.6">
+    <BasePath>/etc/httpd/modules</BasePath>
+    <FileName>mod_security2.so</FileName>
+    <NonCompliantComment>ModSecurity is not installed or enabled, reducing web application firewall capabilities.</NonCompliantComment>
+    <CorrectiveComment>Install and enable ModSecurity; ensure the security2_module is loaded.</CorrectiveComment>
+    <Correction>yum install mod_security -y || apt-get install libapache2-mod-security2 -y; systemctl restart httpd</Correction>
+    <Verification>httpd -M | grep -q security2_module && echo 0 || echo 1</Verification>
+  </Rule>
+  <Rule id="6.7">
+    <BasePath>/etc/modsecurity.d</BasePath>
+    <FileName>crs-setup.conf</FileName>
+    <NonCompliantComment>OWASP ModSecurity Core Rule Set is not installed or enabled.</NonCompliantComment>
+    <CorrectiveComment>Install and configure the OWASP ModSecurity Core Rule Set per best practices.</CorrectiveComment>
+    <Correction>Manual installation required; download the CRS from the OWASP website, configure it, and restart httpd</Correction>
+    <Verification>Manual verification required</Verification>
+  </Rule>
+</RulesCIS>

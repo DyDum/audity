@@ -1,0 +1,58 @@
+<RulesCIS>
+    <Rule id="5.2.1">
+        <BasePath>/usr/bin/</BasePath>
+        <FileName>sudo</FileName>
+        <NonCompliantComment>Sudo is not installed, which prevents secure privilege escalation controls.</NonCompliantComment>
+        <CorrectiveComment>Install the sudo package to manage privilege escalation securely.</CorrectiveComment>
+        <Correction>apt-get install -y sudo</Correction>
+        <Verification>dpkg -l | grep -q sudo && echo 0 || echo 1</Verification>
+    </Rule>
+    <Rule id="5.2.2">
+        <BasePath>/etc/sudoers</BasePath>
+        <FileName>sudoers</FileName>
+        <NonCompliantComment>Sudo commands are not forced to use a pseudo-terminal (pty), which may expose them to security risks.</NonCompliantComment>
+        <CorrectiveComment>Configure sudo to use a pty by ensuring "Defaults use_pty" is present in the sudoers file.</CorrectiveComment>
+        <Correction>echo "Defaults use_pty" >> /etc/sudoers</Correction>
+        <Verification>grep -q "^Defaults use_pty" /etc/sudoers && echo 0 || echo 1</Verification>
+    </Rule>
+    <Rule id="5.2.3">
+        <BasePath>/var/log/</BasePath>
+        <FileName>sudo.log</FileName>
+        <NonCompliantComment>The sudo log file does not exist, limiting auditability of sudo commands.</NonCompliantComment>
+        <CorrectiveComment>Create a sudo log file and configure sudo to log commands to it.</CorrectiveComment>
+        <Correction>touch /var/log/sudo.log; chmod 600 /var/log/sudo.log; echo "Defaults logfile=/var/log/sudo.log" >> /etc/sudoers</Correction>
+        <Verification>test -f /var/log/sudo.log && echo 0 || echo 1</Verification>
+    </Rule>
+    <Rule id="5.2.4">
+        <BasePath>/etc/sudoers</BasePath>
+        <FileName>sudoers</FileName>
+        <NonCompliantComment>Users are not required to provide a password for privilege escalation, increasing the risk of unauthorized access.</NonCompliantComment>
+        <CorrectiveComment>Ensure sudoers is configured to require authentication for all sudo commands.</CorrectiveComment>
+        <Correction>sed -i 's/^\(Defaults.*\)\!authenticate/\1authenticate/' /etc/sudoers</Correction>
+        <Verification>grep -q "Defaults.*authenticate" /etc/sudoers && echo 0 || echo 1</Verification>
+    </Rule>
+    <Rule id="5.2.5">
+        <BasePath>/etc/sudoers</BasePath>
+        <FileName>sudoers</FileName>
+        <NonCompliantComment>Global re-authentication for privilege escalation is disabled, reducing security.</NonCompliantComment>
+        <CorrectiveComment>Review sudoers to ensure that re-authentication is enabled and not disabled globally.</CorrectiveComment>
+        <Correction>echo "# Ensure re-authentication is enabled" >> /etc/sudoers</Correction>
+        <Verification>echo "Manual review required"</Verification>
+    </Rule>
+    <Rule id="5.2.6">
+        <BasePath>/etc/sudoers</BasePath>
+        <FileName>sudoers</FileName>
+        <NonCompliantComment>The sudo authentication timeout is not configured properly, allowing prolonged access after authentication.</NonCompliantComment>
+        <CorrectiveComment>Set the sudo authentication timeout to a reasonable value (e.g., 5 minutes) using Defaults timestamp_timeout=5.</CorrectiveComment>
+        <Correction>echo "Defaults timestamp_timeout=5" >> /etc/sudoers</Correction>
+        <Verification>grep -q "Defaults timestamp_timeout=5" /etc/sudoers && echo 0 || echo 1</Verification>
+    </Rule>
+    <Rule id="5.2.7">
+        <BasePath>/etc/login.defs</BasePath>
+        <FileName>login.defs</FileName>
+        <NonCompliantComment>The su command is unrestricted, potentially allowing unauthorized privilege escalation.</NonCompliantComment>
+        <CorrectiveComment>Restrict access to the su command by modifying its permissions and assigning it to an authorized group.</CorrectiveComment>
+        <Correction>chmod 750 /bin/su; chown root:authorizedgroup /bin/su</Correction>
+        <Verification>stat -c "%a" /bin/su | grep -q "^750$" && echo 0 || echo 1</Verification>
+    </Rule>
+</RulesCIS>

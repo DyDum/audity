@@ -1,0 +1,162 @@
+<RulesCIS>
+  <Rule id="7.2.1">
+    <BasePath>/etc/passwd</BasePath>
+    <FileName>passwd</FileName>
+    <NonCompliantComment>
+      Some accounts in /etc/passwd do not have corresponding entries in /etc/shadow or have empty password fields, indicating they are not shadowed.
+    </NonCompliantComment>
+    <CorrectiveComment>
+      Verify that every account in /etc/passwd has a corresponding non-empty entry in /etc/shadow.
+    </CorrectiveComment>
+    <Correction>
+      echo "Manual review required: use 'awk -F: '($2=="" || $2=="!" ) {print $1}' /etc/shadow' to list accounts with empty password fields, then update them accordingly."
+    </Correction>
+    <Verification>
+      echo "Manual verification required"
+    </Verification>
+  </Rule>
+  <Rule id="7.2.2">
+    <BasePath>/etc/shadow</BasePath>
+    <FileName>shadow</FileName>
+    <NonCompliantComment>
+      Some entries in /etc/shadow have empty or placeholder password fields.
+    </NonCompliantComment>
+    <CorrectiveComment>
+      Ensure that no account has an empty or placeholder password field in /etc/shadow.
+    </CorrectiveComment>
+    <Correction>
+      echo "Manual review required: use 'awk -F: '($2==\"\" || $2=="!" ) {print $1}' /etc/shadow' to identify problematic entries and correct them."
+    </Correction>
+    <Verification>
+      echo "Manual verification required"
+    </Verification>
+  </Rule>
+  <Rule id="7.2.3">
+    <BasePath>/etc/</BasePath>
+    <FileName>group</FileName>
+    <NonCompliantComment>
+      Some groups referenced in /etc/passwd do not exist in /etc/group.
+    </NonCompliantComment>
+    <CorrectiveComment>
+      Verify that every GID from /etc/passwd has a matching group entry in /etc/group.
+    </CorrectiveComment>
+    <Correction>
+      echo "Manual review required: use 'awk -F: '{print $4}' /etc/passwd | sort -u | while read gid; do getent group $gid || echo $gid; done' to identify missing groups."
+    </Correction>
+    <Verification>
+      echo "Manual verification required"
+    </Verification>
+  </Rule>
+  <Rule id="7.2.4">
+    <BasePath>/etc/</BasePath>
+    <FileName>group</FileName>
+    <NonCompliantComment>
+      The shadow group in /etc/group contains user entries, risking unauthorized access to shadow file contents.
+    </NonCompliantComment>
+    <CorrectiveComment>
+      Ensure the shadow group is empty (i.e. no users are assigned to it) in /etc/group.
+    </CorrectiveComment>
+    <Correction>
+      echo "Manual review required: verify the 'shadow' group in /etc/group and remove any users listed."
+    </Correction>
+    <Verification>
+      grep '^shadow:' /etc/group | cut -d: -f4 | tr ',' '\n' | wc -l | grep -q '^0$' && echo 0 || echo 1
+    </Verification>
+  </Rule>
+  <Rule id="7.2.5">
+    <BasePath>/etc/passwd</BasePath>
+    <FileName>passwd</FileName>
+    <NonCompliantComment>
+      Duplicate UIDs exist in /etc/passwd, which can lead to privilege escalation risks.
+    </NonCompliantComment>
+    <CorrectiveComment>
+      Ensure that each UID in /etc/passwd is unique.
+    </CorrectiveComment>
+    <Correction>
+      echo "Manual review required: use 'awk -F: '{print $3}' /etc/passwd | sort | uniq -c | awk '$1 > 1'' to identify duplicate UIDs, then correct them."
+    </Correction>
+    <Verification>
+      awk -F: '{print $3}' /etc/passwd | sort | uniq -c | awk '$1 > 1' | wc -l | grep -q '^0$' && echo 0 || echo 1
+    </Verification>
+  </Rule>
+  <Rule id="7.2.6">
+    <BasePath>/etc/passwd</BasePath>
+    <FileName>passwd</FileName>
+    <NonCompliantComment>
+      Duplicate GIDs exist in /etc/passwd, which may lead to improper access control.
+    </NonCompliantComment>
+    <CorrectiveComment>
+      Ensure that each GID in /etc/passwd is unique.
+    </CorrectiveComment>
+    <Correction>
+      echo "Manual review required: use 'awk -F: '{print $4}' /etc/passwd | sort | uniq -c | awk '$1 > 1'' to identify duplicate GIDs, then correct them."
+    </Correction>
+    <Verification>
+      awk -F: '{print $4}' /etc/passwd | sort | uniq -c | awk '$1 > 1' | wc -l | grep -q '^0$' && echo 0 || echo 1
+    </Verification>
+  </Rule>
+  <Rule id="7.2.7">
+    <BasePath>/etc/passwd</BasePath>
+    <FileName>passwd</FileName>
+    <NonCompliantComment>
+      Duplicate user names exist in /etc/passwd, causing potential account management conflicts.
+    </NonCompliantComment>
+    <CorrectiveComment>
+      Ensure that all usernames in /etc/passwd are unique.
+    </CorrectiveComment>
+    <Correction>
+      echo "Manual review required: use 'awk -F: '{print $1}' /etc/passwd | sort | uniq -d' to identify duplicate usernames, then correct them."
+    </Correction>
+    <Verification>
+      awk -F: '{print $1}' /etc/passwd | sort | uniq -d | wc -l | grep -q '^0$' && echo 0 || echo 1
+    </Verification>
+  </Rule>
+  <Rule id="7.2.8">
+    <BasePath>/etc/group</BasePath>
+    <FileName>group</FileName>
+    <NonCompliantComment>
+      Duplicate group names exist in /etc/group, risking inconsistent group management.
+    </NonCompliantComment>
+    <CorrectiveComment>
+      Ensure that all group names in /etc/group are unique.
+    </CorrectiveComment>
+    <Correction>
+      echo "Manual review required: use 'awk -F: '{print $1}' /etc/group | sort | uniq -d' to identify duplicate group names, then correct them."
+    </Correction>
+    <Verification>
+      awk -F: '{print $1}' /etc/group | sort | uniq -d | wc -l | grep -q '^0$' && echo 0 || echo 1
+    </Verification>
+  </Rule>
+  <Rule id="7.2.9">
+    <BasePath>/etc/passwd</BasePath>
+    <FileName>passwd</FileName>
+    <NonCompliantComment>
+      Some local interactive users do not have a valid home directory configured.
+    </NonCompliantComment>
+    <CorrectiveComment>
+      Ensure every local interactive user (UID ≥ 1000 and login shell not set to nologin) has an existing home directory.
+    </CorrectiveComment>
+    <Correction>
+      echo "Manual review required: use 'awk -F: '($3 >= 1000 && $7 != \"/usr/sbin/nologin\") {print $6}' /etc/passwd' to list home directories and verify they exist."
+    </Correction>
+    <Verification>
+      echo "Manual verification required"
+    </Verification>
+  </Rule>
+  <Rule id="7.2.10">
+    <BasePath>/home</BasePath>
+    <FileName>dotfiles</FileName>
+    <NonCompliantComment>
+      Local interactive user dot files (e.g., .bashrc, .profile) may have insecure permissions.
+    </NonCompliantComment>
+    <CorrectiveComment>
+      Ensure that dot files for local users are set to secure permissions (typically 644).
+    </CorrectiveComment>
+    <Correction>
+      echo "Manual review required: use 'find /home -maxdepth 2 -name \".*\" -type f' to list dot files and verify permissions."
+    </Correction>
+    <Verification>
+      echo "Manual verification required"
+    </Verification>
+  </Rule>
+</RulesCIS>

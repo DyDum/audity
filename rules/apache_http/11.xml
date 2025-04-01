@@ -1,0 +1,34 @@
+<RulesCIS>
+  <Rule id="11.1">
+    <BasePath>/etc/selinux</BasePath>
+    <FileName>config</FileName>
+    <NonCompliantComment>SELinux is not enabled in enforcing mode.</NonCompliantComment>
+    <CorrectiveComment>Enable SELinux in enforcing mode by setting SELINUX=enforcing in /etc/selinux/config and running setenforce 1.</CorrectiveComment>
+    <Correction>sed -i 's/^SELINUX=.*/SELINUX=enforcing/' /etc/selinux/config; setenforce 1</Correction>
+    <Verification>getenforce | grep -q "Enforcing" && echo 0 || echo 1</Verification>
+  </Rule>
+  <Rule id="11.2">
+    <BasePath>/usr/sbin</BasePath>
+    <FileName>httpd</FileName>
+    <NonCompliantComment>Apache processes are not running in the httpd_t SELinux context.</NonCompliantComment>
+    <CorrectiveComment>Restore the default SELinux context for Apache binaries.</CorrectiveComment>
+    <Correction>restorecon -Rv /usr/sbin/httpd</Correction>
+    <Verification>ps -eZ | grep httpd | grep -q "httpd_t" && echo 0 || echo 1</Verification>
+  </Rule>
+  <Rule id="11.3">
+    <BasePath>/etc/selinux</BasePath>
+    <FileName>permissive.list</FileName>
+    <NonCompliantComment>The SELinux domain httpd_t is in permissive mode.</NonCompliantComment>
+    <CorrectiveComment>Remove httpd_t from the permissive list.</CorrectiveComment>
+    <Correction>semanage permissive -d httpd_t</Correction>
+    <Verification>semanage permissive -l | grep -q "^httpd_t" && echo 1 || echo 0</Verification>
+  </Rule>
+  <Rule id="11.4">
+    <BasePath>/etc/selinux</BasePath>
+    <FileName>booleans</FileName>
+    <NonCompliantComment>Unnecessary SELinux booleans for Apache are enabled.</NonCompliantComment>
+    <CorrectiveComment>Review and disable unnecessary SELinux booleans for Apache.</CorrectiveComment>
+    <Correction>Manual review required; use setsebool -P to adjust SELinux booleans as per policy</Correction>
+    <Verification>Manual verification required</Verification>
+  </Rule>
+</RulesCIS>
