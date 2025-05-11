@@ -6,6 +6,7 @@
         <CorrectiveComment> Install AIDE to enable regular integrity checking of critical files and directories. </CorrectiveComment>
         <Correction>apt-get install -y aide; aideinit</Correction>
         <Verification>dpkg -l | grep -q aide && echo 0 || echo 1</Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="6.3.2">
         <BasePath>/etc/aide/</BasePath>
@@ -14,6 +15,7 @@
         <CorrectiveComment> Configure /etc/aide/aide.conf according to your security policy and initialize the AIDE database. </CorrectiveComment>
         <Correction>echo "Manual configuration required: edit /etc/aide/aide.conf as per security requirements; then run aideinit" ; aideinit</Correction>
         <Verification>test -f /var/lib/aide/aide.db && echo 0 || echo 1</Verification>
+        <Manual>CORRECTION</Manual>
     </Rule>
     <Rule id="6.3.3">
         <BasePath>/etc/audit/</BasePath>
@@ -22,5 +24,6 @@
         <CorrectiveComment> Implement cryptographic signing or other integrity measures for audit tools and configuration files as supported by your environment. </CorrectiveComment>
         <Correction>echo "Manual configuration required: implement cryptographic integrity measures for audit tools per policy"</Correction>
         <Verification>echo "Manual verification required"</Verification>
+        <Manual>YES</Manual>
     </Rule>
 </RulesCIS>

@@ -1,91 +1,101 @@
-<ReglesCIS>
-  <Regle id="5.1">
-    <CheminBase>/etc/mysql/</CheminBase>
-    <NomFichier>my.cnf</NomFichier>
-    <RegleNonConforme>Non-administrative users have full database access, which may allow unauthorized actions.</RegleNonConforme>
-    <RegleCorrigee>Restrict full database access to administrative users only (e.g., root, DBA).</RegleCorrigee>
+<RulesCIS>
+  <Rule id="5.1">
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>my.cnf</FileName>
+    <NonCompliantComment>Non-administrative users have full database access, which may allow unauthorized actions.</NonCompliantComment>
+    <CorrectiveComment>Restrict full database access to administrative users only (e.g., root, DBA).</CorrectiveComment>
     <Correction>mysql -u root -p -e "REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'user'@'%';"</Correction>
     <Verification>mysql -u root -p -e "SELECT user,host,grant_priv FROM mysql.user WHERE grant_priv='Y';" | grep -v 'root' && echo 1 || echo 0</Verification>
-  </Regle>
+    <Manual>NO</Manual>
+  </Rule>
 
-  <Regle id="5.2">
-    <CheminBase>/etc/mysql/</CheminBase>
-    <NomFichier>my.cnf</NomFichier>
-    <RegleNonConforme>The 'FILE' privilege is granted to non-administrative users, which may allow unauthorized file access.</RegleNonConforme>
-    <RegleCorrigee>Ensure the 'FILE' privilege is restricted to administrative users only.</RegleCorrigee>
+  <Rule id="5.2">
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>my.cnf</FileName>
+    <NonCompliantComment>The 'FILE' privilege is granted to non-administrative users, which may allow unauthorized file access.</NonCompliantComment>
+    <CorrectiveComment>Ensure the 'FILE' privilege is restricted to administrative users only.</CorrectiveComment>
     <Correction>mysql -u root -p -e "REVOKE FILE ON *.* FROM 'user'@'%';"</Correction>
     <Verification>mysql -u root -p -e "SELECT user,host FROM mysql.user WHERE File_priv='Y';" | grep -v 'root' && echo 1 || echo 0</Verification>
-  </Regle>
+    <Manual>NO</Manual>
+  </Rule>
 
-  <Regle id="5.3">
-    <CheminBase>/etc/mysql/</CheminBase>
-    <NomFichier>my.cnf</NomFichier>
-    <RegleNonConforme>The 'PROCESS' privilege is granted to non-administrative users, exposing process information.</RegleNonConforme>
-    <RegleCorrigee>Ensure the 'PROCESS' privilege is restricted to administrative users only.</RegleCorrigee>
+  <Rule id="5.3">
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>my.cnf</FileName>
+    <NonCompliantComment>The 'PROCESS' privilege is granted to non-administrative users, exposing process information.</NonCompliantComment>
+    <CorrectiveComment>Ensure the 'PROCESS' privilege is restricted to administrative users only.</CorrectiveComment>
     <Correction>mysql -u root -p -e "REVOKE PROCESS ON *.* FROM 'user'@'%';"</Correction>
     <Verification>mysql -u root -p -e "SELECT user,host FROM mysql.user WHERE Process_priv='Y';" | grep -v 'root' && echo 1 || echo 0</Verification>
-  </Regle>
+    <Manual>NO</Manual>
+  </Rule>
 
-  <Regle id="5.4">
-    <CheminBase>/etc/mysql/</CheminBase>
-    <NomFichier>my.cnf</NomFichier>
-    <RegleNonConforme>The 'SUPER' privilege is granted to non-administrative users, increasing security risks.</RegleNonConforme>
-    <RegleCorrigee>Ensure the 'SUPER' privilege is restricted to administrative users only.</RegleCorrigee>
+  <Rule id="5.4">
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>my.cnf</FileName>
+    <NonCompliantComment>The 'SUPER' privilege is granted to non-administrative users, increasing security risks.</NonCompliantComment>
+    <CorrectiveComment>Ensure the 'SUPER' privilege is restricted to administrative users only.</CorrectiveComment>
     <Correction>mysql -u root -p -e "REVOKE SUPER ON *.* FROM 'user'@'%';"</Correction>
     <Verification>mysql -u root -p -e "SELECT user,host FROM mysql.user WHERE Super_priv='Y';" | grep -v 'root' && echo 1 || echo 0</Verification>
-  </Regle>
+    <Manual>NO</Manual>
+  </Rule>
 
-  <Regle id="5.5">
-    <CheminBase>/etc/mysql/</CheminBase>
-    <NomFichier>my.cnf</NomFichier>
-    <RegleNonConforme>The 'SHUTDOWN' privilege is granted to non-administrative users, which may allow unauthorized server shutdowns.</RegleNonConforme>
-    <RegleCorrigee>Ensure the 'SHUTDOWN' privilege is restricted to administrative users only.</RegleCorrigee>
+  <Rule id="5.5">
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>my.cnf</FileName>
+    <NonCompliantComment>The 'SHUTDOWN' privilege is granted to non-administrative users, which may allow unauthorized server shutdowns.</NonCompliantComment>
+    <CorrectiveComment>Ensure the 'SHUTDOWN' privilege is restricted to administrative users only.</CorrectiveComment>
     <Correction>mysql -u root -p -e "REVOKE SHUTDOWN ON *.* FROM 'user'@'%';"</Correction>
     <Verification>mysql -u root -p -e "SELECT user,host FROM mysql.user WHERE Shutdown_priv='Y';" | grep -v 'root' && echo 1 || echo 0</Verification>
-  </Regle>
+    <Manual>NO</Manual>
+  </Rule>
 
-  <Regle id="5.6">
-    <CheminBase>/etc/mysql/</CheminBase>
-    <NomFichier>my.cnf</NomFichier>
-    <RegleNonConforme>The 'CREATE USER' privilege is granted to non-administrative users, increasing security risks.</RegleNonConforme>
-    <RegleCorrigee>Ensure the 'CREATE USER' privilege is restricted to administrative users only.</RegleCorrigee>
+  <Rule id="5.6">
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>my.cnf</FileName>
+    <NonCompliantComment>The 'CREATE USER' privilege is granted to non-administrative users, increasing security risks.</NonCompliantComment>
+    <CorrectiveComment>Ensure the 'CREATE USER' privilege is restricted to administrative users only.</CorrectiveComment>
     <Correction>mysql -u root -p -e "REVOKE CREATE USER ON *.* FROM 'user'@'%';"</Correction>
     <Verification>mysql -u root -p -e "SELECT user,host FROM mysql.user WHERE Create_user_priv='Y';" | grep -v 'root' && echo 1 || echo 0</Verification>
-  </Regle>
+    <Manual>NO</Manual>
+  </Rule>
 
-  <Regle id="5.7">
-    <CheminBase>/etc/mysql/</CheminBase>
-    <NomFichier>my.cnf</NomFichier>
-    <RegleNonConforme>The 'GRANT OPTION' is granted to non-administrative users, allowing them to grant privileges.</RegleNonConforme>
-    <RegleCorrigee>Ensure the 'GRANT OPTION' is restricted to administrative users only.</RegleCorrigee>
+  <Rule id="5.7">
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>my.cnf</FileName>
+    <NonCompliantComment>The 'GRANT OPTION' is granted to non-administrative users, allowing them to grant privileges.</NonCompliantComment>
+    <CorrectiveComment>Ensure the 'GRANT OPTION' is restricted to administrative users only.</CorrectiveComment>
     <Correction>mysql -u root -p -e "REVOKE GRANT OPTION ON *.* FROM 'user'@'%';"</Correction>
     <Verification>mysql -u root -p -e "SELECT user,host FROM mysql.user WHERE Grant_priv='Y';" | grep -v 'root' && echo 1 || echo 0</Verification>
-  </Regle>
+    <Manual>NO</Manual>
+  </Rule>
 
-  <Regle id="5.8">
-    <CheminBase>/etc/mysql/</CheminBase>
-    <NomFichier>my.cnf</NomFichier>
-    <RegleNonConforme>The 'REPLICATION SLAVE' privilege is granted to non-administrative users.</RegleNonConforme>
-    <RegleCorrigee>Ensure the 'REPLICATION SLAVE' privilege is restricted to administrative users only.</RegleCorrigee>
+  <Rule id="5.8">
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>my.cnf</FileName>
+    <NonCompliantComment>The 'REPLICATION SLAVE' privilege is granted to non-administrative users.</NonCompliantComment>
+    <CorrectiveComment>Ensure the 'REPLICATION SLAVE' privilege is restricted to administrative users only.</CorrectiveComment>
     <Correction>mysql -u root -p -e "REVOKE REPLICATION SLAVE ON *.* FROM 'user'@'%';"</Correction>
     <Verification>mysql -u root -p -e "SELECT user,host FROM mysql.user WHERE Repl_slave_priv='Y';" | grep -v 'root' && echo 1 || echo 0</Verification>
-  </Regle>
+    <Manual>NO</Manual>
+  </Rule>
 
-  <Regle id="5.9">
-    <CheminBase>/etc/mysql/</CheminBase>
-    <NomFichier>my.cnf</NomFichier>
-    <RegleNonConforme>DML/DDL privileges are granted broadly, increasing security risks.</RegleNonConforme>
-    <RegleCorrigee>Limit DML/DDL privileges to specific databases and users.</RegleCorrigee>
+  <Rule id="5.9">
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>my.cnf</FileName>
+    <NonCompliantComment>DML/DDL privileges are granted broadly, increasing security risks.</NonCompliantComment>
+    <CorrectiveComment>Limit DML/DDL privileges to specific databases and users.</CorrectiveComment>
     <Correction>mysql -u root -p -e "REVOKE ALL PRIVILEGES ON *.* FROM 'user'@'%';"</Correction>
     <Verification>mysql -u root -p -e "SHOW GRANTS FOR 'user'@'%';" | grep -q 'GRANT USAGE' && echo 0 || echo 1</Verification>
-  </Regle>
+    <Manual>NO</Manual>
+  </Rule>
 
-  <Regle id="5.10">
-    <CheminBase>/etc/mysql/</CheminBase>
-    <NomFichier>my.cnf</NomFichier>
-    <RegleNonConforme>Stored procedures and functions are defined without secure DEFINER/INVOKER settings.</RegleNonConforme>
-    <RegleCorrigee>Securely define stored procedures and functions using 'DEFINER' and 'INVOKER'.</RegleCorrigee>
+  <Rule id="5.10">
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>my.cnf</FileName>
+    <NonCompliantComment>Stored procedures and functions are defined without secure DEFINER/INVOKER settings.</NonCompliantComment>
+    <CorrectiveComment>Securely define stored procedures and functions using 'DEFINER' and 'INVOKER'.</CorrectiveComment>
     <Correction>mysql -u root -p -e "ALTER PROCEDURE proc_name SQL SECURITY INVOKER;"</Correction>
     <Verification>mysql -u root -p -e "SHOW CREATE PROCEDURE proc_name;" | grep -q 'SQL SECURITY INVOKER' && echo 0 || echo 1</Verification>
-  </Regle>
-</ReglesCIS>
+    <Manual>NO</Manual>
+  </Rule>
+</RulesCIS>

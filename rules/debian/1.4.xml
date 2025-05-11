@@ -6,6 +6,7 @@
         <CorrectiveComment> Configure a bootloader password to secure the boot process. </CorrectiveComment>
         <Correction> echo "set superusers=&quot;admin&quot;" >> /etc/grub.d/40_custom; echo "password_pbkdf2 admin &lt;hashed_password&gt;" >> /etc/grub.d/40_custom; update-grub </Correction>
         <Verification> grep -q "password_pbkdf2" /etc/grub.d/40_custom && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="1.4.2">
         <BasePath>/boot/grub/</BasePath>
@@ -14,5 +15,6 @@
         <CorrectiveComment> Restrict the permissions on the bootloader configuration file. </CorrectiveComment>
         <Correction> chmod 600 /boot/grub/grub.cfg </Correction>
         <Verification> stat -c "%a" /boot/grub/grub.cfg | grep -q "^600$" && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
 </RulesCIS>

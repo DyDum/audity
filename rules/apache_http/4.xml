@@ -6,6 +6,7 @@
     <CorrectiveComment>Add a Directory directive for "/" with "Require all denied".</CorrectiveComment>
     <Correction>echo "&lt;Directory /&gt;&lt;Require all denied&gt;&lt;/Require all denied&gt;&lt;/Directory&gt;" >> /etc/httpd/conf/httpd.conf</Correction>
     <Verification>grep -q "&lt;Directory /&gt;" /etc/httpd/conf/httpd.conf && grep -q "Require all denied" /etc/httpd/conf/httpd.conf && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
   </Rule>
   <Rule id="4.2">
     <BasePath>/etc/httpd/conf</BasePath>
@@ -14,6 +15,7 @@
     <CorrectiveComment>Manually configure appropriate Directory directives with proper access controls for web content.</CorrectiveComment>
     <Correction>Manual review required; update Directory directives with appropriate "Require" statements.</Correction>
     <Verification>Manual verification required</Verification>
+    <Manual>YES</Manual>
   </Rule>
   <Rule id="4.3">
     <BasePath>/etc/httpd/conf</BasePath>
@@ -22,6 +24,7 @@
     <CorrectiveComment>Set AllowOverride to "None" for the root directory in the Apache configuration.</CorrectiveComment>
     <Correction>sed -i 's/AllowOverride .*/AllowOverride None/' /etc/httpd/conf/httpd.conf</Correction>
     <Verification>grep -q "AllowOverride None" /etc/httpd/conf/httpd.conf && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
   </Rule>
   <Rule id="4.4">
     <BasePath>/etc/httpd/conf</BasePath>
@@ -30,5 +33,6 @@
     <CorrectiveComment>Set AllowOverride to "None" for all directories in the Apache configuration.</CorrectiveComment>
     <Correction>sed -i 's/AllowOverride .*/AllowOverride None/g' /etc/httpd/conf/httpd.conf</Correction>
     <Verification>grep -q "AllowOverride None" /etc/httpd/conf/httpd.conf && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
   </Rule>
 </RulesCIS>

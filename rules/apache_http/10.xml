@@ -6,6 +6,7 @@
     <CorrectiveComment>Set the LimitRequestLine directive to 8190 or less.</CorrectiveComment>
     <Correction>sed -i 's/^LimitRequestLine .*/LimitRequestLine 8190/' /etc/httpd/conf/httpd.conf; systemctl restart httpd</Correction>
     <Verification>grep "^LimitRequestLine 8190" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
   </Rule>
   <Rule id="10.2">
     <BasePath>/etc/httpd/conf</BasePath>
@@ -14,6 +15,7 @@
     <CorrectiveComment>Set the LimitRequestFields directive to 100 or less.</CorrectiveComment>
     <Correction>sed -i 's/^LimitRequestFields .*/LimitRequestFields 100/' /etc/httpd/conf/httpd.conf; systemctl restart httpd</Correction>
     <Verification>grep "^LimitRequestFields 100" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
   </Rule>
   <Rule id="10.3">
     <BasePath>/etc/httpd/conf</BasePath>
@@ -22,6 +24,7 @@
     <CorrectiveComment>Set the LimitRequestFieldsize directive to 1024 or less.</CorrectiveComment>
     <Correction>sed -i 's/^LimitRequestFieldsize .*/LimitRequestFieldsize 1024/' /etc/httpd/conf/httpd.conf; systemctl restart httpd</Correction>
     <Verification>grep "^LimitRequestFieldsize 1024" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
   </Rule>
   <Rule id="10.4">
     <BasePath>/etc/httpd/conf</BasePath>
@@ -30,5 +33,6 @@
     <CorrectiveComment>Set the LimitRequestBody directive to 102400 or less.</CorrectiveComment>
     <Correction>sed -i 's/^LimitRequestBody .*/LimitRequestBody 102400/' /etc/httpd/conf/httpd.conf; systemctl restart httpd</Correction>
     <Verification>grep "^LimitRequestBody 102400" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
   </Rule>
 </RulesCIS>

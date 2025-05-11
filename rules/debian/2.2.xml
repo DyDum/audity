@@ -6,6 +6,7 @@
         <CorrectiveComment>Uninstall the NIS client package.</CorrectiveComment>
         <Correction>apt-get purge -y nis</Correction>
         <Verification>dpkg -l | grep -q '^ii\s*nis\s' && echo 1 || echo 0</Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="2.2.2">
         <BasePath>/usr/bin/</BasePath>
@@ -14,6 +15,7 @@
         <CorrectiveComment>Uninstall the rsh client package.</CorrectiveComment>
         <Correction>apt-get purge -y rsh-client</Correction>
         <Verification>dpkg -l | grep -q '^ii\s*rsh-client\s' && echo 1 || echo 0</Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="2.2.3">
         <BasePath>/usr/bin/</BasePath>
@@ -22,6 +24,7 @@
         <CorrectiveComment>Uninstall the talk client package.</CorrectiveComment>
         <Correction>apt-get purge -y talk</Correction>
         <Verification>dpkg -l | grep -q '^ii\s*talk\s' && echo 1 || echo 0</Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="2.2.4">
         <BasePath>/usr/bin/</BasePath>
@@ -30,6 +33,7 @@
         <CorrectiveComment>Uninstall the telnet client package.</CorrectiveComment>
         <Correction>apt-get purge -y telnet</Correction>
         <Verification>dpkg -l | grep -q '^ii\s*telnet\s' && echo 1 || echo 0</Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="2.2.5">
         <BasePath>/usr/bin/</BasePath>
@@ -38,6 +42,7 @@
         <CorrectiveComment>Uninstall the LDAP client package if it is not required.</CorrectiveComment>
         <Correction>apt-get purge -y ldap-utils</Correction>
         <Verification>dpkg -l | grep -q '^ii\s*ldap-utils\s' && echo 1 || echo 0</Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="2.2.6">
         <BasePath>/usr/bin/</BasePath>
@@ -46,5 +51,6 @@
         <CorrectiveComment>Uninstall the FTP client package.</CorrectiveComment>
         <Correction>apt-get purge -y ftp</Correction>
         <Verification>dpkg -l | grep -q '^ii\s*ftp\s' && echo 1 || echo 0</Verification>
+        <Manual>NO</Manual>
     </Rule>
 </RulesCIS>

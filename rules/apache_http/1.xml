@@ -6,6 +6,7 @@
     <CorrectiveComment>Review and implement all items on the pre-installation planning checklist as defined by organizational security policies.</CorrectiveComment>
     <Correction>Manual review required; update documentation and verify all checklist items are completed.</Correction>
     <Verification>Manual verification required to ensure all checklist items have been addressed.</Verification>
+    <Manual>YES</Manual>
   </Rule>
   <Rule id="1.2">
     <BasePath>/etc</BasePath>
@@ -14,6 +15,7 @@
     <CorrectiveComment>Designate the server exclusively for Apache web services by removing or disabling non-essential services.</CorrectiveComment>
     <Correction>Manual review required; update system configuration to limit the server’s role to web hosting only.</Correction>
     <Verification>Manual verification required to confirm that no extraneous services are running.</Verification>
+    <Manual>YES</Manual>
   </Rule>
   <Rule id="1.3">
     <BasePath>/opt/apache</BasePath>
@@ -22,5 +24,6 @@
     <CorrectiveComment>Install Apache from the approved vendor binaries or packages to ensure that security patches and updates are provided.</CorrectiveComment>
     <Correction>Manual review required; reinstall Apache using vendor-provided packages per official documentation.</Correction>
     <Verification>Manual verification required to ensure Apache version and installation source meet vendor recommendations.</Verification>
+    <Manual>YES</Manual>
   </Rule>
 </RulesCIS>

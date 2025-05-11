@@ -6,6 +6,7 @@
         <CorrectiveComment> Remove the GDM package to disable the graphical login manager. </CorrectiveComment>
         <Correction> apt-get purge -y gdm3 </Correction>
         <Verification> dpkg -l | grep -q gdm3 && echo 1 || echo 0 </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="1.7.2">
         <BasePath>/etc/gdm3/</BasePath>
@@ -14,6 +15,7 @@
         <CorrectiveComment> Configure a login banner in /etc/gdm3/custom.conf to display an appropriate message. </CorrectiveComment>
         <Correction> echo "[org/gnome/login-screen]" &gt; /etc/gdm3/custom.conf; echo "banner-message-enable=true" &gt;&gt; /etc/gdm3/custom.conf; echo "banner-message-text='Authorized Access Only'" &gt;&gt; /etc/gdm3/custom.conf </Correction>
         <Verification> grep -q "banner-message-enable=true" /etc/gdm3/custom.conf && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="1.7.3">
         <BasePath>/etc/gdm3/</BasePath>
@@ -22,6 +24,7 @@
         <CorrectiveComment> Disable the user list in GDM by setting the disable-user-list option to true. </CorrectiveComment>
         <Correction> echo "[org/gnome/login-screen]" &gt; /etc/gdm3/custom.conf; echo "disable-user-list=true" &gt;&gt; /etc/gdm3/custom.conf </Correction>
         <Verification> grep -q "disable-user-list=true" /etc/gdm3/custom.conf && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="1.7.4">
         <BasePath>/etc/gdm3/</BasePath>
@@ -30,6 +33,7 @@
         <CorrectiveComment> Configure GDM to automatically lock the screen when the user is idle. </CorrectiveComment>
         <Correction> echo "[org/gnome/desktop/screensaver]" &gt; /etc/gdm3/custom.conf; echo "lock-enabled=true" &gt;&gt; /etc/gdm3/custom.conf </Correction>
         <Verification> grep -q "lock-enabled=true" /etc/gdm3/custom.conf && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="1.7.5">
         <BasePath>/etc/gdm3/</BasePath>
@@ -38,6 +42,7 @@
         <CorrectiveComment> Enforce screen lock settings in GDM so that they cannot be overridden. </CorrectiveComment>
         <Correction> (Manual enforcement required: review and lock down the settings via policy) </Correction>
         <Verification> echo "Manual review required" </Verification>
+        <Manual>YES</Manual>
     </Rule>
     <Rule id="1.7.6">
         <BasePath>/etc/gdm3/</BasePath>
@@ -46,6 +51,7 @@
         <CorrectiveComment> Disable automatic mounting of removable media in GDM. </CorrectiveComment>
         <Correction> echo "[org/gnome/settings-daemon/plugins/media-keys]" &gt; /etc/gdm3/custom.conf; echo "automount=false" &gt;&gt; /etc/gdm3/custom.conf </Correction>
         <Verification> grep -q "automount=false" /etc/gdm3/custom.conf && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="1.7.7">
         <BasePath>/etc/gdm3/</BasePath>
@@ -54,6 +60,7 @@
         <CorrectiveComment> Ensure that the disable setting for automount is enforced in GDM. </CorrectiveComment>
         <Correction> echo "[org/gnome/settings-daemon/plugins/media-keys]" &gt; /etc/gdm3/custom.conf; echo "automount=false" &gt;&gt; /etc/gdm3/custom.conf </Correction>
         <Verification> grep -q "automount=false" /etc/gdm3/custom.conf && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="1.7.8">
         <BasePath>/etc/gdm3/</BasePath>
@@ -62,6 +69,7 @@
         <CorrectiveComment> Enable the autorun-never option in GDM. </CorrectiveComment>
         <Correction> echo "[org/gnome/settings-daemon/plugins/media-keys]" &gt; /etc/gdm3/custom.conf; echo "autorun-never=true" &gt;&gt; /etc/gdm3/custom.conf </Correction>
         <Verification> grep -q "autorun-never=true" /etc/gdm3/custom.conf && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="1.7.9">
         <BasePath>/etc/gdm3/</BasePath>
@@ -70,6 +78,7 @@
         <CorrectiveComment> Ensure the autorun-never option remains enabled and cannot be overridden. </CorrectiveComment>
         <Correction> echo "[org/gnome/settings-daemon/plugins/media-keys]" &gt; /etc/gdm3/custom.conf; echo "autorun-never=true" &gt;&gt; /etc/gdm3/custom.conf </Correction>
         <Verification> grep -q "autorun-never=true" /etc/gdm3/custom.conf && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="1.7.10">
         <BasePath>/etc/gdm3/</BasePath>
@@ -78,5 +87,6 @@
         <CorrectiveComment> Disable XDMCP in GDM to secure remote access. </CorrectiveComment>
         <Correction> echo "[xdmcp]" &gt; /etc/gdm3/daemon.conf; echo "Enable=false" &gt;&gt; /etc/gdm3/daemon.conf; systemctl restart gdm3 </Correction>
         <Verification> grep -q "Enable=false" /etc/gdm3/daemon.conf && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
 </RulesCIS>

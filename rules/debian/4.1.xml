@@ -6,5 +6,6 @@
         <CorrectiveComment> Ensure only a single firewall configuration utility is in use by identifying and removing any unnecessary or conflicting firewall packages. </CorrectiveComment>
         <Correction> Manual review required: use package management tools (e.g., dpkg -l) to list installed firewall utilities (such as ufw, iptables, nftables) and remove conflicting packages. </Correction>
         <Verification> echo "Manual review required" </Verification>
+        <Manual>YES</Manual>
     </Rule>
 </RulesCIS>

@@ -14,6 +14,7 @@
         <Verification>
             sysctl -n net.ipv4.ip_forward | grep -q '^0$' && echo 0 || echo 1
         </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="3.3.2">
         <BasePath>/etc/sysctl.conf</BasePath>
@@ -30,6 +31,7 @@
         <Verification>
             sysctl -n net.ipv4.conf.all.send_redirects | grep -q '^0$' && echo 0 || echo 1
         </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="3.3.3">
         <BasePath>/etc/sysctl.conf</BasePath>
@@ -46,6 +48,7 @@
         <Verification>
             sysctl -n net.ipv4.icmp_ignore_bogus_error_responses | grep -q '^1$' && echo 0 || echo 1
         </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="3.3.4">
         <BasePath>/etc/sysctl.conf</BasePath>
@@ -62,6 +65,7 @@
         <Verification>
             sysctl -n net.ipv4.icmp_echo_ignore_broadcasts | grep -q '^1$' && echo 0 || echo 1
         </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="3.3.5">
         <BasePath>/etc/sysctl.conf</BasePath>
@@ -78,6 +82,7 @@
         <Verification>
             sysctl -n net.ipv4.conf.all.accept_redirects | grep -q '^0$' && echo 0 || echo 1
         </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="3.3.6">
         <BasePath>/etc/sysctl.conf</BasePath>
@@ -94,6 +99,7 @@
         <Verification>
             sysctl -n net.ipv4.conf.all.secure_redirects | grep -q '^0$' && echo 0 || echo 1
         </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="3.3.7">
         <BasePath>/etc/sysctl.conf</BasePath>
@@ -110,6 +116,7 @@
         <Verification>
             sysctl -n net.ipv4.conf.all.rp_filter | grep -q '^1$' && echo 0 || echo 1
         </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="3.3.8">
         <BasePath>/etc/sysctl.conf</BasePath>
@@ -126,6 +133,7 @@
         <Verification>
             sysctl -n net.ipv4.conf.all.accept_source_route | grep -q '^0$' && echo 0 || echo 1
         </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="3.3.9">
         <BasePath>/etc/sysctl.conf</BasePath>
@@ -142,6 +150,7 @@
         <Verification>
             sysctl -n net.ipv4.conf.all.log_martians | grep -q '^1$' && echo 0 || echo 1
         </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="3.3.10">
         <BasePath>/etc/sysctl.conf</BasePath>
@@ -158,6 +167,7 @@
         <Verification>
             sysctl -n net.ipv4.tcp_syncookies | grep -q '^1$' && echo 0 || echo 1
         </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="3.3.11">
         <BasePath>/etc/sysctl.conf</BasePath>
@@ -174,5 +184,6 @@
         <Verification>
             sysctl -n net.ipv6.conf.all.accept_ra | grep -q '^0$' && echo 0 || echo 1
         </Verification>
+        <Manual>NO</Manual>
     </Rule>
 </RulesCIS>

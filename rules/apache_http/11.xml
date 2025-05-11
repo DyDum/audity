@@ -6,6 +6,7 @@
     <CorrectiveComment>Enable SELinux in enforcing mode by setting SELINUX=enforcing in /etc/selinux/config and running setenforce 1.</CorrectiveComment>
     <Correction>sed -i 's/^SELINUX=.*/SELINUX=enforcing/' /etc/selinux/config; setenforce 1</Correction>
     <Verification>getenforce | grep -q "Enforcing" && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
   </Rule>
   <Rule id="11.2">
     <BasePath>/usr/sbin</BasePath>
@@ -14,6 +15,7 @@
     <CorrectiveComment>Restore the default SELinux context for Apache binaries.</CorrectiveComment>
     <Correction>restorecon -Rv /usr/sbin/httpd</Correction>
     <Verification>ps -eZ | grep httpd | grep -q "httpd_t" && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
   </Rule>
   <Rule id="11.3">
     <BasePath>/etc/selinux</BasePath>
@@ -22,6 +24,7 @@
     <CorrectiveComment>Remove httpd_t from the permissive list.</CorrectiveComment>
     <Correction>semanage permissive -d httpd_t</Correction>
     <Verification>semanage permissive -l | grep -q "^httpd_t" && echo 1 || echo 0</Verification>
+    <Manual>NO</Manual>
   </Rule>
   <Rule id="11.4">
     <BasePath>/etc/selinux</BasePath>
@@ -30,5 +33,6 @@
     <CorrectiveComment>Review and disable unnecessary SELinux booleans for Apache.</CorrectiveComment>
     <Correction>Manual review required; use setsebool -P to adjust SELinux booleans as per policy</Correction>
     <Verification>Manual verification required</Verification>
+    <Manual>YES</Manual>
   </Rule>
 </RulesCIS>

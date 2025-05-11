@@ -6,6 +6,7 @@
         <CorrectiveComment> Enable ASLR by setting kernel.randomize_va_space to 2. </CorrectiveComment>
         <Correction> echo 'kernel.randomize_va_space = 2' >> /etc/sysctl.conf; sysctl -p </Correction>
         <Verification> grep 'kernel.randomize_va_space' /proc/sys/kernel/randomize_va_space | grep -q '^2$' && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="1.5.2">
         <BasePath>/etc/sysctl.conf</BasePath>
@@ -14,6 +15,7 @@
         <CorrectiveComment> Restrict ptrace by setting kernel.yama.ptrace_scope to 1. </CorrectiveComment>
         <Correction> echo 'kernel.yama.ptrace_scope = 1' >> /etc/sysctl.conf; sysctl -p </Correction>
         <Verification> grep 'kernel.yama.ptrace_scope' /proc/sys/kernel/yama/ptrace_scope | grep -q '^1$' && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="1.5.3">
         <BasePath>/etc/sysctl.conf</BasePath>
@@ -22,5 +24,6 @@
         <CorrectiveComment> Restrict core dumps by setting fs.suid_dumpable to 0 and limiting the core file size. </CorrectiveComment>
         <Correction> echo 'fs.suid_dumpable = 0' >> /etc/sysctl.conf; sysctl -p; ulimit -c 0 </Correction>
         <Verification> grep 'fs.suid_dumpable' /proc/sys/fs/suid_dumpable | grep -q '^0$' && ulimit -c | grep -q '^0$' && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
 </RulesCIS>

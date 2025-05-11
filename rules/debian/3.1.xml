@@ -6,6 +6,7 @@
         <CorrectiveComment> Review and document the IPv6 configuration by running "ip -6 addr show". This is a manual audit. </CorrectiveComment>
         <Correction>ip -6 addr show</Correction>
         <Verification>echo "Manual review required"</Verification>
+        <Manual>VERIFICATION</Manual>
     </Rule>
     <Rule id="3.1.2">
         <BasePath>/usr/sbin/</BasePath>
@@ -14,6 +15,7 @@
         <CorrectiveComment> Disable wireless interfaces by using "rfkill block all" or unloading wireless drivers. </CorrectiveComment>
         <Correction>rfkill block all</Correction>
         <Verification> rfkill list | grep -E "Wireless" | grep -q "Soft blocked: yes" && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="3.1.3">
         <BasePath>/etc/systemd/system/</BasePath>
@@ -22,5 +24,6 @@
         <CorrectiveComment> Disable and stop the Bluetooth service if it is not required. </CorrectiveComment>
         <Correction>systemctl disable bluetooth; systemctl stop bluetooth</Correction>
         <Verification> systemctl is-active bluetooth | grep -q "inactive" && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
     </RulesCIS>

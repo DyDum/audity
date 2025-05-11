@@ -6,6 +6,7 @@
     <CorrectiveComment>Set TimeOut to 10 or less.</CorrectiveComment>
     <Correction>sed -i 's/^TimeOut .*/TimeOut 10/' /etc/httpd/conf/httpd.conf; systemctl restart httpd</Correction>
     <Verification>grep -q "^TimeOut 10" /etc/httpd/conf/httpd.conf && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
   </Rule>
   <Rule id="9.2">
     <BasePath>/etc/httpd/conf</BasePath>
@@ -14,6 +15,7 @@
     <CorrectiveComment>Enable KeepAlive in the Apache configuration.</CorrectiveComment>
     <Correction>sed -i 's/^#KeepAlive On/KeepAlive On/' /etc/httpd/conf/httpd.conf; systemctl restart httpd</Correction>
     <Verification>grep -q "^KeepAlive On" /etc/httpd/conf/httpd.conf && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
   </Rule>
   <Rule id="9.3">
     <BasePath>/etc/httpd/conf</BasePath>
@@ -22,6 +24,7 @@
     <CorrectiveComment>Set MaxKeepAliveRequests to 100 or greater.</CorrectiveComment>
     <Correction>sed -i 's/^MaxKeepAliveRequests .*/MaxKeepAliveRequests 100/' /etc/httpd/conf/httpd.conf; systemctl restart httpd</Correction>
     <Verification>grep -q "^MaxKeepAliveRequests 100" /etc/httpd/conf/httpd.conf && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
   </Rule>
   <Rule id="9.4">
     <BasePath>/etc/httpd/conf</BasePath>
@@ -30,6 +33,7 @@
     <CorrectiveComment>Set KeepAliveTimeout to 15 or less.</CorrectiveComment>
     <Correction>sed -i 's/^KeepAliveTimeout .*/KeepAliveTimeout 15/' /etc/httpd/conf/httpd.conf; systemctl restart httpd</Correction>
     <Verification>grep -q "^KeepAliveTimeout 15" /etc/httpd/conf/httpd.conf && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
   </Rule>
   <Rule id="9.5">
     <BasePath>/etc/httpd/conf</BasePath>
@@ -38,6 +42,7 @@
     <CorrectiveComment>Set request header timeout to 40 seconds or less using mod_reqtimeout.</CorrectiveComment>
     <Correction>echo "RequestReadTimeout header=40" >> /etc/httpd/conf/httpd.conf; systemctl restart httpd</Correction>
     <Verification>grep -q "RequestReadTimeout header=40" /etc/httpd/conf/httpd.conf && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
   </Rule>
   <Rule id="9.6">
     <BasePath>/etc/httpd/conf</BasePath>
@@ -46,5 +51,6 @@
     <CorrectiveComment>Set request body timeout to 20 seconds or less using mod_reqtimeout.</CorrectiveComment>
     <Correction>echo "RequestReadTimeout body=20" >> /etc/httpd/conf/httpd.conf; systemctl restart httpd</Correction>
     <Verification>grep -q "RequestReadTimeout body=20" /etc/httpd/conf/httpd.conf && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
   </Rule>
 </RulesCIS>

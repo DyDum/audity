@@ -1,46 +1,51 @@
-<ReglesCIS>
-    <Regle id="9.1">
-    <CheminBase>/etc/mysql/</CheminBase>
-    <NomFichier>my.cnf</NomFichier>
-    <RegleNonConforme>Replication traffic is not encrypted, which may expose sensitive data to interception.</RegleNonConforme>
-    <RegleCorrigee>Ensure replication traffic is encrypted using SSL/TLS.</RegleCorrigee>
+<RulesCIS>
+    <Rule id="9.1">
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>my.cnf</FileName>
+    <NonCompliantComment>Replication traffic is not encrypted, which may expose sensitive data to interception.</NonCompliantComment>
+    <CorrectiveComment>Ensure replication traffic is encrypted using SSL/TLS.</CorrectiveComment>
     <Correction>sed -i '/\[mysqld\]/a master_ssl=ON; master_ssl_cert=/etc/mysql/ssl/ca-cert.pem; master_ssl_key=/etc/mysql/ssl/ca-key.pem' /etc/mysql/my.cnf; systemctl restart mariadb</Correction>
     <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'master_ssl';" | grep -q 'ON' && echo 0 || echo 1</Verification>
-  </Regle>
+    <Manual>NO</Manual>
+  </Rule>
 
-  <Regle id="9.2">
-    <CheminBase>/etc/mysql/</CheminBase>
-    <NomFichier>my.cnf</NomFichier>
-    <RegleNonConforme>The 'MASTER_SSL_VERIFY_SERVER_CERT' setting is disabled, which may allow untrusted SSL certificates.</RegleNonConforme>
-    <RegleCorrigee>Ensure 'MASTER_SSL_VERIFY_SERVER_CERT' is enabled for SSL certificate verification.</RegleCorrigee>
+  <Rule id="9.2">
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>my.cnf</FileName>
+    <NonCompliantComment>The 'MASTER_SSL_VERIFY_SERVER_CERT' setting is disabled, which may allow untrusted SSL certificates.</NonCompliantComment>
+    <CorrectiveComment>Ensure 'MASTER_SSL_VERIFY_SERVER_CERT' is enabled for SSL certificate verification.</CorrectiveComment>
     <Correction>sed -i '/\[mysqld\]/a master_ssl_verify_server_cert=1' /etc/mysql/my.cnf; systemctl restart mariadb</Correction>
     <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'master_ssl_verify_server_cert';" | grep -q '1' && echo 0 || echo 1</Verification>
-  </Regle>
+    <Manual>NO</Manual>
+  </Rule>
 
-  <Regle id="9.3">
-    <CheminBase>/etc/mysql/</CheminBase>
-    <NomFichier>mysql.user</NomFichier>
-    <RegleNonConforme>Replication users have 'SUPER' privileges, which may allow them to perform unauthorized actions.</RegleNonConforme>
-    <RegleCorrigee>Ensure 'SUPER' privilege is not assigned to replication users.</RegleCorrigee>
+  <Rule id="9.3">
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>mysql.user</FileName>
+    <NonCompliantComment>Replication users have 'SUPER' privileges, which may allow them to perform unauthorized actions.</NonCompliantComment>
+    <CorrectiveComment>Ensure 'SUPER' privilege is not assigned to replication users.</CorrectiveComment>
     <Correction>mysql -u root -p -e "REVOKE SUPER ON *.* FROM 'replication_user'@'%';"</Correction>
     <Verification>mysql -u root -p -e "SELECT user,host,super_priv FROM mysql.user WHERE user='replication_user';" | grep -q 'N' && echo 0 || echo 1</Verification>
-  </Regle>
+    <Manual>NO</Manual>
+  </Rule>
 
-  <Regle id="9.4">
-    <CheminBase>/etc/mysql/</CheminBase>
-    <NomFichier>my.cnf</NomFichier>
-    <RegleNonConforme>Weak or unapproved ciphers are used for replication, reducing the security of the connection.</RegleNonConforme>
-    <RegleCorrigee>Ensure only strong and approved ciphers are used for replication (e.g., ECDHE-RSA-AES128-GCM-SHA256).</RegleCorrigee>
+  <Rule id="9.4">
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>my.cnf</FileName>
+    <NonCompliantComment>Weak or unapproved ciphers are used for replication, reducing the security of the connection.</NonCompliantComment>
+    <CorrectiveComment>Ensure only strong and approved ciphers are used for replication (e.g., ECDHE-RSA-AES128-GCM-SHA256).</CorrectiveComment>
     <Correction>sed -i '/\[mysqld\]/a master_tls_ciphers=ECDHE-RSA-AES128-GCM-SHA256' /etc/mysql/my.cnf; systemctl restart mariadb</Correction>
     <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'master_tls_ciphers';" | grep -q 'ECDHE-RSA-AES128-GCM-SHA256' && echo 0 || echo 1</Verification>
-  </Regle>
+    <Manual>NO</Manual>
+  </Rule>
 
-  <Regle id="9.5">
-    <CheminBase>/etc/mysql/</CheminBase>
-    <NomFichier>my.cnf</NomFichier>
-    <RegleNonConforme>Mutual TLS is not enabled for replication, which may allow unauthenticated connections.</RegleNonConforme>
-    <RegleCorrigee>Enable mutual TLS for replication by configuring client and server certificates.</RegleCorrigee>
+  <Rule id="9.5">
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>my.cnf</FileName>
+    <NonCompliantComment>Mutual TLS is not enabled for replication, which may allow unauthenticated connections.</NonCompliantComment>
+    <CorrectiveComment>Enable mutual TLS for replication by configuring client and server certificates.</CorrectiveComment>
     <Correction>sed -i '/\[mysqld\]/a master_ssl_cert=/etc/mysql/ssl/server-cert.pem; master_ssl_key=/etc/mysql/ssl/server-key.pem; master_ssl_ca=/etc/mysql/ssl/ca-cert.pem' /etc/mysql/my.cnf; systemctl restart mariadb</Correction>
     <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'master_ssl_cert';" | grep -q '/etc/mysql/ssl/server-cert.pem' && echo 0 || echo 1</Verification>
-  </Regle>
-</ReglesCIS>
+    <Manual>NO</Manual>
+  </Rule>
+</RulesCIS>

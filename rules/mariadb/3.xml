@@ -1,93 +1,103 @@
-<ReglesCIS>
+<RulesCIS>
   <!-- File Permissions (3.*) -->
 
-  <Regle id="3.1">
-    <CheminBase>/var/lib/mysql/</CheminBase>
-    <NomFichier>datadir</NomFichier>
-    <RegleNonConforme>The 'datadir' directory does not have appropriate permissions, increasing the risk of unauthorized access.</RegleNonConforme>
-    <RegleCorrigee>Ensure the 'datadir' directory is owned by the mysql user and has 700 permissions.</RegleCorrigee>
+  <Rule id="3.1">
+    <BasePath>/var/lib/mysql/</BasePath>
+    <FileName>datadir</FileName>
+    <NonCompliantComment>The 'datadir' directory does not have appropriate permissions, increasing the risk of unauthorized access.</NonCompliantComment>
+    <CorrectiveComment>Ensure the 'datadir' directory is owned by the mysql user and has 700 permissions.</CorrectiveComment>
     <Correction>chown -R mysql:mysql /var/lib/mysql; chmod -R 700 /var/lib/mysql</Correction>
     <Verification>stat -c "%a %U:%G" /var/lib/mysql | grep -q '700 mysql:mysql' && echo 0 || echo 1</Verification>
-  </Regle>
+    <Manual>NO</Manual>
+  </Rule>
 
-  <Regle id="3.2">
-    <CheminBase>/var/log/mysql/</CheminBase>
-    <NomFichier>log_bin_basename</NomFichier>
-    <RegleNonConforme>The 'log_bin_basename' files do not have appropriate permissions, which may expose log data to unauthorized users.</RegleNonConforme>
-    <RegleCorrigee>Ensure 'log_bin_basename' files are owned by the mysql user and have 640 permissions.</RegleCorrigee>
+  <Rule id="3.2">
+    <BasePath>/var/log/mysql/</BasePath>
+    <FileName>log_bin_basename</FileName>
+    <NonCompliantComment>The 'log_bin_basename' files do not have appropriate permissions, which may expose log data to unauthorized users.</NonCompliantComment>
+    <CorrectiveComment>Ensure 'log_bin_basename' files are owned by the mysql user and have 640 permissions.</CorrectiveComment>
     <Correction>chown mysql:mysql /var/log/mysql/log_bin*; chmod 640 /var/log/mysql/log_bin*</Correction>
     <Verification>stat -c "%a %U:%G" /var/log/mysql/log_bin* | grep -q '640 mysql:mysql' && echo 0 || echo 1</Verification>
-  </Regle>
+    <Manual>NO</Manual>
+  </Rule>
 
-  <Regle id="3.3">
-    <CheminBase>/var/log/mysql/</CheminBase>
-    <NomFichier>log_error</NomFichier>
-    <RegleNonConforme>The 'log_error' file does not have appropriate permissions, which may expose error logs to unauthorized users.</RegleNonConforme>
-    <RegleCorrigee>Ensure the 'log_error' file is owned by the mysql user and has 640 permissions.</RegleCorrigee>
+  <Rule id="3.3">
+    <BasePath>/var/log/mysql/</BasePath>
+    <FileName>log_error</FileName>
+    <NonCompliantComment>The 'log_error' file does not have appropriate permissions, which may expose error logs to unauthorized users.</NonCompliantComment>
+    <CorrectiveComment>Ensure the 'log_error' file is owned by the mysql user and has 640 permissions.</CorrectiveComment>
     <Correction>chown mysql:mysql /var/log/mysql/error.log; chmod 640 /var/log/mysql/error.log</Correction>
     <Verification>stat -c "%a %U:%G" /var/log/mysql/error.log | grep -q '640 mysql:mysql' && echo 0 || echo 1</Verification>
-  </Regle>
+    <Manual>NO</Manual>
+  </Rule>
 
-  <Regle id="3.4">
-    <CheminBase>/var/log/mysql/</CheminBase>
-    <NomFichier>slow_query_log</NomFichier>
-    <RegleNonConforme>The 'slow_query_log' file does not have appropriate permissions, which may expose slow query data.</RegleNonConforme>
-    <RegleCorrigee>Ensure the 'slow_query_log' file is owned by the mysql user and has 640 permissions.</RegleCorrigee>
+  <Rule id="3.4">
+    <BasePath>/var/log/mysql/</BasePath>
+    <FileName>slow_query_log</FileName>
+    <NonCompliantComment>The 'slow_query_log' file does not have appropriate permissions, which may expose slow query data.</NonCompliantComment>
+    <CorrectiveComment>Ensure the 'slow_query_log' file is owned by the mysql user and has 640 permissions.</CorrectiveComment>
     <Correction>chown mysql:mysql /var/log/mysql/slow.log; chmod 640 /var/log/mysql/slow.log</Correction>
     <Verification>stat -c "%a %U:%G" /var/log/mysql/slow.log | grep -q '640 mysql:mysql' && echo 0 || echo 1</Verification>
-  </Regle>
+    <Manual>NO</Manual>
+  </Rule>
 
-  <Regle id="3.5">
-    <CheminBase>/var/log/mysql/</CheminBase>
-    <NomFichier>relay_log_basename</NomFichier>
-    <RegleNonConforme>The 'relay_log_basename' files do not have appropriate permissions, which may expose relay log data.</RegleNonConforme>
-    <RegleCorrigee>Ensure 'relay_log_basename' files are owned by the mysql user and have 640 permissions.</RegleCorrigee>
+  <Rule id="3.5">
+    <BasePath>/var/log/mysql/</BasePath>
+    <FileName>relay_log_basename</FileName>
+    <NonCompliantComment>The 'relay_log_basename' files do not have appropriate permissions, which may expose relay log data.</NonCompliantComment>
+    <CorrectiveComment>Ensure 'relay_log_basename' files are owned by the mysql user and have 640 permissions.</CorrectiveComment>
     <Correction>chown mysql:mysql /var/log/mysql/relay_log*; chmod 640 /var/log/mysql/relay_log*</Correction>
     <Verification>stat -c "%a %U:%G" /var/log/mysql/relay_log* | grep -q '640 mysql:mysql' && echo 0 || echo 1</Verification>
-  </Regle>
+    <Manual>NO</Manual>
+  </Rule>
 
-  <Regle id="3.6">
-    <CheminBase>/var/log/mysql/</CheminBase>
-    <NomFichier>general_log_file</NomFichier>
-    <RegleNonConforme>The 'general_log_file' does not have appropriate permissions, which may expose log data to unauthorized users.</RegleNonConforme>
-    <RegleCorrigee>Ensure the 'general_log_file' is owned by the mysql user and has 640 permissions.</RegleCorrigee>
+  <Rule id="3.6">
+    <BasePath>/var/log/mysql/</BasePath>
+    <FileName>general_log_file</FileName>
+    <NonCompliantComment>The 'general_log_file' does not have appropriate permissions, which may expose log data to unauthorized users.</NonCompliantComment>
+    <CorrectiveComment>Ensure the 'general_log_file' is owned by the mysql user and has 640 permissions.</CorrectiveComment>
     <Correction>chown mysql:mysql /var/log/mysql/general.log; chmod 640 /var/log/mysql/general.log</Correction>
     <Verification>stat -c "%a %U:%G" /var/log/mysql/general.log | grep -q '640 mysql:mysql' && echo 0 || echo 1</Verification>
-  </Regle>
+    <Manual>NO</Manual>
+  </Rule>
 
-  <Regle id="3.7">
-    <CheminBase>/etc/mysql/ssl/</CheminBase>
-    <NomFichier>private-key.pem</NomFichier>
-    <RegleNonConforme>SSL key files do not have appropriate permissions, which may expose them to unauthorized access.</RegleNonConforme>
-    <RegleCorrigee>Ensure SSL key files are owned by mysql and have 600 permissions.</RegleCorrigee>
+  <Rule id="3.7">
+    <BasePath>/etc/mysql/ssl/</BasePath>
+    <FileName>private-key.pem</FileName>
+    <NonCompliantComment>SSL key files do not have appropriate permissions, which may expose them to unauthorized access.</NonCompliantComment>
+    <CorrectiveComment>Ensure SSL key files are owned by mysql and have 600 permissions.</CorrectiveComment>
     <Correction>chown mysql:mysql /etc/mysql/ssl/private-key.pem; chmod 600 /etc/mysql/ssl/private-key.pem</Correction>
     <Verification>stat -c "%a %U:%G" /etc/mysql/ssl/private-key.pem | grep -q '600 mysql:mysql' && echo 0 || echo 1</Verification>
-  </Regle>
+    <Manual>NO</Manual>
+  </Rule>
 
-  <Regle id="3.8">
-    <CheminBase>/usr/lib/mysql/plugin/</CheminBase>
-    <NomFichier>N/A</NomFichier>
-    <RegleNonConforme>The plugin directory does not have appropriate permissions, increasing the risk of unauthorized changes.</RegleNonConforme>
-    <RegleCorrigee>Ensure the plugin directory is owned by mysql and has 750 permissions.</RegleCorrigee>
+  <Rule id="3.8">
+    <BasePath>/usr/lib/mysql/plugin/</BasePath>
+    <FileName>N/A</FileName>
+    <NonCompliantComment>The plugin directory does not have appropriate permissions, increasing the risk of unauthorized changes.</NonCompliantComment>
+    <CorrectiveComment>Ensure the plugin directory is owned by mysql and has 750 permissions.</CorrectiveComment>
     <Correction>chown -R mysql:mysql /usr/lib/mysql/plugin; chmod -R 750 /usr/lib/mysql/plugin</Correction>
     <Verification>stat -c "%a %U:%G" /usr/lib/mysql/plugin | grep -q '750 mysql:mysql' && echo 0 || echo 1</Verification>
-  </Regle>
+    <Manual>NO</Manual>
+  </Rule>
 
-  <Regle id="3.9">
-    <CheminBase>/var/log/mysql/</CheminBase>
-    <NomFichier>server_audit_file_path</NomFichier>
-    <RegleNonConforme>The server audit log does not have appropriate permissions, exposing audit data to unauthorized users.</RegleNonConforme>
-    <RegleCorrigee>Ensure the server audit log is owned by mysql and has 640 permissions.</RegleCorrigee>
+  <Rule id="3.9">
+    <BasePath>/var/log/mysql/</BasePath>
+    <FileName>server_audit_file_path</FileName>
+    <NonCompliantComment>The server audit log does not have appropriate permissions, exposing audit data to unauthorized users.</NonCompliantComment>
+    <CorrectiveComment>Ensure the server audit log is owned by mysql and has 640 permissions.</CorrectiveComment>
     <Correction>chown mysql:mysql /var/log/mysql/audit.log; chmod 640 /var/log/mysql/audit.log</Correction>
     <Verification>stat -c "%a %U:%G" /var/log/mysql/audit.log | grep -q '640 mysql:mysql' && echo 0 || echo 1</Verification>
-  </Regle>
+    <Manual>NO</Manual>
+  </Rule>
 
-  <Regle id="3.10">
-    <CheminBase>/etc/mysql/</CheminBase>
-    <NomFichier>encryption.cnf</NomFichier>
-    <RegleNonConforme>Encryption key files do not have appropriate permissions, increasing security risks.</RegleNonConforme>
-    <RegleCorrigee>Ensure encryption key files are owned by mysql and have 600 permissions.</RegleCorrigee>
+  <Rule id="3.10">
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>encryption.cnf</FileName>
+    <NonCompliantComment>Encryption key files do not have appropriate permissions, increasing security risks.</NonCompliantComment>
+    <CorrectiveComment>Ensure encryption key files are owned by mysql and have 600 permissions.</CorrectiveComment>
     <Correction>chown mysql:mysql /etc/mysql/encryption.cnf; chmod 600 /etc/mysql/encryption.cnf</Correction>
     <Verification>stat -c "%a %U:%G" /etc/mysql/encryption.cnf | grep -q '600 mysql:mysql' && echo 0 || echo 1</Verification>
-  </Regle>
-</ReglesCIS>
+    <Manual>NO</Manual>
+  </Rule>
+</RulesCIS>

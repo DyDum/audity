@@ -6,6 +6,7 @@
         <CorrectiveComment> Disable log forwarding by setting ForwardToSyslog to no. </CorrectiveComment>
         <Correction> sed -i 's/^#\?ForwardToSyslog=.*/ForwardToSyslog=no/' /etc/systemd/journald.conf; systemctl restart systemd-journald </Correction>
         <Verification> grep '^ForwardToSyslog=no' /etc/systemd/journald.conf && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="6.1.2.1.2">
         <BasePath>/etc/systemd/journald.conf</BasePath>
@@ -14,6 +15,7 @@
         <CorrectiveComment> Enable compression by setting Compress to yes. </CorrectiveComment>
         <Correction> sed -i 's/^#\?Compress=.*/Compress=yes/' /etc/systemd/journald.conf; systemctl restart systemd-journald </Correction>
         <Verification> grep '^Compress=yes' /etc/systemd/journald.conf && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="6.1.2.1.3">
         <BasePath>/etc/systemd/journald.conf</BasePath>
@@ -22,6 +24,7 @@
         <CorrectiveComment> Set Storage to persistent to ensure logs are retained across reboots. </CorrectiveComment>
         <Correction> sed -i 's/^#\?Storage=.*/Storage=persistent/' /etc/systemd/journald.conf; systemctl restart systemd-journald </Correction>
         <Verification> grep '^Storage=persistent' /etc/systemd/journald.conf && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="6.1.2.2">
         <BasePath>/etc/systemd/journald.conf</BasePath>
@@ -30,6 +33,7 @@
         <CorrectiveComment> Enable log compression by setting Compress to yes. </CorrectiveComment>
         <Correction> sed -i 's/^#\?Compress=.*/Compress=yes/' /etc/systemd/journald.conf; systemctl restart systemd-journald </Correction>
         <Verification> grep '^Compress=yes' /etc/systemd/journald.conf && systemctl is-active systemd-journald | grep -q "active" && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="6.1.2.3">
         <BasePath>/etc/systemd/journald.conf</BasePath>
@@ -38,6 +42,7 @@
         <CorrectiveComment> Configure Storage to persistent in journald.conf to preserve logs across reboots. </CorrectiveComment>
         <Correction> sed -i 's/^#\?Storage=.*/Storage=persistent/' /etc/systemd/journald.conf; systemctl restart systemd-journald </Correction>
         <Verification> grep '^Storage=persistent' /etc/systemd/journald.conf && systemctl is-active systemd-journald | grep -q "active" && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="6.1.3.1">
         <BasePath>/var/log</BasePath>
@@ -46,6 +51,7 @@
         <CorrectiveComment> Set secure permissions (e.g., 640) on all log files in /var/log. </CorrectiveComment>
         <Correction> find /var/log -type f -exec chmod 640 {} \; </Correction>
         <Verification> find /var/log -type f | xargs -I {} stat -c "%a" {} | grep -q "^640" && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="6.1.3.2">
         <BasePath>/var/log</BasePath>
@@ -54,6 +60,7 @@
         <CorrectiveComment> Ensure that all log files are owned by root and the appropriate group (e.g., adm or root). </CorrectiveComment>
         <Correction> chown -R root:adm /var/log </Correction>
         <Verification> find /var/log -type f -exec stat -c "%U:%G" {} \; | grep -v "root:adm" && echo 1 || echo 0 </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="6.1.3.3">
         <BasePath>/etc/logrotate.d/</BasePath>
@@ -62,6 +69,7 @@
         <CorrectiveComment> Configure logrotate to manage log file size and retention for /var/log. </CorrectiveComment>
         <Correction> echo "/var/log/*.log { daily rotate 7 compress missingok notifempty }" &gt; /etc/logrotate.d/rsyslog </Correction>
         <Verification> grep -q "/var/log/*.log" /etc/logrotate.d/rsyslog && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="6.1.3.4">
         <BasePath>/etc/fstab</BasePath>
@@ -70,6 +78,7 @@
         <CorrectiveComment> Configure a separate partition for /var/log in /etc/fstab and move existing logs accordingly. </CorrectiveComment>
         <Correction> echo "/dev/sdX /var/log ext4 defaults 0 0" &gt;&gt; /etc/fstab; mount -o remount /var/log </Correction>
         <Verification> grep -q "/var/log" /etc/fstab && mount | grep -q "/var/log" && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="6.1.3.5">
         <BasePath>/etc/rsyslog.conf</BasePath>
@@ -78,6 +87,7 @@
         <CorrectiveComment> Configure rsyslog to forward logs to a secure remote log server. </CorrectiveComment>
         <Correction> echo "*.* @@remote-log-server:514" &gt;&gt; /etc/rsyslog.conf; systemctl restart rsyslog </Correction>
         <Verification> grep -q "@@remote-log-server:514" /etc/rsyslog.conf && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="6.1.3.6">
         <BasePath>/var/backups/</BasePath>
@@ -86,6 +96,7 @@
         <CorrectiveComment> Implement a scheduled backup of /var/log to a secure backup location. </CorrectiveComment>
         <Correction> echo "tar -czf /var/backups/logs-$(date +%F).tar.gz /var/log" &gt; /var/backups/log_backup.sh; chmod +x /var/backups/log_backup.sh; (crontab -l ; echo "0 2 * * * /var/backups/log_backup.sh") | crontab - </Correction>
         <Verification> test -f /var/backups/log_backup.sh && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="6.1.3.7">
         <BasePath>/etc/aide.conf</BasePath>
@@ -94,6 +105,7 @@
         <CorrectiveComment> Deploy and configure an integrity checking tool (e.g., AIDE) to monitor /var/log. </CorrectiveComment>
         <Correction> apt-get install -y aide; aideinit; cp /var/lib/aide/aide.db.new /var/lib/aide/aide.db </Correction>
         <Verification> test -f /var/lib/aide/aide.db && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="6.1.3.8">
         <BasePath>/etc/logrotate.d/</BasePath>
@@ -102,6 +114,7 @@
         <CorrectiveComment> Configure log rotation for critical log files by creating a dedicated logrotate configuration to rotate and compress logs. </CorrectiveComment>
         <Correction> echo "/var/log/*.log { daily rotate 7 compress missingok notifempty }" &gt; /etc/logrotate.d/custom_logrotate.conf </Correction>
         <Verification> test -f /etc/logrotate.d/custom_logrotate.conf && grep -q "/var/log/*.log" /etc/logrotate.d/custom_logrotate.conf && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="6.1.4.1">
         <BasePath>/</BasePath>
@@ -110,5 +123,6 @@
         <CorrectiveComment> Disable any additional logging systems so that only systemd-journald is in use. </CorrectiveComment>
         <Correction> systemctl disable rsyslog; systemctl stop rsyslog </Correction>
         <Verification> systemctl is-active rsyslog | grep -q "inactive" && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
 </RulesCIS>

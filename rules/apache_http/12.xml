@@ -6,6 +6,7 @@
     <CorrectiveComment>Enable the AppArmor framework and ensure it is running in enforce mode.</CorrectiveComment>
     <Correction>systemctl enable apparmor; systemctl start apparmor</Correction>
     <Verification>aa-status | grep -q "profiles are in enforce mode" && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
   </Rule>
   <Rule id="12.2">
     <BasePath>/etc/apparmor.d</BasePath>
@@ -14,6 +15,7 @@
     <CorrectiveComment>Review and adjust the Apache AppArmor profile as per best practices.</CorrectiveComment>
     <Correction>Manual review required; update /etc/apparmor.d/usr.sbin.apache2 as needed</Correction>
     <Verification>Manual verification required</Verification>
+    <Manual>YES</Manual>
   </Rule>
   <Rule id="12.3">
     <BasePath>/etc/apparmor.d</BasePath>
@@ -22,5 +24,6 @@
     <CorrectiveComment>Set the Apache AppArmor profile to enforce mode.</CorrectiveComment>
     <Correction>aa-enforce /etc/apparmor.d/usr.sbin.apache2; systemctl restart apache2</Correction>
     <Verification>aa-status | grep "usr.sbin.apache2" | grep -q "enforce mode" && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
   </Rule>
 </RulesCIS>

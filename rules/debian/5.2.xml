@@ -6,6 +6,7 @@
         <CorrectiveComment>Install the sudo package to manage privilege escalation securely.</CorrectiveComment>
         <Correction>apt-get install -y sudo</Correction>
         <Verification>dpkg -l | grep -q sudo && echo 0 || echo 1</Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="5.2.2">
         <BasePath>/etc/sudoers</BasePath>
@@ -14,6 +15,7 @@
         <CorrectiveComment>Configure sudo to use a pty by ensuring "Defaults use_pty" is present in the sudoers file.</CorrectiveComment>
         <Correction>echo "Defaults use_pty" >> /etc/sudoers</Correction>
         <Verification>grep -q "^Defaults use_pty" /etc/sudoers && echo 0 || echo 1</Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="5.2.3">
         <BasePath>/var/log/</BasePath>
@@ -22,6 +24,7 @@
         <CorrectiveComment>Create a sudo log file and configure sudo to log commands to it.</CorrectiveComment>
         <Correction>touch /var/log/sudo.log; chmod 600 /var/log/sudo.log; echo "Defaults logfile=/var/log/sudo.log" >> /etc/sudoers</Correction>
         <Verification>test -f /var/log/sudo.log && echo 0 || echo 1</Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="5.2.4">
         <BasePath>/etc/sudoers</BasePath>
@@ -30,6 +33,7 @@
         <CorrectiveComment>Ensure sudoers is configured to require authentication for all sudo commands.</CorrectiveComment>
         <Correction>sed -i 's/^\(Defaults.*\)\!authenticate/\1authenticate/' /etc/sudoers</Correction>
         <Verification>grep -q "Defaults.*authenticate" /etc/sudoers && echo 0 || echo 1</Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="5.2.5">
         <BasePath>/etc/sudoers</BasePath>
@@ -38,6 +42,7 @@
         <CorrectiveComment>Review sudoers to ensure that re-authentication is enabled and not disabled globally.</CorrectiveComment>
         <Correction>echo "# Ensure re-authentication is enabled" >> /etc/sudoers</Correction>
         <Verification>echo "Manual review required"</Verification>
+        <Manual>VERIFICATION</Manual>
     </Rule>
     <Rule id="5.2.6">
         <BasePath>/etc/sudoers</BasePath>
@@ -46,6 +51,7 @@
         <CorrectiveComment>Set the sudo authentication timeout to a reasonable value (e.g., 5 minutes) using Defaults timestamp_timeout=5.</CorrectiveComment>
         <Correction>echo "Defaults timestamp_timeout=5" >> /etc/sudoers</Correction>
         <Verification>grep -q "Defaults timestamp_timeout=5" /etc/sudoers && echo 0 || echo 1</Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="5.2.7">
         <BasePath>/etc/login.defs</BasePath>
@@ -54,5 +60,6 @@
         <CorrectiveComment>Restrict access to the su command by modifying its permissions and assigning it to an authorized group.</CorrectiveComment>
         <Correction>chmod 750 /bin/su; chown root:authorizedgroup /bin/su</Correction>
         <Verification>stat -c "%a" /bin/su | grep -q "^750$" && echo 0 || echo 1</Verification>
+        <Manual>NO</Manual>
     </Rule>
 </RulesCIS>

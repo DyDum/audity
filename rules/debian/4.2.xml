@@ -6,6 +6,7 @@
         <CorrectiveComment>Install UFW to provide basic firewall functionality.</CorrectiveComment>
         <Correction>apt-get install -y ufw</Correction>
         <Verification>dpkg -l | grep -q ufw && echo 0 || echo 1</Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="4.2.2">
         <BasePath>/usr/sbin/</BasePath>
@@ -14,6 +15,7 @@
         <CorrectiveComment>Remove iptables-persistent when using UFW.</CorrectiveComment>
         <Correction>apt-get purge -y iptables-persistent</Correction>
         <Verification>dpkg -l | grep -q iptables-persistent && echo 1 || echo 0</Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="4.2.3">
         <BasePath>/etc/systemd/system/</BasePath>
@@ -22,6 +24,7 @@
         <CorrectiveComment>Enable and start the UFW service.</CorrectiveComment>
         <Correction>systemctl enable ufw; systemctl start ufw</Correction>
         <Verification>systemctl is-active ufw | grep -q "active" && echo 0 || echo 1</Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="4.2.4">
     <BasePath>/etc/ufw/</BasePath>
@@ -30,6 +33,7 @@
         <CorrectiveComment>Configure UFW to allow incoming and outgoing traffic on the loopback interface.</CorrectiveComment>
         <Correction>ufw allow in on lo; ufw allow out on lo</Correction>
         <Verification>ufw status verbose | grep -q "lo" && echo 0 || echo 1</Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="4.2.5">
         <BasePath>/etc/ufw/</BasePath>
@@ -38,6 +42,7 @@
         <CorrectiveComment>Manually configure outbound rules as per system requirements.</CorrectiveComment>
         <Correction>echo "Manual configuration required: review and configure UFW outbound rules"</Correction>
         <Verification>echo "Manual verification required"</Verification>
+        <Manual>YES</Manual>
     </Rule>
     <Rule id="4.2.6">
         <BasePath>/etc/ufw/</BasePath>
@@ -46,6 +51,7 @@
         <CorrectiveComment>Ensure UFW rules are defined for all open ports.</CorrectiveComment>
         <Correction>echo "Manual configuration required: review open ports and add corresponding UFW rules"</Correction>
         <Verification>echo "Manual verification required"</Verification>
+        <Manual>YES</Manual>
     </Rule>
     <Rule id="4.2.7">
         <BasePath>/etc/ufw/</BasePath>
@@ -54,5 +60,6 @@
         <CorrectiveComment>Set UFW's default policy to deny incoming connections and allow outgoing traffic.</CorrectiveComment>
         <Correction>ufw default deny incoming; ufw default allow outgoing; ufw reload</Correction>
         <Verification>ufw status | grep -q "Default: deny (incoming)" && echo 0 || echo 1</Verification>
+        <Manual>NO</Manual>
     </Rule>
 </RulesCIS>

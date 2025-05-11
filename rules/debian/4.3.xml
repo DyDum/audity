@@ -6,6 +6,7 @@
         <CorrectiveComment> Install nftables to manage firewall rules efficiently. </CorrectiveComment>
         <Correction>apt-get install -y nftables</Correction>
         <Verification>dpkg -l | grep -q nftables && echo 0 || echo 1</Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="4.3.2">
         <BasePath>/etc/</BasePath>
@@ -14,6 +15,7 @@
         <CorrectiveComment> Save the current nftables ruleset to /etc/nftables.conf and enable the nftables service to load it at boot. </CorrectiveComment>
         <Correction>nft list ruleset &gt; /etc/nftables.conf; systemctl enable nftables</Correction>
         <Verification>test -f /etc/nftables.conf && systemctl is-enabled nftables | grep -q "enabled" && echo 0 || echo 1</Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="4.3.3">
         <BasePath>/usr/sbin/</BasePath>
@@ -22,6 +24,7 @@
         <CorrectiveComment> Uninstall or disable iptables to avoid conflicts with nftables. </CorrectiveComment>
         <Correction>apt-get purge -y iptables</Correction>
         <Verification>dpkg -l | grep -q iptables && echo 1 || echo 0</Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="4.3.4">
         <BasePath>/etc/</BasePath>
@@ -30,6 +33,7 @@
         <CorrectiveComment> Manually flush iptables rules to ensure nftables fully manages the firewall. </CorrectiveComment>
         <Correction> iptables -F; iptables -X </Correction>
         <Verification> echo "Manual review required" </Verification>
+        <Manual>VERIFICATION</Manual>
     </Rule>
     <Rule id="4.3.5">
         <BasePath>/etc/nftables.conf</BasePath>
@@ -38,6 +42,7 @@
         <CorrectiveComment> Define base chains in the nftables ruleset with appropriate default policies. </CorrectiveComment>
         <Correction> echo "table inet filter { chain input { type filter hook input priority 0; policy drop; } chain forward { type filter hook forward priority 0; policy drop; } chain output { type filter hook output priority 0; policy accept; } }" &gt; /etc/nftables.conf; nft -f /etc/nftables.conf </Correction>
         <Verification> nft list ruleset | grep -q "chain input" && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="4.3.6">
         <BasePath>/etc/nftables.conf</BasePath>
@@ -46,6 +51,7 @@
         <CorrectiveComment> Add a rule to allow traffic on the loopback interface. </CorrectiveComment>
         <Correction> sed -i '/chain input {/a \\t ip saddr lo accept' /etc/nftables.conf; nft -f /etc/nftables.conf </Correction>
         <Verification> nft list ruleset | grep -q "saddr lo accept" && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="4.3.7">
         <BasePath>/etc/nftables.conf</BasePath>
@@ -54,6 +60,7 @@
         <CorrectiveComment> Manually configure rules to allow established and outbound traffic. </CorrectiveComment>
         <Correction> echo "add rule inet filter input ct state established,related accept" >> /etc/nftables.conf; nft -f /etc/nftables.conf </Correction>
         <Verification> echo "Manual verification required" </Verification>
+        <Manual>VERIFICATION</Manual>
     </Rule>
     <Rule id="4.3.8">
         <BasePath>/etc/nftables.conf</BasePath>
@@ -62,6 +69,7 @@
         <CorrectiveComment> Configure the default chain policies to drop incoming and forwarded traffic. </CorrectiveComment>
         <Correction> sed -i 's/policy accept;/policy drop;/' /etc/nftables.conf; nft -f /etc/nftables.conf </Correction>
         <Verification> nft list ruleset | grep -q "policy drop" && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="4.3.9">
         <BasePath>/etc/systemd/system/</BasePath>
@@ -70,6 +78,7 @@
         <CorrectiveComment> Enable and start the nftables service to load the ruleset at boot. </CorrectiveComment>
         <Correction> systemctl enable nftables; systemctl start nftables </Correction>
         <Verification> systemctl is-active nftables | grep -q "active" && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
     <Rule id="4.3.10">
         <BasePath>/etc/nftables.conf</BasePath>
@@ -78,5 +87,6 @@
         <CorrectiveComment> Save the current nftables ruleset to /etc/nftables.conf for persistence. </CorrectiveComment>
         <Correction> nft list ruleset &gt; /etc/nftables.conf </Correction>
         <Verification> test -f /etc/nftables.conf && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
     </Rule>
 </RulesCIS>
