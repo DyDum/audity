@@ -1,4 +1,4 @@
-<ReglesCIS>
+<RulesCIS>
   <Rule id="1.1">
     <BasePath>$CATALINA_HOME/webapps/</BasePath>
     <FileName>extraneous files and directories</FileName>
@@ -18,4 +18,4 @@
     <Verification>grep -E '<!--.*<Connector.*-->' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
-</ReglesCIS>
+</RulesCIS>

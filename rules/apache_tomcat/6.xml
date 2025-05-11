@@ -1,4 +1,4 @@
-<ReglesCIS>
+<RulesCIS>
   <Rule id="6.1">
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>server.xml</FileName>
@@ -70,4 +70,4 @@
     <Verification>grep 'sslProtocol="TLSv1.2"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
-</ReglesCIS>
+</RulesCIS>

@@ -1,4 +1,4 @@
-<ReglesCIS>
+<RulesCIS>
   <Rule id="9.1">
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>context.xml</FileName>
@@ -29,4 +29,4 @@
     <Verification>grep '<Context.*deployOnStartup="false"' $CATALINA_HOME/conf/context.xml && echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
-</ReglesCIS>
+</RulesCIS>

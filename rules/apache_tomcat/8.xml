@@ -1,4 +1,4 @@
-<ReglesCIS>
+<RulesCIS>
   <Rule id="8.1">
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>catalina.policy</FileName>
@@ -16,4 +16,4 @@
     <Verification>grep -E 'accessClassInPackage.sun|accessClassInPackage.com|accessClassInPackage.org.apache.catalina' $CATALINA_HOME/conf/catalina.policy && echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
-</ReglesCIS>
+</RulesCIS>

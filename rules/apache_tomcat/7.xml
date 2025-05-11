@@ -1,4 +1,4 @@
-<ReglesCIS>
+<RulesCIS>
   <Rule id="7.1">
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>logging.properties</FileName>
@@ -79,4 +79,4 @@
     3. Save the file and restart Tomcat using systemctl restart tomcat.</CorrectiveComment>
     <Manual>YES</Manual>
   </Rule>
-</ReglesCIS>
+</RulesCIS>

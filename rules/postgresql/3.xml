@@ -1,0 +1,302 @@
+<RulesCIS>
+  <Rule id="3.1.2">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>The log destinations are not set correctly, which may reduce visibility into database activity.</NonCompliantComment>
+    <CorrectiveComment>Ensure the log destinations are set to 'stderr', 'csvlog', or 'syslog' as required. Command: 
+    1. Edit the postgresql.conf file. 
+    2. Set the log_destination parameter to 'stderr', 'csvlog', 'syslog', or a combination. 
+    3. Restart PostgreSQL using systemctl restart postgresql-17.</CorrectiveComment>
+    <Correction>sed -i '/log_destination/s/#//;s/=.*/= 'stderr,csvlog'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
+    <Verification>psql -c "SHOW log_destination;" | grep -E 'stderr|csvlog|syslog'</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.1.3">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>The logging collector is not enabled, which may prevent logging of important database events.</NonCompliantComment>
+    <CorrectiveComment>Enable the logging collector. Command: 
+    1. Edit the postgresql.conf file. 
+    2. Set logging_collector to 'on'. 
+    3. Restart PostgreSQL using systemctl restart postgresql-17.</CorrectiveComment>
+    <Correction>sed -i '/logging_collector/s/#//;s/=.*/= on/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
+    <Verification>psql -c "SHOW logging_collector;" | grep -i 'on'</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.1.4">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>The log file destination directory is not set correctly, which may expose logs to unauthorized access.</NonCompliantComment>
+    <CorrectiveComment>Ensure the log file destination directory is set to a secure location. Command: 
+    1. Edit the postgresql.conf file. 
+    2. Set the log_directory parameter to a secure directory (e.g., /var/log/postgresql). 
+    3. Restart PostgreSQL using systemctl restart postgresql-17.</CorrectiveComment>
+    <Correction>sed -i '/log_directory/s/#//;s/=.*/= '\/var\/log\/postgresql'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
+    <Verification>psql -c "SHOW log_directory;" | grep '/var/log/postgresql'</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.1.5">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>The filename pattern for log files is not set correctly, which may result in log overwriting or loss.</NonCompliantComment>
+    <CorrectiveComment>Set the filename pattern for log files. Command: 
+    1. Edit the postgresql.conf file. 
+    2. Set the log_filename parameter to 'postgresql-%Y-%m-%d_%H%M%S.log'. 
+    3. Restart PostgreSQL using systemctl restart postgresql-17.</CorrectiveComment>
+    <Correction>sed -i '/log_filename/s/#//;s/=.*/= 'postgresql-%Y-%m-%d_%H%M%S.log'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
+    <Verification>psql -c "SHOW log_filename;" | grep 'postgresql-%Y-%m-%d_%H%M%S.log'</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.1.6">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>The log file permissions are not set correctly, which may expose log files to unauthorized access.</NonCompliantComment>
+    <CorrectiveComment>Ensure the log file permissions are set correctly. Command: 
+    1. Edit the postgresql.conf file. 
+    2. Set the log_file_mode parameter to '0640'. 
+    3. Restart PostgreSQL using systemctl restart postgresql-17.</CorrectiveComment>
+    <Correction>sed -i '/log_file_mode/s/#//;s/=.*/= '0640'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
+    <Verification>psql -c "SHOW log_file_mode;" | grep '0640'</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.1.7">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>The 'log_truncate_on_rotation' option is not enabled, which may cause log files to grow indefinitely.</NonCompliantComment>
+    <CorrectiveComment>Enable log truncation on rotation. Command: 
+    1. Edit the postgresql.conf file. 
+    2. Set log_truncate_on_rotation to 'on'. 
+    3. Restart PostgreSQL using systemctl restart postgresql-17.</CorrectiveComment>
+    <Correction>sed -i '/log_truncate_on_rotation/s/#//;s/=.*/= on/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
+    <Verification>psql -c "SHOW log_truncate_on_rotation;" | grep 'on'</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.1.8">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>The maximum log file lifetime is not set correctly, which may cause logs to grow indefinitely.</NonCompliantComment>
+    <CorrectiveComment>Set the maximum log file lifetime to a reasonable value (e.g., 1 day). Command: 
+    sed -i '/log_rotation_age/s/#//;s/=.*/= '1d'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</CorrectiveComment>
+    <Correction>sed -i '/log_rotation_age/s/#//;s/=.*/= '1d'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
+    <Verification>psql -c "SHOW log_rotation_age;" | grep '1d'</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.1.9">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>The maximum log file size is not set correctly, which may cause logs to grow indefinitely.</NonCompliantComment>
+    <CorrectiveComment>Set the maximum log file size to a reasonable value (e.g., 10MB). Command: 
+    sed -i '/log_rotation_size/s/#//;s/=.*/= '10MB'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</CorrectiveComment>
+    <Correction>sed -i '/log_rotation_size/s/#//;s/=.*/= '10MB'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
+    <Verification>psql -c "SHOW log_rotation_size;" | grep '10MB'</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.1.10">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>The syslog facility is not set correctly, which may lead to improper logging.</NonCompliantComment>
+    <CorrectiveComment>Ensure the syslog facility is set correctly. Command: 
+    1. Edit the postgresql.conf file. 
+    2. Set syslog_facility to 'local0', 'local1', 'daemon', or another secure facility. 
+    3. Restart PostgreSQL using systemctl restart postgresql-17.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="3.1.11">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>Syslog messages are being suppressed, which may prevent important events from being logged.</NonCompliantComment>
+    <CorrectiveComment>Ensure syslog messages are not suppressed. Command: 
+    sed -i '/syslog_facility/s/#//;s/=.*/= 'local0'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</CorrectiveComment>
+    <Correction>sed -i '/syslog_facility/s/#//;s/=.*/= 'local0'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
+    <Verification>psql -c "SHOW syslog_facility;" | grep 'local0'</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.1.12">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>Syslog messages may be lost due to size constraints, which may cause loss of critical logs.</NonCompliantComment>
+    <CorrectiveComment>Ensure syslog messages are not lost by setting a large enough size. Command: 
+    sed -i '/log_rotation_size/s/#//;s/=.*/= '10MB'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</CorrectiveComment>
+    <Correction>sed -i '/log_rotation_size/s/#//;s/=.*/= '10MB'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
+    <Verification>psql -c "SHOW log_rotation_size;" | grep '10MB'</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.1.13">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>The program name for PostgreSQL syslog messages is not set correctly, which may cause confusion in log analysis.</NonCompliantComment>
+    <CorrectiveComment>Ensure the program name for PostgreSQL syslog messages is set correctly. Command: 
+    sed -i '/syslog_ident/s/#//;s/=.*/= 'postgres'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</CorrectiveComment>
+    <Correction>sed -i '/syslog_ident/s/#//;s/=.*/= 'postgres'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
+    <Verification>psql -c "SHOW syslog_ident;" | grep 'postgres'</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.1.14">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>The correct messages are not written to the server log, which may lead to incomplete logging.</NonCompliantComment>
+    <CorrectiveComment>Ensure that the correct messages are written to the server log. Command: 
+    sed -i '/log_statement/s/#//;s/=.*/= 'all'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</CorrectiveComment>
+    <Correction>sed -i '/log_statement/s/#//;s/=.*/= 'all'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
+    <Verification>psql -c "SHOW log_statement;" | grep 'all'</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.1.15">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>The SQL statements generating errors are not recorded, which may limit error tracking.</NonCompliantComment>
+    <CorrectiveComment>Ensure the correct SQL statements generating errors are recorded. Command: 
+    sed -i '/log_min_error_statement/s/#//;s/=.*/= 'error'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</CorrectiveComment>
+    <Correction>sed -i '/log_min_error_statement/s/#//;s/=.*/= 'error'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
+    <Verification>psql -c "SHOW log_min_error_statement;" | grep 'error'</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.1.16">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>The 'debug_print_parse' option is enabled, which may expose sensitive query information in logs.</NonCompliantComment>
+    <CorrectiveComment>Disable 'debug_print_parse'. Command: 
+    sed -i '/debug_print_parse/s/#//;s/=.*/= 'off'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</CorrectiveComment>
+    <Correction>sed -i '/debug_print_parse/s/#//;s/=.*/= 'off'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
+    <Verification>psql -c "SHOW debug_print_parse;" | grep 'off'</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.1.17">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>The 'debug_print_rewritten' option is enabled, which may expose sensitive query information in logs.</NonCompliantComment>
+    <CorrectiveComment>Disable 'debug_print_rewritten'. Command: 
+    sed -i '/debug_print_rewritten/s/#//;s/=.*/= 'off'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</CorrectiveComment>
+    <Correction>sed -i '/debug_print_rewritten/s/#//;s/=.*/= 'off'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
+    <Verification>psql -c "SHOW debug_print_rewritten;" | grep 'off'</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.1.18">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>The 'debug_print_plan' option is enabled, which may expose sensitive query information in logs.</NonCompliantComment>
+    <CorrectiveComment>Disable 'debug_print_plan'. Command: 
+    sed -i '/debug_print_plan/s/#//;s/=.*/= 'off'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</CorrectiveComment>
+    <Correction>sed -i '/debug_print_plan/s/#//;s/=.*/= 'off'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
+    <Verification>psql -c "SHOW debug_print_plan;" | grep 'off'</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.1.19">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>The 'debug_pretty_print' option is not enabled, which may make debug logs harder to read.</NonCompliantComment>
+    <CorrectiveComment>Enable 'debug_pretty_print' for better readability of debug logs. Command: 
+    sed -i '/debug_pretty_print/s/#//;s/=.*/= 'on'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</CorrectiveComment>
+    <Correction>sed -i '/debug_pretty_print/s/#//;s/=.*/= 'on'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
+    <Verification>psql -c "SHOW debug_pretty_print;" | grep 'on'</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.1.20">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>The 'log_connections' setting is not enabled, which may prevent logging of client connections.</NonCompliantComment>
+    <CorrectiveComment>Enable 'log_connections' to log client connection events. Command: 
+    sed -i '/log_connections/s/#//;s/=.*/= 'on'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</CorrectiveComment>
+    <Correction>sed -i '/log_connections/s/#//;s/=.*/= 'on'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
+    <Verification>psql -c "SHOW log_connections;" | grep 'on'</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.1.21">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>The 'log_disconnections' setting is not enabled, which may prevent logging of client disconnections.</NonCompliantComment>
+    <CorrectiveComment>Enable 'log_disconnections' to log client disconnection events. Command: 
+    sed -i '/log_disconnections/s/#//;s/=.*/= 'on'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</CorrectiveComment>
+    <Correction>sed -i '/log_disconnections/s/#//;s/=.*/= 'on'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
+    <Verification>psql -c "SHOW log_disconnections;" | grep 'on'</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.1.22">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>The 'log_error_verbosity' setting is not configured correctly, which may impact log details.</NonCompliantComment>
+    <CorrectiveComment>Set 'log_error_verbosity' to 'verbose' for detailed error logging. Command: 
+    sed -i '/log_error_verbosity/s/#//;s/=.*/= 'verbose'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</CorrectiveComment>
+    <Correction>sed -i '/log_error_verbosity/s/#//;s/=.*/= 'verbose'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
+    <Verification>psql -c "SHOW log_error_verbosity;" | grep 'verbose'</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.1.23">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>The 'log_hostname' setting is not enabled, which may reduce clarity of client logs.</NonCompliantComment>
+    <CorrectiveComment>Enable 'log_hostname' to log client hostnames. Command: 
+    sed -i '/log_hostname/s/#//;s/=.*/= 'on'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</CorrectiveComment>
+    <Correction>sed -i '/log_hostname/s/#//;s/=.*/= 'on'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
+    <Verification>psql -c "SHOW log_hostname;" | grep 'on'</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.1.24">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>The 'log_line_prefix' setting is not configured correctly, which may reduce log clarity.</NonCompliantComment>
+    <CorrectiveComment>Set 'log_line_prefix' for clear and consistent log entries. Command: 
+    sed -i '/log_line_prefix/s/#//;s/=.*/= '%t %u %d %p %r %h'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</CorrectiveComment>
+    <Correction>sed -i '/log_line_prefix/s/#//;s/=.*/= '%t %u %d %p %r %h'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
+    <Verification>psql -c "SHOW log_line_prefix;" | grep '%t %u %d %p %r %h'</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.1.25">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>The 'log_statement' setting is not configured correctly, which may reduce visibility into database actions.</NonCompliantComment>
+    <CorrectiveComment>Set 'log_statement' to 'all' for full logging. Command: 
+    sed -i '/log_statement/s/#//;s/=.*/= 'all'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</CorrectiveComment>
+    <Correction>sed -i '/log_statement/s/#//;s/=.*/= 'all'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
+    <Verification>psql -c "SHOW log_statement;" | grep 'all'</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.1.26">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>The 'log_timezone' setting is not set correctly, which may result in inaccurate timestamps in logs.</NonCompliantComment>
+    <CorrectiveComment>Ensure 'log_timezone' is set to an appropriate timezone (e.g., 'UTC'). Command: 
+    sed -i '/log_timezone/s/#//;s/=.*/= 'UTC'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</CorrectiveComment>
+    <Correction>sed -i '/log_timezone/s/#//;s/=.*/= 'UTC'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
+    <Verification>psql -c "SHOW log_timezone;" | grep 'UTC'</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.2">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>The PostgreSQL Audit Extension (pgAudit) is not enabled, which may limit the ability to track database activities.</NonCompliantComment>
+    <CorrectiveComment>Enable the PostgreSQL Audit Extension (pgAudit). Command: 
+    1. Install pgAudit using the package manager (e.g., dnf install postgresql-pgaudit). 
+    2. Edit the postgresql.conf file. 
+    3. Add pgaudit.log='all'. 
+    4. Restart PostgreSQL using systemctl restart postgresql-17.</CorrectiveComment>
+    <Correction>dnf install postgresql-pgaudit -y; echo "pgaudit.log='all'" >> /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
+    <Verification>psql -c "SHOW pgaudit.log;" | grep 'all'</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+</RulesCIS>

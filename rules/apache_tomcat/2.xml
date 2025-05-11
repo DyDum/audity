@@ -1,4 +1,4 @@
-<ReglesCIS>
+<RulesCIS>
   <Rule id="2.1">
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>server.xml</FileName>
@@ -64,4 +64,4 @@
     <Verification>grep -E '<Connector.*server="SecureServer"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
-</ReglesCIS>
+</RulesCIS>

@@ -1,0 +1,115 @@
+<RulesCIS>
+  <Rule id="6.1">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>Attack vectors and runtime parameters are not well understood, which may expose the server to misconfigurations.</NonCompliantComment>
+    <CorrectiveComment>Ensure that the PostgreSQL runtime parameters are reviewed, documented, and securely configured.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="6.2">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>'backend' runtime parameters are not configured correctly, which may reduce performance or security.</NonCompliantComment>
+    <CorrectiveComment>Configure 'backend' runtime parameters correctly. Example: 
+    max_connections=100 
+    shared_buffers=1GB</CorrectiveComment>
+    <Correction>sed -i '/max_connections/s/#//;s/=.*/= 100/' /var/lib/pgsql/17/data/postgresql.conf; sed -i '/shared_buffers/s/#//;s/=.*/= 1GB/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
+    <Verification>psql -c "SHOW max_connections;" && psql -c "SHOW shared_buffers;"</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="6.3">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>'Postmaster' runtime parameters are not configured, which may affect server performance and security.</NonCompliantComment>
+    <CorrectiveComment>Configure 'Postmaster' runtime parameters correctly. Example: 
+    listen_addresses='localhost'</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="6.4">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>'SIGHUP' runtime parameters are not configured, which may impact configuration changes.</NonCompliantComment>
+    <CorrectiveComment>Ensure 'SIGHUP' runtime parameters are correctly configured to allow runtime changes without restarting the server.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="6.5">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>'Superuser' runtime parameters are not configured, which may allow excessive privileges.</NonCompliantComment>
+    <CorrectiveComment>Configure 'Superuser' runtime parameters to restrict privileges. Example: 
+    ALTER ROLE postgres WITH NOSUPERUSER;</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="6.6">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>'User' runtime parameters are not configured correctly, which may allow excessive privileges.</NonCompliantComment>
+    <CorrectiveComment>Ensure 'User' runtime parameters are configured correctly to restrict user actions.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="6.7">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>FIPS 140-2 OpenSSL cryptography is not used, which may weaken cryptographic security.</NonCompliantComment>
+    <CorrectiveComment>Enable FIPS 140-2 OpenSSL cryptography. Command: 
+    1. Set ssl_library_path to '/usr/lib/ssl/fips' in postgresql.conf. 
+    2. Restart PostgreSQL.</CorrectiveComment>
+    <Correction>sed -i '/ssl_library_path/s/#//;s/=.*/= '\/usr\/lib\/ssl\/fips'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
+    <Verification>psql -c "SHOW ssl_library_path;" | grep '/usr/lib/ssl/fips'</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="6.8">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>TLS is not enabled or not configured correctly, which may allow unencrypted connections.</NonCompliantComment>
+    <CorrectiveComment>Enable and configure TLS for secure connections. Command: 
+    ssl=on 
+    ssl_cert_file='/etc/ssl/certs/ssl-cert.pem' 
+    ssl_key_file='/etc/ssl/private/ssl-cert.key'</CorrectiveComment>
+    <Correction>sed -i '/ssl/s/#//;s/=.*/= on/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
+    <Verification>psql -c "SHOW ssl;" | grep 'on'</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="6.9">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>TLSv1.3 or later is not configured, which may allow use of outdated protocols.</NonCompliantComment>
+    <CorrectiveComment>Ensure TLSv1.3 or later is configured. Command: 
+    ssl_min_protocol_version='TLSv1.3'</CorrectiveComment>
+    <Correction>sed -i '/ssl_min_protocol_version/s/#//;s/=.*/= 'TLSv1.3'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
+    <Verification>psql -c "SHOW ssl_min_protocol_version;" | grep 'TLSv1.3'</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="6.10">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>Weak SSL/TLS ciphers are enabled, which may allow weak encryption.</NonCompliantComment>
+    <CorrectiveComment>Disable weak SSL/TLS ciphers. Command: 
+    ssl_ciphers='ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256'</CorrectiveComment>
+    <Correction>sed -i '/ssl_ciphers/s/#//;s/=.*/= 'ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
+    <Verification>psql -c "SHOW ssl_ciphers;"</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="6.11">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>The pgcrypto extension is not installed or not configured correctly, which may limit cryptographic capabilities.</NonCompliantComment>
+    <CorrectiveComment>Ensure the pgcrypto extension is installed and configured correctly. Command: 
+    1. Install the pgcrypto extension using the package manager (dnf install postgresql-pgcrypto). 
+    2. Create the extension in the PostgreSQL database: CREATE EXTENSION pgcrypto; 
+    3. Ensure that pgcrypto is configured for secure cryptographic operations.</CorrectiveComment>
+    <Correction>dnf install postgresql-pgcrypto -y; psql -c "CREATE EXTENSION pgcrypto;"</Correction>
+    <Verification>psql -c "SELECT * FROM pg_available_extensions WHERE name = 'pgcrypto';"</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+</RulesCIS>

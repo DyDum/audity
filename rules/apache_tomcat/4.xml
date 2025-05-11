@@ -1,4 +1,4 @@
-<ReglesCIS>
+<RulesCIS>
   <Rule id="4.1">
     <BasePath>$CATALINA_HOME/</BasePath>
     <FileName>N/A</FileName>
@@ -68,4 +68,4 @@
     <Verification>stat -c "%A %U %G" $CATALINA_HOME/webapps</Verification>
     <Manual>NO</Manual>
   </Rule>
-</ReglesCIS>
+</RulesCIS>
