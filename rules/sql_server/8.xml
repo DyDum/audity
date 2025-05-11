@@ -1,0 +1,9 @@
+<RulesCIS>
+  <Rule id="8.1">
+    <BasePath>N/A</BasePath>
+    <FileName>N/A</FileName>
+    <NonCompliantComment>The 'SQL Server Browser Service' is not configured correctly, which may expose the server to unauthorized access.</NonCompliantComment>
+    <CorrectiveComment>Ensure the 'SQL Server Browser Service' is disabled unless explicitly required. Command: Open SQL Server Configuration Manager, navigate to SQL Server Services, and set 'SQL Server Browser' to 'Disabled'. If required, configure it to use secure communication (TCP/IP or Named Pipes).</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+</RulesCIS>
