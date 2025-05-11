@@ -1,0 +1,68 @@
+<RulesCIS>
+  <Rule id="5.1">
+    <BasePath>/etc/mongod.conf</BasePath>
+    <FileName>mongod.conf</FileName>
+    <NonCompliantComment>System activity is not audited, which may prevent tracking of unauthorized actions.</NonCompliantComment>
+    <CorrectiveComment>Ensure that system activity is audited. Command: 
+    1. Open the MongoDB configuration file (mongod.conf). 
+    2. Set the following under systemLog: 
+       destination: file 
+       path: /var/log/mongodb/mongod.log 
+       logAppend: true 
+       auditLog:
+         destination: file 
+         format: JSON 
+         path: /var/log/mongodb/audit.log 
+    3. Restart the MongoDB service using systemctl restart mongod.</CorrectiveComment>
+    <Correction>sed -i '/systemLog:/a\  destination: file\n  path: /var/log/mongodb/mongod.log\n  logAppend: true\n  auditLog:\n    destination: file\n    format: JSON\n    path: /var/log/mongodb/audit.log' /etc/mongod.conf; systemctl restart mongod</Correction>
+    <Verification>cat /var/log/mongodb/audit.log</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="5.2">
+    <BasePath>/etc/mongod.conf</BasePath>
+    <FileName>mongod.conf</FileName>
+    <NonCompliantComment>Audit filters are not configured properly, which may limit the ability to capture relevant security events.</NonCompliantComment>
+    <CorrectiveComment>Ensure that audit filters are configured properly. Command: 
+    1. Open the MongoDB configuration file (mongod.conf). 
+    2. Add the following auditLog configuration: 
+       auditLog:
+         destination: file 
+         format: JSON 
+         path: /var/log/mongodb/audit.log 
+         filter: '{ "atype": { "$in": ["authCheck", "insert", "update", "delete"] } }' 
+    3. Restart the MongoDB service using systemctl restart mongod.</CorrectiveComment>
+    <Correction>sed -i '/auditLog:/a\  filter: "{ \"atype\": { \"$in\": [\"authCheck\", \"insert\", \"update\", \"delete\"] } }"' /etc/mongod.conf; systemctl restart mongod</Correction>
+    <Verification>cat /var/log/mongodb/audit.log | grep -E 'authCheck|insert|update|delete'</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="5.3">
+    <BasePath>/etc/mongod.conf</BasePath>
+    <FileName>mongod.conf</FileName>
+    <NonCompliantComment>The audit log does not capture all critical actions, which may prevent complete monitoring.</NonCompliantComment>
+    <CorrectiveComment>Ensure that logging captures as much information as possible. Command: 
+    1. Open the MongoDB configuration file (mongod.conf). 
+    2. Set the auditLog filter to capture all actions: 
+       auditLog:
+         filter: '{ "atype": { "$in": ["authCheck", "createCollection", "dropCollection", "insert", "update", "delete"] } }' 
+    3. Restart the MongoDB service using systemctl restart mongod.</CorrectiveComment>
+    <Correction>sed -i '/auditLog:/a\  filter: "{ \"atype\": { \"$in\": [\"authCheck\", \"createCollection\", \"dropCollection\", \"insert\", \"update\", \"delete\"] } }"' /etc/mongod.conf; systemctl restart mongod</Correction>
+    <Verification>cat /var/log/mongodb/audit.log | grep -E 'authCheck|createCollection|dropCollection|insert|update|delete'</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="5.4">
+    <BasePath>/etc/mongod.conf</BasePath>
+    <FileName>mongod.conf</FileName>
+    <NonCompliantComment>Log entries are not appended to the end of the log file, which may cause loss of logging information.</NonCompliantComment>
+    <CorrectiveComment>Ensure that new entries are appended to the end of the log file. Command: 
+    1. Open the MongoDB configuration file (mongod.conf). 
+    2. Set the following under systemLog: 
+       logAppend: true 
+    3. Restart the MongoDB service using systemctl restart mongod.</CorrectiveComment>
+    <Correction>sed -i '/systemLog:/a\  logAppend: true' /etc/mongod.conf; systemctl restart mongod</Correction>
+    <Verification>cat /var/log/mongodb/mongod.log | tail -n 10</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+</RulesCIS>
