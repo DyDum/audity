@@ -1,0 +1,64 @@
+<ReglesCIS>
+  <Regle id="3.1">
+    <CheminBase>/etc/nginx/</CheminBase>
+    <NomFichier>nginx.conf</NomFichier>
+    <RegleNonConforme>Detailed logging is not enabled, which reduces the ability to detect and investigate security incidents.</RegleNonConforme>
+    <RegleCorrigee>Enable detailed logging by setting the access_log and error_log directives with a detailed format.</RegleCorrigee>
+    <Correction>echo 'log_format main \'$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" "$http_x_forwarded_for"\' ; access_log /var/log/nginx/access.log main; error_log /var/log/nginx/error.log info;' >> /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -E 'access_log /var/log/nginx/access.log main;|error_log /var/log/nginx/error.log info;' && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="3.2">
+    <CheminBase>/etc/nginx/</CheminBase>
+    <NomFichier>nginx.conf</NomFichier>
+    <RegleNonConforme>Access logging is not enabled, which prevents the monitoring of HTTP requests.</RegleNonConforme>
+    <RegleCorrigee>Enable access logging in the NGINX configuration file.</RegleCorrigee>
+    <Correction>echo 'access_log /var/log/nginx/access.log main;' >> /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'access_log /var/log/nginx/access.log' && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="3.3">
+    <CheminBase>/etc/nginx/</CheminBase>
+    <NomFichier>nginx.conf</NomFichier>
+    <RegleNonConforme>Error logging is not set to "info" level, reducing the ability to debug and monitor issues.</RegleNonConforme>
+    <RegleCorrigee>Set error logging to "info" level in the NGINX configuration file.</RegleCorrigee>
+    <Correction>sed -i 's/error_log.*/error_log \/var\/log\/nginx\/error.log info;/' /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'error_log /var/log/nginx/error.log info;' && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="3.4">
+    <CheminBase>/etc/logrotate.d/</CheminBase>
+    <NomFichier>nginx</NomFichier>
+    <RegleNonConforme>Log files are not rotated, which can lead to disk space exhaustion.</RegleNonConforme>
+    <RegleCorrigee>Configure log rotation using logrotate for NGINX logs.</RegleCorrigee>
+    <Correction>echo '/var/log/nginx/*.log { daily missingok rotate 14 compress delaycompress notifempty create 640 nginx adm sharedscripts postrotate [ -f /var/run/nginx.pid ] && kill -USR1 $(cat /var/run/nginx.pid) endscript }' > /etc/logrotate.d/nginx</Correction>
+    <Verification>logrotate -d /etc/logrotate.d/nginx | grep -q 'nginx' && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="3.5">
+    <CheminBase>/etc/nginx/</CheminBase>
+    <NomFichier>nginx.conf</NomFichier>
+    <RegleNonConforme>Error logs are not sent to a remote syslog server, which can result in loss of logs during an incident.</RegleNonConforme>
+    <RegleCorrigee>Configure NGINX to send error logs to a remote syslog server.</RegleCorrigee>
+    <Correction>echo 'error_log syslog:server=192.168.1.100:514 info;' >> /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'error_log syslog:' && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="3.6">
+    <CheminBase>/etc/nginx/</CheminBase>
+    <NomFichier>nginx.conf</NomFichier>
+    <RegleNonConforme>Access logs are not sent to a remote syslog server, which can result in loss of logs during an incident.</RegleNonConforme>
+    <RegleCorrigee>Configure NGINX to send access logs to a remote syslog server.</RegleCorrigee>
+    <Correction>echo 'access_log syslog:server=192.168.1.100:514 main;' >> /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'access_log syslog:' && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="3.7">
+    <CheminBase>/etc/nginx/</CheminBase>
+    <NomFichier>nginx.conf</NomFichier>
+    <RegleNonConforme>Proxies do not pass source IP information, making it difficult to trace client requests.</RegleNonConforme>
+    <RegleCorrigee>Ensure proxies pass source IP information using the X-Forwarded-For header.</RegleCorrigee>
+    <Correction>echo 'proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;' >> /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'proxy_set_header X-Forwarded-For' && echo 0 || echo 1</Verification>
+  </Regle>
+</ReglesCIS>

@@ -1,0 +1,172 @@
+<ReglesCIS>
+  <Regle id="2.1.1">
+    <CheminBase>/etc/nginx/</CheminBase>
+    <NomFichier>nginx.conf</NomFichier>
+    <RegleNonConforme>Unnecessary NGINX modules are installed, increasing the attack surface.</RegleNonConforme>
+    <RegleCorrigee>Remove any unnecessary modules by recompiling NGINX from source with only required modules.</RegleCorrigee>
+    <Correction>cd /path/to/nginx/source; ./configure --without-http_autoindex_module --without-http_dav_module; make; make install</Correction>
+    <Verification>nginx -V 2>&amp;1 | grep -E '(http_autoindex_module|http_dav_module)' &amp;&amp; echo 1 || echo 0</Verification>
+  </Regle>
+
+  <Regle id="2.1.2">
+    <CheminBase>/etc/nginx/</CheminBase>
+    <NomFichier>nginx.conf</NomFichier>
+    <RegleNonConforme>The HTTP WebDAV module is installed, which can allow unauthorized file operations on the server.</RegleNonConforme>
+    <RegleCorrigee>Disable the HTTP WebDAV module by recompiling NGINX without it.</RegleCorrigee>
+    <Correction>cd /path/to/nginx/source; ./configure --without-http_dav_module; make; make install</Correction>
+    <Verification>nginx -V 2>&amp;1 | grep -q 'http_dav_module' &amp;&amp; echo 1 || echo 0</Verification>
+  </Regle>
+
+  <Regle id="2.1.3">
+    <CheminBase>/etc/nginx/</CheminBase>
+    <NomFichier>nginx.conf</NomFichier>
+    <RegleNonConforme>The gzip module is enabled, which may expose the server to BREACH attacks.</RegleNonConforme>
+    <RegleCorrigee>Disable gzip module by recompiling NGINX without it.</RegleCorrigee>
+    <Correction>cd /path/to/nginx/source; ./configure --without-http_gzip_module --without-http_gzip_static_module; make; make install</Correction>
+    <Verification>nginx -V 2>&amp;1 | grep -E '(http_gzip_module|http_gzip_static_module)' &amp;&amp; echo 1 || echo 0</Verification>
+  </Regle>
+
+  <Regle id="2.1.4">
+    <CheminBase>/etc/nginx/nginx.conf</CheminBase>
+    <NomFichier>nginx.conf</NomFichier>
+    <RegleNonConforme>The autoindex module is enabled, which can reveal directory contents to attackers.</RegleNonConforme>
+    <RegleCorrigee>Disable the autoindex module by setting 'autoindex off' in the NGINX configuration file.</RegleCorrigee>
+    <Correction>sed -i 's/autoindex on;/autoindex off;/g' /etc/nginx/nginx.conf</Correction>
+    <Verification>grep -E '^\s*autoindex\s+off;' /etc/nginx/nginx.conf &amp;&amp; echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="2.2.1">
+    <CheminBase>/etc/nginx/</CheminBase>
+    <NomFichier>nginx.conf</NomFichier>
+    <RegleNonConforme>NGINX is not configured to run with a non-privileged, dedicated user account, increasing security risks.</RegleNonConforme>
+    <RegleCorrigee>Configure NGINX to run as a dedicated non-privileged user (e.g., 'nginx').</RegleCorrigee>
+    <Correction>echo "user nginx;" >> /etc/nginx/nginx.conf; useradd -r -d /var/cache/nginx -s /sbin/nologin nginx</Correction>
+    <Verification>grep -E '^\s*user\s+nginx;' /etc/nginx/nginx.conf &amp;&amp; echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="2.2.2">
+    <CheminBase>/etc/nginx/</CheminBase>
+    <NomFichier>nginx.conf</NomFichier>
+    <RegleNonConforme>The NGINX service account is not locked, which may allow unauthorized access.</RegleNonConforme>
+    <RegleCorrigee>Lock the NGINX service account to prevent unauthorized access.</RegleCorrigee>
+    <Correction>passwd -l nginx</Correction>
+    <Verification>passwd -S nginx | grep -q 'LK' &amp;&amp; echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="2.2.3">
+    <CheminBase>/etc/nginx/</CheminBase>
+    <NomFichier>nginx.conf</NomFichier>
+    <RegleNonConforme>The NGINX service account has a valid shell, which may allow unauthorized access.</RegleNonConforme>
+    <RegleCorrigee>Set the NGINX service account shell to /sbin/nologin.</RegleCorrigee>
+    <Correction>usermod -s /sbin/nologin nginx</Correction>
+    <Verification>getent passwd nginx | grep -q '/sbin/nologin' &amp;&amp; echo 0 || echo 1</Verification>
+  </Regle>
+
+    <Regle id="2.3.1">
+    <CheminBase>/etc/nginx/</CheminBase>
+    <NomFichier>nginx.conf</NomFichier>
+    <RegleNonConforme>NGINX directories and files are not owned by root, making them vulnerable to unauthorized modifications.</RegleNonConforme>
+    <RegleCorrigee>Ensure that NGINX directories and files are owned by the root user and group.</RegleCorrigee>
+    <Correction>chown -R root:root /etc/nginx</Correction>
+    <Verification>stat -c '%U:%G' /etc/nginx | grep -q 'root:root' &amp;&amp; echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="2.3.2">
+    <CheminBase>/etc/nginx/</CheminBase>
+    <NomFichier>nginx.conf</NomFichier>
+    <RegleNonConforme>Access to NGINX directories and files is not restricted, increasing the risk of unauthorized modifications.</RegleNonConforme>
+    <RegleCorrigee>Restrict access to NGINX directories and files to root and the NGINX user only.</RegleCorrigee>
+    <Correction>find /etc/nginx -type d -exec chmod 750 {} +; find /etc/nginx -type f -exec chmod 640 {} +</Correction>
+    <Verification>find /etc/nginx -type d -exec stat -c '%A' {} + | grep -E -v '^drwxr-x---' &amp;&amp; echo 1 || echo 0</Verification>
+  </Regle>
+
+  <Regle id="2.3.3">
+    <CheminBase>/var/run/</CheminBase>
+    <NomFichier>nginx.pid</NomFichier>
+    <RegleNonConforme>The NGINX PID file is not secured, making it vulnerable to unauthorized modifications.</RegleNonConforme>
+    <RegleCorrigee>Ensure the NGINX PID file is owned by root and has restricted permissions.</RegleCorrigee>
+    <Correction>chown root:root /var/run/nginx.pid; chmod 644 /var/run/nginx.pid</Correction>
+    <Verification>stat -L -c "%U:%G" /var/run/nginx.pid | grep -q 'root:root' &amp;&amp; stat -L -c "%a" /var/run/nginx.pid | grep -q '644' &amp;&amp; echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="2.3.4">
+    <CheminBase>/var/log/nginx/</CheminBase>
+    <NomFichier>core/</NomFichier>
+    <RegleNonConforme>The NGINX core dump directory is not secured, exposing sensitive memory data to unauthorized users.</RegleNonConforme>
+    <RegleCorrigee>Secure the NGINX core dump directory by ensuring it is owned by root and is not readable by other users.</RegleCorrigee>
+    <Correction>chown root:nginx /var/log/nginx; chmod o-rwx /var/log/nginx</Correction>
+    <Verification>stat -c "%U:%G %A" /var/log/nginx | grep -E '^root:nginx drwx------' &amp;&amp; echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="2.4.1">
+    <CheminBase>/etc/nginx/</CheminBase>
+    <NomFichier>nginx.conf</NomFichier>
+    <RegleNonConforme>NGINX is listening on unauthorized ports, increasing the risk of unauthorized access.</RegleNonConforme>
+    <RegleCorrigee>Ensure NGINX is only listening on authorized ports (e.g., 80 and 443).</RegleCorrigee>
+    <Correction>sed -i '/listen/!d' /etc/nginx/nginx.conf</Correction>
+    <Verification>grep -E 'listen (80|443);' /etc/nginx/nginx.conf && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="2.4.2">
+    <CheminBase>/etc/nginx/</CheminBase>
+    <NomFichier>nginx.conf</NomFichier>
+    <RegleNonConforme>NGINX is responding to requests for unknown hostnames, which may lead to domain spoofing.</RegleNonConforme>
+    <RegleCorrigee>Ensure requests for unknown hostnames are rejected by default.</RegleCorrigee>
+    <Correction>echo 'server { return 404; }' >> /etc/nginx/nginx.conf</Correction>
+    <Verification>curl -k -v https://localhost -H 'Host: invalid.host.com' | grep -q '404' && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="2.4.3">
+    <CheminBase>/etc/nginx/</CheminBase>
+    <NomFichier>nginx.conf</NomFichier>
+    <RegleNonConforme>The keepalive_timeout value is not set to 10 seconds or less, increasing the risk of resource exhaustion attacks.</RegleNonConforme>
+    <RegleCorrigee>Set keepalive_timeout to 10 seconds or less.</RegleCorrigee>
+    <Correction>sed -i 's/keepalive_timeout.*/keepalive_timeout 10;/' /etc/nginx/nginx.conf</Correction>
+    <Verification>grep -E 'keepalive_timeout\s+10;' /etc/nginx/nginx.conf && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="2.4.4">
+    <CheminBase>/etc/nginx/</CheminBase>
+    <NomFichier>nginx.conf</NomFichier>
+    <RegleNonConforme>The send_timeout value is not set to 10 seconds or less, which may allow slow client attacks.</RegleNonConforme>
+    <RegleCorrigee>Set send_timeout to 10 seconds or less.</RegleCorrigee>
+    <Correction>sed -i 's/send_timeout.*/send_timeout 10;/' /etc/nginx/nginx.conf</Correction>
+    <Verification>grep -E 'send_timeout\s+10;' /etc/nginx/nginx.conf && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="2.5.1">
+    <CheminBase>/etc/nginx/</CheminBase>
+    <NomFichier>nginx.conf</NomFichier>
+    <RegleNonConforme>The server_tokens directive is set to "on", exposing the NGINX version in HTTP responses, increasing the risk of targeted attacks.</RegleNonConforme>
+    <RegleCorrigee>Set the server_tokens directive to "off" to prevent version disclosure.</RegleCorrigee>
+    <Correction>sed -i 's/server_tokens on;/server_tokens off;/g' /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'server_tokens off;' && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="2.5.2">
+    <CheminBase>/usr/share/nginx/html/</CheminBase>
+    <NomFichier>index.html</NomFichier>
+    <RegleNonConforme>The default error and index pages contain references to NGINX, exposing the server type and version to attackers.</RegleNonConforme>
+    <RegleCorrigee>Remove or customize default error and index pages to eliminate NGINX references.</RegleCorrigee>
+    <Correction>sed -i '/nginx/d' /usr/share/nginx/html/index.html; sed -i '/nginx/d' /usr/share/nginx/html/50x.html</Correction>
+    <Verification>grep -i nginx /usr/share/nginx/html/index.html /usr/share/nginx/html/50x.html && echo 1 || echo 0</Verification>
+  </Regle>
+
+  <Regle id="2.5.3">
+    <CheminBase>/etc/nginx/</CheminBase>
+    <NomFichier>nginx.conf</NomFichier>
+    <RegleNonConforme>Hidden files (such as .git) are accessible through NGINX, which can expose sensitive data.</RegleNonConforme>
+    <RegleCorrigee>Disable access to hidden files by adding a location block to deny access.</RegleCorrigee>
+    <Correction>echo 'location ~ /\. { deny all; }' >> /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'location ~ /\. { deny all;' && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="2.5.4">
+    <CheminBase>/etc/nginx/</CheminBase>
+    <NomFichier>nginx.conf</NomFichier>
+    <RegleNonConforme>The reverse proxy configuration leaks information about backend servers, increasing the risk of targeted attacks.</RegleNonConforme>
+    <RegleCorrigee>Disable the "proxy_pass" headers and remove X-Forwarded-For headers.</RegleCorrigee>
+    <Correction>sed -i '/proxy_pass_header/d' /etc/nginx/nginx.conf; sed -i '/proxy_set_header X-Forwarded-For/d' /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -qE '(proxy_pass_header|proxy_set_header X-Forwarded-For)' && echo 1 || echo 0</Verification>
+  </Regle>
+</ReglesCIS>
