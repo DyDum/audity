@@ -1,0 +1,208 @@
+<ReglesCIS>
+  <Rule id="10.1">
+    <BasePath>N/A</BasePath>
+    <FileName>N/A</FileName>
+    <NonCompliantComment>The web content directory is on the same partition as the Tomcat system files, which may lead to security risks.</NonCompliantComment>
+    <CorrectiveComment>Ensure the web content directory is on a separate partition from the Tomcat system files. Command: Manually configure the web content directory to a separate partition during installation or move the directory and update Tomcat configurations.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="10.2">
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>server.xml</FileName>
+    <NonCompliantComment>Access to the web administration application is not restricted, which may allow unauthorized access.</NonCompliantComment>
+    <CorrectiveComment>Restrict access to the web administration application. Command: Configure access controls in the <Context> section of the server.xml file, allowing access only to authorized IPs.</CorrectiveComment>
+    <Correction>sed -i '/<Context/s/allow=".*"/allow="192.168.1.0\/24"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat</Correction>
+    <Verification>grep '<Context.*allow="192.168.1.0/24"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="10.3">
+    <BasePath>$CATALINA_HOME/webapps/manager/</BasePath>
+    <FileName>context.xml</FileName>
+    <NonCompliantComment>The manager application is accessible without restrictions, which may allow unauthorized access.</NonCompliantComment>
+    <CorrectiveComment>Restrict access to the manager application. Command: 
+    1. Open the context.xml file for the manager application. 
+    2. Add access control settings, such as IP restrictions. 
+    Example: <Valve className="org.apache.catalina.valves.RemoteAddrValve" allow="192.168.1.0/24" />.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="10.4">
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>server.xml</FileName>
+    <NonCompliantComment>The manager application is accessible without SSL, which may expose sensitive data during transmission.</NonCompliantComment>
+    <CorrectiveComment>Force SSL when accessing the manager application via HTTP. Command: 
+    1. Open the server.xml file. 
+    2. Configure the <Connector> element for HTTPS. 
+    3. Add a security constraint to the web.xml file of the manager application to enforce SSL.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="10.5">
+    <BasePath>$CATALINA_HOME/webapps/</BasePath>
+    <FileName>manager/</FileName>
+    <NonCompliantComment>The manager application is using the default name, which may make it a target for attacks.</NonCompliantComment>
+    <CorrectiveComment>Rename the manager application. Command: 
+    1. Rename the manager application directory (e.g., mv $CATALINA_HOME/webapps/manager $CATALINA_HOME/webapps/secure-manager). 
+    2. Update the server.xml file to match the new application name.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="10.6">
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>catalina.properties</FileName>
+    <NonCompliantComment>Strict servlet compliance is not enabled, which may allow non-standard servlet behaviors.</NonCompliantComment>
+    <CorrectiveComment>Enable strict servlet compliance. Command: 
+    1. Open the catalina.properties file. 
+    2. Set org.apache.catalina.STRICT_SERVLET_COMPLIANCE=true.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="10.7">
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>catalina.properties</FileName>
+    <NonCompliantComment>Session facade recycling is enabled, which may cause session management issues.</NonCompliantComment>
+    <CorrectiveComment>Turn off session facade recycling. Command: 
+    1. Open the catalina.properties file. 
+    2. Set org.apache.catalina.connector.RECYCLE_FACADES=false.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="10.8">
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>server.xml</FileName>
+    <NonCompliantComment>Additional path delimiters are allowed, which may introduce path traversal vulnerabilities.</NonCompliantComment>
+    <CorrectiveComment>Do not allow additional path delimiters. Command: 
+    1. Open the server.xml file. 
+    2. Set allowLinking="false" in the <Context> elements.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <ReglesCIS>
+  <Rule id="10.9">
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>server.xml</FileName>
+    <NonCompliantComment>The connectionTimeout attribute is not configured, which may cause performance issues or allow unauthorized connections.</NonCompliantComment>
+    <CorrectiveComment>Configure the connectionTimeout attribute for secure connectors. Command: 
+    1. Open the server.xml file. 
+    2. Set the connectionTimeout attribute in the <Connector> element to a secure value (e.g., 20000). 
+    Example: <Connector port="8443" connectionTimeout="20000" ... /></CorrectiveComment>
+    <Correction>sed -i '/<Connector/s/connectionTimeout=".*"/connectionTimeout="20000"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat</Correction>
+    <Verification>grep 'connectionTimeout="20000"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="10.10">
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>server.xml</FileName>
+    <NonCompliantComment>The maxHttpHeaderSize attribute is not configured, which may expose the server to denial of service attacks.</NonCompliantComment>
+    <CorrectiveComment>Configure the maxHttpHeaderSize attribute for secure connectors. Command: 
+    1. Open the server.xml file. 
+    2. Set the maxHttpHeaderSize attribute in the <Connector> element (e.g., 8192). 
+    Example: <Connector port="8443" maxHttpHeaderSize="8192" ... /></CorrectiveComment>
+    <Correction>sed -i '/<Connector/s/maxHttpHeaderSize=".*"/maxHttpHeaderSize="8192"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat</Correction>
+    <Verification>grep 'maxHttpHeaderSize="8192"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="10.11">
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>server.xml</FileName>
+    <NonCompliantComment>SSL is not enforced for all applications, which may allow unencrypted communications.</NonCompliantComment>
+    <CorrectiveComment>Force SSL for all applications. Command: 
+    1. Open the web.xml file for each application. 
+    2. Add a security constraint enforcing HTTPS for all URLs.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="10.12">
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>server.xml</FileName>
+    <NonCompliantComment>Symbolic linking is enabled, which may expose sensitive files through unauthorized links.</NonCompliantComment>
+    <CorrectiveComment>Disable symbolic linking. Command: 
+    1. Open the server.xml file. 
+    2. Set allowLinking="false" in the <Context> elements.</CorrectiveComment>
+    <Correction>sed -i '/<Context/s/allowLinking=".*"/allowLinking="false"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat</Correction>
+    <Verification>grep '<Context.*allowLinking="false"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="10.13">
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>server.xml</FileName>
+    <NonCompliantComment>Applications are allowed to run as privileged, which may allow them to perform unauthorized actions.</NonCompliantComment>
+    <CorrectiveComment>Ensure applications are not run as privileged. Command: 
+    1. Open the context.xml file for each application. 
+    2. Set privileged="false".</CorrectiveComment>
+    <Correction>sed -i '/<Context/s/privileged=".*"/privileged="false"/' $CATALINA_HOME/conf/context.xml; systemctl restart tomcat</Correction>
+    <Verification>grep 'privileged="false"' $CATALINA_HOME/conf/context.xml && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="10.14">
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>server.xml</FileName>
+    <NonCompliantComment>Cross-context requests are allowed, which may allow unauthorized access between applications.</NonCompliantComment>
+    <CorrectiveComment>Disable cross-context requests. Command: 
+    1. Open the context.xml file. 
+    2. Set crossContext="false".</CorrectiveComment>
+    <Correction>sed -i '/<Context/s/crossContext=".*"/crossContext="false"/' $CATALINA_HOME/conf/context.xml; systemctl restart tomcat</Correction>
+    <Verification>grep 'crossContext="false"' $CATALINA_HOME/conf/context.xml && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="10.15">
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>server.xml</FileName>
+    <NonCompliantComment>The server resolves hostnames on logging valves, which may introduce performance issues.</NonCompliantComment>
+    <CorrectiveComment>Disable hostname resolution on logging valves. Command: 
+    1. Open the server.xml file. 
+    2. Set resolveHosts="false" in the <Valve> elements.</CorrectiveComment>
+    <Correction>sed -i '/<Valve/s/resolveHosts=".*"/resolveHosts="false"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat</Correction>
+    <Verification>grep 'resolveHosts="false"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="10.16">
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>server.xml</FileName>
+    <NonCompliantComment>Memory leak detection is disabled, which may prevent identification of memory leaks in applications.</NonCompliantComment>
+    <CorrectiveComment>Enable memory leak listener. Command: 
+    1. Add the following listener in server.xml: 
+       <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" /></CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="10.17">
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>server.xml</FileName>
+    <NonCompliantComment>The Security Lifecycle Listener is not enabled, which may prevent secure initialization of the server.</NonCompliantComment>
+    <CorrectiveComment>Enable the Security Lifecycle Listener. Command: 
+    1. Add the following listener in server.xml: 
+       <Listener className="org.apache.catalina.security.SecurityListener" /></CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="10.18">
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>web.xml</FileName>
+    <NonCompliantComment>The logEffectiveWebXml and metadata-complete settings are not configured, which may allow incomplete or insecure deployments.</NonCompliantComment>
+    <CorrectiveComment>Ensure logEffectiveWebXml is set to true and metadata-complete is set for all applications. Command: 
+    1. Open the web.xml file in a text editor. 
+    2. Set logEffectiveWebXml="true" in the <WebApp> element. 
+    3. Set metadata-complete="true" in each application’s deployment descriptor (web.xml).</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="10.19">
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>tomcat-users.xml</FileName>
+    <NonCompliantComment>Manager application passwords are stored in plaintext, which may expose sensitive information.</NonCompliantComment>
+    <CorrectiveComment>Ensure manager application passwords are encrypted. Command: 
+    1. Use a secure hash algorithm (e.g., bcrypt) for password hashing. 
+    2. Modify the tomcat-users.xml file to store hashed passwords. 
+    Example: <user username="admin" password="$2a$12$hashed_password_here" roles="manager-gui,admin-gui" />.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+</ReglesCIS>
