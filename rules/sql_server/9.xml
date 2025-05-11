@@ -1,0 +1,33 @@
+<RulesCIS>
+  <Rule id="9.1">
+    <BasePath>N/A</BasePath>
+    <FileName>N/A</FileName>
+    <NonCompliantComment>No dedicated 'Audit/Scan' user exists, which may prevent secure audit scans.</NonCompliantComment>
+    <CorrectiveComment>Create a dedicated 'Audit/Scan' user with appropriate permissions. Command: USE [master]; IF NOT EXISTS (SELECT * FROM sys.server_principals WHERE name = 'DOMAIN\cis-scan') CREATE LOGIN [DOMAIN\cis-scan] FROM WINDOWS WITH DEFAULT_DATABASE=[master]; USE master; GRANT VIEW SERVER STATE TO [DOMAIN\cis-scan];</CorrectiveComment>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="9.2">
+    <BasePath>N/A</BasePath>
+    <FileName>N/A</FileName>
+    <NonCompliantComment>The 'Audit/Scan' user does not have sufficient permissions for database scans.</NonCompliantComment>
+    <CorrectiveComment>Grant the 'Audit/Scan' user read permissions on system views. Command: USE master; EXEC sp_MSforeachdb @command1= 'USE ?; IF DB_NAME() NOT IN (''master'',''msdb'',''tempdb'', ''model'') AND NOT EXISTS (SELECT * FROM sys.database_principals WHERE name = ''cis-scan'') CREATE USER [cis-scan] FOR LOGIN [DOMAIN\cis-scan]';</CorrectiveComment>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="9.3">
+    <BasePath>N/A</BasePath>
+    <FileName>N/A</FileName>
+    <NonCompliantComment>The 'Audit/Scan' user does not have permissions on database objects necessary for comprehensive scanning.</NonCompliantComment>
+    <CorrectiveComment>Grant the 'Audit/Scan' user SELECT permissions on key database objects. Command: EXEC sp_MSforeachdb @command1= 'USE ?; IF DB_NAME() NOT IN (''master'',''msdb'',''tempdb'', ''model'') AND EXISTS (SELECT * FROM sys.database_principals WHERE name = ''cis-scan'') GRANT SELECT ON sys.assemblies TO [cis-scan]; GRANT SELECT ON sys.symmetric_keys TO [cis-scan]; GRANT SELECT ON sys.asymmetric_keys TO [cis-scan];';</CorrectiveComment>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="9.4">
+    <BasePath>N/A</BasePath>
+    <FileName>N/A</FileName>
+    <NonCompliantComment>The 'Audit/Scan' user does not have SELECT permissions on system views in MSDB.</NonCompliantComment>
+    <CorrectiveComment>Grant the 'Audit/Scan' user SELECT permissions on system views in MSDB. Command: USE msdb; IF NOT EXISTS (SELECT * FROM sys.database_principals WHERE name = 'cis-scan') CREATE USER [cis-scan] FOR LOGIN [DOMAIN\cis-scan]; GRANT SELECT ON dbo.sysproxies TO [cis-scan]; GRANT SELECT ON dbo.sysproxylogin TO [cis-scan];</CorrectiveComment>
+    <Manual>NO</Manual>
+  </Rule>
+</RulesCIS>

@@ -1,0 +1,83 @@
+<RulesCIS>
+    <Rule id="2.4.1.1">
+        <BasePath>/etc/init.d/</BasePath>
+        <FileName>cron</FileName>
+        <NonCompliantComment>Cron daemon is not enabled, risking failure of scheduled jobs.</NonCompliantComment>
+        <CorrectiveComment>Enable the cron daemon and ensure it is active.</CorrectiveComment>
+        <Correction>systemctl enable cron; systemctl start cron</Correction>
+        <Verification>systemctl is-active cron | grep -q "active" && echo 0 || echo 1</Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.4.1.2">
+        <BasePath>/etc/</BasePath>
+        <FileName>crontab</FileName>
+        <NonCompliantComment>File permissions on /etc/crontab are not properly set, which may allow unauthorized modifications.</NonCompliantComment>
+        <CorrectiveComment>Set the correct permissions (644) on /etc/crontab.</CorrectiveComment>
+        <Correction>chmod 644 /etc/crontab</Correction>
+        <Verification>stat -c "%a" /etc/crontab | grep -q "^644$" && echo 0 || echo 1</Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.4.1.3">
+        <BasePath>/etc/cron.hourly/</BasePath>
+        <FileName>*</FileName>
+        <NonCompliantComment>Permissions on files in /etc/cron.hourly are too permissive.</NonCompliantComment>
+        <CorrectiveComment>Set the correct permissions (644) on all files in /etc/cron.hourly.</CorrectiveComment>
+        <Correction>chmod 644 /etc/cron.hourly/*</Correction>
+        <Verification>for file in /etc/cron.hourly/*; do stat -c "%a" "$file" | grep -q "^644$" || exit 1; done; echo 0</Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.4.1.4">
+        <BasePath>/etc/cron.daily/</BasePath>
+        <FileName>*</FileName>
+        <NonCompliantComment>Permissions on files in /etc/cron.daily are too permissive.</NonCompliantComment>
+        <CorrectiveComment>Set the correct permissions (644) on all files in /etc/cron.daily.</CorrectiveComment>
+        <Correction>chmod 644 /etc/cron.daily/*</Correction>
+        <Verification>for file in /etc/cron.daily/*; do stat -c "%a" "$file" | grep -q "^644$" || exit 1; done; echo 0</Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.4.1.5">
+        <BasePath>/etc/cron.weekly/</BasePath>
+        <FileName>*</FileName>
+        <NonCompliantComment>Permissions on files in /etc/cron.weekly are too permissive.</NonCompliantComment>
+        <CorrectiveComment>Set the correct permissions (644) on all files in /etc/cron.weekly.</CorrectiveComment>
+        <Correction>chmod 644 /etc/cron.weekly/*</Correction>
+        <Verification>for file in /etc/cron.weekly/*; do stat -c "%a" "$file" | grep -q "^644$" || exit 1; done; echo 0</Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.4.1.6">
+        <BasePath>/etc/cron.monthly/</BasePath>
+        <FileName>*</FileName>
+        <NonCompliantComment>Permissions on files in /etc/cron.monthly are too permissive.</NonCompliantComment>
+        <CorrectiveComment>Set the correct permissions (644) on all files in /etc/cron.monthly.</CorrectiveComment>
+        <Correction>chmod 644 /etc/cron.monthly/*</Correction>
+        <Verification>for file in /etc/cron.monthly/*; do stat -c "%a" "$file" | grep -q "^644$" || exit 1; done; echo 0</Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.4.1.7">
+        <BasePath>/etc/cron.d/</BasePath>
+        <FileName>*</FileName>
+        <NonCompliantComment>Permissions on files in /etc/cron.d are too permissive.</NonCompliantComment>
+        <CorrectiveComment>Set the correct permissions (644) on all files in /etc/cron.d.</CorrectiveComment>
+        <Correction>chmod 644 /etc/cron.d/*</Correction>
+        <Verification>for file in /etc/cron.d/*; do stat -c "%a" "$file" | grep -q "^644$" || exit 1; done; echo 0</Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.4.1.8">
+        <BasePath>/etc/</BasePath>
+        <FileName>cron.allow</FileName>
+        <NonCompliantComment>Cron access is not restricted to authorized users.</NonCompliantComment>
+        <CorrectiveComment>Create or update the cron.allow file to list only authorized users.</CorrectiveComment>
+        <Correction>echo "authorizeduser" &gt; /etc/cron.allow</Correction>
+        <Verification>grep -q "authorizeduser" /etc/cron.allow && echo 0 || echo 1</Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.4.2.1">
+        <BasePath>/etc/</BasePath>
+        <FileName>at.allow</FileName>
+        <NonCompliantComment>The at command is not restricted, which may allow unauthorized job scheduling.</NonCompliantComment>
+        <CorrectiveComment>Restrict the at command by configuring at.allow (and/or at.deny) appropriately.</CorrectiveComment>
+        <Correction>echo "authorizeduser" &gt; /etc/at.allow</Correction>
+        <Verification>grep -q "authorizeduser" /etc/at.allow && echo 0 || echo 1</Verification>
+        <Manual>NO</Manual>
+    </Rule>
+</RulesCIS>

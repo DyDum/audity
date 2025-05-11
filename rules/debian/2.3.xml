@@ -1,0 +1,56 @@
+<RulesCIS>
+    <Rule id="2.3.1.1">
+        <BasePath>/etc/systemd/system/</BasePath>
+        <FileName>timesyncd.service</FileName>
+        <NonCompliantComment> Multiple time synchronization daemons may be active, which can cause conflicts and inconsistent time settings. </NonCompliantComment>
+        <CorrectiveComment> Ensure only a single time synchronization daemon is active. Disable other daemons (e.g., ntp, chrony) if systemd-timesyncd is used. </CorrectiveComment>
+        <Correction> systemctl disable ntp; systemctl stop ntp; systemctl disable chrony; systemctl stop chrony </Correction>
+        <Verification> ! systemctl is-active ntp | grep -q 'active' && ! systemctl is-active chrony | grep -q 'active' && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.3.2.1">
+        <BasePath>/etc/systemd/</BasePath>
+        <FileName>timesyncd.conf</FileName>
+        <NonCompliantComment> systemd-timesyncd is not configured with authorized NTP servers. </NonCompliantComment>
+        <CorrectiveComment> Configure /etc/systemd/timesyncd.conf with approved NTP servers. </CorrectiveComment>
+        <Correction> echo "NTP=pool.ntp.org" &gt;&gt; /etc/systemd/timesyncd.conf; systemctl restart systemd-timesyncd </Correction>
+        <Verification> grep -q "^NTP=pool.ntp.org" /etc/systemd/timesyncd.conf && systemctl is-active systemd-timesyncd | grep -q "active" && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.3.2.2">
+        <BasePath>/etc/systemd/system/</BasePath>
+        <FileName>timesyncd.service</FileName>
+        <NonCompliantComment> systemd-timesyncd is not enabled or running. </NonCompliantComment>
+        <CorrectiveComment> Enable and start systemd-timesyncd to ensure proper time synchronization. </CorrectiveComment>
+        <Correction> systemctl enable systemd-timesyncd; systemctl start systemd-timesyncd </Correction>
+        <Verification> systemctl is-active systemd-timesyncd | grep -q "active" && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.3.3.1">
+        <BasePath>/etc/chrony/</BasePath>
+        <FileName>chrony.conf</FileName>
+        <NonCompliantComment> Chrony is not configured with an authorized time server. </NonCompliantComment>
+        <CorrectiveComment> Edit /etc/chrony/chrony.conf to set a trusted time server (e.g., pool.ntp.org) and restart chrony. </CorrectiveComment>
+        <Correction> sed -i 's/^server .*/server pool.ntp.org iburst/' /etc/chrony/chrony.conf; systemctl restart chrony </Correction>
+        <Verification> grep -q "^server pool.ntp.org" /etc/chrony/chrony.conf && systemctl is-active chrony | grep -q "active" && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.3.3.2">
+        <BasePath>/etc/chrony/</BasePath>
+        <FileName>chrony.conf</FileName>
+        <NonCompliantComment> Chrony is not running under the dedicated _chrony user, which reduces process isolation. </NonCompliantComment>
+        <CorrectiveComment> Ensure that the chronyd daemon runs as the _chrony user. </CorrectiveComment>
+        <Correction> usermod -a -G _chrony chrony; systemctl restart chrony </Correction>
+        <Verification> ps aux | grep -E "[c]hrony" | grep -q "_chrony" && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.3.3.3">
+        <BasePath>/etc/systemd/system/</BasePath>
+        <FileName>chrony.service</FileName>
+        <NonCompliantComment> Chrony is not enabled or running, which may lead to inaccurate system time. </NonCompliantComment>
+        <CorrectiveComment> Enable and start the chrony service to ensure proper time synchronization. </CorrectiveComment>
+        <Correction> systemctl enable chrony; systemctl start chrony </Correction>
+        <Verification> systemctl is-active chrony | grep -q "active" && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+</RulesCIS>

@@ -1,0 +1,210 @@
+<RulesCIS>
+    <Rule id="5.3.1.1">
+        <BasePath>/usr/bin/</BasePath>
+        <FileName>pam</FileName>
+        <NonCompliantComment> The PAM package is either missing or not up-to-date, which may expose the system to authentication vulnerabilities. </NonCompliantComment>
+        <CorrectiveComment> Install or update PAM components (e.g., libpam0g and libpam-modules) to the latest available version. </CorrectiveComment>
+        <Correction>apt-get update && apt-get install -y libpam0g libpam-modules</Correction>
+        <Verification>dpkg -l | grep -q libpam0g && dpkg -l | grep -q libpam-modules && echo 0 || echo 1</Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="5.3.1.2">
+        <BasePath>/usr/bin/</BasePath>
+        <FileName>libpam-pwquality</FileName>
+        <NonCompliantComment> The libpam-pwquality module is not installed, preventing enforcement of strong password policies. </NonCompliantComment>
+        <CorrectiveComment> Install the libpam-pwquality package to enforce password complexity requirements. </CorrectiveComment>
+        <Correction>apt-get install -y libpam-pwquality</Correction>
+        <Verification>dpkg -l | grep -q libpam-pwquality && echo 0 || echo 1</Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="5.3.1.3">
+        <BasePath>/usr/bin/</BasePath>
+        <FileName>libpam-modules</FileName>
+        <NonCompliantComment> The libpam-modules package is missing, reducing the available PAM functionality. </NonCompliantComment>
+        <CorrectiveComment> Install the libpam-modules package to ensure complete PAM functionality. </CorrectiveComment>
+        <Correction>apt-get install -y libpam-modules</Correction>
+        <Verification>dpkg -l | grep -q libpam-modules && echo 0 || echo 1</Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="5.3.2.1">
+        <BasePath>/etc/pam.d/</BasePath>
+        <FileName>common-auth</FileName>
+        <NonCompliantComment> The pam_unix module is not properly enabled in the authentication configuration, weakening local authentication. </NonCompliantComment>
+        <CorrectiveComment> Ensure the pam_unix.so module is included in /etc/pam.d/common-auth. </CorrectiveComment>
+        <Correction>echo "auth required pam_unix.so" >> /etc/pam.d/common-auth; systemctl restart sshd</Correction>
+        <Verification>grep -q "pam_unix.so" /etc/pam.d/common-auth && echo 0 || echo 1</Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="5.3.2.2">
+        <BasePath>/etc/pam.d/</BasePath>
+        <FileName>common-auth</FileName>
+        <NonCompliantComment> The pam_faillock module is not enabled, potentially allowing unlimited failed authentication attempts. </NonCompliantComment>
+        <CorrectiveComment> Configure pam_faillock in /etc/pam.d/common-auth to lock accounts after a defined number of failed attempts. </CorrectiveComment>
+        <Correction>echo "auth required pam_faillock.so preauth silent deny=5 unlock_time=900" >> /etc/pam.d/common-auth; echo "auth [default=die] pam_faillock.so authfail deny=5 unlock_time=900" >> /etc/pam.d/common-auth; systemctl restart sshd</Correction>
+        <Verification>grep -q "pam_faillock.so" /etc/pam.d/common-auth && echo 0 || echo 1</Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="5.3.2.3">
+        <BasePath>/etc/pam.d/</BasePath>
+        <FileName>common-password</FileName>
+        <NonCompliantComment> The pam_pwquality module is not enabled, preventing enforcement of strong password rules. </NonCompliantComment>
+        <CorrectiveComment> Enable the pam_pwquality.so module in /etc/pam.d/common-password to enforce password complexity. </CorrectiveComment>
+        <Correction>echo "password requisite pam_pwquality.so retry=3" >> /etc/pam.d/common-password; systemctl restart sshd</Correction>
+        <Verification>grep -q "pam_pwquality.so" /etc/pam.d/common-password && echo 0 || echo 1</Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="5.3.2.4">
+        <BasePath>/etc/pam.d/</BasePath>
+        <FileName>common-password</FileName>
+        <NonCompliantComment> The pam_pwhistory module is not enabled, reducing password history enforcement. </NonCompliantComment>
+        <CorrectiveComment> Enable the pam_pwhistory.so module in /etc/pam.d/common-password to enforce password history. </CorrectiveComment>
+        <Correction>echo "password required pam_pwhistory.so remember=5 use_authtok" >> /etc/pam.d/common-password; systemctl restart sshd</Correction>
+        <Verification>grep -q "pam_pwhistory.so" /etc/pam.d/common-password && echo 0 || echo 1</Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="5.3.3.1.1">
+        <BasePath>/etc/pam.d/</BasePath>
+        <FileName>common-auth</FileName>
+        <NonCompliantComment> The configuration does not enforce an account lockout after consecutive failed authentication attempts, exposing the system to brute-force attacks. </NonCompliantComment>
+        <CorrectiveComment> Configure pam_faillock in the authentication stack to lock accounts after a defined number of failed attempts. </CorrectiveComment>
+        <Correction> echo "auth required pam_faillock.so preauth silent deny=5 unlock_time=900" >> /etc/pam.d/common-auth; echo "auth [default=die] pam_faillock.so authfail deny=5 unlock_time=900" >> /etc/pam.d/common-auth; systemctl restart sshd </Correction>
+        <Verification> grep -q "pam_faillock.so" /etc/pam.d/common-auth && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="5.3.3.2.2">
+        <BasePath>/etc/pam.d/</BasePath>
+        <FileName>common-password</FileName>
+        <NonCompliantComment> The minimum password length is not enforced, which may allow the use of weak passwords. </NonCompliantComment>
+        <CorrectiveComment> Configure pam_pwquality in the password stack to enforce a minimum password length. </CorrectiveComment>
+        <Correction> echo "password requisite pam_pwquality.so retry=3 minlen=12" >> /etc/pam.d/common-password; systemctl restart sshd </Correction>
+        <Verification> grep -q "minlen=12" /etc/pam.d/common-password && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <RulesCIS>
+    <Rule id="5.3.3.2.3">
+        <BasePath>/etc/pam.d/</BasePath>
+        <FileName>common-password</FileName>
+        <NonCompliantComment> The configuration does not limit the number of identical consecutive characters in a password, reducing its strength. </NonCompliantComment>
+        <CorrectiveComment> Configure the pam_pwquality module to limit repeating characters by setting maxrepeat (for example, to 3). </CorrectiveComment>
+        <Correction> echo "password requisite pam_pwquality.so retry=3 maxrepeat=3" >> /etc/pam.d/common-password; systemctl restart sshd </Correction>
+        <Verification> grep -q "maxrepeat=3" /etc/pam.d/common-password && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="5.3.3.2.4">
+        <BasePath>/etc/pam.d/</BasePath>
+        <FileName>common-password</FileName>
+        <NonCompliantComment> The configuration does not limit the maximum number of sequential characters in a password. </NonCompliantComment>
+        <CorrectiveComment> Configure pam_pwquality to limit sequential characters by setting maxsequence (for example, to 3). </CorrectiveComment>
+        <Correction> echo "password requisite pam_pwquality.so retry=3 maxsequence=3" >> /etc/pam.d/common-password; systemctl restart sshd </Correction>
+        <Verification> grep -q "maxsequence=3" /etc/pam.d/common-password && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="5.3.3.2.5">
+        <BasePath>/etc/pam.d/</BasePath>
+        <FileName>common-password</FileName>
+        <NonCompliantComment> The password dictionary check is not enabled, which increases the risk of weak passwords. </NonCompliantComment>
+        <CorrectiveComment> Enable dictionary checking in the pam_pwquality configuration by setting an appropriate parameter. </CorrectiveComment>
+        <Correction> echo "password requisite pam_pwquality.so retry=3 dictcheck=1" >> /etc/pam.d/common-password; systemctl restart sshd </Correction>
+        <Verification> grep -q "dictcheck=1" /etc/pam.d/common-password && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="5.3.3.2.6">
+        <BasePath>/etc/pam.d/</BasePath>
+        <FileName>common-password</FileName>
+        <NonCompliantComment> Password quality checking is not enforced, allowing the use of weak passwords. </NonCompliantComment>
+        <CorrectiveComment> Enforce password quality by configuring pam_pwquality with parameters such as dcredit, ucredit, ocredit, and lcredit (e.g., set each to -1). </CorrectiveComment>
+        <Correction> echo "password requisite pam_pwquality.so retry=3 dcredit=-1 ucredit=-1 ocredit=-1 lcredit=-1" >> /etc/pam.d/common-password; systemctl restart sshd </Correction>
+        <Verification> grep -q "dcredit=-1" /etc/pam.d/common-password && grep -q "ucredit=-1" /etc/pam.d/common-password && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="5.3.3.2.7">
+        <BasePath>/etc/pam.d/</BasePath>
+        <FileName>common-password</FileName>
+        <NonCompliantComment> The root user is not subject to the same password quality requirements as regular users. </NonCompliantComment>
+        <CorrectiveComment> Enforce password quality for the root user by enabling enforce_for_root in the pam_pwquality module. </CorrectiveComment>
+        <Correction> echo "password requisite pam_pwquality.so retry=3 enforce_for_root" >> /etc/pam.d/common-password; systemctl restart sshd </Correction>
+        <Verification> grep -q "enforce_for_root" /etc/pam.d/common-password && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="5.3.3.2.8">
+        <BasePath>/etc/pam.d/</BasePath>
+        <FileName>common-password</FileName>
+        <NonCompliantComment> The root user's password is not enforced by the same quality requirements as regular users. </NonCompliantComment>
+        <CorrectiveComment> Enforce password quality for the root user by enabling the enforce_for_root option in the pam_pwquality module. </CorrectiveComment>
+        <Correction> echo "password requisite pam_pwquality.so retry=3 enforce_for_root" >> /etc/pam.d/common-password; systemctl restart sshd </Correction>
+        <Verification> grep -q "enforce_for_root" /etc/pam.d/common-password && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="5.3.3.3.1">
+        <BasePath>/etc/pam.d/</BasePath>
+        <FileName>common-password</FileName>
+        <NonCompliantComment> The pam_unix module configuration includes the "nullok" option, which permits accounts to have empty passwords. </NonCompliantComment>
+        <CorrectiveComment> Remove the "nullok" option from the pam_unix entry in /etc/pam.d/common-password. </CorrectiveComment>
+        <Correction>sed -i '/pam_unix.so/ s/nullok//' /etc/pam.d/common-password; systemctl restart sshd</Correction>
+        <Verification>grep "pam_unix.so" /etc/pam.d/common-password | grep -q "nullok" && echo 1 || echo 0</Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="5.3.3.3.2">
+    <BasePath>/etc/pam.d/</BasePath>
+        <FileName>common-password</FileName>
+        <NonCompliantComment> The pam_unix module configuration includes the "remember" option, which may allow reuse of previous passwords. </NonCompliantComment>
+        <CorrectiveComment> Remove the "remember" option from the pam_unix configuration in /etc/pam.d/common-password. </CorrectiveComment>
+        <Correction>sed -i '/pam_unix.so/ s/remember=[0-9]*//' /etc/pam.d/common-password; systemctl restart sshd</Correction>
+        <Verification>grep "pam_unix.so" /etc/pam.d/common-password | grep -q "remember=" && echo 1 || echo 0</Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="5.3.3.3.3">
+        <BasePath>/etc/pam.d/</BasePath>
+        <FileName>common-password</FileName>
+        <NonCompliantComment> A weak password hashing algorithm may be used by the pam_unix module. </NonCompliantComment>
+        <CorrectiveComment> Configure pam_unix to use a strong hashing algorithm, such as SHA-512. </CorrectiveComment>
+        <Correction>echo "password sufficient pam_unix.so sha512" >> /etc/pam.d/common-password; systemctl restart sshd</Correction>
+        <Verification>grep "pam_unix.so" /etc/pam.d/common-password | grep -q "sha512" && echo 0 || echo 1</Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="5.3.3.3.4">
+        <BasePath>/etc/pam.d/</BasePath>
+        <FileName>common-password</FileName>
+        <NonCompliantComment> The pam_unix module does not include the "use_authtok" option, which may lead to inconsistent password change behavior. </NonCompliantComment>
+        <CorrectiveComment> Ensure that the pam_unix module includes the "use_authtok" option in /etc/pam.d/common-password. </CorrectiveComment>
+        <Correction>echo "password sufficient pam_unix.so use_authtok" >> /etc/pam.d/common-password; systemctl restart sshd</Correction>
+        <Verification>grep "pam_unix.so" /etc/pam.d/common-password | grep -q "use_authtok" && echo 0 || echo 1</Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="5.3.3.4.1">
+        <BasePath>/etc/pam.d/</BasePath>
+        <FileName>common-auth</FileName>
+        <NonCompliantComment> The pam_unix module is configured with the "nullok" option, allowing accounts to have empty passwords. </NonCompliantComment>
+        <CorrectiveComment> Remove the "nullok" option from the pam_unix configuration in common-auth. </CorrectiveComment>
+        <Correction>sed -i '/pam_unix.so/ s/nullok//' /etc/pam.d/common-auth; systemctl restart sshd</Correction>
+        <Verification>grep "pam_unix.so" /etc/pam.d/common-auth | grep -q "nullok" && echo 1 || echo 0</Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="5.3.3.4.2">
+        <BasePath>/etc/pam.d/</BasePath>
+        <FileName>common-auth</FileName>
+        <NonCompliantComment> The pam_unix module is configured with the "remember" option, which may allow reuse of previous passwords. </NonCompliantComment>
+        <CorrectiveComment> Remove the "remember" option from the pam_unix configuration in common-auth. </CorrectiveComment>
+        <Correction>sed -i '/pam_unix.so/ s/remember=[0-9]*//' /etc/pam.d/common-auth; systemctl restart sshd</Correction>
+        <Verification>grep "pam_unix.so" /etc/pam.d/common-auth | grep -q "remember=" && echo 1 || echo 0</Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="5.3.3.4.3">
+        <BasePath>/etc/pam.d/</BasePath>
+        <FileName>common-auth</FileName>
+        <NonCompliantComment> The pam_unix module does not enforce a strong hashing algorithm, potentially using a weak default. </NonCompliantComment>
+        <CorrectiveComment> Configure the pam_unix module to use a strong hashing algorithm (e.g., SHA-512). </CorrectiveComment>
+        <Correction>echo "password sufficient pam_unix.so sha512" >> /etc/pam.d/common-auth; systemctl restart sshd</Correction>
+        <Verification>grep "pam_unix.so" /etc/pam.d/common-auth | grep -q "sha512" && echo 0 || echo 1</Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="5.3.3.4.4">
+        <BasePath>/etc/pam.d/</BasePath>
+        <FileName>common-auth</FileName>
+        <NonCompliantComment> The pam_unix module does not include the "use_authtok" option, which is needed to ensure consistent handling of password changes. </NonCompliantComment>
+        <CorrectiveComment> Add the "use_authtok" option to the pam_unix module configuration in common-auth. </CorrectiveComment>
+        <Correction>echo "password sufficient pam_unix.so use_authtok" >> /etc/pam.d/common-auth; systemctl restart sshd</Correction>
+        <Verification>grep "pam_unix.so" /etc/pam.d/common-auth | grep -q "use_authtok" && echo 0 || echo 1</Verification>
+        <Manual>NO</Manual>
+    </Rule>
+</RulesCIS>

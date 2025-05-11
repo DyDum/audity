@@ -1,0 +1,71 @@
+<RulesCIS>
+    <Rule id="7.1">
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>my.cnf</FileName>
+    <NonCompliantComment>The 'mysql_old_password' plugin is enabled, which may allow the use of weak password hashing algorithms.</NonCompliantComment>
+    <CorrectiveComment>Disable the 'mysql_old_password' plugin to enforce strong password hashing algorithms.</CorrectiveComment>
+    <Correction>mysql -u root -p -e "UNINSTALL PLUGIN mysql_old_password;"</Correction>
+    <Verification>mysql -u root -p -e "SHOW PLUGINS;" | grep -q 'mysql_old_password' && echo 1 || echo 0</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="7.2">
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>my.cnf</FileName>
+    <NonCompliantComment>Passwords are stored in the global configuration, which may expose them to unauthorized users.</NonCompliantComment>
+    <CorrectiveComment>Ensure passwords are not stored in the global configuration file.</CorrectiveComment>
+    <Correction>sed -i '/password=/d' /etc/mysql/my.cnf</Correction>
+    <Verification>grep -q 'password=' /etc/mysql/my.cnf && echo 1 || echo 0</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="7.3">
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>my.cnf</FileName>
+    <NonCompliantComment>Weak authentication mechanisms are used for user accounts, increasing security risks.</NonCompliantComment>
+    <CorrectiveComment>Ensure strong authentication mechanisms are used (e.g., caching_sha2_password).</CorrectiveComment>
+    <Correction>sed -i '/\[mysqld\]/a default_authentication_plugin=caching_sha2_password' /etc/mysql/my.cnf</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'default_authentication_plugin';" | grep -q 'caching_sha2_password' && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="7.4">
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>my.cnf</FileName>
+    <NonCompliantComment>No password complexity policies are enforced, which may allow weak passwords.</NonCompliantComment>
+    <CorrectiveComment>Configure password complexity policies, including minimum length and character requirements.</CorrectiveComment>
+    <Correction>sed -i '/\[mysqld\]/a validate_password_policy=MEDIUM; validate_password_length=12' /etc/mysql/my.cnf</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'validate_password%';"</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="7.5">
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>mysql.user</FileName>
+    <NonCompliantComment>Users have wildcard hostnames, which may allow unauthorized access.</NonCompliantComment>
+    <CorrectiveComment>Ensure user accounts are restricted to specific hostnames or IP addresses.</CorrectiveComment>
+    <Correction>mysql -u root -p -e "DELETE FROM mysql.user WHERE host='%' AND user NOT IN ('root'); FLUSH PRIVILEGES;"</Correction>
+    <Verification>mysql -u root -p -e "SELECT user,host FROM mysql.user WHERE host='%';" | grep -v 'root' && echo 1 || echo 0</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="7.6">
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>mysql.user</FileName>
+    <NonCompliantComment>Anonymous accounts exist, which may allow unauthorized access.</NonCompliantComment>
+    <CorrectiveComment>Ensure no anonymous accounts exist in the database.</CorrectiveComment>
+    <Correction>mysql -u root -p -e "DELETE FROM mysql.user WHERE user=''; FLUSH PRIVILEGES;"</Correction>
+    <Verification>mysql -u root -p -e "SELECT user,host FROM mysql.user WHERE user='';" | grep -q '.' && echo 1 || echo 0</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="7.7">
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>my.cnf</FileName>
+    <NonCompliantComment>Passwords can be reused without restriction, which may weaken account security.</NonCompliantComment>
+    <CorrectiveComment>Enforce password reuse policies by configuring a password history setting.</CorrectiveComment>
+    <Correction>sed -i '/\[mysqld\]/a password_reuse_history=5' /etc/mysql/my.cnf</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'password_reuse_history';" | grep -q '5' && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+</RulesCIS>

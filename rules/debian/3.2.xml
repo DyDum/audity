@@ -1,0 +1,38 @@
+<RulesCIS>
+    <Rule id="3.2.1">
+        <BasePath>/etc/modprobe.d/</BasePath>
+        <FileName>dccp.conf</FileName>
+        <NonCompliantComment>The dccp kernel module is available, increasing the attack surface.</NonCompliantComment>
+        <CorrectiveComment>Disable the dccp kernel module by blacklisting it and preventing its loading.</CorrectiveComment>
+        <Correction>echo "install dccp /bin/false" >> /etc/modprobe.d/dccp.conf; echo "blacklist dccp" >> /etc/modprobe.d/dccp.conf; modprobe -r dccp</Correction>
+        <Verification>lsmod | grep -q '^dccp' && echo 1 || echo 0</Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="3.2.2">
+        <BasePath>/etc/modprobe.d/</BasePath>
+        <FileName>tipc.conf</FileName>
+        <NonCompliantComment>The tipc kernel module is available, which may increase the attack surface unnecessarily.</NonCompliantComment>
+        <CorrectiveComment>Disable the tipc kernel module by blacklisting it and preventing its loading.</CorrectiveComment>
+        <Correction>echo "install tipc /bin/false" >> /etc/modprobe.d/tipc.conf; echo "blacklist tipc" >> /etc/modprobe.d/tipc.conf; modprobe -r tipc</Correction>
+        <Verification>lsmod | grep -q '^tipc' && echo 1 || echo 0</Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="3.2.3">
+        <BasePath>/etc/modprobe.d/</BasePath>
+        <FileName>rds.conf</FileName>
+        <NonCompliantComment>The rds kernel module is available, potentially exposing the system to vulnerabilities.</NonCompliantComment>
+        <CorrectiveComment>Disable the rds kernel module by blacklisting it and preventing its loading.</CorrectiveComment>
+        <Correction>echo "install rds /bin/false" >> /etc/modprobe.d/rds.conf; echo "blacklist rds" >> /etc/modprobe.d/rds.conf; modprobe -r rds</Correction>
+        <Verification>lsmod | grep -q '^rds' && echo 1 || echo 0</Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="3.2.4">
+        <BasePath>/etc/modprobe.d/</BasePath>
+        <FileName>sctp.conf</FileName>
+        <NonCompliantComment>The sctp kernel module is available, which may not be necessary and could increase security risks.</NonCompliantComment>
+        <CorrectiveComment>Disable the sctp kernel module by blacklisting it and preventing its loading.</CorrectiveComment>
+        <Correction>echo "install sctp /bin/false" >> /etc/modprobe.d/sctp.conf; echo "blacklist sctp" >> /etc/modprobe.d/sctp.conf; modprobe -r sctp</Correction>
+        <Verification>lsmod | grep -q '^sctp' && echo 1 || echo 0</Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    </RulesCIS>

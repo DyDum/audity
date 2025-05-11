@@ -1,0 +1,67 @@
+<RulesCIS>
+  <Rule id="2.1">
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>server.xml</FileName>
+    <NonCompliantComment>The 'server.info' string is not customized, which may expose server information.</NonCompliantComment>
+    <CorrectiveComment>Alter the 'server.info' string to a custom value. Manually modify the server.xml file and set the 'server.info' value to a custom string.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="2.2">
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>server.xml</FileName>
+    <NonCompliantComment>The 'server.number' string is not customized, which may expose server information.</NonCompliantComment>
+    <CorrectiveComment>Alter the 'server.number' string to a custom value. Manually modify the server.xml file and set the 'server.number' value to a custom string.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="2.3">
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>server.xml</FileName>
+    <NonCompliantComment>The 'server.built' date is not customized, which may expose server build information.</NonCompliantComment>
+    <CorrectiveComment>Alter the 'server.built' date to a custom value. Manually modify the server.xml file and set the 'server.built' value to a custom string.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="2.4">
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>server.xml</FileName>
+    <NonCompliantComment>The X-Powered-By HTTP header is enabled, which may expose server information.</NonCompliantComment>
+    <CorrectiveComment>Disable the X-Powered-By HTTP header by adding the following configuration in the server.xml file: 
+    <Connector ... server="SecureServer" />.</CorrectiveComment>
+    <Correction>sed -i '/<Connector/s/server=".*"/server="SecureServer"/' $CATALINA_HOME/conf/server.xml</Correction>
+    <Verification>grep -E '<Connector.*server="SecureServer"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="2.5">
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>web.xml</FileName>
+    <NonCompliantComment>Client-facing stack traces are enabled, which may expose sensitive information to users.</NonCompliantComment>
+    <CorrectiveComment>Disable client-facing stack traces. Manually modify the web.xml file and set the 'showServerInfo' parameter to 'false' within the <servlet> configuration.</CorrectiveComment>
+    <Correction>sed -i '/<param-name>showServerInfo<\/param-name>/!b;n;c<param-value>false<\/param-value>' $CATALINA_HOME/conf/web.xml</Correction>
+    <Verification>grep -A 1 '<param-name>showServerInfo</param-name>' $CATALINA_HOME/conf/web.xml | grep '<param-value>false</param-value>' && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="2.6">
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>web.xml</FileName>
+    <NonCompliantComment>The HTTP TRACE method is enabled, which may allow cross-site tracing attacks.</NonCompliantComment>
+    <CorrectiveComment>Turn off the TRACE method. Manually modify the web.xml file and set the following: 
+    <LimitExcept GET POST HEAD> Deny from all </LimitExcept></CorrectiveComment>
+    <Correction>sed -i '/<LimitExcept GET POST HEAD>/!b;n;cDeny from all' $CATALINA_HOME/conf/web.xml</Correction>
+    <Verification>grep -A 1 '<LimitExcept GET POST HEAD>' $CATALINA_HOME/conf/web.xml | grep 'Deny from all' && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="2.7">
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>server.xml</FileName>
+    <NonCompliantComment>The 'Server' header is not modified, which may expose server information to clients.</NonCompliantComment>
+    <CorrectiveComment>Ensure the 'Server' header is modified to prevent information disclosure. Manually modify the server.xml file and add the 'server' attribute to the <Connector> element with a custom value. Example: <Connector ... server="SecureServer" />.</CorrectiveComment>
+    <Correction>sed -i '/<Connector/s/server=".*"/server="SecureServer"/' $CATALINA_HOME/conf/server.xml</Correction>
+    <Verification>grep -E '<Connector.*server="SecureServer"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+</RulesCIS>

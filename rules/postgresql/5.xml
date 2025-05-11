@@ -1,0 +1,61 @@
+<RulesCIS>
+  <Rule id="5.1">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>pg_hba.conf</FileName>
+    <NonCompliantComment>Passwords are specified in the command line, which may expose them to unauthorized users.</NonCompliantComment>
+    <CorrectiveComment>Do not specify passwords in the command line. Use a secure method, such as PGPASSFILE or prompt for passwords interactively.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="5.2">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>PostgreSQL is not bound to a specific IP address, which may expose it to unauthorized access.</NonCompliantComment>
+    <CorrectiveComment>Ensure PostgreSQL is bound to an IP address. Command: 
+    1. Edit the postgresql.conf file. 
+    2. Set the 'listen_addresses' parameter to a specific IP address or 'localhost'. 
+    3. Restart PostgreSQL using systemctl restart postgresql-17.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="5.3">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>pg_hba.conf</FileName>
+    <NonCompliantComment>Login via "local" UNIX Domain Socket is not configured correctly, which may allow unauthorized access.</NonCompliantComment>
+    <CorrectiveComment>Ensure login via "local" UNIX Domain Socket is configured with appropriate authentication methods. Example: 
+    local   all             all                                     peer</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="5.4">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>pg_hba.conf</FileName>
+    <NonCompliantComment>Login via "host" TCP/IP Socket is not configured correctly, which may allow unauthorized access.</NonCompliantComment>
+    <CorrectiveComment>Ensure login via "host" TCP/IP Socket is configured with appropriate authentication methods. Example: 
+    host    all             all             192.168.1.0/24          md5</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="5.5">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>Per-account connection limits are not configured, which may allow excessive connections from a single user.</NonCompliantComment>
+    <CorrectiveComment>Set per-account connection limits. Command: 
+    ALTER ROLE username CONNECTION LIMIT 10;</CorrectiveComment>
+    <Correction>psql -c "ALTER ROLE username CONNECTION LIMIT 10;"</Correction>
+    <Verification>psql -c "SELECT rolname, rolconnlimit FROM pg_roles WHERE rolconnlimit > 0;"</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="5.6">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>pg_hba.conf</FileName>
+    <NonCompliantComment>Password complexity is not configured, which may allow weak passwords.</NonCompliantComment>
+    <CorrectiveComment>Ensure password complexity is configured. Command: 
+    1. Install the passwordcheck extension. 
+    2. Configure password complexity settings in the postgresql.conf file:
+    passwordcheck.minlen = 12
+    passwordcheck.minclass = 3</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+</RulesCIS>

@@ -1,0 +1,34 @@
+<RulesCIS>
+  <Rule id="8.1">
+    <BasePath>/var/lib/pgsql/17/</BasePath>
+    <FileName>data</FileName>
+    <NonCompliantComment>PostgreSQL subdirectory locations are inside the data cluster, which may expose them to unauthorized access.</NonCompliantComment>
+    <CorrectiveComment>Ensure PostgreSQL subdirectory locations (e.g., backups, logs, WAL archive) are outside the data cluster. Command: 
+    1. Move the subdirectories to secure locations outside the data cluster. 
+    2. Update the postgresql.conf file to reflect the new locations (e.g., log_directory, archive_command).</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="8.2">
+    <BasePath>/usr/bin/</BasePath>
+    <FileName>pgBackRest</FileName>
+    <NonCompliantComment>The backup and restore tool, 'pgBackRest', is not installed or not configured correctly, which may prevent reliable backups.</NonCompliantComment>
+    <CorrectiveComment>Ensure pgBackRest is installed and configured correctly. Command: 
+    1. Install pgBackRest using the package manager (e.g., dnf install pgbackrest). 
+    2. Configure pgBackRest with a secure configuration file (e.g., /etc/pgbackrest/pgbackrest.conf). 
+    3. Test the configuration using: pgbackrest --stanza=main check</CorrectiveComment>
+    <Correction>dnf install pgbackrest -y; pgbackrest --stanza=main check</Correction>
+    <Verification>pgbackrest --stanza=main check</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="8.3">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>postgresql.conf</FileName>
+    <NonCompliantComment>Miscellaneous configuration settings are not configured correctly, which may affect security and performance.</NonCompliantComment>
+    <CorrectiveComment>Review and configure miscellaneous settings. Command: 
+    1. Ensure appropriate settings for work_mem, maintenance_work_mem, autovacuum settings, etc. 
+    2. Adjust these parameters based on the server's role and available resources.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+</RulesCIS>

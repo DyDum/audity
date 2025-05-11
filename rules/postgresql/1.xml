@@ -1,0 +1,71 @@
+<RulesCIS>
+  <Rule id="1.1">
+    <BasePath>/etc/yum.repos.d/</BasePath>
+    <FileName>postgresql.repo</FileName>
+    <NonCompliantComment>Packages are being obtained from unauthorized repositories, which may lead to installing unverified or malicious software.</NonCompliantComment>
+    <CorrectiveComment>Ensure PostgreSQL packages are obtained from authorized repositories such as the official PostgreSQL YUM (yum.postgresql.org) or APT (apt.postgresql.org) repositories.</CorrectiveComment>
+    <Correction>Manual review required to ensure packages are obtained only from authorized repositories.</Correction>
+    <Verification>grep -E 'postgresql|pgdg' /etc/yum.repos.d/* || grep -E 'postgresql|pgdg' /etc/apt/sources.list*</Verification>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="1.2">
+    <BasePath>/usr/bin/</BasePath>
+    <FileName>psql</FileName>
+    <NonCompliantComment>Unnecessary PostgreSQL packages are installed, increasing the attack surface.</NonCompliantComment>
+    <CorrectiveComment>Only required PostgreSQL packages should be installed, such as the server and client packages. Optional modules should be avoided unless necessary.</CorrectiveComment>
+    <Correction>Manual review required to identify and uninstall unnecessary PostgreSQL packages.</Correction>
+    <Verification>dpkg -l | grep postgresql || rpm -qa | grep postgresql</Verification>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="1.3">
+    <BasePath>/etc/systemd/system/</BasePath>
+    <FileName>postgresql-17.service</FileName>
+    <NonCompliantComment>The PostgreSQL systemd service file is not enabled, which may cause the database service to be inactive after a reboot.</NonCompliantComment>
+    <CorrectiveComment>Ensure PostgreSQL systemd service file is enabled to automatically start at boot.</CorrectiveComment>
+    <Correction>systemctl enable postgresql-17</Correction>
+    <Verification>systemctl is-enabled postgresql-17.service | grep enabled</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="1.4">
+    <BasePath>/var/lib/pgsql/</BasePath>
+    <FileName>data</FileName>
+    <NonCompliantComment>The PostgreSQL data cluster has not been initialized correctly, which may lead to a failed installation or misconfiguration.</NonCompliantComment>
+    <CorrectiveComment>Ensure the PostgreSQL data cluster is properly initialized using the initdb command.</CorrectiveComment>
+    <Correction>/usr/pgsql-17/bin/postgresql-17-setup initdb</Correction>
+    <Verification>/usr/pgsql-17/bin/postgresql-17-check-db-dir /var/lib/pgsql/17/data && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="1.5">
+    <BasePath>/var/lib/pgsql/</BasePath>
+    <FileName>postgresql-17</FileName>
+    <NonCompliantComment>The PostgreSQL server does not have the latest security patches applied, leaving it vulnerable to known security flaws.</NonCompliantComment>
+    <CorrectiveComment>Ensure the latest PostgreSQL security patches are installed using the package manager (apt or dnf/yum).</CorrectiveComment>
+    <Correction>Manual review required. Use apt-get upgrade or dnf update to apply the latest patches.</Correction>
+    <Verification>psql -c 'SHOW server_version;'</Verification>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="1.6">
+    <BasePath>/home/</BasePath>
+    <FileName>.bashrc, .profile</FileName>
+    <NonCompliantComment>The 'PGPASSWORD' environment variable is set in user profiles, which may expose database credentials.</NonCompliantComment>
+    <CorrectiveComment>Ensure 'PGPASSWORD' is not set in user profile files (.bashrc, .profile) to prevent exposure of database passwords.</CorrectiveComment>
+    <Correction>sed -i '/PGPASSWORD/d' /home/*/.{bashrc,profile}; sed -i '/PGPASSWORD/d' /root/.{bashrc,profile}</Correction>
+    <Verification>grep PGPASSWORD /home/*/.{bashrc,profile} /root/.{bashrc,profile} || echo 0</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="1.7">
+    <BasePath>/proc/</BasePath>
+    <FileName>environ</FileName>
+    <NonCompliantComment>The 'PGPASSWORD' environment variable is currently in use by a running process, exposing the database password.</NonCompliantComment>
+    <CorrectiveComment>Ensure 'PGPASSWORD' is not set as an environment variable for any running process.</CorrectiveComment>
+    <Correction>Manual review required to identify and remove the environment variable from any running process.</Correction>
+    <Verification>grep -R PGPASSWORD /proc/*/environ || echo 0</Verification>
+    <Manual>YES</Manual>
+  </Rule>
+</RulesCIS>

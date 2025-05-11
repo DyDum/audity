@@ -1,0 +1,38 @@
+<RulesCIS>
+  <Rule id="10.1">
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>LimitRequestLine is set to a value greater than 8190, increasing the risk of buffer overflow attacks.</NonCompliantComment>
+    <CorrectiveComment>Set the LimitRequestLine directive to 8190 or less.</CorrectiveComment>
+    <Correction>sed -i 's/^LimitRequestLine .*/LimitRequestLine 8190/' /etc/httpd/conf/httpd.conf; systemctl restart httpd</Correction>
+    <Verification>grep "^LimitRequestLine 8190" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+  <Rule id="10.2">
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>LimitRequestFields is set to a value greater than 100, which may allow excessive header fields.</NonCompliantComment>
+    <CorrectiveComment>Set the LimitRequestFields directive to 100 or less.</CorrectiveComment>
+    <Correction>sed -i 's/^LimitRequestFields .*/LimitRequestFields 100/' /etc/httpd/conf/httpd.conf; systemctl restart httpd</Correction>
+    <Verification>grep "^LimitRequestFields 100" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+  <Rule id="10.3">
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>LimitRequestFieldsize is set to a value greater than 1024, potentially exposing the server to large header attacks.</NonCompliantComment>
+    <CorrectiveComment>Set the LimitRequestFieldsize directive to 1024 or less.</CorrectiveComment>
+    <Correction>sed -i 's/^LimitRequestFieldsize .*/LimitRequestFieldsize 1024/' /etc/httpd/conf/httpd.conf; systemctl restart httpd</Correction>
+    <Verification>grep "^LimitRequestFieldsize 1024" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+  <Rule id="10.4">
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>LimitRequestBody is set to a value greater than 102400, which may allow oversized requests.</NonCompliantComment>
+    <CorrectiveComment>Set the LimitRequestBody directive to 102400 or less.</CorrectiveComment>
+    <Correction>sed -i 's/^LimitRequestBody .*/LimitRequestBody 102400/' /etc/httpd/conf/httpd.conf; systemctl restart httpd</Correction>
+    <Verification>grep "^LimitRequestBody 102400" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+</RulesCIS>

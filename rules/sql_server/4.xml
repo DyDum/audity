@@ -1,0 +1,29 @@
+<RulesCIS>
+  <Rule id="4.1">
+    <BasePath>N/A</BasePath>
+    <FileName>N/A</FileName>
+    <NonCompliantComment>The 'MUST_CHANGE' option is not set to 'ON' for all SQL authenticated logins.</NonCompliantComment>
+    <CorrectiveComment>Set the 'MUST_CHANGE' option to 'ON' for all SQL authenticated logins.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="4.2">
+    <BasePath>N/A</BasePath>
+    <FileName>N/A</FileName>
+    <NonCompliantComment>The 'CHECK_EXPIRATION' option is not set to 'ON' for all SQL authenticated logins within the Sysadmin role.</NonCompliantComment>
+    <CorrectiveComment>Ensure the 'CHECK_EXPIRATION' option is set to 'ON' for all SQL authenticated logins within the Sysadmin role. Command : ALTER LOGIN [username] WITH CHECK_EXPIRATION = ON;</CorrectiveComment>
+    <Correction>ALTER LOGIN [username] WITH CHECK_EXPIRATION = ON;</Correction>
+    <Verification>SELECT name, is_expiration_checked FROM sys.sql_logins WHERE is_expiration_checked = 0;</Verification>
+    <Manual>CORRECTION</Manual>
+  </Rule>
+
+  <Rule id="4.3">
+    <BasePath>N/A</BasePath>
+    <FileName>N/A</FileName>
+    <NonCompliantComment>The 'CHECK_POLICY' option is not set to 'ON' for all SQL authenticated logins.</NonCompliantComment>
+    <CorrectiveComment>Ensure the 'CHECK_POLICY' option is set to 'ON' for all SQL authenticated logins. Command : ALTER LOGIN [username] WITH CHECK_POLICY = ON;</CorrectiveComment>
+    <Correction>ALTER LOGIN [username] WITH CHECK_POLICY = ON;</Correction>
+    <Verification>SELECT name, is_policy_checked FROM sys.sql_logins WHERE is_policy_checked = 0;</Verification>
+    <Manual>CORRECTION</Manual>
+  </Rule>
+</RulesCIS>

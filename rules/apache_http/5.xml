@@ -1,0 +1,164 @@
+<RulesCIS>
+  <Rule id="5.1">
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>Options for the OS root directory are not restricted.</NonCompliantComment>
+    <CorrectiveComment>Set the Options directive to "None" for the root directory.</CorrectiveComment>
+    <Correction>echo "&lt;Directory /&gt;" >> /etc/httpd/conf/httpd.conf; echo "  Options None" >> /etc/httpd/conf/httpd.conf; echo "&lt;/Directory&gt;" >> /etc/httpd/conf/httpd.conf</Correction>
+    <Verification>grep -q "&lt;Directory /&gt;" /etc/httpd/conf/httpd.conf && grep -q "Options None" /etc/httpd/conf/httpd.conf && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+  <Rule id="5.2">
+    <BasePath>/var/www/html</BasePath>
+    <FileName>DocumentRoot configuration</FileName>
+    <NonCompliantComment>Web root directory options are not restricted.</NonCompliantComment>
+    <CorrectiveComment>Set the Options directive to "None" or "Multiviews" as appropriate for the DocumentRoot.</CorrectiveComment>
+    <Correction>sed -i 's/Options .*/Options None/' /etc/httpd/conf/httpd.conf</Correction>
+    <Verification>grep "Options None" /etc/httpd/conf/httpd.conf && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+  <Rule id="5.3">
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>Options for non-critical directories are not minimized.</NonCompliantComment>
+    <CorrectiveComment>Review and reduce the Options directives for directories that do not require extended functionality.</CorrectiveComment>
+    <Correction>Manual review required; update Options directives to minimal values.</Correction>
+    <Verification>Manual verification required</Verification>
+    <Manual>YES</Manual>
+  </Rule>
+  <Rule id="5.4">
+    <BasePath>/var/www/html</BasePath>
+    <FileName>index.html</FileName>
+    <NonCompliantComment>Default HTML content is present.</NonCompliantComment>
+    <CorrectiveComment>Remove default index.html content from the DocumentRoot.</CorrectiveComment>
+    <Correction>rm -f /var/www/html/index.html</Correction>
+    <Verification>[ ! -f /var/www/html/index.html ] && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+  <Rule id="5.5">
+    <BasePath>/usr/local/apache2/cgi-bin</BasePath>
+    <FileName>printenv</FileName>
+    <NonCompliantComment>Default CGI printenv script is present.</NonCompliantComment>
+    <CorrectiveComment>Remove the default printenv script from the CGI directory.</CorrectiveComment>
+    <Correction>rm -f /usr/local/apache2/cgi-bin/printenv</Correction>
+    <Verification>[ ! -f /usr/local/apache2/cgi-bin/printenv ] && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+  <Rule id="5.6">
+    <BasePath>/usr/local/apache2/cgi-bin</BasePath>
+    <FileName>test-cgi</FileName>
+    <NonCompliantComment>Default CGI test-cgi script is present.</NonCompliantComment>
+    <CorrectiveComment>Remove the default test-cgi script from the CGI directory.</CorrectiveComment>
+    <Correction>rm -f /usr/local/apache2/cgi-bin/test-cgi</Correction>
+    <Verification>[ ! -f /usr/local/apache2/cgi-bin/test-cgi ] && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+  <Rule id="5.7">
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>HTTP request methods are not restricted.</NonCompliantComment>
+    <CorrectiveComment>Add a &lt;LimitExcept&gt; directive to allow only GET, HEAD, POST, and OPTIONS.</CorrectiveComment>
+    <Correction>echo "&lt;LimitExcept GET HEAD POST OPTIONS&gt;" >> /etc/httpd/conf/httpd.conf; echo "  Require all denied" >> /etc/httpd/conf/httpd.conf; echo "&lt;/LimitExcept&gt;" >> /etc/httpd/conf/httpd.conf</Correction>
+    <Verification>grep -q "&lt;LimitExcept GET HEAD POST OPTIONS&gt;" /etc/httpd/conf/httpd.conf && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+  <Rule id="5.8">
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>HTTP TRACE method is enabled.</NonCompliantComment>
+    <CorrectiveComment>Disable the HTTP TRACE method by setting TraceEnable to Off.</CorrectiveComment>
+    <Correction>echo "TraceEnable Off" >> /etc/httpd/conf/httpd.conf</Correction>
+    <Verification>grep -q "^TraceEnable Off" /etc/httpd/conf/httpd.conf && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+  <Rule id="5.9">
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>Old HTTP protocol versions are allowed.</NonCompliantComment>
+    <CorrectiveComment>Implement rewrite rules to block requests not using HTTP/1.1 or HTTP/2.</CorrectiveComment>
+    <Correction>echo "RewriteEngine On" >> /etc/httpd/conf/httpd.conf; echo "RewriteCond %{THE_REQUEST} !HTTP/1\\.1$" >> /etc/httpd/conf/httpd.conf; echo "RewriteRule .* - [F]" >> /etc/httpd/conf/httpd.conf</Correction>
+    <Verification>grep -q "RewriteEngine On" /etc/httpd/conf/httpd.conf && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+  <Rule id="5.10">
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>Access to .ht* files is not restricted.</NonCompliantComment>
+    <CorrectiveComment>Add a FilesMatch directive to deny access to files beginning with .ht.</CorrectiveComment>
+    <Correction>echo "&lt;FilesMatch \"^\\.ht\"&gt;" >> /etc/httpd/conf/httpd.conf; echo "  Require all denied" >> /etc/httpd/conf/httpd.conf; echo "&lt;/FilesMatch&gt;" >> /etc/httpd/conf/httpd.conf</Correction>
+    <Verification>grep -q "&lt;FilesMatch \"^\\.ht\"&gt;" /etc/httpd/conf/httpd.conf && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+  <Rule id="5.11">
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>Access to .git files is not restricted.</NonCompliantComment>
+    <CorrectiveComment>Add a DirectoryMatch directive to deny access to .git directories.</CorrectiveComment>
+    <Correction>echo "&lt;DirectoryMatch \"/\\.git\"&gt;" >> /etc/httpd/conf/httpd.conf; echo "  Require all denied" >> /etc/httpd/conf/httpd.conf; echo "&lt;/DirectoryMatch&gt;" >> /etc/httpd/conf/httpd.conf</Correction>
+    <Verification>grep -q "&lt;DirectoryMatch \"/\\.git\"&gt;" /etc/httpd/conf/httpd.conf && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+  <Rule id="5.12">
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>Access to .svn files is not restricted.</NonCompliantComment>
+    <CorrectiveComment>Add a DirectoryMatch directive to deny access to .svn directories.</CorrectiveComment>
+    <Correction>echo "&lt;DirectoryMatch \"/\\.svn\"&gt;" >> /etc/httpd/conf/httpd.conf; echo "  Require all denied" >> /etc/httpd/conf/httpd.conf; echo "&lt;/DirectoryMatch&gt;" >> /etc/httpd/conf/httpd.conf</Correction>
+    <Verification>grep -q "&lt;DirectoryMatch \"/\\.svn\"&gt;" /etc/httpd/conf/httpd.conf && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+  <Rule id="5.13">
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>allowed_extensions.conf</FileName>
+    <NonCompliantComment>Inappropriate file extensions may be accessible.</NonCompliantComment>
+    <CorrectiveComment>Create a FilesMatch directive that allows only approved file extensions.</CorrectiveComment>
+    <Correction>echo "&lt;FilesMatch \"^.*\\.(css|html?|js|pdf|txt|xml|xsl|gif|ico|jpe?g|png)$\"&gt;" &gt; /etc/httpd/conf/allowed_extensions.conf; echo "  Require all granted" &gt;&gt; /etc/httpd/conf/allowed_extensions.conf; echo "&lt;/FilesMatch&gt;" &gt;&gt; /etc/httpd/conf/allowed_extensions.conf</Correction>
+    <Verification>test -f /etc/httpd/conf/allowed_extensions.conf && grep -q "Require all granted" /etc/httpd/conf/allowed_extensions.conf && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+  <Rule id="5.14">
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>IP address based requests are allowed.</NonCompliantComment>
+    <CorrectiveComment>Add rewrite rules to block requests with a numeric Host header.</CorrectiveComment>
+    <Correction>echo "RewriteEngine On" >> /etc/httpd/conf/httpd.conf; echo "RewriteCond %{HTTP_HOST} ^[0-9\\.]+$ [NC]" >> /etc/httpd/conf/httpd.conf; echo "RewriteRule .* - [F]" >> /etc/httpd/conf/httpd.conf</Correction>
+    <Verification>grep -q "RewriteCond %{HTTP_HOST} ^[0-9\\.]+$" /etc/httpd/conf/httpd.conf && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+  <Rule id="5.15">
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>Listen directives do not specify an IP address.</NonCompliantComment>
+    <CorrectiveComment>Update the Listen directives to include the specific IP address.</CorrectiveComment>
+    <Correction>sed -i 's/^Listen [0-9]*/Listen 192.168.1.10:80/' /etc/httpd/conf/httpd.conf</Correction>
+    <Verification>grep -q "^Listen 192.168.1.10:80" /etc/httpd/conf/httpd.conf && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+  <Rule id="5.16">
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>No header is configured to restrict browser framing.</NonCompliantComment>
+    <CorrectiveComment>Add a Header directive to restrict framing via Content-Security-Policy.</CorrectiveComment>
+    <Correction>echo "Header always append Content-Security-Policy \"frame-ancestors 'self'\"" >> /etc/httpd/conf/httpd.conf</Correction>
+    <Verification>grep -q "Header always append Content-Security-Policy" /etc/httpd/conf/httpd.conf && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+  <Rule id="5.17">
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>Referrer-Policy header is not set.</NonCompliantComment>
+    <CorrectiveComment>Add a Header directive to set the Referrer-Policy header appropriately.</CorrectiveComment>
+    <Correction>echo "Header set Referrer-Policy \"no-referrer-when-downgrade\"" >> /etc/httpd/conf/httpd.conf</Correction>
+    <Verification>grep -q "Header set Referrer-Policy" /etc/httpd/conf/httpd.conf && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+  <Rule id="5.18">
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>Permissions-Policy header is not set.</NonCompliantComment>
+    <CorrectiveComment>Add a Header directive to set the Permissions-Policy header with an appropriate allowlist.</CorrectiveComment>
+    <Correction>echo "Header set Permissions-Policy \"geolocation=(), microphone=()\"" >> /etc/httpd/conf/httpd.conf</Correction>
+    <Verification>grep -q "Header set Permissions-Policy" /etc/httpd/conf/httpd.conf && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+</RulesCIS>

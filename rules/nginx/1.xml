@@ -1,0 +1,41 @@
+<RulesCIS>
+  <Rule id="1.1.1">
+    <BasePath>/etc/nginx/</BasePath>
+    <FileName>N/A</FileName>
+    <NonCompliantComment>NGINX is not installed, which means the server is not secured with a recommended web server.</NonCompliantComment>
+    <CorrectiveComment>Install NGINX using the package manager or from source to ensure a secure installation.</CorrectiveComment>
+    <Correction>dnf install nginx -y</Correction>
+    <Verification>nginx -v &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="1.1.2">
+    <BasePath>/etc/nginx/</BasePath>
+    <FileName>N/A</FileName>
+    <NonCompliantComment>NGINX is not installed from source, which may include unnecessary modules and increase the attack surface.</NonCompliantComment>
+    <CorrectiveComment>Install NGINX from source with only the necessary modules enabled.</CorrectiveComment>
+    <Correction>wget https://nginx.org/download/nginx-1.22.0.tar.gz; tar -zxvf nginx-1.22.0.tar.gz; cd nginx-1.22.0; ./configure --without-http_autoindex_module --without-http_gzip_module; make; make install</Correction>
+    <Verification>nginx -V 2>&amp;1 | grep -q 'built from source' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="1.2.1">
+    <BasePath>/etc/yum.repos.d/</BasePath>
+    <FileName>nginx.repo</FileName>
+    <NonCompliantComment>NGINX package repositories are not properly configured, which may prevent updates.</NonCompliantComment>
+    <CorrectiveComment>Configure the NGINX repository in the package manager for automatic updates.</CorrectiveComment>
+    <Correction>echo -e "[nginx-stable]\nname=nginx stable repo\nbaseurl=http://nginx.org/packages/rhel/8/\$basearch/\ngpgcheck=1\nenabled=1\ngpgkey=https://nginx.org/keys/nginx_signing.key\nmodule_hotfixes=true" > /etc/yum.repos.d/nginx.repo</Correction>
+    <Verification>dnf repolist -v nginx-stable | grep -q 'nginx-stable' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="1.2.2">
+    <BasePath>/usr/sbin/</BasePath>
+    <FileName>nginx</FileName>
+    <NonCompliantComment>NGINX is not updated to the latest version, which may contain security vulnerabilities.</NonCompliantComment>
+    <CorrectiveComment>Update NGINX to the latest version using the package manager.</CorrectiveComment>
+    <Correction>dnf update nginx -y</Correction>
+    <Verification>nginx -v | grep -q '1.22.0' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+</RulesCIS>

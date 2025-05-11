@@ -1,0 +1,200 @@
+<RulesCIS>
+    <Rule id="2.1.1">
+        <BasePath>/etc/systemd/system/</BasePath>
+        <FileName>autofs.service</FileName>
+        <NonCompliantComment> The autofs service is enabled and running, which increases the attack surface by providing unnecessary service functionality. </NonCompliantComment>
+        <CorrectiveComment> Disable and stop the autofs service if it is not required on the system. </CorrectiveComment>
+        <Correction> systemctl disable autofs; systemctl stop autofs </Correction>
+        <Verification> systemctl is-active autofs | grep -q 'inactive' && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.1.2">
+        <BasePath>/etc/systemd/system/</BasePath>
+        <FileName>avahi-daemon.service</FileName>
+        <NonCompliantComment> The Avahi daemon service is running, which can expose the system to network discovery vulnerabilities if not needed. </NonCompliantComment>
+        <CorrectiveComment> Disable and stop the avahi-daemon service if it is not required. </CorrectiveComment>
+        <Correction> systemctl disable avahi-daemon; systemctl stop avahi-daemon </Correction>
+        <Verification> systemctl is-active avahi-daemon | grep -q 'inactive' && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.1.3">
+        <BasePath>/etc/systemd/system/</BasePath>
+        <FileName>dhcpd.service</FileName>
+        <NonCompliantComment> The DHCP server service is active, which may be unnecessary for this server and increases the risk of unauthorized network configuration. </NonCompliantComment>
+        <CorrectiveComment> Disable and stop the DHCP server service if it is not required. </CorrectiveComment>
+        <Correction> systemctl disable dhcpd; systemctl stop dhcpd </Correction>
+        <Verification> systemctl is-active dhcpd | grep -q 'inactive' && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.1.4">
+        <BasePath>/etc/systemd/system/</BasePath>
+        <FileName>named.service</FileName>
+        <NonCompliantComment> The DNS server service (named) is running, which may introduce vulnerabilities if not needed. </NonCompliantComment>
+        <CorrectiveComment> Disable and stop the DNS server service if it is not required. </CorrectiveComment>
+        <Correction> systemctl disable named; systemctl stop named </Correction>
+        <Verification> systemctl is-active named | grep -q 'inactive' && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.1.5">
+        <BasePath>/etc/systemd/system/</BasePath>
+        <FileName>dnsmasq.service</FileName>
+        <NonCompliantComment> The dnsmasq service is active, which may provide unnecessary network services. </NonCompliantComment>
+        <CorrectiveComment> Disable and stop the dnsmasq service if it is not required. </CorrectiveComment>
+        <Correction> systemctl disable dnsmasq; systemctl stop dnsmasq </Correction>
+        <Verification> systemctl is-active dnsmasq | grep -q 'inactive' && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.1.6">
+        <BasePath>/etc/systemd/system/</BasePath>
+        <FileName>vsftpd.service</FileName>
+        <NonCompliantComment> The FTP server service is active, which may introduce vulnerabilities. </NonCompliantComment>
+        <CorrectiveComment> Disable and stop the FTP service if it is not required. </CorrectiveComment>
+        <Correction> systemctl disable vsftpd; systemctl stop vsftpd </Correction>
+        <Verification> systemctl is-active vsftpd | grep -q 'inactive' && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.1.7">
+        <BasePath>/etc/systemd/system/</BasePath>
+        <FileName>slapd.service</FileName>
+        <NonCompliantComment> The LDAP server service is running, which can expose sensitive directory information. </NonCompliantComment>
+        <CorrectiveComment> Disable and stop the LDAP service if it is not needed. </CorrectiveComment>
+        <Correction> systemctl disable slapd; systemctl stop slapd </Correction>
+        <Verification> systemctl is-active slapd | grep -q 'inactive' && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.1.8">
+    <BasePath>/etc/systemd/system/</BasePath>
+        <FileName>message-server.service</FileName>
+        <NonCompliantComment> A message access server service is running, which might expose messaging data. </NonCompliantComment>
+        <CorrectiveComment> Disable and stop the message access server service if it is not required. </CorrectiveComment>
+        <Correction> systemctl disable message-server; systemctl stop message-server </Correction>
+        <Verification> systemctl is-active message-server | grep -q 'inactive' && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.1.9">
+        <BasePath>/etc/systemd/system/</BasePath>
+        <FileName>nfs-server.service</FileName>
+        <NonCompliantComment> The NFS server service is active, potentially exposing file-sharing vulnerabilities. </NonCompliantComment>
+        <CorrectiveComment> Disable and stop the NFS server service if it is not required. </CorrectiveComment>
+        <Correction> systemctl disable nfs-server; systemctl stop nfs-server </Correction>
+        <Verification> systemctl is-active nfs-server | grep -q 'inactive' && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.1.10">
+        <BasePath>/etc/systemd/system/</BasePath>
+        <FileName>ypserv.service</FileName>
+        <NonCompliantComment> The NIS server service is running, which may expose user account information. </NonCompliantComment>
+        <CorrectiveComment> Disable and stop the NIS service if it is not required. </CorrectiveComment>
+        <Correction> systemctl disable ypserv; systemctl stop ypserv </Correction>
+        <Verification> systemctl is-active ypserv | grep -q 'inactive' && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.1.11">
+        <BasePath>/etc/systemd/system/</BasePath>
+        <FileName>cups.service</FileName>
+        <NonCompliantComment> The print server service is active, which might not be necessary on a server. </NonCompliantComment>
+        <CorrectiveComment> Disable and stop the print service if it is not required. </CorrectiveComment>
+        <Correction> systemctl disable cups; systemctl stop cups </Correction>
+        <Verification> systemctl is-active cups | grep -q 'inactive' && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.1.12">
+        <BasePath>/etc/systemd/system/</BasePath>
+        <FileName>rpcbind.service</FileName>
+        <NonCompliantComment> The rpcbind service is active, which may increase the system’s exposure to remote exploits. </NonCompliantComment>
+        <CorrectiveComment> Disable and stop the rpcbind service if it is not required. </CorrectiveComment>
+        <Correction> systemctl disable rpcbind; systemctl stop rpcbind </Correction>
+        <Verification> systemctl is-active rpcbind | grep -q 'inactive' && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.1.13">
+        <BasePath>/etc/systemd/system/</BasePath>
+        <FileName>rsync.service</FileName>
+        <NonCompliantComment> The rsync service is active, which may expose the system to unauthorized file transfers. </NonCompliantComment>
+        <CorrectiveComment> Disable and stop the rsync service if it is not required. </CorrectiveComment>
+        <Correction> systemctl disable rsync; systemctl stop rsync </Correction>
+        <Verification> systemctl is-active rsync | grep -q 'inactive' && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.1.14">
+        <BasePath>/etc/systemd/system/</BasePath>
+        <FileName>smbd.service</FileName>
+        <NonCompliantComment> The Samba file server service is running, which may allow unauthorized file sharing. </NonCompliantComment>
+        <CorrectiveComment> Disable and stop the Samba service if it is not required. </CorrectiveComment>
+        <Correction> systemctl disable smbd; systemctl stop smbd </Correction>
+        <Verification> systemctl is-active smbd | grep -q 'inactive' && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.1.15">
+        <BasePath>/etc/systemd/system/</BasePath>
+        <FileName>snmpd.service</FileName>
+        <NonCompliantComment> The SNMP service is active, which may expose the system to network-based attacks. </NonCompliantComment>
+        <CorrectiveComment> Disable and stop the SNMP service if it is not required. </CorrectiveComment>
+        <Correction> systemctl disable snmpd; systemctl stop snmpd </Correction>
+        <Verification> systemctl is-active snmpd | grep -q 'inactive' && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.1.16">
+        <BasePath>/etc/systemd/system/</BasePath>
+        <FileName>tftpd.service</FileName>
+        <NonCompliantComment> The TFTP service is active, which may allow unauthorized file transfers. </NonCompliantComment>
+        <CorrectiveComment> Disable and stop the TFTP service if it is not required. </CorrectiveComment>
+        <Correction> systemctl disable tftpd; systemctl stop tftpd </Correction>
+        <Verification> systemctl is-active tftpd | grep -q 'inactive' && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.1.17">
+        <BasePath>/etc/systemd/system/</BasePath>
+        <FileName>squid.service</FileName>
+        <NonCompliantComment> The web proxy service is active, which may unnecessarily expose the system. </NonCompliantComment>
+        <CorrectiveComment> Disable and stop the web proxy service if it is not required. </CorrectiveComment>
+        <Correction> systemctl disable squid; systemctl stop squid </Correction>
+        <Verification> systemctl is-active squid | grep -q 'inactive' && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.1.18">
+        <BasePath>/etc/systemd/system/</BasePath>
+        <FileName>apache2.service</FileName>
+        <NonCompliantComment> The web server service is active, which may increase the risk of exploitation. </NonCompliantComment>
+        <CorrectiveComment> Disable and stop the web server service if it is not required. </CorrectiveComment>
+        <Correction> systemctl disable apache2; systemctl stop apache2 </Correction>
+        <Verification> systemctl is-active apache2 | grep -q 'inactive' && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.1.19">
+        <BasePath>/etc/systemd/system/</BasePath>
+        <FileName>xinetd.service</FileName>
+        <NonCompliantComment> The xinetd service is active, which might provide unnecessary access points. </NonCompliantComment>
+        <CorrectiveComment> Disable and stop the xinetd service if it is not required. </CorrectiveComment>
+        <Correction> systemctl disable xinetd; systemctl stop xinetd </Correction>
+        <Verification> systemctl is-active xinetd | grep -q 'inactive' && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.1.20">
+        <BasePath>/etc/systemd/system/</BasePath>
+        <FileName>xorg.service</FileName>
+        <NonCompliantComment> The X window server service is active, which may not be necessary on a headless server. </NonCompliantComment>
+        <CorrectiveComment> Disable and stop the X window server service if it is not required. </CorrectiveComment>
+        <Correction> systemctl disable xorg; systemctl stop xorg </Correction>
+        <Verification> systemctl is-active xorg | grep -q 'inactive' && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.1.21">
+        <BasePath>/etc/postfix/</BasePath>
+        <FileName>main.cf</FileName>
+        <NonCompliantComment> The mail transfer agent is configured to accept connections from all interfaces, which may expose the system. </NonCompliantComment>
+        <CorrectiveComment> Configure the mail transfer agent to operate in local-only mode by setting inet_interfaces to loopback-only. </CorrectiveComment>
+        <Correction> sed -i 's/inet_interfaces = all/inet_interfaces = loopback-only/' /etc/postfix/main.cf; systemctl restart postfix </Correction>
+        <Verification> grep -q "inet_interfaces = loopback-only" /etc/postfix/main.cf && echo 0 || echo 1 </Verification>
+        <Manual>NO</Manual>
+    </Rule>
+    <Rule id="2.1.22">
+        <BasePath>/</BasePath>
+        <FileName>netstat</FileName>
+        <NonCompliantComment> Unauthorized or unapproved services are found listening on network interfaces. </NonCompliantComment>
+        <CorrectiveComment> Manually review the list of active listening services and disable any that are not approved. </CorrectiveComment>
+        <Correction> Manual review required: use commands like "netstat -tulnp" or "ss -tulnp" to identify services. </Correction>
+        <Verification> echo "Manual review required" </Verification>
+        <Manual>YES</Manual>
+    </Rule>
+</RulesCIS>

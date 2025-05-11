@@ -1,0 +1,119 @@
+<RulesCIS>
+  <Rule id="7.1.1">
+    <BasePath>/etc/</BasePath>
+    <FileName>passwd</FileName>
+    <NonCompliantComment>/etc/passwd file permissions are not set securely, risking unauthorized access.</NonCompliantComment>
+    <CorrectiveComment>Set /etc/passwd file permissions to 644.</CorrectiveComment>
+    <Correction>chmod 644 /etc/passwd</Correction>
+    <Verification>stat -c "%a" /etc/passwd | grep -q "^644$" && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+  <Rule id="7.1.2">
+    <BasePath>/etc/</BasePath>
+    <FileName>passwd-</FileName>
+    <NonCompliantComment>/etc/passwd- file permissions are too permissive, risking exposure of backup account information.</NonCompliantComment>
+    <CorrectiveComment>Set /etc/passwd- file permissions to 640.</CorrectiveComment>
+    <Correction>chmod 640 /etc/passwd-</Correction>
+    <Verification>stat -c "%a" /etc/passwd- | grep -q "^640$" && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+  <Rule id="7.1.3">
+    <BasePath>/etc/</BasePath>
+    <FileName>group</FileName>
+    <NonCompliantComment>/etc/group file permissions are not set securely.</NonCompliantComment>
+    <CorrectiveComment>Set /etc/group file permissions to 644.</CorrectiveComment>
+    <Correction>chmod 644 /etc/group</Correction>
+    <Verification>stat -c "%a" /etc/group | grep -q "^644$" && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+  <Rule id="7.1.4">
+    <BasePath>/etc/</BasePath>
+    <FileName>group-</FileName>
+    <NonCompliantComment>/etc/group- file permissions are too permissive.</NonCompliantComment>
+    <CorrectiveComment>Set /etc/group- file permissions to 640.</CorrectiveComment>
+    <Correction>chmod 640 /etc/group-</Correction>
+    <Verification>stat -c "%a" /etc/group- | grep -q "^640$" && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+  <Rule id="7.1.5">
+    <BasePath>/etc/</BasePath>
+    <FileName>shadow</FileName>
+    <NonCompliantComment>/etc/shadow file permissions are too open, risking exposure of password hashes.</NonCompliantComment>
+    <CorrectiveComment>Set /etc/shadow file permissions to 600.</CorrectiveComment>
+    <Correction>chmod 600 /etc/shadow</Correction>
+    <Verification>stat -c "%a" /etc/shadow | grep -q "^600$" && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+  <Rule id="7.1.6">
+    <BasePath>/etc/</BasePath>
+    <FileName>shadow-</FileName>
+    <NonCompliantComment>/etc/shadow- file permissions are too permissive.</NonCompliantComment>
+    <CorrectiveComment>Set /etc/shadow- file permissions to 640.</CorrectiveComment>
+    <Correction>chmod 640 /etc/shadow-</Correction>
+    <Verification>stat -c "%a" /etc/shadow- | grep -q "^640$" && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+  <Rule id="7.1.7">
+    <BasePath>/etc/</BasePath>
+    <FileName>gshadow</FileName>
+    <NonCompliantComment>/etc/gshadow file permissions are too open, risking unauthorized disclosure of group password information.</NonCompliantComment>
+    <CorrectiveComment>Set /etc/gshadow file permissions to 600.</CorrectiveComment>
+    <Correction>chmod 600 /etc/gshadow</Correction>
+    <Verification>stat -c "%a" /etc/gshadow | grep -q "^600$" && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+  <Rule id="7.1.8">
+    <BasePath>/etc/</BasePath>
+    <FileName>gshadow-</FileName>
+    <NonCompliantComment>/etc/gshadow- file permissions are too permissive.</NonCompliantComment>
+    <CorrectiveComment>Set /etc/gshadow- file permissions to 640.</CorrectiveComment>
+    <Correction>chmod 640 /etc/gshadow-</Correction>
+    <Verification>stat -c "%a" /etc/gshadow- | grep -q "^640$" && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+  <Rule id="7.1.9">
+    <BasePath>/etc/</BasePath>
+    <FileName>shells</FileName>
+    <NonCompliantComment>/etc/shells file permissions are too permissive, risking unauthorized modifications.</NonCompliantComment>
+    <CorrectiveComment>Set /etc/shells file permissions to 644.</CorrectiveComment>
+    <Correction>chmod 644 /etc/shells</Correction>
+    <Verification>stat -c "%a" /etc/shells | grep -q "^644$" && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+  <Rule id="7.1.10">
+    <BasePath>/etc/security/</BasePath>
+    <FileName>opasswd</FileName>
+    <NonCompliantComment>/etc/security/opasswd file permissions are not set securely, risking exposure of password history.</NonCompliantComment>
+    <CorrectiveComment>Set /etc/security/opasswd file permissions to 600.</CorrectiveComment>
+    <Correction>chmod 600 /etc/security/opasswd</Correction>
+    <Verification>stat -c "%a" /etc/security/opasswd | grep -q "^600$" && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+  <Rule id="7.1.11">
+    <BasePath>/</BasePath>
+    <FileName>world_writable</FileName>
+    <NonCompliantComment>There are world-writable files and directories, which could be exploited by an attacker.</NonCompliantComment>
+    <CorrectiveComment>Identify and secure world-writable files and directories.</CorrectiveComment>
+    <Correction>echo "Manual review required: use 'find / -xdev -type f -perm -0002' to list world-writable files."</Correction>
+    <Verification>echo "Manual verification required"</Verification>
+    <Manual>YES</Manual>
+  </Rule>
+  <Rule id="7.1.12">
+    <BasePath>/</BasePath>
+    <FileName>orphan_files</FileName>
+    <NonCompliantComment>Files or directories without an owner exist, posing a security risk.</NonCompliantComment>
+    <CorrectiveComment>Identify and correct files and directories without an owner.</CorrectiveComment>
+    <Correction>echo "Manual review required: use 'find / -xdev \( -nouser -o -nogroup \) -print' to list orphan files."</Correction>
+    <Verification>echo "Manual verification required"</Verification>
+    <Manual>YES</Manual>
+  </Rule>
+  <Rule id="7.1.13">
+    <BasePath>/</BasePath>
+    <FileName>suid_sgid_review</FileName>
+    <NonCompliantComment>SUID and SGID files have not been reviewed, potentially allowing unauthorized privilege escalation.</NonCompliantComment>
+    <CorrectiveComment>Regularly review SUID and SGID files and ensure that only trusted files have these permissions.</CorrectiveComment>
+    <Correction>echo "Manual review required: use 'find / -xdev -perm /6000 -type f -exec ls -la {} \;' to list SUID/SGID files."</Correction>
+    <Verification>echo "Manual verification required"</Verification>
+    <Manual>YES</Manual>
+  </Rule>
+</RulesCIS>
