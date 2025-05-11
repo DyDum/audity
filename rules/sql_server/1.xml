@@ -15,6 +15,7 @@
              SERVERPROPERTY('ProductUpdateLevel') AS 'ProductUpdate_Level', 
              SERVERPROPERTY('ProductUpdateReference') AS 'KB_Number';
     </Verification>
+    <Manual>YES</Manual>
   </Rule>
 
   <Rule id="1.2">
@@ -31,5 +32,6 @@
       SELECT SERVERPROPERTY('IsClustered') AS IsClustered, 
              SERVERPROPERTY('EngineEdition') AS EngineEdition;
     </Verification>
+    <Manual>YES</Manual>
   </Rule>
 </RulesCIS>

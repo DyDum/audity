@@ -6,6 +6,7 @@
     <CorrectiveComment>Ensure the 'Ad Hoc Distributed Queries' server configuration option is set to '0'.</CorrectiveComment>
     <Correction>EXEC sp_configure 'show advanced options', 1; RECONFIGURE; EXEC sp_configure 'Ad Hoc Distributed Queries', 0; RECONFIGURE;</Correction>
     <Verification>EXEC sp_configure 'Ad Hoc Distributed Queries';</Verification>
+    <Manual>NO</Manual>
   </Rule>
 
   <Rule id="2.2">
@@ -15,6 +16,7 @@
     <CorrectiveComment>Ensure the 'CLR Enabled' server configuration option is set to '0'.</CorrectiveComment>
     <Correction>EXEC sp_configure 'show advanced options', 1; RECONFIGURE; EXEC sp_configure 'clr enabled', 0; RECONFIGURE;</Correction>
     <Verification>EXEC sp_configure 'clr enabled';</Verification>
+    <Manual>NO</Manual>
   </Rule>
 
   <Rule id="2.3">
@@ -24,6 +26,7 @@
     <CorrectiveComment>Ensure 'Cross DB Ownership Chaining' is set to '0'.</CorrectiveComment>
     <Correction>EXEC sp_configure 'show advanced options', 1; RECONFIGURE; EXEC sp_configure 'Cross DB Ownership Chaining', 0; RECONFIGURE;</Correction>
     <Verification>EXEC sp_configure 'Cross DB Ownership Chaining';</Verification>
+    <Manual>NO</Manual>
   </Rule>
 
   <Rule id="2.4">
@@ -33,6 +36,7 @@
     <CorrectiveComment>Ensure 'Database Mail XPs' is set to '0'.</CorrectiveComment>
     <Correction>EXEC sp_configure 'show advanced options', 1; RECONFIGURE; EXEC sp_configure 'Database Mail XPs', 0; RECONFIGURE;</Correction>
     <Verification>EXEC sp_configure 'Database Mail XPs';</Verification>
+    <Manual>NO</Manual>
   </Rule>
 
   <Rule id="2.5">
@@ -42,6 +46,7 @@
     <CorrectiveComment>Ensure 'Ole Automation Procedures' is set to '0'.</CorrectiveComment>
     <Correction>EXEC sp_configure 'show advanced options', 1; RECONFIGURE; EXEC sp_configure 'Ole Automation Procedures', 0; RECONFIGURE;</Correction>
     <Verification>EXEC sp_configure 'Ole Automation Procedures';</Verification>
+    <Manual>NO</Manual>
   </Rule>
 
   <Rule id="2.6">
@@ -51,6 +56,7 @@
     <CorrectiveComment>Ensure 'Remote Access' is set to '0'.</CorrectiveComment>
     <Correction>EXEC sp_configure 'show advanced options', 1; RECONFIGURE; EXEC sp_configure 'Remote Access', 0; RECONFIGURE;</Correction>
     <Verification>EXEC sp_configure 'Remote Access';</Verification>
+    <Manual>NO</Manual>
   </Rule>
 
   <Rule id="2.7">
@@ -60,6 +66,7 @@
     <CorrectiveComment>Ensure 'Remote Admin Connections' is set to '0'.</CorrectiveComment>
     <Correction>EXEC sp_configure 'show advanced options', 1; RECONFIGURE; EXEC sp_configure 'Remote Admin Connections', 0; RECONFIGURE;</Correction>
     <Verification>EXEC sp_configure 'Remote Admin Connections';</Verification>
+    <Manual>NO</Manual>
   </Rule>
 
   <Rule id="2.8">
@@ -69,6 +76,7 @@
     <CorrectiveComment>Ensure 'Scan For Startup Procs' is set to '0'.</CorrectiveComment>
     <Correction>EXEC sp_configure 'show advanced options', 1; RECONFIGURE; EXEC sp_configure 'Scan For Startup Procs', 0; RECONFIGURE;</Correction>
     <Verification>EXEC sp_configure 'Scan For Startup Procs';</Verification>
+    <Manual>NO</Manual>
   </Rule>
 
   <Rule id="2.9">
@@ -78,6 +86,7 @@
     <CorrectiveComment>Ensure the 'Trustworthy' database property is set to 'OFF' for all databases.</CorrectiveComment>
     <Correction>ALTER DATABASE [DatabaseName] SET TRUSTWORTHY OFF;</Correction>
     <Verification>SELECT name, is_trustworthy_on FROM sys.databases;</Verification>
+    <Manual>CORRECTION</Manual>
   </Rule>
 
   <Rule id="2.10">
@@ -93,6 +102,7 @@
     <Verification>
       SELECT protocol_desc, enabled FROM sys.dm_server_registry WHERE registry_key LIKE '%SuperSocketNetLib%';
     </Verification>
+    <Manual>YES</Manual>
   </Rule>
 
   <Rule id="2.11">
@@ -108,6 +118,7 @@
     <Verification>
       SELECT local_net_address, local_tcp_port FROM sys.dm_exec_connections WHERE protocol_desc = 'TCP';
     </Verification>
+    <Manual>CORRECTION</Manual>
   </Rule>
 
   <Rule id="2.12">
@@ -117,6 +128,7 @@
     <CorrectiveComment>Set the 'Hide Instance' option to 'Yes' for production SQL Server instances.</CorrectiveComment>
     <Correction>EXEC sp_configure 'show advanced options', 1; RECONFIGURE; EXEC sp_configure 'hide instance', 1; RECONFIGURE;</Correction>
     <Verification>EXEC sp_configure 'hide instance';</Verification>
+    <Manual>NO</Manual>
   </Rule>
 
   <Rule id="2.13">
@@ -126,6 +138,7 @@
     <CorrectiveComment>Disable the 'sa' login account to prevent unauthorized access.</CorrectiveComment>
     <Correction>ALTER LOGIN [sa] DISABLE;</Correction>
     <Verification>SELECT name, is_disabled FROM sys.server_principals WHERE name = 'sa';</Verification>
+    <Manual>NO</Manual>
   </Rule>
 
   <Rule id="2.14">
@@ -135,6 +148,7 @@
     <CorrectiveComment>Rename the 'sa' login account to a less predictable name.</CorrectiveComment>
     <Correction>ALTER LOGIN [sa] WITH NAME = [new_admin_name];</Correction>
     <Verification>SELECT name FROM sys.server_principals WHERE principal_id = 1;</Verification>
+    <Manual>NO</Manual>
   </Rule>
 
   <Rule id="2.15">
@@ -144,6 +158,7 @@
     <CorrectiveComment>Ensure 'AUTO_CLOSE' is set to 'OFF' on all contained databases.</CorrectiveComment>
     <Correction>ALTER DATABASE [DatabaseName] SET AUTO_CLOSE OFF;</Correction>
     <Verification>SELECT name, is_auto_close_on FROM sys.databases WHERE is_auto_close_on = 1;</Verification>
+    <Manual>CORRECTION</Manual>
   </Rule>
 
   <Rule id="2.16">
@@ -153,6 +168,7 @@
     <CorrectiveComment>Ensure no login exists with the name 'sa'.</CorrectiveComment>
     <Correction>DROP LOGIN [sa];</Correction>
     <Verification>SELECT name FROM sys.server_principals WHERE name = 'sa';</Verification>
+    <Manual>NO</Manual>
   </Rule>
 
   <Rule id="2.17">
@@ -162,5 +178,6 @@
     <CorrectiveComment>Ensure 'clr strict security' is set to '1' for enhanced security.</CorrectiveComment>
     <Correction>EXEC sp_configure 'show advanced options', 1; RECONFIGURE; EXEC sp_configure 'clr strict security', 1; RECONFIGURE;</Correction>
     <Verification>EXEC sp_configure 'clr strict security';</Verification>
+    <Manual>NO</Manual>
   </Rule>
 </RulesCIS>
