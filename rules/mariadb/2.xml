@@ -1,0 +1,163 @@
+<ReglesCIS>
+  <Regle id="2.1.1">
+    <CheminBase>/etc/mysql/</CheminBase>
+    <NomFichier>backup_policy.txt</NomFichier>
+    <RegleNonConforme>No backup policy is defined, which may result in data loss.</RegleNonConforme>
+    <RegleCorrigee>Establish a backup policy for MariaDB databases, including full, incremental, and transaction log backups.</RegleCorrigee>
+    <Correction>echo 'Backup policy: Daily full backup, hourly incremental backups, and transaction log backups.' > /etc/mysql/backup_policy.txt</Correction>
+    <Verification>test -f /etc/mysql/backup_policy.txt && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="2.1.2">
+    <CheminBase>/backup/</CheminBase>
+    <NomFichier>N/A</NomFichier>
+    <RegleNonConforme>Backups are not verified, which may result in unreliable recoveries.</RegleNonConforme>
+    <RegleCorrigee>Regularly verify backups by performing test restores.</RegleCorrigee>
+    <Correction>mysql -u root -p -e "RESTORE FROM BACKUP '/backup/path/';"</Correction>
+    <Verification>test -d /backup/path && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="2.1.3">
+    <CheminBase>/etc/mysql/</CheminBase>
+    <NomFichier>backup_credentials.cnf</NomFichier>
+    <RegleNonConforme>Backup credentials are stored in plain text, which may expose them to unauthorized users.</RegleNonConforme>
+    <RegleCorrigee>Secure backup credentials by storing them in a secure vault or encrypting them.</RegleCorrigee>
+    <Correction>chmod 600 /etc/mysql/backup_credentials.cnf; chown mysql:mysql /etc/mysql/backup_credentials.cnf</Correction>
+    <Verification>stat -c "%a %U:%G" /etc/mysql/backup_credentials.cnf | grep -q '600 mysql:mysql' && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="2.1.4">
+    <CheminBase>/backup/</CheminBase>
+    <NomFichier>N/A</NomFichier>
+    <RegleNonConforme>Backups are not properly secured, making them vulnerable to unauthorized access.</RegleNonConforme>
+    <RegleCorrigee>Ensure backup directories are secured with appropriate permissions.</RegleCorrigee>
+    <Correction>chmod 700 /backup; chown mysql:mysql /backup</Correction>
+    <Verification>stat -c "%a %U:%G" /backup | grep -q '700 mysql:mysql' && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="2.1.5">
+    <CheminBase>/etc/mysql/</CheminBase>
+    <NomFichier>my.cnf</NomFichier>
+    <RegleNonConforme>Point-in-Time Recovery (PITR) is not enabled, which may prevent restoring to a specific point in time.</RegleNonConforme>
+    <RegleCorrigee>Enable binary logging to allow point-in-time recovery.</RegleCorrigee>
+    <Correction>sed -i 's/^#log_bin/log_bin/' /etc/mysql/my.cnf; systemctl restart mariadb</Correction>
+    <Verification>grep -q '^log_bin' /etc/mysql/my.cnf && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="2.1.6">
+    <CheminBase>/etc/mysql/</CheminBase>
+    <NomFichier>dr_plan.txt</NomFichier>
+    <RegleNonConforme>No Disaster Recovery (DR) plan is defined, which may result in prolonged downtime during an incident.</RegleNonConforme>
+    <RegleCorrigee>Establish a Disaster Recovery (DR) plan for MariaDB, including replication and failover procedures.</RegleCorrigee>
+    <Correction>echo 'Disaster Recovery Plan: Backup, Replication, Failover' > /etc/mysql/dr_plan.txt</Correction>
+    <Verification>test -f /etc/mysql/dr_plan.txt && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="2.1.7">
+    <CheminBase>/etc/mysql/</CheminBase>
+    <NomFichier>my.cnf</NomFichier>
+    <RegleNonConforme>Configuration and related files are not backed up, which may result in misconfiguration after recovery.</RegleNonConforme>
+    <RegleCorrigee>Regularly backup configuration files, including my.cnf and user configuration files.</RegleCorrigee>
+    <Correction>tar -czf /backup/mariadb-config-$(date +%F).tar.gz /etc/mysql/</Correction>
+    <Verification>test -f /backup/mariadb-config-$(date +%F).tar.gz && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="2.2">
+    <CheminBase>/etc/mysql/</CheminBase>
+    <NomFichier>my.cnf</NomFichier>
+    <RegleNonConforme>MariaDB is installed on a multi-use server, increasing security risks.</RegleNonConforme>
+    <RegleCorrigee>Dedicate the server exclusively to MariaDB.</RegleCorrigee>
+    <Correction>systemctl stop apache2; systemctl disable apache2</Correction>
+    <Verification>! systemctl is-active --quiet apache2 && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="2.3">
+    <CheminBase>/etc/mysql/</CheminBase>
+    <NomFichier>my.cnf</NomFichier>
+    <RegleNonConforme>Passwords are specified in the command line, exposing them to unauthorized users.</RegleNonConforme>
+    <RegleCorrigee>Use secure password files or environment variables for authentication.</RegleCorrigee>
+    <Correction>unset MYSQL_PWD; export MYSQL_PWD_FILE=/etc/mysql/secure_password.cnf</Correction>
+    <Verification>env | grep -q 'MYSQL_PWD' && echo 1 || echo 0</Verification>
+  </Regle>
+
+  <Regle id="2.4">
+    <CheminBase>/etc/mysql/</CheminBase>
+    <NomFichier>my.cnf</NomFichier>
+    <RegleNonConforme>Usernames are reused, which can lead to confusion and security risks.</RegleNonConforme>
+    <RegleCorrigee>Ensure usernames are unique and not reused.</RegleCorrigee>
+    <Correction>mysql -u root -p -e "DELETE FROM mysql.user WHERE user='duplicate_user';"</Correction>
+    <Verification>mysql -u root -p -e "SELECT user FROM mysql.user GROUP BY user HAVING COUNT(*) > 1;" | grep -q . && echo 1 || echo 0</Verification>
+  </Regle>
+
+  <Regle id="2.5">
+    <CheminBase>/etc/mysql/ssl/</CheminBase>
+    <NomFichier>certificate.pem</NomFichier>
+    <RegleNonConforme>Default or weak cryptographic material is used, reducing security.</RegleNonConforme>
+    <RegleCorrigee>Ensure unique, strong cryptographic material is used for SSL/TLS.</RegleCorrigee>
+    <Correction>openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/mysql/ssl/private-key.pem -out /etc/mysql/ssl/certificate.pem</Correction>
+    <Verification>openssl x509 -in /etc/mysql/ssl/certificate.pem -noout -text | grep -q 'RSA' && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="2.6">
+    <CheminBase>/etc/mysql/</CheminBase>
+    <NomFichier>my.cnf</NomFichier>
+    <RegleNonConforme>The 'password_lifetime' parameter is not configured, allowing passwords to never expire.</RegleNonConforme>
+    <RegleCorrigee>Set 'password_lifetime' to a value less than or equal to 365 days.</RegleCorrigee>
+    <Correction>sed -i '/\[mysqld\]/a password_lifetime=365' /etc/mysql/my.cnf</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'password_lifetime';" | grep -q '365' && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="2.7">
+    <CheminBase>/etc/mysql/</CheminBase>
+    <NomFichier>my.cnf</NomFichier>
+    <RegleNonConforme>Inactive accounts are not locked, increasing security risks.</RegleNonConforme>
+    <RegleCorrigee>Lock inactive accounts to prevent unauthorized access.</RegleCorrigee>
+    <Correction>mysql -u root -p -e "ALTER USER 'inactive_user'@'localhost' ACCOUNT LOCK;"</Correction>
+    <Verification>mysql -u root -p -e "SELECT user,host,account_locked FROM mysql.user WHERE account_locked='Y';" | grep -q 'Y' && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="2.8">
+    <CheminBase>/etc/mysql/</CheminBase>
+    <NomFichier>my.cnf</NomFichier>
+    <RegleNonConforme>Socket peer-credential authentication is not used, which may reduce security.</RegleNonConforme>
+    <RegleCorrigee>Enable socket peer-credential authentication for secure local connections.</RegleCorrigee>
+    <Correction>sed -i '/\[mysqld\]/a skip_name_resolve=ON' /etc/mysql/my.cnf</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'skip_name_resolve';" | grep -q 'ON' && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="2.9">
+    <CheminBase>/etc/mysql/</CheminBase>
+    <NomFichier>my.cnf</NomFichier>
+    <RegleNonConforme>MariaDB is not bound to specific IP addresses, increasing exposure.</RegleNonConforme>
+    <RegleCorrigee>Restrict MariaDB to one or more specific IP addresses (e.g., 127.0.0.1).</RegleCorrigee>
+    <Correction>sed -i '/\[mysqld\]/a bind-address=127.0.0.1' /etc/mysql/my.cnf</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'bind_address';" | grep -q '127.0.0.1' && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="2.10">
+    <CheminBase>/etc/mysql/</CheminBase>
+    <NomFichier>my.cnf</NomFichier>
+    <RegleNonConforme>All TLS versions are enabled, increasing the risk of using weak versions.</RegleNonConforme>
+    <RegleCorrigee>Restrict TLS to versions 1.2 and 1.3 only.</RegleCorrigee>
+    <Correction>sed -i '/\[mysqld\]/a tls_version=TLSv1.2,TLSv1.3' /etc/mysql/my.cnf</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'tls_version';" | grep -q 'TLSv1.2,TLSv1.3' && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="2.11">
+    <CheminBase>/etc/mysql/ssl/</CheminBase>
+    <NomFichier>ca-cert.pem</NomFichier>
+    <RegleNonConforme>Client-side certificates are not required, which may allow unauthorized connections.</RegleNonConforme>
+    <RegleCorrigee>Require client-side certificates (X.509) for secure connections.</RegleCorrigee>
+    <Correction>sed -i '/\[mysqld\]/a require_secure_transport=ON' /etc/mysql/my.cnf</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'require_secure_transport';" | grep -q 'ON' && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="2.12">
+    <CheminBase>/etc/mysql/</CheminBase>
+    <NomFichier>my.cnf</NomFichier>
+    <RegleNonConforme>Weak ciphers are enabled, increasing the risk of exploitation.</RegleNonConforme>
+    <RegleCorrigee>Ensure only approved, strong ciphers are used for SSL/TLS.</RegleCorrigee>
+    <Correction>sed -i '/\[mysqld\]/a ssl_ciphers=ECDHE-ECDSA-AES128-GCM-SHA256' /etc/mysql/my.cnf</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'ssl_ciphers';" | grep -q 'ECDHE-ECDSA-AES128-GCM-SHA256' && echo 0 || echo 1</Verification>
+  </Regle>
+</ReglesCIS>

@@ -1,0 +1,55 @@
+<ReglesCIS>
+    <Regle id="6.1">
+    <CheminBase>/etc/mysql/</CheminBase>
+    <NomFichier>my.cnf</NomFichier>
+    <RegleNonConforme>The 'log_error' parameter is not configured correctly, which may result in missing error logs.</RegleNonConforme>
+    <RegleCorrigee>Ensure 'log_error' is set to a specific file in the logging directory (e.g., /var/log/mysql/error.log).</RegleCorrigee>
+    <Correction>sed -i '/\[mysqld\]/a log_error=/var/log/mysql/error.log' /etc/mysql/my.cnf; systemctl restart mariadb</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'log_error';" | grep -q '/var/log/mysql/error.log' && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="6.2">
+    <CheminBase>/var/log/mysql/</CheminBase>
+    <NomFichier>N/A</NomFichier>
+    <RegleNonConforme>Log files are stored on the system partition, which may cause disk space exhaustion or unauthorized access.</RegleNonConforme>
+    <RegleCorrigee>Store log files on a non-system partition (e.g., /mnt/log/mysql/).</RegleCorrigee>
+    <Correction>mkdir -p /mnt/log/mysql; mv /var/log/mysql/* /mnt/log/mysql/; ln -s /mnt/log/mysql /var/log/mysql</Correction>
+    <Verification>df /var/log/mysql | grep -vq '/$' && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="6.3">
+    <CheminBase>/etc/mysql/</CheminBase>
+    <NomFichier>my.cnf</NomFichier>
+    <RegleNonConforme>The 'log_warnings' parameter is not set to '2', which may reduce logging verbosity.</RegleNonConforme>
+    <RegleCorrigee>Set 'log_warnings' to '2' to increase log verbosity for security events.</RegleCorrigee>
+    <Correction>sed -i '/\[mysqld\]/a log_warnings=2' /etc/mysql/my.cnf; systemctl restart mariadb</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'log_warnings';" | grep -q '2' && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="6.4">
+    <CheminBase>/etc/mysql/</CheminBase>
+    <NomFichier>my.cnf</NomFichier>
+    <RegleNonConforme>Audit logging is not enabled, reducing visibility on database activities.</RegleNonConforme>
+    <RegleCorrigee>Enable the MariaDB audit logging plugin for enhanced logging.</RegleCorrigee>
+    <Correction>sed -i '/\[mysqld\]/a plugin_load_add=audit_log.so; audit_log_policy=ALL;' /etc/mysql/my.cnf; systemctl restart mariadb</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'audit_log_policy';" | grep -q 'ALL' && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="6.5">
+    <CheminBase>/etc/mysql/</CheminBase>
+    <NomFichier>my.cnf</NomFichier>
+    <RegleNonConforme>The audit plugin can be unloaded, which may allow attackers to disable logging.</RegleNonConforme>
+    <RegleCorrigee>Configure MariaDB to prevent unloading the audit plugin.</RegleCorrigee>
+    <Correction>sed -i '/\[mysqld\]/a plugin_load_add=audit_log.so; audit_log_plugin=ON' /etc/mysql/my.cnf; systemctl restart mariadb</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'audit_log_plugin';" | grep -q 'ON' && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="6.6">
+    <CheminBase>/etc/mysql/</CheminBase>
+    <NomFichier>my.cnf</NomFichier>
+    <RegleNonConforme>Binary and relay logs are not encrypted, which may expose sensitive data.</RegleNonConforme>
+    <RegleCorrigee>Enable encryption for binary and relay logs.</RegleCorrigee>
+    <Correction>sed -i '/\[mysqld\]/a encrypt_binlog=ON; relay_log_encryption=ON;' /etc/mysql/my.cnf; systemctl restart mariadb</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'encrypt_binlog';" | grep -q 'ON' && echo 0 || echo 1</Verification>
+  </Regle>
+</ReglesCIS>

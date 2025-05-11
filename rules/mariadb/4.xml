@@ -1,0 +1,82 @@
+<ReglesCIS>
+  <Regle id="4.1">
+    <CheminBase>/etc/mysql/</CheminBase>
+    <NomFichier>my.cnf</NomFichier>
+    <RegleNonConforme>MariaDB is not running the latest security patches, which may expose it to vulnerabilities.</RegleNonConforme>
+    <RegleCorrigee>Regularly update MariaDB to the latest security-patched version.</RegleCorrigee>
+    <Correction>apt update && apt upgrade -y mariadb-server</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'version';"</Verification>
+  </Regle>
+
+  <Regle id="4.2">
+    <CheminBase>/var/lib/mysql/</CheminBase>
+    <NomFichier>test/</NomFichier>
+    <RegleNonConforme>Example or test databases are installed on the production server, increasing security risks.</RegleNonConforme>
+    <RegleCorrigee>Remove all example or test databases from the production server.</RegleCorrigee>
+    <Correction>mysql -u root -p -e "DROP DATABASE IF EXISTS test;"</Correction>
+    <Verification>mysql -u root -p -e "SHOW DATABASES;" | grep -q 'test' && echo 1 || echo 0</Verification>
+  </Regle>
+
+  <Regle id="4.3">
+    <CheminBase>/etc/mysql/</CheminBase>
+    <NomFichier>my.cnf</NomFichier>
+    <RegleNonConforme>The 'allow-suspicious-udfs' parameter is enabled, which may allow unsafe user-defined functions (UDFs).</RegleNonConforme>
+    <RegleCorrigee>Set 'allow-suspicious-udfs' to 'OFF' to prevent unsafe UDFs.</RegleCorrigee>
+    <Correction>sed -i '/\[mysqld\]/a allow-suspicious-udfs=OFF' /etc/mysql/my.cnf</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'allow_suspicious_udfs';" | grep -q 'OFF' && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="4.4">
+    <CheminBase>/etc/mysql/</CheminBase>
+    <NomFichier>my.cnf</NomFichier>
+    <RegleNonConforme>The 'local_infile' parameter is enabled, which may allow unauthorized file imports.</RegleNonConforme>
+    <RegleCorrigee>Disable 'local_infile' to prevent unauthorized file imports.</RegleCorrigee>
+    <Correction>sed -i '/\[mysqld\]/a local_infile=OFF' /etc/mysql/my.cnf</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'local_infile';" | grep -q 'OFF' && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="4.5">
+    <CheminBase>/etc/mysql/</CheminBase>
+    <NomFichier>my.cnf</NomFichier>
+    <RegleNonConforme>MariaDB is started with 'skip-grant-tables', which disables access control and authentication.</RegleNonConforme>
+    <RegleCorrigee>Ensure 'skip-grant-tables' is not used during startup.</RegleCorrigee>
+    <Correction>sed -i '/skip-grant-tables/d' /etc/mysql/my.cnf</Correction>
+    <Verification>grep -q 'skip-grant-tables' /etc/mysql/my.cnf && echo 1 || echo 0</Verification>
+  </Regle>
+
+  <Regle id="4.6">
+    <CheminBase>/etc/mysql/</CheminBase>
+    <NomFichier>my.cnf</NomFichier>
+    <RegleNonConforme>Symbolic links are enabled, which may allow unauthorized file access.</RegleNonConforme>
+    <RegleCorrigee>Disable symbolic links by setting 'symbolic-links=0'.</RegleCorrigee>
+    <Correction>sed -i '/\[mysqld\]/a symbolic-links=0' /etc/mysql/my.cnf</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'have_symlink';" | grep -q 'DISABLED' && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="4.7">
+    <CheminBase>/etc/mysql/</CheminBase>
+    <NomFichier>my.cnf</NomFichier>
+    <RegleNonConforme>The 'secure_file_priv' parameter is not set, which may allow unrestricted file access.</RegleNonConforme>
+    <RegleCorrigee>Restrict file access using 'secure_file_priv'.</RegleCorrigee>
+    <Correction>sed -i '/\[mysqld\]/a secure_file_priv="/var/lib/mysql-files"' /etc/mysql/my.cnf</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'secure_file_priv';" | grep -q '/var/lib/mysql-files' && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="4.8">
+    <CheminBase>/etc/mysql/</CheminBase>
+    <NomFichier>my.cnf</NomFichier>
+    <RegleNonConforme>The 'sql_mode' parameter does not contain 'STRICT_ALL_TABLES', which may allow invalid data entries.</RegleNonConforme>
+    <RegleCorrigee>Ensure 'sql_mode' includes 'STRICT_ALL_TABLES' for strict data integrity.</RegleCorrigee>
+    <Correction>sed -i '/\[mysqld\]/a sql_mode="STRICT_ALL_TABLES"' /etc/mysql/my.cnf</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'sql_mode';" | grep -q 'STRICT_ALL_TABLES' && echo 0 || echo 1</Verification>
+  </Regle>
+
+  <Regle id="4.9">
+    <CheminBase>/etc/mysql/</CheminBase>
+    <NomFichier>my.cnf</NomFichier>
+    <RegleNonConforme>Data-at-rest encryption is not enabled, which may expose sensitive data.</RegleNonConforme>
+    <RegleCorrigee>Enable data-at-rest encryption for sensitive data.</RegleCorrigee>
+    <Correction>sed -i '/\[mysqld\]/a innodb_encrypt_tables=ON; innodb_encrypt_log=ON; encrypt_binlog=ON' /etc/mysql/my.cnf</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'innodb_encrypt_tables';" | grep -q 'ON' && echo 0 || echo 1</Verification>
+  </Regle>
+</ReglesCIS>
