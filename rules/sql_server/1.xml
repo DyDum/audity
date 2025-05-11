@@ -1,6 +1,4 @@
 <RulesCIS>
-  <!-- Installation, Updates and Patches (1.*) -->
-
   <Rule id="1.1">
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>

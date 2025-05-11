@@ -1,6 +1,4 @@
 <RulesCIS>
-  <!-- File Permissions (3.*) -->
-
   <Rule id="3.1">
     <BasePath>/var/lib/mysql/</BasePath>
     <FileName>datadir</FileName>
