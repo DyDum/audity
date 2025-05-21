@@ -13,7 +13,7 @@
     <NonCompliantComment>Access to the web administration application is not restricted, which may allow unauthorized access.</NonCompliantComment>
     <CorrectiveComment>Restrict access to the web administration application. Command: Configure access controls in the <Context> section of the server.xml file, allowing access only to authorized IPs.</CorrectiveComment>
     <Correction>sed -i '/<Context/s/allow=".*"/allow="192.168.1.0\/24"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat</Correction>
-    <Verification>grep '<Context.*allow="192.168.1.0/24"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1</Verification>
+    <Verification>grep '<Context.*allow="192.168.1.0/24"' $CATALINA_HOME/conf/server.xml &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -89,7 +89,7 @@
     2. Set the connectionTimeout attribute in the <Connector> element to a secure value (e.g., 20000). 
     Example: <Connector port="8443" connectionTimeout="20000" ... /></CorrectiveComment>
     <Correction>sed -i '/<Connector/s/connectionTimeout=".*"/connectionTimeout="20000"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat</Correction>
-    <Verification>grep 'connectionTimeout="20000"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1</Verification>
+    <Verification>grep 'connectionTimeout="20000"' $CATALINA_HOME/conf/server.xml &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -102,7 +102,7 @@
     2. Set the maxHttpHeaderSize attribute in the <Connector> element (e.g., 8192). 
     Example: <Connector port="8443" maxHttpHeaderSize="8192" ... /></CorrectiveComment>
     <Correction>sed -i '/<Connector/s/maxHttpHeaderSize=".*"/maxHttpHeaderSize="8192"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat</Correction>
-    <Verification>grep 'maxHttpHeaderSize="8192"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1</Verification>
+    <Verification>grep 'maxHttpHeaderSize="8192"' $CATALINA_HOME/conf/server.xml &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -124,7 +124,7 @@
     1. Open the server.xml file. 
     2. Set allowLinking="false" in the <Context> elements.</CorrectiveComment>
     <Correction>sed -i '/<Context/s/allowLinking=".*"/allowLinking="false"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat</Correction>
-    <Verification>grep '<Context.*allowLinking="false"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1</Verification>
+    <Verification>grep '<Context.*allowLinking="false"' $CATALINA_HOME/conf/server.xml &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -136,7 +136,7 @@
     1. Open the context.xml file for each application. 
     2. Set privileged="false".</CorrectiveComment>
     <Correction>sed -i '/<Context/s/privileged=".*"/privileged="false"/' $CATALINA_HOME/conf/context.xml; systemctl restart tomcat</Correction>
-    <Verification>grep 'privileged="false"' $CATALINA_HOME/conf/context.xml && echo 0 || echo 1</Verification>
+    <Verification>grep 'privileged="false"' $CATALINA_HOME/conf/context.xml &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -148,7 +148,7 @@
     1. Open the context.xml file. 
     2. Set crossContext="false".</CorrectiveComment>
     <Correction>sed -i '/<Context/s/crossContext=".*"/crossContext="false"/' $CATALINA_HOME/conf/context.xml; systemctl restart tomcat</Correction>
-    <Verification>grep 'crossContext="false"' $CATALINA_HOME/conf/context.xml && echo 0 || echo 1</Verification>
+    <Verification>grep 'crossContext="false"' $CATALINA_HOME/conf/context.xml &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -160,7 +160,7 @@
     1. Open the server.xml file. 
     2. Set resolveHosts="false" in the <Valve> elements.</CorrectiveComment>
     <Correction>sed -i '/<Valve/s/resolveHosts=".*"/resolveHosts="false"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat</Correction>
-    <Verification>grep 'resolveHosts="false"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1</Verification>
+    <Verification>grep 'resolveHosts="false"' $CATALINA_HOME/conf/server.xml &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -191,7 +191,7 @@
     <CorrectiveComment>Ensure logEffectiveWebXml is set to true and metadata-complete is set for all applications. Command: 
     1. Open the web.xml file in a text editor. 
     2. Set logEffectiveWebXml="true" in the <WebApp> element. 
-    3. Set metadata-complete="true" in each application’s deployment descriptor (web.xml).</CorrectiveComment>
+    3. Set metadata-complete="true" in each application's deployment descriptor (web.xml).</CorrectiveComment>
     <Manual>YES</Manual>
   </Rule>
 

@@ -13,7 +13,7 @@
        }; 
     3. Save the file and restart Tomcat using systemctl restart tomcat.</CorrectiveComment>
     <Correction>sed -i '/grant codeBase "file:${catalina.home}\/webapps\/-"/a\\tpermission java.lang.RuntimePermission "accessClassInPackage.sun.*", "deny";\\n\\tpermission java.lang.RuntimePermission "accessClassInPackage.com.sun.*", "deny";\\n\\tpermission java.lang.RuntimePermission "accessClassInPackage.org.apache.catalina.*", "deny";' $CATALINA_HOME/conf/catalina.policy; systemctl restart tomcat</Correction>
-    <Verification>grep -E 'accessClassInPackage.sun|accessClassInPackage.com|accessClassInPackage.org.apache.catalina' $CATALINA_HOME/conf/catalina.policy && echo 0 || echo 1</Verification>
+    <Verification>grep -E 'accessClassInPackage.sun|accessClassInPackage.com|accessClassInPackage.org.apache.catalina' $CATALINA_HOME/conf/catalina.policy &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 </RulesCIS>

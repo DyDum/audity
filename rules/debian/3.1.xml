@@ -14,7 +14,7 @@
         <NonCompliantComment> Wireless interfaces are enabled, which increases the risk of unauthorized wireless access. </NonCompliantComment>
         <CorrectiveComment> Disable wireless interfaces by using "rfkill block all" or unloading wireless drivers. </CorrectiveComment>
         <Correction>rfkill block all</Correction>
-        <Verification> rfkill list | grep -E "Wireless" | grep -q "Soft blocked: yes" && echo 0 || echo 1 </Verification>
+        <Verification> rfkill list | grep -E "Wireless" | grep -q "Soft blocked: yes" &amp;&amp; echo 0 || echo 1 </Verification>
         <Manual>NO</Manual>
     </Rule>
     <Rule id="3.1.3">
@@ -23,7 +23,7 @@
         <NonCompliantComment> The Bluetooth service is enabled, which may expose the system to unauthorized access via wireless connections. </NonCompliantComment>
         <CorrectiveComment> Disable and stop the Bluetooth service if it is not required. </CorrectiveComment>
         <Correction>systemctl disable bluetooth; systemctl stop bluetooth</Correction>
-        <Verification> systemctl is-active bluetooth | grep -q "inactive" && echo 0 || echo 1 </Verification>
+        <Verification> systemctl is-active bluetooth | grep -q "inactive" &amp;&amp; echo 0 || echo 1 </Verification>
         <Manual>NO</Manual>
     </Rule>
     </RulesCIS>

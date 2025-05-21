@@ -5,7 +5,7 @@
     <NonCompliantComment>No backup policy is defined, which may result in data loss.</NonCompliantComment>
     <CorrectiveComment>Establish a backup policy for MariaDB databases, including full, incremental, and transaction log backups.</CorrectiveComment>
     <Correction>echo 'Backup policy: Daily full backup, hourly incremental backups, and transaction log backups.' > /etc/mysql/backup_policy.txt</Correction>
-    <Verification>test -f /etc/mysql/backup_policy.txt && echo 0 || echo 1</Verification>
+    <Verification>test -f /etc/mysql/backup_policy.txt &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -15,7 +15,7 @@
     <NonCompliantComment>Backups are not verified, which may result in unreliable recoveries.</NonCompliantComment>
     <CorrectiveComment>Regularly verify backups by performing test restores.</CorrectiveComment>
     <Correction>mysql -u root -p -e "RESTORE FROM BACKUP '/backup/path/';"</Correction>
-    <Verification>test -d /backup/path && echo 0 || echo 1</Verification>
+    <Verification>test -d /backup/path &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -25,7 +25,7 @@
     <NonCompliantComment>Backup credentials are stored in plain text, which may expose them to unauthorized users.</NonCompliantComment>
     <CorrectiveComment>Secure backup credentials by storing them in a secure vault or encrypting them.</CorrectiveComment>
     <Correction>chmod 600 /etc/mysql/backup_credentials.cnf; chown mysql:mysql /etc/mysql/backup_credentials.cnf</Correction>
-    <Verification>stat -c "%a %U:%G" /etc/mysql/backup_credentials.cnf | grep -q '600 mysql:mysql' && echo 0 || echo 1</Verification>
+    <Verification>stat -c "%a %U:%G" /etc/mysql/backup_credentials.cnf | grep -q '600 mysql:mysql' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -35,7 +35,7 @@
     <NonCompliantComment>Backups are not properly secured, making them vulnerable to unauthorized access.</NonCompliantComment>
     <CorrectiveComment>Ensure backup directories are secured with appropriate permissions.</CorrectiveComment>
     <Correction>chmod 700 /backup; chown mysql:mysql /backup</Correction>
-    <Verification>stat -c "%a %U:%G" /backup | grep -q '700 mysql:mysql' && echo 0 || echo 1</Verification>
+    <Verification>stat -c "%a %U:%G" /backup | grep -q '700 mysql:mysql' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -45,7 +45,7 @@
     <NonCompliantComment>Point-in-Time Recovery (PITR) is not enabled, which may prevent restoring to a specific point in time.</NonCompliantComment>
     <CorrectiveComment>Enable binary logging to allow point-in-time recovery.</CorrectiveComment>
     <Correction>sed -i 's/^#log_bin/log_bin/' /etc/mysql/my.cnf; systemctl restart mariadb</Correction>
-    <Verification>grep -q '^log_bin' /etc/mysql/my.cnf && echo 0 || echo 1</Verification>
+    <Verification>grep -q '^log_bin' /etc/mysql/my.cnf &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -55,7 +55,7 @@
     <NonCompliantComment>No Disaster Recovery (DR) plan is defined, which may result in prolonged downtime during an incident.</NonCompliantComment>
     <CorrectiveComment>Establish a Disaster Recovery (DR) plan for MariaDB, including replication and failover procedures.</CorrectiveComment>
     <Correction>echo 'Disaster Recovery Plan: Backup, Replication, Failover' > /etc/mysql/dr_plan.txt</Correction>
-    <Verification>test -f /etc/mysql/dr_plan.txt && echo 0 || echo 1</Verification>
+    <Verification>test -f /etc/mysql/dr_plan.txt &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -65,7 +65,7 @@
     <NonCompliantComment>Configuration and related files are not backed up, which may result in misconfiguration after recovery.</NonCompliantComment>
     <CorrectiveComment>Regularly backup configuration files, including my.cnf and user configuration files.</CorrectiveComment>
     <Correction>tar -czf /backup/mariadb-config-$(date +%F).tar.gz /etc/mysql/</Correction>
-    <Verification>test -f /backup/mariadb-config-$(date +%F).tar.gz && echo 0 || echo 1</Verification>
+    <Verification>test -f /backup/mariadb-config-$(date +%F).tar.gz &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -75,7 +75,7 @@
     <NonCompliantComment>MariaDB is installed on a multi-use server, increasing security risks.</NonCompliantComment>
     <CorrectiveComment>Dedicate the server exclusively to MariaDB.</CorrectiveComment>
     <Correction>systemctl stop apache2; systemctl disable apache2</Correction>
-    <Verification>! systemctl is-active --quiet apache2 && echo 0 || echo 1</Verification>
+    <Verification>! systemctl is-active --quiet apache2 &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -85,7 +85,7 @@
     <NonCompliantComment>Passwords are specified in the command line, exposing them to unauthorized users.</NonCompliantComment>
     <CorrectiveComment>Use secure password files or environment variables for authentication.</CorrectiveComment>
     <Correction>unset MYSQL_PWD; export MYSQL_PWD_FILE=/etc/mysql/secure_password.cnf</Correction>
-    <Verification>env | grep -q 'MYSQL_PWD' && echo 1 || echo 0</Verification>
+    <Verification>env | grep -q 'MYSQL_PWD' &amp;&amp; echo 1 || echo 0</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -95,7 +95,7 @@
     <NonCompliantComment>Usernames are reused, which can lead to confusion and security risks.</NonCompliantComment>
     <CorrectiveComment>Ensure usernames are unique and not reused.</CorrectiveComment>
     <Correction>mysql -u root -p -e "DELETE FROM mysql.user WHERE user='duplicate_user';"</Correction>
-    <Verification>mysql -u root -p -e "SELECT user FROM mysql.user GROUP BY user HAVING COUNT(*) > 1;" | grep -q . && echo 1 || echo 0</Verification>
+    <Verification>mysql -u root -p -e "SELECT user FROM mysql.user GROUP BY user HAVING COUNT(*) > 1;" | grep -q . &amp;&amp; echo 1 || echo 0</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -105,7 +105,7 @@
     <NonCompliantComment>Default or weak cryptographic material is used, reducing security.</NonCompliantComment>
     <CorrectiveComment>Ensure unique, strong cryptographic material is used for SSL/TLS.</CorrectiveComment>
     <Correction>openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/mysql/ssl/private-key.pem -out /etc/mysql/ssl/certificate.pem</Correction>
-    <Verification>openssl x509 -in /etc/mysql/ssl/certificate.pem -noout -text | grep -q 'RSA' && echo 0 || echo 1</Verification>
+    <Verification>openssl x509 -in /etc/mysql/ssl/certificate.pem -noout -text | grep -q 'RSA' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -115,7 +115,7 @@
     <NonCompliantComment>The 'password_lifetime' parameter is not configured, allowing passwords to never expire.</NonCompliantComment>
     <CorrectiveComment>Set 'password_lifetime' to a value less than or equal to 365 days.</CorrectiveComment>
     <Correction>sed -i '/\[mysqld\]/a password_lifetime=365' /etc/mysql/my.cnf</Correction>
-    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'password_lifetime';" | grep -q '365' && echo 0 || echo 1</Verification>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'password_lifetime';" | grep -q '365' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -125,7 +125,7 @@
     <NonCompliantComment>Inactive accounts are not locked, increasing security risks.</NonCompliantComment>
     <CorrectiveComment>Lock inactive accounts to prevent unauthorized access.</CorrectiveComment>
     <Correction>mysql -u root -p -e "ALTER USER 'inactive_user'@'localhost' ACCOUNT LOCK;"</Correction>
-    <Verification>mysql -u root -p -e "SELECT user,host,account_locked FROM mysql.user WHERE account_locked='Y';" | grep -q 'Y' && echo 0 || echo 1</Verification>
+    <Verification>mysql -u root -p -e "SELECT user,host,account_locked FROM mysql.user WHERE account_locked='Y';" | grep -q 'Y' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -135,7 +135,7 @@
     <NonCompliantComment>Socket peer-credential authentication is not used, which may reduce security.</NonCompliantComment>
     <CorrectiveComment>Enable socket peer-credential authentication for secure local connections.</CorrectiveComment>
     <Correction>sed -i '/\[mysqld\]/a skip_name_resolve=ON' /etc/mysql/my.cnf</Correction>
-    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'skip_name_resolve';" | grep -q 'ON' && echo 0 || echo 1</Verification>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'skip_name_resolve';" | grep -q 'ON' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -145,7 +145,7 @@
     <NonCompliantComment>MariaDB is not bound to specific IP addresses, increasing exposure.</NonCompliantComment>
     <CorrectiveComment>Restrict MariaDB to one or more specific IP addresses (e.g., 127.0.0.1).</CorrectiveComment>
     <Correction>sed -i '/\[mysqld\]/a bind-address=127.0.0.1' /etc/mysql/my.cnf</Correction>
-    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'bind_address';" | grep -q '127.0.0.1' && echo 0 || echo 1</Verification>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'bind_address';" | grep -q '127.0.0.1' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -155,7 +155,7 @@
     <NonCompliantComment>All TLS versions are enabled, increasing the risk of using weak versions.</NonCompliantComment>
     <CorrectiveComment>Restrict TLS to versions 1.2 and 1.3 only.</CorrectiveComment>
     <Correction>sed -i '/\[mysqld\]/a tls_version=TLSv1.2,TLSv1.3' /etc/mysql/my.cnf</Correction>
-    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'tls_version';" | grep -q 'TLSv1.2,TLSv1.3' && echo 0 || echo 1</Verification>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'tls_version';" | grep -q 'TLSv1.2,TLSv1.3' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -165,7 +165,7 @@
     <NonCompliantComment>Client-side certificates are not required, which may allow unauthorized connections.</NonCompliantComment>
     <CorrectiveComment>Require client-side certificates (X.509) for secure connections.</CorrectiveComment>
     <Correction>sed -i '/\[mysqld\]/a require_secure_transport=ON' /etc/mysql/my.cnf</Correction>
-    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'require_secure_transport';" | grep -q 'ON' && echo 0 || echo 1</Verification>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'require_secure_transport';" | grep -q 'ON' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -175,7 +175,7 @@
     <NonCompliantComment>Weak ciphers are enabled, increasing the risk of exploitation.</NonCompliantComment>
     <CorrectiveComment>Ensure only approved, strong ciphers are used for SSL/TLS.</CorrectiveComment>
     <Correction>sed -i '/\[mysqld\]/a ssl_ciphers=ECDHE-ECDSA-AES128-GCM-SHA256' /etc/mysql/my.cnf</Correction>
-    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'ssl_ciphers';" | grep -q 'ECDHE-ECDSA-AES128-GCM-SHA256' && echo 0 || echo 1</Verification>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'ssl_ciphers';" | grep -q 'ECDHE-ECDSA-AES128-GCM-SHA256' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 </RulesCIS>

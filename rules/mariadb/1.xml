@@ -5,7 +5,7 @@
     <NonCompliantComment>MariaDB databases are stored on the system partition, which may impact performance and security.</NonCompliantComment>
     <CorrectiveComment>Place MariaDB databases on a non-system partition for improved security and performance.</CorrectiveComment>
     <Correction>sed -i 's|datadir=.*|datadir=/mnt/data/mysql|' /etc/mysql/mariadb.conf.d/50-server.cnf; systemctl restart mariadb</Correction>
-    <Verification>grep 'datadir=/mnt/data/mysql' /etc/mysql/mariadb.conf.d/50-server.cnf && echo 0 || echo 1</Verification>
+    <Verification>grep 'datadir=/mnt/data/mysql' /etc/mysql/mariadb.conf.d/50-server.cnf &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -15,7 +15,7 @@
     <NonCompliantComment>MariaDB is not running under a dedicated, least-privileged account, increasing security risks.</NonCompliantComment>
     <CorrectiveComment>Ensure MariaDB runs under a dedicated, non-root, least-privileged account (e.g., 'mysql').</CorrectiveComment>
     <Correction>usermod -s /usr/sbin/nologin mysql; chown -R mysql:mysql /var/lib/mysql/</Correction>
-    <Verification>ps aux | grep 'mysqld' | grep -q 'mysql' && echo 0 || echo 1</Verification>
+    <Verification>ps aux | grep 'mysqld' | grep -q 'mysql' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -24,8 +24,8 @@
     <FileName>my.cnf</FileName>
     <NonCompliantComment>MariaDB command history is enabled, which may expose sensitive commands and passwords.</NonCompliantComment>
     <CorrectiveComment>Disable MariaDB command history by setting 'HISTFILE' to '/dev/null' in the configuration.</CorrectiveComment>
-    <Correction>echo 'export HISTFILE=/dev/null' >> /etc/profile.d/mariadb.sh; chmod +x /etc/profile.d/mariadb.sh</Correction>
-    <Verification>grep 'HISTFILE=/dev/null' /etc/profile.d/mariadb.sh && echo 0 || echo 1</Verification>
+    <Correction>echo 'export HISTFILE=/dev/null' &gt;&gt; /etc/profile.d/mariadb.sh; chmod +x /etc/profile.d/mariadb.sh</Correction>
+    <Verification>grep 'HISTFILE=/dev/null' /etc/profile.d/mariadb.sh &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -35,7 +35,7 @@
     <NonCompliantComment>The MYSQL_PWD environment variable is used, which exposes passwords to other users.</NonCompliantComment>
     <CorrectiveComment>Ensure the MYSQL_PWD environment variable is not used for authentication.</CorrectiveComment>
     <Correction>unset MYSQL_PWD</Correction>
-    <Verification>env | grep -q 'MYSQL_PWD' && echo 1 || echo 0</Verification>
+    <Verification>env | grep -q 'MYSQL_PWD' &amp;&amp; echo 1 || echo 0</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -45,7 +45,7 @@
     <NonCompliantComment>Interactive login is enabled for the MariaDB account, increasing security risks.</NonCompliantComment>
     <CorrectiveComment>Disable interactive login for the MariaDB user account.</CorrectiveComment>
     <Correction>usermod -s /usr/sbin/nologin mysql</Correction>
-    <Verification>grep 'mysql' /etc/passwd | grep -q '/usr/sbin/nologin' && echo 0 || echo 1</Verification>
+    <Verification>grep 'mysql' /etc/passwd | grep -q '/usr/sbin/nologin' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -55,7 +55,7 @@
     <NonCompliantComment>The MYSQL_PWD variable is set in user profiles, which may expose passwords.</NonCompliantComment>
     <CorrectiveComment>Ensure MYSQL_PWD is not set in any user profiles.</CorrectiveComment>
     <Correction>sed -i '/MYSQL_PWD/d' /etc/profile /etc/profile.d/*</Correction>
-    <Verification>grep -R 'MYSQL_PWD' /etc/profile /etc/profile.d/ && echo 1 || echo 0</Verification>
+    <Verification>grep -R 'MYSQL_PWD' /etc/profile /etc/profile.d/ &amp;&amp; echo 1 || echo 0</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -65,7 +65,7 @@
     <NonCompliantComment>MariaDB is not running under a sandbox environment, which may increase the risk of security breaches.</NonCompliantComment>
     <CorrectiveComment>Configure MariaDB to run in a sandboxed environment (e.g., AppArmor, SELinux).</CorrectiveComment>
     <Correction>aa-enforce /etc/apparmor.d/usr.sbin.mysqld</Correction>
-    <Verification>aa-status | grep -q '/usr/sbin/mysqld (enforce)' && echo 0 || echo 1</Verification>
+    <Verification>aa-status | grep -q '/usr/sbin/mysqld (enforce)' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 </RulesCIS>

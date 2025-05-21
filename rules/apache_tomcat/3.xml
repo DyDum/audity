@@ -9,7 +9,7 @@
        Example: <Server port="8005" shutdown="SecureShutdown"/> 
     3. Save the file and restart the Tomcat service using systemctl restart tomcat.</CorrectiveComment>
     <Correction>sed -i '/<Server /s/shutdown=".*"/shutdown="SecureShutdown"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat</Correction>
-    <Verification>grep 'shutdown="SecureShutdown"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1</Verification>
+    <Verification>grep 'shutdown="SecureShutdown"' $CATALINA_HOME/conf/server.xml &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -23,7 +23,7 @@
        Example: <Server port="-1" shutdown="SecureShutdown"/> 
     3. Save the file and restart the Tomcat service using systemctl restart tomcat.</CorrectiveComment>
     <Correction>sed -i '/<Server /s/port=".*"/port="-1"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat</Correction>
-    <Verification>grep '<Server port="-1"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1</Verification>
+    <Verification>grep '<Server port="-1"' $CATALINA_HOME/conf/server.xml &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 </RulesCIS>

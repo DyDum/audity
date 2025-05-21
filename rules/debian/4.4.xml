@@ -5,7 +5,7 @@
         <NonCompliantComment> The iptables package is not installed, leaving the system without proper IPv4 firewall management. </NonCompliantComment>
         <CorrectiveComment> Install the iptables package to manage IPv4 firewall rules. </CorrectiveComment>
         <Correction>apt-get install -y iptables</Correction>
-        <Verification>dpkg -l | grep -q iptables && echo 0 || echo 1</Verification>
+        <Verification>dpkg -l | grep -q iptables &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
     <Rule id="4.4.1.2">
@@ -14,7 +14,7 @@
         <NonCompliantComment> Nftables is installed and active, which may conflict with iptables. </NonCompliantComment>
         <CorrectiveComment> Uninstall nftables to ensure iptables is solely in use. </CorrectiveComment>
         <Correction>apt-get purge -y nftables</Correction>
-        <Verification>dpkg -l | grep -q nftables && echo 1 || echo 0</Verification>
+        <Verification>dpkg -l | grep -q nftables &amp;&amp; echo 1 || echo 0</Verification>
         <Manual>NO</Manual>
     </Rule>
     <Rule id="4.4.1.3">
@@ -23,7 +23,7 @@
         <NonCompliantComment> UFW is installed and may conflict with iptables management. </NonCompliantComment>
         <CorrectiveComment> Uninstall UFW when using iptables exclusively. </CorrectiveComment>
         <Correction>apt-get purge -y ufw</Correction>
-        <Verification>dpkg -l | grep -q ufw && echo 1 || echo 0</Verification>
+        <Verification>dpkg -l | grep -q ufw &amp;&amp; echo 1 || echo 0</Verification>
         <Manual>NO</Manual>
     </Rule>
     <Rule id="4.4.2.1">
@@ -32,7 +32,7 @@
         <NonCompliantComment> The default policy for iptables is not set to deny, which may allow unauthorized access. </NonCompliantComment>
         <CorrectiveComment> Set the default iptables policy for INPUT and FORWARD chains to DROP, and for OUTPUT to ACCEPT. </CorrectiveComment>
         <Correction>iptables -P INPUT DROP; iptables -P FORWARD DROP; iptables -P OUTPUT ACCEPT</Correction>
-        <Verification>iptables -L INPUT | grep "policy DROP" && iptables -L FORWARD | grep "policy DROP" && iptables -L OUTPUT | grep "policy ACCEPT" && echo 0 || echo 1</Verification>
+        <Verification>iptables -L INPUT | grep "policy DROP" &amp;&amp; iptables -L FORWARD | grep "policy DROP" &amp;&amp; iptables -L OUTPUT | grep "policy ACCEPT" &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
     <Rule id="4.4.2.2">
@@ -41,7 +41,7 @@
         <NonCompliantComment> Loopback traffic is not explicitly allowed in iptables. </NonCompliantComment>
         <CorrectiveComment> Add a rule to allow all traffic on the loopback interface. </CorrectiveComment>
         <Correction>iptables -A INPUT -i lo -j ACCEPT</Correction>
-        <Verification>iptables -L INPUT | grep -q "lo" && echo 0 || echo 1</Verification>
+        <Verification>iptables -L INPUT | grep -q "lo" &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
     <Rule id="4.4.2.3">
@@ -68,7 +68,7 @@
         <NonCompliantComment> The default policy for ip6tables is not set to deny, which may allow unauthorized IPv6 traffic. </NonCompliantComment>
         <CorrectiveComment> Set the default ip6tables policy for INPUT and FORWARD chains to DROP, and for OUTPUT to ACCEPT. </CorrectiveComment>
         <Correction>ip6tables -P INPUT DROP; ip6tables -P FORWARD DROP; ip6tables -P OUTPUT ACCEPT</Correction>
-        <Verification>ip6tables -L INPUT | grep "policy DROP" && ip6tables -L FORWARD | grep "policy DROP" && ip6tables -L OUTPUT | grep "policy ACCEPT" && echo 0 || echo 1</Verification>
+        <Verification>ip6tables -L INPUT | grep "policy DROP" &amp;&amp; ip6tables -L FORWARD | grep "policy DROP" &amp;&amp; ip6tables -L OUTPUT | grep "policy ACCEPT" &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
     <Rule id="4.4.3.2">
@@ -77,7 +77,7 @@
         <NonCompliantComment> Loopback traffic is not properly configured in ip6tables. </NonCompliantComment>
         <CorrectiveComment> Add a rule to allow all traffic on the IPv6 loopback interface. </CorrectiveComment>
         <Correction>ip6tables -A INPUT -i lo -j ACCEPT</Correction>
-        <Verification>ip6tables -L INPUT | grep -q "lo" && echo 0 || echo 1</Verification>
+        <Verification>ip6tables -L INPUT | grep -q "lo" &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
     <Rule id="4.4.3.3">

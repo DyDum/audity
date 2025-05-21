@@ -15,7 +15,7 @@
     max_connections=100 
     shared_buffers=1GB</CorrectiveComment>
     <Correction>sed -i '/max_connections/s/#//;s/=.*/= 100/' /var/lib/pgsql/17/data/postgresql.conf; sed -i '/shared_buffers/s/#//;s/=.*/= 1GB/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
-    <Verification>psql -c "SHOW max_connections;" && psql -c "SHOW shared_buffers;"</Verification>
+    <Verification>psql -c "SHOW max_connections;" &amp;&amp; psql -c "SHOW shared_buffers;"</Verification>
     <Manual>NO</Manual>
   </Rule>
 

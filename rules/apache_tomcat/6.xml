@@ -25,7 +25,7 @@
     3. Set SSLEnabled="true". 
     4. Save the file and restart Tomcat using systemctl restart tomcat.</CorrectiveComment>
     <Correction>sed -i '/<Connector/s/SSLEnabled="false"/SSLEnabled="true"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat</Correction>
-    <Verification>grep 'SSLEnabled="true"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1</Verification>
+    <Verification>grep 'SSLEnabled="true"' $CATALINA_HOME/conf/server.xml &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -39,7 +39,7 @@
     3. Set scheme="https". 
     4. Save the file and restart Tomcat using systemctl restart tomcat.</CorrectiveComment>
     <Correction>sed -i '/<Connector/s/scheme=".*"/scheme="https"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat</Correction>
-    <Verification>grep 'scheme="https"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1</Verification>
+    <Verification>grep 'scheme="https"' $CATALINA_HOME/conf/server.xml &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -53,7 +53,7 @@
     3. Set secure="true". 
     4. Save the file and restart Tomcat using systemctl restart tomcat.</CorrectiveComment>
     <Correction>sed -i '/<Connector/s/secure=".*"/secure="true"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat</Correction>
-    <Verification>grep 'secure="true"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1</Verification>
+    <Verification>grep 'secure="true"' $CATALINA_HOME/conf/server.xml &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -67,7 +67,7 @@
     3. Set sslProtocol="TLSv1.2" or higher. 
     4. Save the file and restart Tomcat using systemctl restart tomcat.</CorrectiveComment>
     <Correction>sed -i '/<Connector/s/sslProtocol=".*"/sslProtocol="TLSv1.2"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat</Correction>
-    <Verification>grep 'sslProtocol="TLSv1.2"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1</Verification>
+    <Verification>grep 'sslProtocol="TLSv1.2"' $CATALINA_HOME/conf/server.xml &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 </RulesCIS>

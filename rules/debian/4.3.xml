@@ -5,7 +5,7 @@
         <NonCompliantComment> nftables is not installed, leaving the system without modern firewall capabilities. </NonCompliantComment>
         <CorrectiveComment> Install nftables to manage firewall rules efficiently. </CorrectiveComment>
         <Correction>apt-get install -y nftables</Correction>
-        <Verification>dpkg -l | grep -q nftables && echo 0 || echo 1</Verification>
+        <Verification>dpkg -l | grep -q nftables &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
     <Rule id="4.3.2">
@@ -14,7 +14,7 @@
         <NonCompliantComment> nftables rules are not persisted, risking loss of firewall configuration on reboot. </NonCompliantComment>
         <CorrectiveComment> Save the current nftables ruleset to /etc/nftables.conf and enable the nftables service to load it at boot. </CorrectiveComment>
         <Correction>nft list ruleset &gt; /etc/nftables.conf; systemctl enable nftables</Correction>
-        <Verification>test -f /etc/nftables.conf && systemctl is-enabled nftables | grep -q "enabled" && echo 0 || echo 1</Verification>
+        <Verification>test -f /etc/nftables.conf &amp;&amp; systemctl is-enabled nftables | grep -q "enabled" &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
     <Rule id="4.3.3">
@@ -23,7 +23,7 @@
         <NonCompliantComment> iptables is installed and may be active, which can conflict with nftables. </NonCompliantComment>
         <CorrectiveComment> Uninstall or disable iptables to avoid conflicts with nftables. </CorrectiveComment>
         <Correction>apt-get purge -y iptables</Correction>
-        <Verification>dpkg -l | grep -q iptables && echo 1 || echo 0</Verification>
+        <Verification>dpkg -l | grep -q iptables &amp;&amp; echo 1 || echo 0</Verification>
         <Manual>NO</Manual>
     </Rule>
     <Rule id="4.3.4">
@@ -41,7 +41,7 @@
         <NonCompliantComment> The nftables base chains (input, forward, output) are not defined, leaving the firewall incomplete. </NonCompliantComment>
         <CorrectiveComment> Define base chains in the nftables ruleset with appropriate default policies. </CorrectiveComment>
         <Correction> echo "table inet filter { chain input { type filter hook input priority 0; policy drop; } chain forward { type filter hook forward priority 0; policy drop; } chain output { type filter hook output priority 0; policy accept; } }" &gt; /etc/nftables.conf; nft -f /etc/nftables.conf </Correction>
-        <Verification> nft list ruleset | grep -q "chain input" && echo 0 || echo 1 </Verification>
+        <Verification> nft list ruleset | grep -q "chain input" &amp;&amp; echo 0 || echo 1 </Verification>
         <Manual>NO</Manual>
     </Rule>
     <Rule id="4.3.6">
@@ -50,7 +50,7 @@
         <NonCompliantComment> Loopback traffic is not explicitly allowed in the nftables ruleset. </NonCompliantComment>
         <CorrectiveComment> Add a rule to allow traffic on the loopback interface. </CorrectiveComment>
         <Correction> sed -i '/chain input {/a \\t ip saddr lo accept' /etc/nftables.conf; nft -f /etc/nftables.conf </Correction>
-        <Verification> nft list ruleset | grep -q "saddr lo accept" && echo 0 || echo 1 </Verification>
+        <Verification> nft list ruleset | grep -q "saddr lo accept" &amp;&amp; echo 0 || echo 1 </Verification>
         <Manual>NO</Manual>
     </Rule>
     <Rule id="4.3.7">
@@ -58,7 +58,7 @@
         <FileName>nftables.conf</FileName>
         <NonCompliantComment> Outbound and established connection rules are not configured, risking disruption of legitimate traffic. </NonCompliantComment>
         <CorrectiveComment> Manually configure rules to allow established and outbound traffic. </CorrectiveComment>
-        <Correction> echo "add rule inet filter input ct state established,related accept" >> /etc/nftables.conf; nft -f /etc/nftables.conf </Correction>
+        <Correction> echo "add rule inet filter input ct state established,related accept" &gt;&gt; /etc/nftables.conf; nft -f /etc/nftables.conf </Correction>
         <Verification> echo "Manual verification required" </Verification>
         <Manual>VERIFICATION</Manual>
     </Rule>
@@ -68,7 +68,7 @@
         <NonCompliantComment> The default policy for chains is not set to deny, potentially allowing unauthorized traffic. </NonCompliantComment>
         <CorrectiveComment> Configure the default chain policies to drop incoming and forwarded traffic. </CorrectiveComment>
         <Correction> sed -i 's/policy accept;/policy drop;/' /etc/nftables.conf; nft -f /etc/nftables.conf </Correction>
-        <Verification> nft list ruleset | grep -q "policy drop" && echo 0 || echo 1 </Verification>
+        <Verification> nft list ruleset | grep -q "policy drop" &amp;&amp; echo 0 || echo 1 </Verification>
         <Manual>NO</Manual>
     </Rule>
     <Rule id="4.3.9">
@@ -77,7 +77,7 @@
         <NonCompliantComment> The nftables service is not enabled, risking loss of firewall configuration on reboot. </NonCompliantComment>
         <CorrectiveComment> Enable and start the nftables service to load the ruleset at boot. </CorrectiveComment>
         <Correction> systemctl enable nftables; systemctl start nftables </Correction>
-        <Verification> systemctl is-active nftables | grep -q "active" && echo 0 || echo 1 </Verification>
+        <Verification> systemctl is-active nftables | grep -q "active" &amp;&amp; echo 0 || echo 1 </Verification>
         <Manual>NO</Manual>
     </Rule>
     <Rule id="4.3.10">
@@ -86,7 +86,7 @@
         <NonCompliantComment> The nftables ruleset is not saved permanently, so configuration may be lost on reboot. </NonCompliantComment>
         <CorrectiveComment> Save the current nftables ruleset to /etc/nftables.conf for persistence. </CorrectiveComment>
         <Correction> nft list ruleset &gt; /etc/nftables.conf </Correction>
-        <Verification> test -f /etc/nftables.conf && echo 0 || echo 1 </Verification>
+        <Verification> test -f /etc/nftables.conf &amp;&amp; echo 0 || echo 1 </Verification>
         <Manual>NO</Manual>
     </Rule>
 </RulesCIS>

@@ -5,7 +5,7 @@
         <NonCompliantComment> GDM is installed on the system, which may allow unauthorized graphical logins. </NonCompliantComment>
         <CorrectiveComment> Remove the GDM package to disable the graphical login manager. </CorrectiveComment>
         <Correction> apt-get purge -y gdm3 </Correction>
-        <Verification> dpkg -l | grep -q gdm3 && echo 1 || echo 0 </Verification>
+        <Verification> dpkg -l | grep -q gdm3 &amp;&amp; echo 1 || echo 0 </Verification>
         <Manual>NO</Manual>
     </Rule>
     <Rule id="1.7.2">
@@ -14,7 +14,7 @@
         <NonCompliantComment> The GDM login banner is not configured, leaving users without a proper warning. </NonCompliantComment>
         <CorrectiveComment> Configure a login banner in /etc/gdm3/custom.conf to display an appropriate message. </CorrectiveComment>
         <Correction> echo "[org/gnome/login-screen]" &gt; /etc/gdm3/custom.conf; echo "banner-message-enable=true" &gt;&gt; /etc/gdm3/custom.conf; echo "banner-message-text='Authorized Access Only'" &gt;&gt; /etc/gdm3/custom.conf </Correction>
-        <Verification> grep -q "banner-message-enable=true" /etc/gdm3/custom.conf && echo 0 || echo 1 </Verification>
+        <Verification> grep -q "banner-message-enable=true" /etc/gdm3/custom.conf &amp;&amp; echo 0 || echo 1 </Verification>
         <Manual>NO</Manual>
     </Rule>
     <Rule id="1.7.3">
@@ -23,7 +23,7 @@
         <NonCompliantComment> The GDM user list is not disabled, potentially exposing local user information. </NonCompliantComment>
         <CorrectiveComment> Disable the user list in GDM by setting the disable-user-list option to true. </CorrectiveComment>
         <Correction> echo "[org/gnome/login-screen]" &gt; /etc/gdm3/custom.conf; echo "disable-user-list=true" &gt;&gt; /etc/gdm3/custom.conf </Correction>
-        <Verification> grep -q "disable-user-list=true" /etc/gdm3/custom.conf && echo 0 || echo 1 </Verification>
+        <Verification> grep -q "disable-user-list=true" /etc/gdm3/custom.conf &amp;&amp; echo 0 || echo 1 </Verification>
         <Manual>NO</Manual>
     </Rule>
     <Rule id="1.7.4">
@@ -32,7 +32,7 @@
         <NonCompliantComment> GDM is not configured to lock the screen when idle, which may allow unauthorized access. </NonCompliantComment>
         <CorrectiveComment> Configure GDM to automatically lock the screen when the user is idle. </CorrectiveComment>
         <Correction> echo "[org/gnome/desktop/screensaver]" &gt; /etc/gdm3/custom.conf; echo "lock-enabled=true" &gt;&gt; /etc/gdm3/custom.conf </Correction>
-        <Verification> grep -q "lock-enabled=true" /etc/gdm3/custom.conf && echo 0 || echo 1 </Verification>
+        <Verification> grep -q "lock-enabled=true" /etc/gdm3/custom.conf &amp;&amp; echo 0 || echo 1 </Verification>
         <Manual>NO</Manual>
     </Rule>
     <Rule id="1.7.5">
@@ -50,7 +50,7 @@
         <NonCompliantComment> Automatic mounting of removable media is enabled in GDM. </NonCompliantComment>
         <CorrectiveComment> Disable automatic mounting of removable media in GDM. </CorrectiveComment>
         <Correction> echo "[org/gnome/settings-daemon/plugins/media-keys]" &gt; /etc/gdm3/custom.conf; echo "automount=false" &gt;&gt; /etc/gdm3/custom.conf </Correction>
-        <Verification> grep -q "automount=false" /etc/gdm3/custom.conf && echo 0 || echo 1 </Verification>
+        <Verification> grep -q "automount=false" /etc/gdm3/custom.conf &amp;&amp; echo 0 || echo 1 </Verification>
         <Manual>NO</Manual>
     </Rule>
     <Rule id="1.7.7">
@@ -59,7 +59,7 @@
         <NonCompliantComment> The setting to disable automatic mounting of removable media might be overridden. </NonCompliantComment>
         <CorrectiveComment> Ensure that the disable setting for automount is enforced in GDM. </CorrectiveComment>
         <Correction> echo "[org/gnome/settings-daemon/plugins/media-keys]" &gt; /etc/gdm3/custom.conf; echo "automount=false" &gt;&gt; /etc/gdm3/custom.conf </Correction>
-        <Verification> grep -q "automount=false" /etc/gdm3/custom.conf && echo 0 || echo 1 </Verification>
+        <Verification> grep -q "automount=false" /etc/gdm3/custom.conf &amp;&amp; echo 0 || echo 1 </Verification>
         <Manual>NO</Manual>
     </Rule>
     <Rule id="1.7.8">
@@ -68,7 +68,7 @@
         <NonCompliantComment> GDM is not configured to disable autorun, potentially exposing the system. </NonCompliantComment>
         <CorrectiveComment> Enable the autorun-never option in GDM. </CorrectiveComment>
         <Correction> echo "[org/gnome/settings-daemon/plugins/media-keys]" &gt; /etc/gdm3/custom.conf; echo "autorun-never=true" &gt;&gt; /etc/gdm3/custom.conf </Correction>
-        <Verification> grep -q "autorun-never=true" /etc/gdm3/custom.conf && echo 0 || echo 1 </Verification>
+        <Verification> grep -q "autorun-never=true" /etc/gdm3/custom.conf &amp;&amp; echo 0 || echo 1 </Verification>
         <Manual>NO</Manual>
     </Rule>
     <Rule id="1.7.9">
@@ -77,7 +77,7 @@
         <NonCompliantComment> The autorun-never setting in GDM is not enforced. </NonCompliantComment>
         <CorrectiveComment> Ensure the autorun-never option remains enabled and cannot be overridden. </CorrectiveComment>
         <Correction> echo "[org/gnome/settings-daemon/plugins/media-keys]" &gt; /etc/gdm3/custom.conf; echo "autorun-never=true" &gt;&gt; /etc/gdm3/custom.conf </Correction>
-        <Verification> grep -q "autorun-never=true" /etc/gdm3/custom.conf && echo 0 || echo 1 </Verification>
+        <Verification> grep -q "autorun-never=true" /etc/gdm3/custom.conf &amp;&amp; echo 0 || echo 1 </Verification>
         <Manual>NO</Manual>
     </Rule>
     <Rule id="1.7.10">
@@ -86,7 +86,7 @@
         <NonCompliantComment> XDMCP is enabled in the bootloader configuration, potentially exposing the system to remote graphical logins. </NonCompliantComment>
         <CorrectiveComment> Disable XDMCP in GDM to secure remote access. </CorrectiveComment>
         <Correction> echo "[xdmcp]" &gt; /etc/gdm3/daemon.conf; echo "Enable=false" &gt;&gt; /etc/gdm3/daemon.conf; systemctl restart gdm3 </Correction>
-        <Verification> grep -q "Enable=false" /etc/gdm3/daemon.conf && echo 0 || echo 1 </Verification>
+        <Verification> grep -q "Enable=false" /etc/gdm3/daemon.conf &amp;&amp; echo 0 || echo 1 </Verification>
         <Manual>NO</Manual>
     </Rule>
 </RulesCIS>

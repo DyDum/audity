@@ -10,7 +10,7 @@
        org.apache.catalina.handlers = java.util.logging.ConsoleHandler 
     3. Save the file and restart Tomcat using systemctl restart tomcat.</CorrectiveComment>
     <Correction>sed -i '/org.apache.catalina.level/c\org.apache.catalina.level = FINE' $CATALINA_HOME/conf/logging.properties; systemctl restart tomcat</Correction>
-    <Verification>grep 'org.apache.catalina.level = FINE' $CATALINA_HOME/conf/logging.properties && echo 0 || echo 1</Verification>
+    <Verification>grep 'org.apache.catalina.level = FINE' $CATALINA_HOME/conf/logging.properties &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -23,8 +23,8 @@
     2. Add the following line: 
        java.util.logging.FileHandler.pattern = $CATALINA_HOME/logs/tomcat.log 
     3. Save the file and restart Tomcat using systemctl restart tomcat.</CorrectiveComment>
-    <Correction>echo "java.util.logging.FileHandler.pattern = $CATALINA_HOME/logs/tomcat.log" >> $CATALINA_HOME/conf/logging.properties; systemctl restart tomcat</Correction>
-    <Verification>grep 'java.util.logging.FileHandler.pattern' $CATALINA_HOME/conf/logging.properties && echo 0 || echo 1</Verification>
+    <Correction>echo "java.util.logging.FileHandler.pattern = $CATALINA_HOME/logs/tomcat.log" &gt;&gt; $CATALINA_HOME/conf/logging.properties; systemctl restart tomcat</Correction>
+    <Verification>grep 'java.util.logging.FileHandler.pattern' $CATALINA_HOME/conf/logging.properties &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -38,7 +38,7 @@
        <Logger className="org.apache.catalina.logger.FileLogger" prefix="localhost_log" suffix=".txt" timestamp="true" /> 
     3. Save the file and restart Tomcat using systemctl restart tomcat.</CorrectiveComment>
     <Correction>sed -i '/<Logger /s/className=".*"/className="org.apache.catalina.logger.FileLogger"/' $CATALINA_HOME/conf/context.xml; systemctl restart tomcat</Correction>
-    <Verification>grep 'className="org.apache.catalina.logger.FileLogger"' $CATALINA_HOME/conf/context.xml && echo 0 || echo 1</Verification>
+    <Verification>grep 'className="org.apache.catalina.logger.FileLogger"' $CATALINA_HOME/conf/context.xml &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -64,7 +64,7 @@
        <Logger className="org.apache.catalina.logger.FileLogger" prefix="localhost_log" suffix=".txt" pattern="%h %l %u %t &quot;%r&quot; %s %b" /> 
     3. Save the file and restart Tomcat using systemctl restart tomcat.</CorrectiveComment>
     <Correction>sed -i '/<Logger /s/pattern=".*"/pattern="%h %l %u %t &quot;%r&quot; %s %b"/' $CATALINA_HOME/conf/context.xml; systemctl restart tomcat</Correction>
-    <Verification>grep 'pattern="%h %l %u %t &quot;%r&quot; %s %b"' $CATALINA_HOME/conf/context.xml && echo 0 || echo 1</Verification>
+    <Verification>grep 'pattern="%h %l %u %t &quot;%r&quot; %s %b"' $CATALINA_HOME/conf/context.xml &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 

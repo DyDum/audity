@@ -5,7 +5,7 @@
     <NonCompliantComment>Non-administrative users have full database access, which may allow unauthorized actions.</NonCompliantComment>
     <CorrectiveComment>Restrict full database access to administrative users only (e.g., root, DBA).</CorrectiveComment>
     <Correction>mysql -u root -p -e "REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'user'@'%';"</Correction>
-    <Verification>mysql -u root -p -e "SELECT user,host,grant_priv FROM mysql.user WHERE grant_priv='Y';" | grep -v 'root' && echo 1 || echo 0</Verification>
+    <Verification>mysql -u root -p -e "SELECT user,host,grant_priv FROM mysql.user WHERE grant_priv='Y';" | grep -v 'root' &amp;&amp; echo 1 || echo 0</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -15,7 +15,7 @@
     <NonCompliantComment>The 'FILE' privilege is granted to non-administrative users, which may allow unauthorized file access.</NonCompliantComment>
     <CorrectiveComment>Ensure the 'FILE' privilege is restricted to administrative users only.</CorrectiveComment>
     <Correction>mysql -u root -p -e "REVOKE FILE ON *.* FROM 'user'@'%';"</Correction>
-    <Verification>mysql -u root -p -e "SELECT user,host FROM mysql.user WHERE File_priv='Y';" | grep -v 'root' && echo 1 || echo 0</Verification>
+    <Verification>mysql -u root -p -e "SELECT user,host FROM mysql.user WHERE File_priv='Y';" | grep -v 'root' &amp;&amp; echo 1 || echo 0</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -25,7 +25,7 @@
     <NonCompliantComment>The 'PROCESS' privilege is granted to non-administrative users, exposing process information.</NonCompliantComment>
     <CorrectiveComment>Ensure the 'PROCESS' privilege is restricted to administrative users only.</CorrectiveComment>
     <Correction>mysql -u root -p -e "REVOKE PROCESS ON *.* FROM 'user'@'%';"</Correction>
-    <Verification>mysql -u root -p -e "SELECT user,host FROM mysql.user WHERE Process_priv='Y';" | grep -v 'root' && echo 1 || echo 0</Verification>
+    <Verification>mysql -u root -p -e "SELECT user,host FROM mysql.user WHERE Process_priv='Y';" | grep -v 'root' &amp;&amp; echo 1 || echo 0</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -35,7 +35,7 @@
     <NonCompliantComment>The 'SUPER' privilege is granted to non-administrative users, increasing security risks.</NonCompliantComment>
     <CorrectiveComment>Ensure the 'SUPER' privilege is restricted to administrative users only.</CorrectiveComment>
     <Correction>mysql -u root -p -e "REVOKE SUPER ON *.* FROM 'user'@'%';"</Correction>
-    <Verification>mysql -u root -p -e "SELECT user,host FROM mysql.user WHERE Super_priv='Y';" | grep -v 'root' && echo 1 || echo 0</Verification>
+    <Verification>mysql -u root -p -e "SELECT user,host FROM mysql.user WHERE Super_priv='Y';" | grep -v 'root' &amp;&amp; echo 1 || echo 0</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -45,7 +45,7 @@
     <NonCompliantComment>The 'SHUTDOWN' privilege is granted to non-administrative users, which may allow unauthorized server shutdowns.</NonCompliantComment>
     <CorrectiveComment>Ensure the 'SHUTDOWN' privilege is restricted to administrative users only.</CorrectiveComment>
     <Correction>mysql -u root -p -e "REVOKE SHUTDOWN ON *.* FROM 'user'@'%';"</Correction>
-    <Verification>mysql -u root -p -e "SELECT user,host FROM mysql.user WHERE Shutdown_priv='Y';" | grep -v 'root' && echo 1 || echo 0</Verification>
+    <Verification>mysql -u root -p -e "SELECT user,host FROM mysql.user WHERE Shutdown_priv='Y';" | grep -v 'root' &amp;&amp; echo 1 || echo 0</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -55,7 +55,7 @@
     <NonCompliantComment>The 'CREATE USER' privilege is granted to non-administrative users, increasing security risks.</NonCompliantComment>
     <CorrectiveComment>Ensure the 'CREATE USER' privilege is restricted to administrative users only.</CorrectiveComment>
     <Correction>mysql -u root -p -e "REVOKE CREATE USER ON *.* FROM 'user'@'%';"</Correction>
-    <Verification>mysql -u root -p -e "SELECT user,host FROM mysql.user WHERE Create_user_priv='Y';" | grep -v 'root' && echo 1 || echo 0</Verification>
+    <Verification>mysql -u root -p -e "SELECT user,host FROM mysql.user WHERE Create_user_priv='Y';" | grep -v 'root' &amp;&amp; echo 1 || echo 0</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -65,7 +65,7 @@
     <NonCompliantComment>The 'GRANT OPTION' is granted to non-administrative users, allowing them to grant privileges.</NonCompliantComment>
     <CorrectiveComment>Ensure the 'GRANT OPTION' is restricted to administrative users only.</CorrectiveComment>
     <Correction>mysql -u root -p -e "REVOKE GRANT OPTION ON *.* FROM 'user'@'%';"</Correction>
-    <Verification>mysql -u root -p -e "SELECT user,host FROM mysql.user WHERE Grant_priv='Y';" | grep -v 'root' && echo 1 || echo 0</Verification>
+    <Verification>mysql -u root -p -e "SELECT user,host FROM mysql.user WHERE Grant_priv='Y';" | grep -v 'root' &amp;&amp; echo 1 || echo 0</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -75,7 +75,7 @@
     <NonCompliantComment>The 'REPLICATION SLAVE' privilege is granted to non-administrative users.</NonCompliantComment>
     <CorrectiveComment>Ensure the 'REPLICATION SLAVE' privilege is restricted to administrative users only.</CorrectiveComment>
     <Correction>mysql -u root -p -e "REVOKE REPLICATION SLAVE ON *.* FROM 'user'@'%';"</Correction>
-    <Verification>mysql -u root -p -e "SELECT user,host FROM mysql.user WHERE Repl_slave_priv='Y';" | grep -v 'root' && echo 1 || echo 0</Verification>
+    <Verification>mysql -u root -p -e "SELECT user,host FROM mysql.user WHERE Repl_slave_priv='Y';" | grep -v 'root' &amp;&amp; echo 1 || echo 0</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -85,7 +85,7 @@
     <NonCompliantComment>DML/DDL privileges are granted broadly, increasing security risks.</NonCompliantComment>
     <CorrectiveComment>Limit DML/DDL privileges to specific databases and users.</CorrectiveComment>
     <Correction>mysql -u root -p -e "REVOKE ALL PRIVILEGES ON *.* FROM 'user'@'%';"</Correction>
-    <Verification>mysql -u root -p -e "SHOW GRANTS FOR 'user'@'%';" | grep -q 'GRANT USAGE' && echo 0 || echo 1</Verification>
+    <Verification>mysql -u root -p -e "SHOW GRANTS FOR 'user'@'%';" | grep -q 'GRANT USAGE' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -95,7 +95,7 @@
     <NonCompliantComment>Stored procedures and functions are defined without secure DEFINER/INVOKER settings.</NonCompliantComment>
     <CorrectiveComment>Securely define stored procedures and functions using 'DEFINER' and 'INVOKER'.</CorrectiveComment>
     <Correction>mysql -u root -p -e "ALTER PROCEDURE proc_name SQL SECURITY INVOKER;"</Correction>
-    <Verification>mysql -u root -p -e "SHOW CREATE PROCEDURE proc_name;" | grep -q 'SQL SECURITY INVOKER' && echo 0 || echo 1</Verification>
+    <Verification>mysql -u root -p -e "SHOW CREATE PROCEDURE proc_name;" | grep -q 'SQL SECURITY INVOKER' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 </RulesCIS>

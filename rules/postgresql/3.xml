@@ -295,7 +295,7 @@
     2. Edit the postgresql.conf file. 
     3. Add pgaudit.log='all'. 
     4. Restart PostgreSQL using systemctl restart postgresql-17.</CorrectiveComment>
-    <Correction>dnf install postgresql-pgaudit -y; echo "pgaudit.log='all'" >> /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
+    <Correction>dnf install postgresql-pgaudit -y; echo "pgaudit.log='all'" &gt;&gt; /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
     <Verification>psql -c "SHOW pgaudit.log;" | grep 'all'</Verification>
     <Manual>NO</Manual>
   </Rule>

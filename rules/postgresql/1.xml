@@ -35,7 +35,7 @@
     <NonCompliantComment>The PostgreSQL data cluster has not been initialized correctly, which may lead to a failed installation or misconfiguration.</NonCompliantComment>
     <CorrectiveComment>Ensure the PostgreSQL data cluster is properly initialized using the initdb command.</CorrectiveComment>
     <Correction>/usr/pgsql-17/bin/postgresql-17-setup initdb</Correction>
-    <Verification>/usr/pgsql-17/bin/postgresql-17-check-db-dir /var/lib/pgsql/17/data && echo 0 || echo 1</Verification>
+    <Verification>/usr/pgsql-17/bin/postgresql-17-check-db-dir /var/lib/pgsql/17/data &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 

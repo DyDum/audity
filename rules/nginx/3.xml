@@ -4,8 +4,8 @@
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Detailed logging is not enabled, which reduces the ability to detect and investigate security incidents.</NonCompliantComment>
     <CorrectiveComment>Enable detailed logging by setting the access_log and error_log directives with a detailed format.</CorrectiveComment>
-    <Correction>echo 'log_format main \'$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" "$http_x_forwarded_for"\' ; access_log /var/log/nginx/access.log main; error_log /var/log/nginx/error.log info;' >> /etc/nginx/nginx.conf</Correction>
-    <Verification>nginx -T | grep -E 'access_log /var/log/nginx/access.log main;|error_log /var/log/nginx/error.log info;' && echo 0 || echo 1</Verification>
+    <Correction>echo 'log_format main \'$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" "$http_x_forwarded_for"\' ; access_log /var/log/nginx/access.log main; error_log /var/log/nginx/error.log info;' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -E 'access_log /var/log/nginx/access.log main;|error_log /var/log/nginx/error.log info;' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -14,8 +14,8 @@
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Access logging is not enabled, which prevents the monitoring of HTTP requests.</NonCompliantComment>
     <CorrectiveComment>Enable access logging in the NGINX configuration file.</CorrectiveComment>
-    <Correction>echo 'access_log /var/log/nginx/access.log main;' >> /etc/nginx/nginx.conf</Correction>
-    <Verification>nginx -T | grep -q 'access_log /var/log/nginx/access.log' && echo 0 || echo 1</Verification>
+    <Correction>echo 'access_log /var/log/nginx/access.log main;' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'access_log /var/log/nginx/access.log' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -25,7 +25,7 @@
     <NonCompliantComment>Error logging is not set to "info" level, reducing the ability to debug and monitor issues.</NonCompliantComment>
     <CorrectiveComment>Set error logging to "info" level in the NGINX configuration file.</CorrectiveComment>
     <Correction>sed -i 's/error_log.*/error_log \/var\/log\/nginx\/error.log info;/' /etc/nginx/nginx.conf</Correction>
-    <Verification>nginx -T | grep -q 'error_log /var/log/nginx/error.log info;' && echo 0 || echo 1</Verification>
+    <Verification>nginx -T | grep -q 'error_log /var/log/nginx/error.log info;' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -34,8 +34,8 @@
     <FileName>nginx</FileName>
     <NonCompliantComment>Log files are not rotated, which can lead to disk space exhaustion.</NonCompliantComment>
     <CorrectiveComment>Configure log rotation using logrotate for NGINX logs.</CorrectiveComment>
-    <Correction>echo '/var/log/nginx/*.log { daily missingok rotate 14 compress delaycompress notifempty create 640 nginx adm sharedscripts postrotate [ -f /var/run/nginx.pid ] && kill -USR1 $(cat /var/run/nginx.pid) endscript }' > /etc/logrotate.d/nginx</Correction>
-    <Verification>logrotate -d /etc/logrotate.d/nginx | grep -q 'nginx' && echo 0 || echo 1</Verification>
+    <Correction>echo '/var/log/nginx/*.log { daily missingok rotate 14 compress delaycompress notifempty create 640 nginx adm sharedscripts postrotate [ -f /var/run/nginx.pid ] &amp;&amp; kill -USR1 $(cat /var/run/nginx.pid) endscript }' > /etc/logrotate.d/nginx</Correction>
+    <Verification>logrotate -d /etc/logrotate.d/nginx | grep -q 'nginx' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -44,8 +44,8 @@
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Error logs are not sent to a remote syslog server, which can result in loss of logs during an incident.</NonCompliantComment>
     <CorrectiveComment>Configure NGINX to send error logs to a remote syslog server.</CorrectiveComment>
-    <Correction>echo 'error_log syslog:server=192.168.1.100:514 info;' >> /etc/nginx/nginx.conf</Correction>
-    <Verification>nginx -T | grep -q 'error_log syslog:' && echo 0 || echo 1</Verification>
+    <Correction>echo 'error_log syslog:server=192.168.1.100:514 info;' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'error_log syslog:' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -54,8 +54,8 @@
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Access logs are not sent to a remote syslog server, which can result in loss of logs during an incident.</NonCompliantComment>
     <CorrectiveComment>Configure NGINX to send access logs to a remote syslog server.</CorrectiveComment>
-    <Correction>echo 'access_log syslog:server=192.168.1.100:514 main;' >> /etc/nginx/nginx.conf</Correction>
-    <Verification>nginx -T | grep -q 'access_log syslog:' && echo 0 || echo 1</Verification>
+    <Correction>echo 'access_log syslog:server=192.168.1.100:514 main;' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'access_log syslog:' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -64,8 +64,8 @@
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Proxies do not pass source IP information, making it difficult to trace client requests.</NonCompliantComment>
     <CorrectiveComment>Ensure proxies pass source IP information using the X-Forwarded-For header.</CorrectiveComment>
-    <Correction>echo 'proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;' >> /etc/nginx/nginx.conf</Correction>
-    <Verification>nginx -T | grep -q 'proxy_set_header X-Forwarded-For' && echo 0 || echo 1</Verification>
+    <Correction>echo 'proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'proxy_set_header X-Forwarded-For' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 </RulesCIS>
