@@ -4,7 +4,6 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-
-[dependencies.quick-xml]
-version = "0.22.0"
-features = ["serialize"]
+serde      = { version = "1.0", features = ["derive"] }
+quick-xml  = { version = "0.30", features = ["serialize"] } # depuis 0.30, la même feature active (de)Serialize
+thiserror  = "1.0"

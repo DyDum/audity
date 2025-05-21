@@ -4,8 +4,8 @@
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>Access to OS root directory is not denied by default.</NonCompliantComment>
     <CorrectiveComment>Add a Directory directive for "/" with "Require all denied".</CorrectiveComment>
-    <Correction>echo "&lt;Directory /&gt;&lt;Require all denied&gt;&lt;/Require all denied&gt;&lt;/Directory&gt;" >> /etc/httpd/conf/httpd.conf</Correction>
-    <Verification>grep -q "&lt;Directory /&gt;" /etc/httpd/conf/httpd.conf && grep -q "Require all denied" /etc/httpd/conf/httpd.conf && echo 0 || echo 1</Verification>
+    <Correction>echo "&lt;Directory /&gt;&lt;Require all denied&gt;&lt;/Require all denied&gt;&lt;/Directory&gt;" &gt;&gt; /etc/httpd/conf/httpd.conf</Correction>
+    <Verification>grep -q "&lt;Directory /&gt;" /etc/httpd/conf/httpd.conf &amp;&amp; grep -q "Require all denied" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
   <Rule id="4.2">
@@ -23,7 +23,7 @@
     <NonCompliantComment>AllowOverride is not set to "None" for the OS root directory.</NonCompliantComment>
     <CorrectiveComment>Set AllowOverride to "None" for the root directory in the Apache configuration.</CorrectiveComment>
     <Correction>sed -i 's/AllowOverride .*/AllowOverride None/' /etc/httpd/conf/httpd.conf</Correction>
-    <Verification>grep -q "AllowOverride None" /etc/httpd/conf/httpd.conf && echo 0 || echo 1</Verification>
+    <Verification>grep -q "AllowOverride None" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
   <Rule id="4.4">
@@ -32,7 +32,7 @@
     <NonCompliantComment>One or more directories have AllowOverride enabled.</NonCompliantComment>
     <CorrectiveComment>Set AllowOverride to "None" for all directories in the Apache configuration.</CorrectiveComment>
     <Correction>sed -i 's/AllowOverride .*/AllowOverride None/g' /etc/httpd/conf/httpd.conf</Correction>
-    <Verification>grep -q "AllowOverride None" /etc/httpd/conf/httpd.conf && echo 0 || echo 1</Verification>
+    <Verification>grep -q "AllowOverride None" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 </RulesCIS>

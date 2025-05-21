@@ -11,7 +11,7 @@
        autoDeploy="false" 
     4. Save the file and restart Tomcat using systemctl restart tomcat.</CorrectiveComment>
     <Correction>sed -i '/<Context/s/deployOnStartup=".*"/deployOnStartup="false"/' $CATALINA_HOME/conf/context.xml; sed -i '/<Context/s/autoDeploy=".*"/autoDeploy="false"/' $CATALINA_HOME/conf/context.xml; systemctl restart tomcat</Correction>
-    <Verification>grep '<Context.*deployOnStartup="false".*autoDeploy="false"' $CATALINA_HOME/conf/context.xml && echo 0 || echo 1</Verification>
+    <Verification>grep '<Context.*deployOnStartup="false".*autoDeploy="false"' $CATALINA_HOME/conf/context.xml &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -26,7 +26,7 @@
        deployOnStartup="false" 
     4. Save the file and restart Tomcat using systemctl restart tomcat.</CorrectiveComment>
     <Correction>sed -i '/<Context/s/deployOnStartup=".*"/deployOnStartup="false"/' $CATALINA_HOME/conf/context.xml; systemctl restart tomcat</Correction>
-    <Verification>grep '<Context.*deployOnStartup="false"' $CATALINA_HOME/conf/context.xml && echo 0 || echo 1</Verification>
+    <Verification>grep '<Context.*deployOnStartup="false"' $CATALINA_HOME/conf/context.xml &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 </RulesCIS>

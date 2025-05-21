@@ -28,8 +28,8 @@
     <CorrectiveComment>Disable PostgreSQL command history. Command: 
     1. Edit the user's profile files (.bashrc, .profile, .bash_profile). 
     2. Add the following line: export HISTSIZE=0; unset HISTFILE.</CorrectiveComment>
-    <Correction>echo 'export HISTSIZE=0; unset HISTFILE' >> /home/postgres/.bashrc; source /home/postgres/.bashrc</Correction>
-    <Verification>grep -E 'HISTSIZE=0|unset HISTFILE' /home/postgres/.bashrc && echo 0 || echo 1</Verification>
+    <Correction>echo 'export HISTSIZE=0; unset HISTFILE' &gt;&gt; /home/postgres/.bashrc; source /home/postgres/.bashrc</Correction>
+    <Verification>grep -E 'HISTSIZE=0|unset HISTFILE' /home/postgres/.bashrc &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -40,7 +40,7 @@
     <CorrectiveComment>Ensure passwords are not stored in the PostgreSQL service file. Command: 
     1. Open the service file (postgresql-17.service). 
     2. Verify that no passwords are present in the 'ExecStart' or 'Environment' lines. 
-    3. Restart the PostgreSQL service using systemctl daemon-reload && systemctl restart postgresql-17.</CorrectiveComment>
+    3. Restart the PostgreSQL service using systemctl daemon-reload &amp;&amp; systemctl restart postgresql-17.</CorrectiveComment>
     <Manual>YES</Manual>
   </Rule>
 </RulesCIS>

@@ -4,8 +4,8 @@
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>HTTP is not redirected to HTTPS, which exposes unencrypted traffic to interception.</NonCompliantComment>
     <CorrectiveComment>Configure a 301 redirect from HTTP to HTTPS in the NGINX configuration.</CorrectiveComment>
-    <Correction>echo 'server { listen 80; return 301 https://$host$request_uri; }' >> /etc/nginx/nginx.conf</Correction>
-    <Verification>curl -I http://localhost | grep -q '301 Moved Permanently' && echo 0 || echo 1</Verification>
+    <Correction>echo 'server { listen 80; return 301 https://$host$request_uri; }' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>curl -I http://localhost | grep -q '301 Moved Permanently' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -15,7 +15,7 @@
     <NonCompliantComment>A self-signed or untrusted SSL certificate is used, which reduces trust.</NonCompliantComment>
     <CorrectiveComment>Install a trusted SSL certificate from a trusted Certificate Authority (CA).</CorrectiveComment>
     <Correction>openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/nginx-selfsigned.key -out /etc/ssl/certs/nginx-selfsigned.crt</Correction>
-    <Verification>openssl x509 -in /etc/ssl/certs/nginx-selfsigned.crt -noout -issuer | grep -q 'CA' && echo 0 || echo 1</Verification>
+    <Verification>openssl x509 -in /etc/ssl/certs/nginx-selfsigned.crt -noout -issuer | grep -q 'CA' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -25,7 +25,7 @@
     <NonCompliantComment>The private key has weak or improper permissions, making it vulnerable to unauthorized access.</NonCompliantComment>
     <CorrectiveComment>Restrict the private key permissions to root only (600).</CorrectiveComment>
     <Correction>chmod 600 /etc/ssl/private/nginx-selfsigned.key; chown root:root /etc/ssl/private/nginx-selfsigned.key</Correction>
-    <Verification>stat -c "%a %U:%G" /etc/ssl/private/nginx-selfsigned.key | grep -q '600 root:root' && echo 0 || echo 1</Verification>
+    <Verification>stat -c "%a %U:%G" /etc/ssl/private/nginx-selfsigned.key | grep -q '600 root:root' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -34,8 +34,8 @@
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Weak or deprecated SSL/TLS protocols are enabled, increasing vulnerability to attacks.</NonCompliantComment>
     <CorrectiveComment>Restrict SSL/TLS protocols to TLS 1.2 and TLS 1.3 only.</CorrectiveComment>
-    <Correction>echo 'ssl_protocols TLSv1.2 TLSv1.3;' >> /etc/nginx/nginx.conf</Correction>
-    <Verification>nginx -T | grep -q 'ssl_protocols TLSv1.2 TLSv1.3;' && echo 0 || echo 1</Verification>
+    <Correction>echo 'ssl_protocols TLSv1.2 TLSv1.3;' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'ssl_protocols TLSv1.2 TLSv1.3;' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -44,8 +44,8 @@
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Weak SSL/TLS ciphers are enabled, increasing the risk of exploitation.</NonCompliantComment>
     <CorrectiveComment>Disable weak SSL/TLS ciphers in the configuration.</CorrectiveComment>
-    <Correction>echo 'ssl_ciphers "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256";' >> /etc/nginx/nginx.conf</Correction>
-    <Verification>nginx -T | grep -q 'ssl_ciphers' && echo 0 || echo 1</Verification>
+    <Correction>echo 'ssl_ciphers "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256";' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'ssl_ciphers' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -54,8 +54,8 @@
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Custom Diffie-Hellman parameters are not used, reducing security.</NonCompliantComment>
     <CorrectiveComment>Use custom Diffie-Hellman parameters for secure key exchange.</CorrectiveComment>
-    <Correction>openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048; echo 'ssl_dhparam /etc/ssl/certs/dhparam.pem;' >> /etc/nginx/nginx.conf</Correction>
-    <Verification>nginx -T | grep -q 'ssl_dhparam' && echo 0 || echo 1</Verification>
+    <Correction>openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048; echo 'ssl_dhparam /etc/ssl/certs/dhparam.pem;' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'ssl_dhparam' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -64,8 +64,8 @@
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>OCSP stapling is not enabled, increasing SSL handshake time and reducing security.</NonCompliantComment>
     <CorrectiveComment>Enable OCSP Stapling in the SSL configuration.</CorrectiveComment>
-    <Correction>echo 'ssl_stapling on; ssl_stapling_verify on; ssl_trusted_certificate /etc/ssl/certs/nginx-selfsigned.crt;' >> /etc/nginx/nginx.conf</Correction>
-    <Verification>nginx -T | grep -q 'ssl_stapling on;' && echo 0 || echo 1</Verification>
+    <Correction>echo 'ssl_stapling on; ssl_stapling_verify on; ssl_trusted_certificate /etc/ssl/certs/nginx-selfsigned.crt;' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'ssl_stapling on;' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -74,8 +74,8 @@
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>HTTP Strict Transport Security (HSTS) is not enabled, reducing HTTPS security.</NonCompliantComment>
     <CorrectiveComment>Enable HSTS in the NGINX configuration.</CorrectiveComment>
-    <Correction>echo 'add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload";' >> /etc/nginx/nginx.conf</Correction>
-    <Verification>nginx -T | grep -q 'Strict-Transport-Security' && echo 0 || echo 1</Verification>
+    <Correction>echo 'add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload";' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'Strict-Transport-Security' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -84,8 +84,8 @@
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Upstream server traffic is not authenticated with a client certificate, reducing security.</NonCompliantComment>
     <CorrectiveComment>Configure client certificate authentication for upstream server traffic.</CorrectiveComment>
-    <Correction>echo 'proxy_ssl_certificate /etc/ssl/certs/client.crt; proxy_ssl_certificate_key /etc/ssl/private/client.key;' >> /etc/nginx/nginx.conf</Correction>
-    <Verification>nginx -T | grep -q 'proxy_ssl_certificate' && echo 0 || echo 1</Verification>
+    <Correction>echo 'proxy_ssl_certificate /etc/ssl/certs/client.crt; proxy_ssl_certificate_key /etc/ssl/private/client.key;' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'proxy_ssl_certificate' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -94,8 +94,8 @@
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>The upstream server certificate is not verified, making the server vulnerable to Man-in-the-Middle attacks.</NonCompliantComment>
     <CorrectiveComment>Configure NGINX to verify the upstream server certificate using a trusted CA certificate.</CorrectiveComment>
-    <Correction>echo 'proxy_ssl_trusted_certificate /etc/ssl/certs/ca-certificates.crt; proxy_ssl_verify on;' >> /etc/nginx/nginx.conf</Correction>
-    <Verification>nginx -T | grep -q 'proxy_ssl_verify on;' && echo 0 || echo 1</Verification>
+    <Correction>echo 'proxy_ssl_trusted_certificate /etc/ssl/certs/ca-certificates.crt; proxy_ssl_verify on;' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'proxy_ssl_verify on;' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -104,8 +104,8 @@
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Your domain is not preloaded in HSTS, reducing the effectiveness of HTTPS.</NonCompliantComment>
     <CorrectiveComment>Configure HSTS with the preload directive and submit your domain for HSTS preload.</CorrectiveComment>
-    <Correction>echo 'add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload";' >> /etc/nginx/nginx.conf</Correction>
-    <Verification>nginx -T | grep -q 'Strict-Transport-Security.*preload' && echo 0 || echo 1</Verification>
+    <Correction>echo 'add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload";' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'Strict-Transport-Security.*preload' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -114,8 +114,8 @@
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>SSL session resumption is enabled, reducing the benefits of Perfect Forward Secrecy (PFS).</NonCompliantComment>
     <CorrectiveComment>Disable SSL session resumption for PFS.</CorrectiveComment>
-    <Correction>echo 'ssl_session_cache off;' >> /etc/nginx/nginx.conf</Correction>
-    <Verification>nginx -T | grep -q 'ssl_session_cache off;' && echo 0 || echo 1</Verification>
+    <Correction>echo 'ssl_session_cache off;' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'ssl_session_cache off;' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -125,7 +125,7 @@
     <NonCompliantComment>HTTP/2.0 is not enabled, which reduces the performance of HTTPS connections.</NonCompliantComment>
     <CorrectiveComment>Enable HTTP/2.0 for HTTPS connections in NGINX.</CorrectiveComment>
     <Correction>sed -i 's/listen 443 ssl;/listen 443 ssl http2;/' /etc/nginx/nginx.conf</Correction>
-    <Verification>nginx -T | grep -q 'listen 443 ssl http2;' && echo 0 || echo 1</Verification>
+    <Verification>nginx -T | grep -q 'listen 443 ssl http2;' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -134,8 +134,8 @@
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Perfect Forward Secrecy (PFS) ciphers are not enforced, reducing SSL/TLS security.</NonCompliantComment>
     <CorrectiveComment>Restrict SSL/TLS ciphers to only PFS-compatible ciphers (ECDHE).</CorrectiveComment>
-    <Correction>echo 'ssl_ciphers "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256";' >> /etc/nginx/nginx.conf</Correction>
-    <Verification>nginx -T | grep -q 'ssl_ciphers' && echo 0 || echo 1</Verification>
+    <Correction>echo 'ssl_ciphers "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256";' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'ssl_ciphers' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 </RulesCIS>

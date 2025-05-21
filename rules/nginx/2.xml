@@ -44,7 +44,7 @@
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>NGINX is not configured to run with a non-privileged, dedicated user account, increasing security risks.</NonCompliantComment>
     <CorrectiveComment>Configure NGINX to run as a dedicated non-privileged user (e.g., 'nginx').</CorrectiveComment>
-    <Correction>echo "user nginx;" >> /etc/nginx/nginx.conf; useradd -r -d /var/cache/nginx -s /sbin/nologin nginx</Correction>
+    <Correction>echo "user nginx;" &gt;&gt; /etc/nginx/nginx.conf; useradd -r -d /var/cache/nginx -s /sbin/nologin nginx</Correction>
     <Verification>grep -E '^\s*user\s+nginx;' /etc/nginx/nginx.conf &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
@@ -115,7 +115,7 @@
     <NonCompliantComment>NGINX is listening on unauthorized ports, increasing the risk of unauthorized access.</NonCompliantComment>
     <CorrectiveComment>Ensure NGINX is only listening on authorized ports (e.g., 80 and 443).</CorrectiveComment>
     <Correction>sed -i '/listen/!d' /etc/nginx/nginx.conf</Correction>
-    <Verification>grep -E 'listen (80|443);' /etc/nginx/nginx.conf && echo 0 || echo 1</Verification>
+    <Verification>grep -E 'listen (80|443);' /etc/nginx/nginx.conf &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -124,8 +124,8 @@
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>NGINX is responding to requests for unknown hostnames, which may lead to domain spoofing.</NonCompliantComment>
     <CorrectiveComment>Ensure requests for unknown hostnames are rejected by default.</CorrectiveComment>
-    <Correction>echo 'server { return 404; }' >> /etc/nginx/nginx.conf</Correction>
-    <Verification>curl -k -v https://localhost -H 'Host: invalid.host.com' | grep -q '404' && echo 0 || echo 1</Verification>
+    <Correction>echo 'server { return 404; }' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>curl -k -v https://localhost -H 'Host: invalid.host.com' | grep -q '404' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -135,7 +135,7 @@
     <NonCompliantComment>The keepalive_timeout value is not set to 10 seconds or less, increasing the risk of resource exhaustion attacks.</NonCompliantComment>
     <CorrectiveComment>Set keepalive_timeout to 10 seconds or less.</CorrectiveComment>
     <Correction>sed -i 's/keepalive_timeout.*/keepalive_timeout 10;/' /etc/nginx/nginx.conf</Correction>
-    <Verification>grep -E 'keepalive_timeout\s+10;' /etc/nginx/nginx.conf && echo 0 || echo 1</Verification>
+    <Verification>grep -E 'keepalive_timeout\s+10;' /etc/nginx/nginx.conf &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -145,7 +145,7 @@
     <NonCompliantComment>The send_timeout value is not set to 10 seconds or less, which may allow slow client attacks.</NonCompliantComment>
     <CorrectiveComment>Set send_timeout to 10 seconds or less.</CorrectiveComment>
     <Correction>sed -i 's/send_timeout.*/send_timeout 10;/' /etc/nginx/nginx.conf</Correction>
-    <Verification>grep -E 'send_timeout\s+10;' /etc/nginx/nginx.conf && echo 0 || echo 1</Verification>
+    <Verification>grep -E 'send_timeout\s+10;' /etc/nginx/nginx.conf &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -155,7 +155,7 @@
     <NonCompliantComment>The server_tokens directive is set to "on", exposing the NGINX version in HTTP responses, increasing the risk of targeted attacks.</NonCompliantComment>
     <CorrectiveComment>Set the server_tokens directive to "off" to prevent version disclosure.</CorrectiveComment>
     <Correction>sed -i 's/server_tokens on;/server_tokens off;/g' /etc/nginx/nginx.conf</Correction>
-    <Verification>nginx -T | grep -q 'server_tokens off;' && echo 0 || echo 1</Verification>
+    <Verification>nginx -T | grep -q 'server_tokens off;' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -165,7 +165,7 @@
     <NonCompliantComment>The default error and index pages contain references to NGINX, exposing the server type and version to attackers.</NonCompliantComment>
     <CorrectiveComment>Remove or customize default error and index pages to eliminate NGINX references.</CorrectiveComment>
     <Correction>sed -i '/nginx/d' /usr/share/nginx/html/index.html; sed -i '/nginx/d' /usr/share/nginx/html/50x.html</Correction>
-    <Verification>grep -i nginx /usr/share/nginx/html/index.html /usr/share/nginx/html/50x.html && echo 1 || echo 0</Verification>
+    <Verification>grep -i nginx /usr/share/nginx/html/index.html /usr/share/nginx/html/50x.html &amp;&amp; echo 1 || echo 0</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -174,8 +174,8 @@
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Hidden files (such as .git) are accessible through NGINX, which can expose sensitive data.</NonCompliantComment>
     <CorrectiveComment>Disable access to hidden files by adding a location block to deny access.</CorrectiveComment>
-    <Correction>echo 'location ~ /\. { deny all; }' >> /etc/nginx/nginx.conf</Correction>
-    <Verification>nginx -T | grep -q 'location ~ /\. { deny all;' && echo 0 || echo 1</Verification>
+    <Correction>echo 'location ~ /\. { deny all; }' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'location ~ /\. { deny all;' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -185,7 +185,7 @@
     <NonCompliantComment>The reverse proxy configuration leaks information about backend servers, increasing the risk of targeted attacks.</NonCompliantComment>
     <CorrectiveComment>Disable the "proxy_pass" headers and remove X-Forwarded-For headers.</CorrectiveComment>
     <Correction>sed -i '/proxy_pass_header/d' /etc/nginx/nginx.conf; sed -i '/proxy_set_header X-Forwarded-For/d' /etc/nginx/nginx.conf</Correction>
-    <Verification>nginx -T | grep -qE '(proxy_pass_header|proxy_set_header X-Forwarded-For)' && echo 1 || echo 0</Verification>
+    <Verification>nginx -T | grep -qE '(proxy_pass_header|proxy_set_header X-Forwarded-For)' &amp;&amp; echo 1 || echo 0</Verification>
     <Manual>NO</Manual>
   </Rule>
 </RulesCIS>

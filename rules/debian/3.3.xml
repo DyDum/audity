@@ -9,10 +9,10 @@
             Disable IP forwarding by setting net.ipv4.ip_forward to 0.
         </CorrectiveComment>
         <Correction>
-            echo 'net.ipv4.ip_forward = 0' >> /etc/sysctl.conf; sysctl -p
+            echo 'net.ipv4.ip_forward = 0' &gt;&gt; /etc/sysctl.conf; sysctl -p
         </Correction>
         <Verification>
-            sysctl -n net.ipv4.ip_forward | grep -q '^0$' && echo 0 || echo 1
+            sysctl -n net.ipv4.ip_forward | grep -q '^0$' &amp;&amp; echo 0 || echo 1
         </Verification>
         <Manual>NO</Manual>
     </Rule>
@@ -26,10 +26,10 @@
             Disable packet redirect sending by setting net.ipv4.conf.all.send_redirects to 0.
         </CorrectiveComment>
         <Correction>
-            echo 'net.ipv4.conf.all.send_redirects = 0' >> /etc/sysctl.conf; sysctl -p
+            echo 'net.ipv4.conf.all.send_redirects = 0' &gt;&gt; /etc/sysctl.conf; sysctl -p
         </Correction>
         <Verification>
-            sysctl -n net.ipv4.conf.all.send_redirects | grep -q '^0$' && echo 0 || echo 1
+            sysctl -n net.ipv4.conf.all.send_redirects | grep -q '^0$' &amp;&amp; echo 0 || echo 1
         </Verification>
         <Manual>NO</Manual>
     </Rule>
@@ -43,10 +43,10 @@
             Configure the system to ignore bogus ICMP error responses by setting net.ipv4.icmp_ignore_bogus_error_responses to 1.
         </CorrectiveComment>
         <Correction>
-            echo 'net.ipv4.icmp_ignore_bogus_error_responses = 1' >> /etc/sysctl.conf; sysctl -p
+            echo 'net.ipv4.icmp_ignore_bogus_error_responses = 1' &gt;&gt; /etc/sysctl.conf; sysctl -p
         </Correction>
         <Verification>
-            sysctl -n net.ipv4.icmp_ignore_bogus_error_responses | grep -q '^1$' && echo 0 || echo 1
+            sysctl -n net.ipv4.icmp_ignore_bogus_error_responses | grep -q '^1$' &amp;&amp; echo 0 || echo 1
         </Verification>
         <Manual>NO</Manual>
     </Rule>
@@ -60,10 +60,10 @@
             Ignore broadcast ICMP echo requests by setting net.ipv4.icmp_echo_ignore_broadcasts to 1.
         </CorrectiveComment>
         <Correction>
-            echo 'net.ipv4.icmp_echo_ignore_broadcasts = 1' >> /etc/sysctl.conf; sysctl -p
+            echo 'net.ipv4.icmp_echo_ignore_broadcasts = 1' &gt;&gt; /etc/sysctl.conf; sysctl -p
         </Correction>
         <Verification>
-            sysctl -n net.ipv4.icmp_echo_ignore_broadcasts | grep -q '^1$' && echo 0 || echo 1
+            sysctl -n net.ipv4.icmp_echo_ignore_broadcasts | grep -q '^1$' &amp;&amp; echo 0 || echo 1
         </Verification>
         <Manual>NO</Manual>
     </Rule>
@@ -77,10 +77,10 @@
             Disable acceptance of ICMP redirects by setting net.ipv4.conf.all.accept_redirects to 0.
         </CorrectiveComment>
         <Correction>
-            echo 'net.ipv4.conf.all.accept_redirects = 0' >> /etc/sysctl.conf; sysctl -p
+            echo 'net.ipv4.conf.all.accept_redirects = 0' &gt;&gt; /etc/sysctl.conf; sysctl -p
         </Correction>
         <Verification>
-            sysctl -n net.ipv4.conf.all.accept_redirects | grep -q '^0$' && echo 0 || echo 1
+            sysctl -n net.ipv4.conf.all.accept_redirects | grep -q '^0$' &amp;&amp; echo 0 || echo 1
         </Verification>
         <Manual>NO</Manual>
     </Rule>
@@ -94,10 +94,10 @@
             Disable secure ICMP redirects by setting net.ipv4.conf.all.secure_redirects to 0.
         </CorrectiveComment>
         <Correction>
-            echo 'net.ipv4.conf.all.secure_redirects = 0' >> /etc/sysctl.conf; sysctl -p
+            echo 'net.ipv4.conf.all.secure_redirects = 0' &gt;&gt; /etc/sysctl.conf; sysctl -p
         </Correction>
         <Verification>
-            sysctl -n net.ipv4.conf.all.secure_redirects | grep -q '^0$' && echo 0 || echo 1
+            sysctl -n net.ipv4.conf.all.secure_redirects | grep -q '^0$' &amp;&amp; echo 0 || echo 1
         </Verification>
         <Manual>NO</Manual>
     </Rule>
@@ -111,10 +111,10 @@
             Enable reverse path filtering by setting net.ipv4.conf.all.rp_filter to 1.
         </CorrectiveComment>
         <Correction>
-            echo 'net.ipv4.conf.all.rp_filter = 1' >> /etc/sysctl.conf; sysctl -p
+            echo 'net.ipv4.conf.all.rp_filter = 1' &gt;&gt; /etc/sysctl.conf; sysctl -p
         </Correction>
         <Verification>
-            sysctl -n net.ipv4.conf.all.rp_filter | grep -q '^1$' && echo 0 || echo 1
+            sysctl -n net.ipv4.conf.all.rp_filter | grep -q '^1$' &amp;&amp; echo 0 || echo 1
         </Verification>
         <Manual>NO</Manual>
     </Rule>
@@ -128,10 +128,10 @@
             Disable source routing by setting net.ipv4.conf.all.accept_source_route to 0.
         </CorrectiveComment>
         <Correction>
-            echo 'net.ipv4.conf.all.accept_source_route = 0' >> /etc/sysctl.conf; sysctl -p
+            echo 'net.ipv4.conf.all.accept_source_route = 0' &gt;&gt; /etc/sysctl.conf; sysctl -p
         </Correction>
         <Verification>
-            sysctl -n net.ipv4.conf.all.accept_source_route | grep -q '^0$' && echo 0 || echo 1
+            sysctl -n net.ipv4.conf.all.accept_source_route | grep -q '^0$' &amp;&amp; echo 0 || echo 1
         </Verification>
         <Manual>NO</Manual>
     </Rule>
@@ -145,10 +145,10 @@
             Enable logging of suspicious packets by setting net.ipv4.conf.all.log_martians to 1.
         </CorrectiveComment>
         <Correction>
-            echo 'net.ipv4.conf.all.log_martians = 1' >> /etc/sysctl.conf; sysctl -p
+            echo 'net.ipv4.conf.all.log_martians = 1' &gt;&gt; /etc/sysctl.conf; sysctl -p
         </Correction>
         <Verification>
-            sysctl -n net.ipv4.conf.all.log_martians | grep -q '^1$' && echo 0 || echo 1
+            sysctl -n net.ipv4.conf.all.log_martians | grep -q '^1$' &amp;&amp; echo 0 || echo 1
         </Verification>
         <Manual>NO</Manual>
     </Rule>
@@ -162,10 +162,10 @@
             Enable TCP SYN cookies by setting net.ipv4.tcp_syncookies to 1.
         </CorrectiveComment>
         <Correction>
-            echo 'net.ipv4.tcp_syncookies = 1' >> /etc/sysctl.conf; sysctl -p
+            echo 'net.ipv4.tcp_syncookies = 1' &gt;&gt; /etc/sysctl.conf; sysctl -p
         </Correction>
         <Verification>
-            sysctl -n net.ipv4.tcp_syncookies | grep -q '^1$' && echo 0 || echo 1
+            sysctl -n net.ipv4.tcp_syncookies | grep -q '^1$' &amp;&amp; echo 0 || echo 1
         </Verification>
         <Manual>NO</Manual>
     </Rule>
@@ -179,10 +179,10 @@
             Disable IPv6 router advertisements by setting net.ipv6.conf.all.accept_ra to 0.
         </CorrectiveComment>
         <Correction>
-            echo 'net.ipv6.conf.all.accept_ra = 0' >> /etc/sysctl.conf; sysctl -p
+            echo 'net.ipv6.conf.all.accept_ra = 0' &gt;&gt; /etc/sysctl.conf; sysctl -p
         </Correction>
         <Verification>
-            sysctl -n net.ipv6.conf.all.accept_ra | grep -q '^0$' && echo 0 || echo 1
+            sysctl -n net.ipv6.conf.all.accept_ra | grep -q '^0$' &amp;&amp; echo 0 || echo 1
         </Verification>
         <Manual>NO</Manual>
     </Rule>

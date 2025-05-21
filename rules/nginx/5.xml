@@ -4,8 +4,8 @@
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Access to the server is not restricted by IP addresses, allowing unauthorized access.</NonCompliantComment>
     <CorrectiveComment>Use allow and deny directives to restrict access to specific IP addresses.</CorrectiveComment>
-    <Correction>echo 'allow 192.168.1.0/24; deny all;' >> /etc/nginx/nginx.conf</Correction>
-    <Verification>nginx -T | grep -q 'allow 192.168.1.0/24;' && echo 0 || echo 1</Verification>
+    <Correction>echo 'allow 192.168.1.0/24; deny all;' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'allow 192.168.1.0/24;' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -14,8 +14,8 @@
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>All HTTP methods are allowed, including potentially dangerous methods (e.g., DELETE, TRACE).</NonCompliantComment>
     <CorrectiveComment>Restrict HTTP methods to only those required (e.g., GET, POST, HEAD).</CorrectiveComment>
-    <Correction>echo 'limit_except GET POST HEAD { deny all; }' >> /etc/nginx/nginx.conf</Correction>
-    <Verification>nginx -T | grep -q 'limit_except GET POST HEAD' && echo 0 || echo 1</Verification>
+    <Correction>echo 'limit_except GET POST HEAD { deny all; }' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'limit_except GET POST HEAD' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -24,8 +24,8 @@
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>The timeout values for reading the client header and body are not set, which may allow DoS attacks.</NonCompliantComment>
     <CorrectiveComment>Set the client header and body timeout values to reasonable values (e.g., 10s).</CorrectiveComment>
-    <Correction>echo 'client_header_timeout 10s; client_body_timeout 10s;' >> /etc/nginx/nginx.conf</Correction>
-    <Verification>nginx -T | grep -q 'client_header_timeout 10s;' && echo 0 || echo 1</Verification>
+    <Correction>echo 'client_header_timeout 10s; client_body_timeout 10s;' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'client_header_timeout 10s;' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -34,8 +34,8 @@
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>The maximum request body size is not defined, which may allow large payloads and DoS attacks.</NonCompliantComment>
     <CorrectiveComment>Set the maximum request body size to a reasonable value (e.g., 1M).</CorrectiveComment>
-    <Correction>echo 'client_max_body_size 1M;' >> /etc/nginx/nginx.conf</Correction>
-    <Verification>nginx -T | grep -q 'client_max_body_size 1M;' && echo 0 || echo 1</Verification>
+    <Correction>echo 'client_max_body_size 1M;' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'client_max_body_size 1M;' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -44,8 +44,8 @@
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>The URI buffer size is not defined, which may allow buffer overflow attacks.</NonCompliantComment>
     <CorrectiveComment>Set the maximum buffer size for URIs (e.g., 1k).</CorrectiveComment>
-    <Correction>echo 'large_client_header_buffers 4 1k;' >> /etc/nginx/nginx.conf</Correction>
-    <Verification>nginx -T | grep -q 'large_client_header_buffers 4 1k;' && echo 0 || echo 1</Verification>
+    <Correction>echo 'large_client_header_buffers 4 1k;' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'large_client_header_buffers 4 1k;' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -54,8 +54,8 @@
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Connection limits per IP are not set, allowing unlimited connections per client and increasing DoS risk.</NonCompliantComment>
     <CorrectiveComment>Limit the number of connections per IP using the limit_conn_zone and limit_conn directives.</CorrectiveComment>
-    <Correction>echo 'limit_conn_zone $binary_remote_addr zone=conn_zone:10m; limit_conn conn_zone 10;' >> /etc/nginx/nginx.conf</Correction>
-    <Verification>nginx -T | grep -q 'limit_conn conn_zone' && echo 0 || echo 1</Verification>
+    <Correction>echo 'limit_conn_zone $binary_remote_addr zone=conn_zone:10m; limit_conn conn_zone 10;' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'limit_conn conn_zone' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -64,8 +64,8 @@
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Request rate limits are not set, allowing clients to send unlimited requests and increasing DoS risk.</NonCompliantComment>
     <CorrectiveComment>Limit the request rate per IP using the limit_req_zone and limit_req directives.</CorrectiveComment>
-    <Correction>echo 'limit_req_zone $binary_remote_addr zone=req_zone:10m rate=1r/s; limit_req zone=req_zone burst=5 nodelay;' >> /etc/nginx/nginx.conf</Correction>
-    <Verification>nginx -T | grep -q 'limit_req zone=req_zone' && echo 0 || echo 1</Verification>
+    <Correction>echo 'limit_req_zone $binary_remote_addr zone=req_zone:10m rate=1r/s; limit_req zone=req_zone burst=5 nodelay;' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'limit_req zone=req_zone' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -74,8 +74,8 @@
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>The X-Frame-Options header is not set, allowing the website to be embedded in iframes, which can lead to clickjacking attacks.</NonCompliantComment>
     <CorrectiveComment>Configure the X-Frame-Options header to "DENY" or "SAMEORIGIN" to prevent clickjacking attacks.</CorrectiveComment>
-    <Correction>echo 'add_header X-Frame-Options "SAMEORIGIN";' >> /etc/nginx/nginx.conf</Correction>
-    <Verification>nginx -T | grep -q 'X-Frame-Options' && echo 0 || echo 1</Verification>
+    <Correction>echo 'add_header X-Frame-Options "SAMEORIGIN";' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'X-Frame-Options' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -84,8 +84,8 @@
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>The X-Content-Type-Options header is not set, which can allow MIME type sniffing by the browser.</NonCompliantComment>
     <CorrectiveComment>Configure the X-Content-Type-Options header to "nosniff" to prevent MIME type sniffing.</CorrectiveComment>
-    <Correction>echo 'add_header X-Content-Type-Options "nosniff";' >> /etc/nginx/nginx.conf</Correction>
-    <Verification>nginx -T | grep -q 'X-Content-Type-Options' && echo 0 || echo 1</Verification>
+    <Correction>echo 'add_header X-Content-Type-Options "nosniff";' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'X-Content-Type-Options' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -94,8 +94,8 @@
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>The Content Security Policy (CSP) is not enabled, increasing the risk of cross-site scripting (XSS) and data injection attacks.</NonCompliantComment>
     <CorrectiveComment>Enable and configure a strict Content Security Policy (CSP) header.</CorrectiveComment>
-    <Correction>echo 'add_header Content-Security-Policy "default-src 'self';";' >> /etc/nginx/nginx.conf</Correction>
-    <Verification>nginx -T | grep -q 'Content-Security-Policy' && echo 0 || echo 1</Verification>
+    <Correction>echo 'add_header Content-Security-Policy "default-src 'self';";' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'Content-Security-Policy' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -104,8 +104,8 @@
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>The Referrer-Policy header is not set, allowing the referrer information to be exposed to external websites.</NonCompliantComment>
     <CorrectiveComment>Configure the Referrer-Policy header to "no-referrer" or "strict-origin" to limit referrer information exposure.</CorrectiveComment>
-    <Correction>echo 'add_header Referrer-Policy "no-referrer";' >> /etc/nginx/nginx.conf</Correction>
-    <Verification>nginx -T | grep -q 'Referrer-Policy' && echo 0 || echo 1</Verification>
+    <Correction>echo 'add_header Referrer-Policy "no-referrer";' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'Referrer-Policy' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 </RulesCIS>

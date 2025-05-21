@@ -1,4 +1,7 @@
+mod audit_rules;
 mod package_management;
+use audit_rules::scanner::scan_directory;
+
 
 fn main() {
     // Update the package list to ensure it is up-to-date.
@@ -33,6 +36,13 @@ fn main() {
             // If there was an error generating the XML report, log the error.
             println!("Failed to generate XML report: {}", e);
         },
+    }
+    // TODO : Fix the path to the rules directory to automatically select the rights one.
+    let dir = "rules/debian";
+
+    if let Err(e) = scan_directory(dir) {
+        eprintln!("Error : {e}");
+        std::process::exit(1);
     }
 }
 

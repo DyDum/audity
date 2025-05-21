@@ -5,7 +5,7 @@
     <NonCompliantComment>Extraneous files and directories (e.g., examples, docs, ROOT, manager, host-manager) exist in the Tomcat webapps directory, which may introduce security risks.</NonCompliantComment>
     <CorrectiveComment>Remove extraneous files and directories to reduce the attack surface. Command: rm -rf $CATALINA_HOME/webapps/docs $CATALINA_HOME/webapps/examples $CATALINA_HOME/webapps/ROOT</CorrectiveComment>
     <Correction>rm -rf $CATALINA_HOME/webapps/docs $CATALINA_HOME/webapps/examples $CATALINA_HOME/webapps/ROOT</Correction>
-    <Verification>ls -l $CATALINA_HOME/webapps | grep -E 'docs|examples|ROOT|manager|host-manager' && echo 1 || echo 0</Verification>
+    <Verification>ls -l $CATALINA_HOME/webapps | grep -E 'docs|examples|ROOT|manager|host-manager' &amp;&amp; echo 1 || echo 0</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -15,7 +15,7 @@
     <NonCompliantComment>Unused connectors are enabled, which may expose the server to unnecessary security risks.</NonCompliantComment>
     <CorrectiveComment>Disable unused connectors in the Tomcat server.xml file. Command: Comment out or remove the unused <Connector> elements.</CorrectiveComment>
     <Correction>sed -i '/<Connector/,/<\/Connector>/s/^/<!--/; /<\/Connector>/s/$/-->/' $CATALINA_HOME/conf/server.xml</Correction>
-    <Verification>grep -E '<!--.*<Connector.*-->' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1</Verification>
+    <Verification>grep -E '<!--.*<Connector.*-->' $CATALINA_HOME/conf/server.xml &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 </RulesCIS>

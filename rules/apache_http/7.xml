@@ -5,7 +5,7 @@
     <NonCompliantComment>mod_ssl and mod_nss are not installed or enabled.</NonCompliantComment>
     <CorrectiveComment>Install and enable mod_ssl and/or mod_nss using your package manager.</CorrectiveComment>
     <Correction>yum install mod_ssl -y || apt-get install libapache2-mod-ssl -y; systemctl restart httpd</Correction>
-    <Verification>httpd -M | grep -q "ssl_module" && echo 0 || echo 1</Verification>
+    <Verification>httpd -M | grep -q "ssl_module" &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
   <Rule id="7.2">
@@ -23,7 +23,7 @@
     <NonCompliantComment>The server's private key is not adequately protected.</NonCompliantComment>
     <CorrectiveComment>Set ownership to root and permissions to 400 on the private key.</CorrectiveComment>
     <Correction>chown root:root /etc/ssl/private/server.key; chmod 400 /etc/ssl/private/server.key</Correction>
-    <Verification>stat -c "%a" /etc/ssl/private/server.key | grep -q "^400$" && echo 0 || echo 1</Verification>
+    <Verification>stat -c "%a" /etc/ssl/private/server.key | grep -q "^400$" &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
   <Rule id="7.4">
@@ -32,7 +32,7 @@
     <NonCompliantComment>TLSv1.0 and TLSv1.1 protocols are enabled.</NonCompliantComment>
     <CorrectiveComment>Disable TLSv1.0 and TLSv1.1, enabling only TLSv1.2 and TLSv1.3.</CorrectiveComment>
     <Correction>sed -i 's/^SSLProtocol .*/SSLProtocol +TLSv1.2 +TLSv1.3/' /etc/httpd/conf.d/ssl.conf; systemctl restart httpd</Correction>
-    <Verification>grep '^SSLProtocol' /etc/httpd/conf.d/ssl.conf | grep -q "+TLSv1.2" && echo 0 || echo 1</Verification>
+    <Verification>grep '^SSLProtocol' /etc/httpd/conf.d/ssl.conf | grep -q "+TLSv1.2" &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
   <Rule id="7.5">
@@ -41,7 +41,7 @@
     <NonCompliantComment>Weak SSL/TLS ciphers are enabled.</NonCompliantComment>
     <CorrectiveComment>Configure the SSLCipherSuite to disable weak ciphers.</CorrectiveComment>
     <Correction>sed -i 's/^SSLCipherSuite .*/SSLCipherSuite HIGH:!aNULL:!MD5:!3DES/' /etc/httpd/conf.d/ssl.conf; systemctl restart httpd</Correction>
-    <Verification>grep '^SSLCipherSuite' /etc/httpd/conf.d/ssl.conf | grep -q "HIGH:!aNULL:!MD5:!3DES" && echo 0 || echo 1</Verification>
+    <Verification>grep '^SSLCipherSuite' /etc/httpd/conf.d/ssl.conf | grep -q "HIGH:!aNULL:!MD5:!3DES" &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
   <Rule id="7.6">
@@ -77,9 +77,9 @@
     <NonCompliantComment>Not all web content is forced to be accessed via HTTPS.</NonCompliantComment>
     <CorrectiveComment>Configure rewrite rules to redirect HTTP requests to HTTPS.</CorrectiveComment>
     <Correction>
-      echo "RewriteEngine On" >> /etc/httpd/conf/httpd.conf; 
-      echo "RewriteCond %{HTTPS} !=on" >> /etc/httpd/conf/httpd.conf; 
-      echo "RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]" >> /etc/httpd/conf/httpd.conf; 
+      echo "RewriteEngine On" &gt;&gt; /etc/httpd/conf/httpd.conf; 
+      echo "RewriteCond %{HTTPS} !=on" &gt;&gt; /etc/httpd/conf/httpd.conf; 
+      echo "RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]" &gt;&gt; /etc/httpd/conf/httpd.conf; 
       systemctl restart httpd
     </Correction>
     <Verification>grep -q "RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI}" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
@@ -99,7 +99,7 @@
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>HTTP Strict Transport Security (HSTS) is not enabled.</NonCompliantComment>
     <CorrectiveComment>Configure HSTS by adding the Strict-Transport-Security header.</CorrectiveComment>
-    <Correction>echo "Header always set Strict-Transport-Security &quot;max-age=63072000; includeSubDomains&quot;" >> /etc/httpd/conf/httpd.conf; systemctl restart httpd</Correction>
+    <Correction>echo "Header always set Strict-Transport-Security &quot;max-age=63072000; includeSubDomains&quot;" &gt;&gt; /etc/httpd/conf/httpd.conf; systemctl restart httpd</Correction>
     <Verification>grep -q "Strict-Transport-Security" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>

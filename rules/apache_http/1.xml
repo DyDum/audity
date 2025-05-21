@@ -13,7 +13,7 @@
     <FileName>server_usage_policy.txt</FileName>
     <NonCompliantComment>The server is configured as a multi-use system, which increases the attack surface and the risk of compromise.</NonCompliantComment>
     <CorrectiveComment>Designate the server exclusively for Apache web services by removing or disabling non-essential services.</CorrectiveComment>
-    <Correction>Manual review required; update system configuration to limit the server’s role to web hosting only.</Correction>
+    <Correction>Manual review required; update system configuration to limit the server's role to web hosting only.</Correction>
     <Verification>Manual verification required to confirm that no extraneous services are running.</Verification>
     <Manual>YES</Manual>
   </Rule>

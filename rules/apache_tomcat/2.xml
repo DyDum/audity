@@ -30,7 +30,7 @@
     <CorrectiveComment>Disable the X-Powered-By HTTP header by adding the following configuration in the server.xml file: 
     <Connector ... server="SecureServer" />.</CorrectiveComment>
     <Correction>sed -i '/<Connector/s/server=".*"/server="SecureServer"/' $CATALINA_HOME/conf/server.xml</Correction>
-    <Verification>grep -E '<Connector.*server="SecureServer"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1</Verification>
+    <Verification>grep -E '<Connector.*server="SecureServer"' $CATALINA_HOME/conf/server.xml &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -40,7 +40,7 @@
     <NonCompliantComment>Client-facing stack traces are enabled, which may expose sensitive information to users.</NonCompliantComment>
     <CorrectiveComment>Disable client-facing stack traces. Manually modify the web.xml file and set the 'showServerInfo' parameter to 'false' within the <servlet> configuration.</CorrectiveComment>
     <Correction>sed -i '/<param-name>showServerInfo<\/param-name>/!b;n;c<param-value>false<\/param-value>' $CATALINA_HOME/conf/web.xml</Correction>
-    <Verification>grep -A 1 '<param-name>showServerInfo</param-name>' $CATALINA_HOME/conf/web.xml | grep '<param-value>false</param-value>' && echo 0 || echo 1</Verification>
+    <Verification>grep -A 1 '<param-name>showServerInfo</param-name>' $CATALINA_HOME/conf/web.xml | grep '<param-value>false</param-value>' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -51,7 +51,7 @@
     <CorrectiveComment>Turn off the TRACE method. Manually modify the web.xml file and set the following: 
     <LimitExcept GET POST HEAD> Deny from all </LimitExcept></CorrectiveComment>
     <Correction>sed -i '/<LimitExcept GET POST HEAD>/!b;n;cDeny from all' $CATALINA_HOME/conf/web.xml</Correction>
-    <Verification>grep -A 1 '<LimitExcept GET POST HEAD>' $CATALINA_HOME/conf/web.xml | grep 'Deny from all' && echo 0 || echo 1</Verification>
+    <Verification>grep -A 1 '<LimitExcept GET POST HEAD>' $CATALINA_HOME/conf/web.xml | grep 'Deny from all' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -61,7 +61,7 @@
     <NonCompliantComment>The 'Server' header is not modified, which may expose server information to clients.</NonCompliantComment>
     <CorrectiveComment>Ensure the 'Server' header is modified to prevent information disclosure. Manually modify the server.xml file and add the 'server' attribute to the <Connector> element with a custom value. Example: <Connector ... server="SecureServer" />.</CorrectiveComment>
     <Correction>sed -i '/<Connector/s/server=".*"/server="SecureServer"/' $CATALINA_HOME/conf/server.xml</Correction>
-    <Verification>grep -E '<Connector.*server="SecureServer"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1</Verification>
+    <Verification>grep -E '<Connector.*server="SecureServer"' $CATALINA_HOME/conf/server.xml &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 </RulesCIS>

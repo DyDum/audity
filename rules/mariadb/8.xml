@@ -5,7 +5,7 @@
     <NonCompliantComment>The 'require_secure_transport' setting is not enabled, which may allow unencrypted connections.</NonCompliantComment>
     <CorrectiveComment>Set 'require_secure_transport' to 'ON' and ensure SSL is enabled ('have_ssl' is 'YES').</CorrectiveComment>
     <Correction>sed -i '/\[mysqld\]/a require_secure_transport=ON' /etc/mysql/my.cnf; systemctl restart mariadb</Correction>
-    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'require_secure_transport';" | grep -q 'ON' && mysql -u root -p -e "SHOW VARIABLES LIKE 'have_ssl';" | grep -q 'YES' && echo 0 || echo 1</Verification>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'require_secure_transport';" | grep -q 'ON' &amp;&amp; mysql -u root -p -e "SHOW VARIABLES LIKE 'have_ssl';" | grep -q 'YES' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -15,7 +15,7 @@
     <NonCompliantComment>SSL is not required for remote users, which may allow unencrypted connections.</NonCompliantComment>
     <CorrectiveComment>Ensure 'ssl_type' is set to 'ANY', 'X509', or 'SPECIFIED' for all remote users.</CorrectiveComment>
     <Correction>mysql -u root -p -e "UPDATE mysql.user SET ssl_type='ANY' WHERE host!='localhost'; FLUSH PRIVILEGES;"</Correction>
-    <Verification>mysql -u root -p -e "SELECT user,host,ssl_type FROM mysql.user WHERE host!='localhost' AND ssl_type NOT IN ('ANY', 'X509', 'SPECIFIED');" | grep -q . && echo 1 || echo 0</Verification>
+    <Verification>mysql -u root -p -e "SELECT user,host,ssl_type FROM mysql.user WHERE host!='localhost' AND ssl_type NOT IN ('ANY', 'X509', 'SPECIFIED');" | grep -q . &amp;&amp; echo 1 || echo 0</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -25,7 +25,7 @@
     <NonCompliantComment>No connection limits are set, which may allow resource exhaustion (DoS).</NonCompliantComment>
     <CorrectiveComment>Set maximum connection limits for the server and per user.</CorrectiveComment>
     <Correction>sed -i '/\[mysqld\]/a max_connections=200; max_user_connections=20' /etc/mysql/my.cnf; systemctl restart mariadb</Correction>
-    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'max_connections';" | grep -q '200' && mysql -u root -p -e "SHOW VARIABLES LIKE 'max_user_connections';" | grep -q '20' && echo 0 || echo 1</Verification>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'max_connections';" | grep -q '200' &amp;&amp; mysql -u root -p -e "SHOW VARIABLES LIKE 'max_user_connections';" | grep -q '20' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 </RulesCIS>
