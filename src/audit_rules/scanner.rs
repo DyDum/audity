@@ -65,6 +65,7 @@ pub fn scan_directory(dir: &str) -> Result<(), ScanError> {
 
     // Parse each file and evaluate compliance
     for file in files {
+        println!("{}",file.file_name().to_string_lossy());
         let raw = fs::read_to_string(file.path())?;
         let local: RulesCis = from_str(&raw)?;
 
