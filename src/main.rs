@@ -1,48 +1,29 @@
-mod audit_rules;
-mod package_management;
-use audit_rules::scanner::scan_directory;
-
+use audity::controller;
+use clap::{Arg, ArgAction, Command};
 
 fn main() {
-    // Update the package list to ensure it is up-to-date.
-    if let Err(e) = package_management::update::update_package_list() {
-        println!("Failed to update package list: {}", e);
-        return;
-    }
+    let matches = Command::new("Audity")
+        .version("0.1.0")
+        .author("DyDum & Wikkizs")
+        .about("Linux server scanning and auditing tool")
+        .arg_required_else_help(true)
+        .arg(Arg::new("audit").short('A').long("audit").help("Run full audit").action(ArgAction::SetTrue))
+        .arg(Arg::new("package").short('P').long("package").help("Run package audit").action(ArgAction::SetTrue))
+        .arg(Arg::new("update").short('D').long("update").help("Update package list").action(ArgAction::SetTrue).requires("package"))
+        .arg(Arg::new("upgrade").short('G').long("upgrade").help("Check upgrades").action(ArgAction::SetTrue).requires("package"))
+        .arg(Arg::new("cis").short('C').long("cis").help("Check CIS compliances (MUST HAVE PACKAGE LIST)").action(ArgAction::SetTrue).requires("package"))
+        .get_matches();
 
-    // Read the sources list if needed for the report or verification.
-    let sources = package_management::sources::read_sources_list().unwrap_or_else(|e| {
-        println!("Failed to read sources list: {}", e);
-        return String::new();  // Provide an empty string in case of failure.
-    });
-
-    // Retrieve the total count of installed packages. If the operation fails, default to 0.
-    let total_installed = package_management::list::get_installed_packages_count().unwrap_or(0);
-
-    // Retrieve detailed information about installed packages. If the operation fails, default to an empty string.
-    let installed_packages = package_management::list::list_installed_packages().unwrap_or_default();
-
-    // Retrieve detailed information about upgradable packages. If the operation fails, default to an empty string.
-    let upgradable_packages = package_management::update::check_upgradable_packages().unwrap_or_default();
-
-    // Generate the XML report using the gathered data.
-    match package_management::xml_report::generate_xml_report(total_installed, &installed_packages, &upgradable_packages) {
-        Ok(xml_data) => {
-            // If the XML data is successfully generated, write it to a file.
-            std::fs::write("./reports/report.xml", xml_data).expect("Failed to write XML report");
-            println!("XML report generated successfully and saved to 'report.xml'.");
-        },
-        Err(e) => {
-            // If there was an error generating the XML report, log the error.
-            println!("Failed to generate XML report: {}", e);
-        },
-    }
-    // TODO : Fix the path to the rules directory to automatically select the rights one.
-    let dir = "rules/debian";
-
-    if let Err(e) = scan_directory(dir) {
-        eprintln!("Error : {e}");
-        std::process::exit(1);
+    if matches.get_flag("audit") {
+        controller::run_full_audit();
+    } else if matches.get_flag("cis") && matches.get_flag("package") {
+        controller::run_audit_rules();
+        let do_update = matches.get_flag("update");
+        let do_upgrade = matches.get_flag("upgrade");
+        controller::run_package_audit(do_update, do_upgrade);
+    } else if matches.get_flag("package") {
+        let do_update = matches.get_flag("update");
+        let do_upgrade = matches.get_flag("upgrade");
+        controller::run_package_audit(do_update, do_upgrade);
     }
 }
-
