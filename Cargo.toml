@@ -5,5 +5,12 @@ edition = "2024"
 
 [dependencies]
 serde      = { version = "1.0", features = ["derive"] }
-quick-xml  = { version = "0.30", features = ["serialize"] } # depuis 0.30, la même feature active (de)Serialize
+quick-xml  = { version = "0.30", features = ["serialize"] }
 thiserror  = "1.0"
+askama = "0.14.0"
+chrono = { version = "0.4.41", features = ["serde"] }
+anyhow = "1.0.98"
+tempfile = "3.20.0"
+sys-info      = "0.9"
+get_if_addrs  = "0.5"
+os_info = "3"

@@ -1,86 +1,73 @@
-use quick_xml::{Writer, events::{Event, BytesEnd, BytesStart, BytesText}};
-use std::io::Cursor;
-use std::io::{self, Error as IoError};
+use quick_xml::events::{BytesEnd, BytesStart, BytesText, Event}; // Import XML event types
+use quick_xml::Writer; // XML writer
+use std::io::{Cursor, Error as IoError, ErrorKind, Result}; // I/O types and error handling
 
-/// Generates an XML report of package statistics and details.
+/// Generates an XML report listing installed and upgradable packages.
 ///
 /// # Arguments
-/// * `total_installed` - Total number of installed packages.
-/// * `installed_packages` - String containing details of each installed package.
-/// * `upgradable_packages` - String containing details of each upgradable package.
+/// * `total_installed` – total number of installed packages.
+/// * `installed_packages` – multiline string: each line contains a package name and version.
+/// * `upgradable_packages` – multiline string: each line contains a package name.
 ///
 /// # Returns
-/// A `Result` which is either:
-/// - An XML string on success.
-/// - An `IoError` on failure.
-pub fn generate_xml_report(total_installed: usize, installed_packages: &str, upgradable_packages: &str) -> Result<String, IoError> {
-    // Initialize XML writer with indentation for readability.
+/// XML string wrapped in `Result`, or `IoError` on failure.
+pub fn generate_xml_report(
+    total_installed: usize,
+    installed_packages: &str,
+    upgradable_packages: &str,
+) -> Result<String> {
+    // Initialize the writer with 4-space indentation, writing to memory buffer.
     let mut writer = Writer::new_with_indent(Cursor::new(Vec::new()), b' ', 4);
 
-    // Start the XML document with the root element.
-    writer.write_event(Event::Start(BytesStart::borrowed_name(b"packages")))
-        .map_err(|e| IoError::new(io::ErrorKind::Other, e.to_string()))?;
+    // Closure to convert quick_xml errors into IoError.
+    let map_err = |e: quick_xml::Error| IoError::new(ErrorKind::Other, e.to_string());
 
-    // Section for total number of installed packages.
-    writer.write_event(Event::Start(BytesStart::borrowed_name(b"installed")))
-        .map_err(|e| IoError::new(io::ErrorKind::Other, e.to_string()))?;
-    writer.write_event(Event::Text(BytesText::from_plain_str(&total_installed.to_string())))
-        .map_err(|e| IoError::new(io::ErrorKind::Other, e.to_string()))?;
-    writer.write_event(Event::End(BytesEnd::borrowed(b"installed")))
-        .map_err(|e| IoError::new(io::ErrorKind::Other, e.to_string()))?;
+    // Write <packages> root element.
+    writer.write_event(Event::Start(BytesStart::new("packages"))).map_err(map_err)?;
 
-    // Section for the number of upgradable packages.
-    writer.write_event(Event::Start(BytesStart::borrowed_name(b"upgradable")))
-        .map_err(|e| IoError::new(io::ErrorKind::Other, e.to_string()))?;
-    writer.write_event(Event::Text(BytesText::from_plain_str(&upgradable_packages.lines().count().to_string())))
-        .map_err(|e| IoError::new(io::ErrorKind::Other, e.to_string()))?;
-    writer.write_event(Event::End(BytesEnd::borrowed(b"upgradable")))
-        .map_err(|e| IoError::new(io::ErrorKind::Other, e.to_string()))?;
+    // Write <installed> section with total count.
+    writer.write_event(Event::Start(BytesStart::new("installed"))).map_err(map_err)?;
+    writer.write_event(Event::Text(BytesText::new(&total_installed.to_string()))).map_err(map_err)?;
+    writer.write_event(Event::End(BytesEnd::new("installed"))).map_err(map_err)?;
 
-    // List details of each installed package under the <total> tag.
-    writer.write_event(Event::Start(BytesStart::borrowed_name(b"total")))
-        .map_err(|e| IoError::new(io::ErrorKind::Other, e.to_string()))?;
+    // Write <upgradable> section with line count of upgradable packages.
+    writer.write_event(Event::Start(BytesStart::new("upgradable"))).map_err(map_err)?;
+    writer.write_event(Event::Text(BytesText::new(
+        &upgradable_packages.lines().count().to_string(),
+    ))).map_err(map_err)?;
+    writer.write_event(Event::End(BytesEnd::new("upgradable"))).map_err(map_err)?;
+
+    // Write <total> section with detailed installed packages.
+    writer.write_event(Event::Start(BytesStart::new("total"))).map_err(map_err)?;
     for line in installed_packages.lines() {
-        let details: Vec<&str> = line.split_whitespace().collect();
+        let details: Vec<&str> = line.split_whitespace().collect(); // Expect: name + version
         if details.len() > 1 {
-            let package_name = details[0];
-            let version_info = details[1];
-
-            // Writing each package with its name and version as a self-closing tag.
-            let mut pkg = BytesStart::borrowed_name(b"package");
-            pkg.push_attribute(("name", package_name));
-            pkg.push_attribute(("version", version_info));
-
-            writer.write_event(Event::Empty(pkg))
-                .map_err(|e| IoError::new(io::ErrorKind::Other, e.to_string()))?;
+            // Write <package name="..." version="..." />.
+            let mut pkg = BytesStart::new("package");
+            pkg.push_attribute(("name", details[0]));
+            pkg.push_attribute(("version", details[1]));
+            writer.write_event(Event::Empty(pkg)).map_err(map_err)?;
         }
     }
-    writer.write_event(Event::End(BytesEnd::borrowed(b"total")))
-        .map_err(|e| IoError::new(io::ErrorKind::Other, e.to_string()))?;
+    writer.write_event(Event::End(BytesEnd::new("total"))).map_err(map_err)?;
 
-    // List details of each upgradable package under the <upgrade> tag.
-    writer.write_event(Event::Start(BytesStart::borrowed_name(b"upgrade")))
-        .map_err(|e| IoError::new(io::ErrorKind::Other, e.to_string()))?;
+    // Write <upgrade> section with upgradable package names.
+    writer.write_event(Event::Start(BytesStart::new("upgrade"))).map_err(map_err)?;
     for line in upgradable_packages.lines() {
-        let details: Vec<&str> = line.split_whitespace().collect();
-        if details.len() > 1 {
-            let package_name = details[0];
-
-            // Writing each upgradable package as a self-closing tag.
-            let mut pkg = BytesStart::borrowed_name(b"package");
-            pkg.push_attribute(("name", package_name));
-
-            writer.write_event(Event::Empty(pkg))
-                .map_err(|e| IoError::new(io::ErrorKind::Other, e.to_string()))?;
+        let details: Vec<&str> = line.split_whitespace().collect(); // Expect: name only
+        if !details.is_empty() {
+            // Write <package name="..." />.
+            let mut pkg = BytesStart::new("package");
+            pkg.push_attribute(("name", details[0]));
+            writer.write_event(Event::Empty(pkg)).map_err(map_err)?;
         }
     }
-    writer.write_event(Event::End(BytesEnd::borrowed(b"upgrade")))
-        .map_err(|e| IoError::new(io:: ErrorKind::Other, e.to_string()))?;
+    writer.write_event(Event::End(BytesEnd::new("upgrade"))).map_err(map_err)?;
 
-    // Close the root element and the document.
-    writer.write_event(Event::End(BytesEnd::borrowed(b"packages")))
-        .map_err(|e| IoError::new(io::ErrorKind::Other, e.to_string()))?;
+    // Close </packages> root.
+    writer.write_event(Event::End(BytesEnd::new("packages"))).map_err(map_err)?;
 
-    // Convert the XML data stored in the writer to a String and return it.
-    Ok(String::from_utf8(writer.into_inner().into_inner()).map_err(|e| IoError::new(io::ErrorKind::InvalidData, e.to_string()))?)
+    // Convert the memory buffer (Vec<u8>) into UTF-8 string and return.
+    let output = writer.into_inner().into_inner();
+    String::from_utf8(output).map_err(|e| IoError::new(ErrorKind::InvalidData, e))
 }
