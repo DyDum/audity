@@ -1,5 +1,13 @@
 <RulesCIS>
   <Rule id="1.1.1">
+    <Name>Ensure NGINX is Installed (Automated)</Name>
+    <Chapter id="1">Initial Setup</Chapter>
+    <Section id="1.1.1">Ensure NGINX is Installed</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>NGINX is not installed, which means the server is not secured with a recommended web server.</NonCompliantComment>
@@ -10,6 +18,14 @@
   </Rule>
 
   <Rule id="1.1.2">
+    <Name>Ensure NGINX is Installed from Source (Automated)</Name>
+    <Chapter id="1">Initial Setup</Chapter>
+    <Section id="1.1.2">Ensure NGINX is Installed from Source</Section>
+    <Profiles>
+      <Profile level="2" type="Webserver"/>
+      <Profile level="2" type="Proxy"/>
+      <Profile level="2" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>NGINX is not installed from source, which may include unnecessary modules and increase the attack surface.</NonCompliantComment>
@@ -20,6 +36,14 @@
   </Rule>
 
   <Rule id="1.2.1">
+    <Name>Ensure Package Manager Repositories are Properly Configured (Automated)</Name>
+    <Chapter id="1">Initial Setup</Chapter>
+    <Section id="1.2.1">Ensure Package Manager Repositories are Properly Configured</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/yum.repos.d/</BasePath>
     <FileName>nginx.repo</FileName>
     <NonCompliantComment>NGINX package repositories are not properly configured, which may prevent updates.</NonCompliantComment>
@@ -30,6 +54,14 @@
   </Rule>
 
   <Rule id="1.2.2">
+    <Name>Ensure NGINX is Updated to the Latest Version (Automated)</Name>
+    <Chapter id="1">Initial Setup</Chapter>
+    <Section id="1.2.2">Ensure NGINX is Updated to the Latest Version</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/usr/sbin/</BasePath>
     <FileName>nginx</FileName>
     <NonCompliantComment>NGINX is not updated to the latest version, which may contain security vulnerabilities.</NonCompliantComment>

@@ -1,5 +1,11 @@
 <RulesCIS>
   <Rule id="3.1">
+    <Name>Secure datadir Permissions (Automated)</Name>
+    <Chapter id="3">MariaDB Database Configuration</Chapter>
+    <Section id="3.1">Secure datadir Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
     <BasePath>/var/lib/mysql/</BasePath>
     <FileName>datadir</FileName>
     <NonCompliantComment>The 'datadir' directory does not have appropriate permissions, increasing the risk of unauthorized access.</NonCompliantComment>
@@ -10,6 +16,12 @@
   </Rule>
 
   <Rule id="3.2">
+    <Name>Secure Binary Log File Permissions (Automated)</Name>
+    <Chapter id="3">MariaDB Database Configuration</Chapter>
+    <Section id="3.2">Secure Binary Log File Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
     <BasePath>/var/log/mysql/</BasePath>
     <FileName>log_bin_basename</FileName>
     <NonCompliantComment>The 'log_bin_basename' files do not have appropriate permissions, which may expose log data to unauthorized users.</NonCompliantComment>
@@ -20,6 +32,12 @@
   </Rule>
 
   <Rule id="3.3">
+    <Name>Secure Error Log File Permissions (Automated)</Name>
+    <Chapter id="3">MariaDB Database Configuration</Chapter>
+    <Section id="3.3">Secure Error Log File Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
     <BasePath>/var/log/mysql/</BasePath>
     <FileName>log_error</FileName>
     <NonCompliantComment>The 'log_error' file does not have appropriate permissions, which may expose error logs to unauthorized users.</NonCompliantComment>
@@ -30,6 +48,12 @@
   </Rule>
 
   <Rule id="3.4">
+    <Name>Secure Slow Query Log File Permissions (Automated)</Name>
+    <Chapter id="3">MariaDB Database Configuration</Chapter>
+    <Section id="3.4">Secure Slow Query Log File Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
     <BasePath>/var/log/mysql/</BasePath>
     <FileName>slow_query_log</FileName>
     <NonCompliantComment>The 'slow_query_log' file does not have appropriate permissions, which may expose slow query data.</NonCompliantComment>
@@ -40,6 +64,12 @@
   </Rule>
 
   <Rule id="3.5">
+    <Name>Secure Relay Log File Permissions (Automated)</Name>
+    <Chapter id="3">MariaDB Database Configuration</Chapter>
+    <Section id="3.5">Secure Relay Log File Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
     <BasePath>/var/log/mysql/</BasePath>
     <FileName>relay_log_basename</FileName>
     <NonCompliantComment>The 'relay_log_basename' files do not have appropriate permissions, which may expose relay log data.</NonCompliantComment>
@@ -50,6 +80,12 @@
   </Rule>
 
   <Rule id="3.6">
+    <Name>Secure General Log File Permissions (Automated)</Name>
+    <Chapter id="3">MariaDB Database Configuration</Chapter>
+    <Section id="3.6">Secure General Log File Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
     <BasePath>/var/log/mysql/</BasePath>
     <FileName>general_log_file</FileName>
     <NonCompliantComment>The 'general_log_file' does not have appropriate permissions, which may expose log data to unauthorized users.</NonCompliantComment>
@@ -60,6 +96,12 @@
   </Rule>
 
   <Rule id="3.7">
+    <Name>Secure SSL Private Key Permissions (Automated)</Name>
+    <Chapter id="3">MariaDB Database Configuration</Chapter>
+    <Section id="3.7">Secure SSL Private Key Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
     <BasePath>/etc/mysql/ssl/</BasePath>
     <FileName>private-key.pem</FileName>
     <NonCompliantComment>SSL key files do not have appropriate permissions, which may expose them to unauthorized access.</NonCompliantComment>
@@ -70,6 +112,12 @@
   </Rule>
 
   <Rule id="3.8">
+    <Name>Secure Plugin Directory Permissions (Automated)</Name>
+    <Chapter id="3">MariaDB Database Configuration</Chapter>
+    <Section id="3.8">Secure Plugin Directory Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
     <BasePath>/usr/lib/mysql/plugin/</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>The plugin directory does not have appropriate permissions, increasing the risk of unauthorized changes.</NonCompliantComment>
@@ -80,6 +128,12 @@
   </Rule>
 
   <Rule id="3.9">
+    <Name>Secure Audit Log File Permissions (Automated)</Name>
+    <Chapter id="3">MariaDB Database Configuration</Chapter>
+    <Section id="3.9">Secure Audit Log File Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
     <BasePath>/var/log/mysql/</BasePath>
     <FileName>server_audit_file_path</FileName>
     <NonCompliantComment>The server audit log does not have appropriate permissions, exposing audit data to unauthorized users.</NonCompliantComment>
@@ -90,6 +144,12 @@
   </Rule>
 
   <Rule id="3.10">
+    <Name>Secure Encryption Key File Permissions (Automated)</Name>
+    <Chapter id="3">MariaDB Database Configuration</Chapter>
+    <Section id="3.10">Secure Encryption Key File Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>encryption.cnf</FileName>
     <NonCompliantComment>Encryption key files do not have appropriate permissions, increasing security risks.</NonCompliantComment>

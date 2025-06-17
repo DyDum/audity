@@ -1,0 +1,35 @@
+<RulesCIS>
+  <Rule id="3.1">
+    <Name>Set a nondeterministic shutdown command value (Automated)</Name>
+    <Chapter id="3">Protect the Shutdown Port</Chapter>
+    <Section id="3.1">Set a nondeterministic shutdown command value</Section>
+    <Profiles>
+      <Profile level="1" type="Server"/>
+      <Profile level="1" type="Workstation"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>server.xml</FileName>
+    <NonCompliantComment>The shutdown command is set to the default value ('SHUTDOWN'), which may allow unauthorized shutdown of the Tomcat server.</NonCompliantComment>
+    <CorrectiveComment>Set a nondeterministic shutdown command value in server.xml.</CorrectiveComment>
+    <Correction>sed -i '/&lt;Server /s/shutdown=".*"/shutdown="SecureShutdown"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat</Correction>
+    <Verification>grep 'shutdown="SecureShutdown"' $CATALINA_HOME/conf/server.xml &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.2">
+    <Name>Disable the shutdown port by setting it to '-1' (Automated)</Name>
+    <Chapter id="3">Protect the Shutdown Port</Chapter>
+    <Section id="3.2">Disable the shutdown port</Section>
+    <Profiles>
+      <Profile level="1" type="Server"/>
+      <Profile level="1" type="Workstation"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>server.xml</FileName>
+    <NonCompliantComment>The shutdown port is enabled, which may allow unauthorized users to remotely shut down the server.</NonCompliantComment>
+    <CorrectiveComment>Disable the shutdown port by setting it to '-1' in server.xml.</CorrectiveComment>
+    <Correction>sed -i '/&lt;Server /s/port=".*"/port="-1"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat</Correction>
+    <Verification>grep '&lt;Server port="-1"' $CATALINA_HOME/conf/server.xml &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+</RulesCIS>

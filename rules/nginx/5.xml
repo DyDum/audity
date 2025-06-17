@@ -1,5 +1,13 @@
 <RulesCIS>
   <Rule id="5.1.1">
+    <Name>Ensure Access Is Restricted by IP Address (Automated)</Name>
+    <Chapter id="5">HTTP Headers Hardening</Chapter>
+    <Section id="5.1.1">Ensure Access Is Restricted by IP Address</Section>
+    <Profiles>
+      <Profile level="2" type="Webserver"/>
+      <Profile level="2" type="Proxy"/>
+      <Profile level="2" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Access to the server is not restricted by IP addresses, allowing unauthorized access.</NonCompliantComment>
@@ -10,6 +18,14 @@
   </Rule>
 
   <Rule id="5.1.2">
+    <Name>Ensure HTTP Methods Are Restricted (Automated)</Name>
+    <Chapter id="5">HTTP Headers Hardening</Chapter>
+    <Section id="5.1.2">Ensure HTTP Methods Are Restricted</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>All HTTP methods are allowed, including potentially dangerous methods (e.g., DELETE, TRACE).</NonCompliantComment>
@@ -20,6 +36,14 @@
   </Rule>
 
   <Rule id="5.2.1">
+    <Name>Ensure Client Request Timeouts Are Set Appropriately (Automated)</Name>
+    <Chapter id="5">HTTP Headers Hardening</Chapter>
+    <Section id="5.2.1">Ensure Client Request Timeouts Are Set Appropriately</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>The timeout values for reading the client header and body are not set, which may allow DoS attacks.</NonCompliantComment>
@@ -30,6 +54,14 @@
   </Rule>
 
   <Rule id="5.2.2">
+    <Name>Ensure Request Body Size Is Limited (Automated)</Name>
+    <Chapter id="5">HTTP Headers Hardening</Chapter>
+    <Section id="5.2.2">Ensure Request Body Size Is Limited</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>The maximum request body size is not defined, which may allow large payloads and DoS attacks.</NonCompliantComment>
@@ -40,6 +72,14 @@
   </Rule>
 
   <Rule id="5.2.3">
+    <Name>Ensure URI Buffer Sizes Are Limited (Automated)</Name>
+    <Chapter id="5">HTTP Headers Hardening</Chapter>
+    <Section id="5.2.3">Ensure URI Buffer Sizes Are Limited</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>The URI buffer size is not defined, which may allow buffer overflow attacks.</NonCompliantComment>
@@ -50,6 +90,14 @@
   </Rule>
 
   <Rule id="5.2.4">
+    <Name>Ensure Connection Limits Are Configured (Automated)</Name>
+    <Chapter id="5">HTTP Headers Hardening</Chapter>
+    <Section id="5.2.4">Ensure Connection Limits Are Configured</Section>
+    <Profiles>
+      <Profile level="2" type="Webserver"/>
+      <Profile level="2" type="Proxy"/>
+      <Profile level="2" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Connection limits per IP are not set, allowing unlimited connections per client and increasing DoS risk.</NonCompliantComment>
@@ -60,6 +108,14 @@
   </Rule>
 
   <Rule id="5.2.5">
+    <Name>Ensure Request Rate Limits Are Configured (Automated)</Name>
+    <Chapter id="5">HTTP Headers Hardening</Chapter>
+    <Section id="5.2.5">Ensure Request Rate Limits Are Configured</Section>
+    <Profiles>
+      <Profile level="2" type="Webserver"/>
+      <Profile level="2" type="Proxy"/>
+      <Profile level="2" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Request rate limits are not set, allowing clients to send unlimited requests and increasing DoS risk.</NonCompliantComment>
@@ -70,6 +126,12 @@
   </Rule>
 
   <Rule id="5.3.1">
+    <Name>Ensure X-Frame-Options Header Is Configured (Automated)</Name>
+    <Chapter id="5">HTTP Headers Hardening</Chapter>
+    <Section id="5.3.1">Ensure X-Frame-Options Header Is Configured</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>The X-Frame-Options header is not set, allowing the website to be embedded in iframes, which can lead to clickjacking attacks.</NonCompliantComment>
@@ -80,6 +142,12 @@
   </Rule>
 
   <Rule id="5.3.2">
+    <Name>Ensure X-Content-Type-Options Header Is Configured (Automated)</Name>
+    <Chapter id="5">HTTP Headers Hardening</Chapter>
+    <Section id="5.3.2">Ensure X-Content-Type-Options Header Is Configured</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>The X-Content-Type-Options header is not set, which can allow MIME type sniffing by the browser.</NonCompliantComment>
@@ -90,6 +158,12 @@
   </Rule>
 
   <Rule id="5.3.3">
+    <Name>Ensure Content-Security-Policy Header Is Configured (Automated)</Name>
+    <Chapter id="5">HTTP Headers Hardening</Chapter>
+    <Section id="5.3.3">Ensure Content-Security-Policy Header Is Configured</Section>
+    <Profiles>
+      <Profile level="2" type="Webserver"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>The Content Security Policy (CSP) is not enabled, increasing the risk of cross-site scripting (XSS) and data injection attacks.</NonCompliantComment>
@@ -100,6 +174,12 @@
   </Rule>
 
   <Rule id="5.3.4">
+    <Name>Ensure Referrer-Policy Header Is Configured (Automated)</Name>
+    <Chapter id="5">HTTP Headers Hardening</Chapter>
+    <Section id="5.3.4">Ensure Referrer-Policy Header Is Configured</Section>
+    <Profiles>
+      <Profile level="2" type="Webserver"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>The Referrer-Policy header is not set, allowing the referrer information to be exposed to external websites.</NonCompliantComment>

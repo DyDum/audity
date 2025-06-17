@@ -1,5 +1,12 @@
 <RulesCIS>
   <Rule id="5.1">
+    <Name>Restrict Full Database Access to Administrative Users (Automated)</Name>
+    <Chapter id="5">MariaDB User Authorization</Chapter>
+    <Section id="5.1">Restrict Full Database Access to Administrative Users</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>Non-administrative users have full database access, which may allow unauthorized actions.</NonCompliantComment>
@@ -10,6 +17,13 @@
   </Rule>
 
   <Rule id="5.2">
+    <Name>Restrict FILE Privilege to Administrative Users (Automated)</Name>
+    <Chapter id="5">MariaDB User Authorization</Chapter>
+    <Section id="5.2">Restrict FILE Privilege to Administrative Users</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>The 'FILE' privilege is granted to non-administrative users, which may allow unauthorized file access.</NonCompliantComment>
@@ -20,6 +34,13 @@
   </Rule>
 
   <Rule id="5.3">
+    <Name>Restrict PROCESS Privilege to Administrative Users (Automated)</Name>
+    <Chapter id="5">MariaDB User Authorization</Chapter>
+    <Section id="5.3">Restrict PROCESS Privilege to Administrative Users</Section>
+    <Profiles>
+      <Profile level="2" type="MariaDB RDBMS"/>
+      <Profile level="2" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>The 'PROCESS' privilege is granted to non-administrative users, exposing process information.</NonCompliantComment>
@@ -30,6 +51,12 @@
   </Rule>
 
   <Rule id="5.4">
+    <Name>Restrict SUPER Privilege to Administrative Users (Automated)</Name>
+    <Chapter id="5">MariaDB User Authorization</Chapter>
+    <Section id="5.4">Restrict SUPER Privilege to Administrative Users</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>The 'SUPER' privilege is granted to non-administrative users, increasing security risks.</NonCompliantComment>
@@ -40,6 +67,12 @@
   </Rule>
 
   <Rule id="5.5">
+    <Name>Restrict SHUTDOWN Privilege to Administrative Users (Automated)</Name>
+    <Chapter id="5">MariaDB User Authorization</Chapter>
+    <Section id="5.5">Restrict SHUTDOWN Privilege to Administrative Users</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>The 'SHUTDOWN' privilege is granted to non-administrative users, which may allow unauthorized server shutdowns.</NonCompliantComment>
@@ -50,6 +83,12 @@
   </Rule>
 
   <Rule id="5.6">
+    <Name>Restrict CREATE USER Privilege to Administrative Users (Automated)</Name>
+    <Chapter id="5">MariaDB User Authorization</Chapter>
+    <Section id="5.6">Restrict CREATE USER Privilege to Administrative Users</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>The 'CREATE USER' privilege is granted to non-administrative users, increasing security risks.</NonCompliantComment>
@@ -60,6 +99,12 @@
   </Rule>
 
   <Rule id="5.7">
+    <Name>Restrict GRANT OPTION Privilege to Administrative Users (Automated)</Name>
+    <Chapter id="5">MariaDB User Authorization</Chapter>
+    <Section id="5.7">Restrict GRANT OPTION Privilege to Administrative Users</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>The 'GRANT OPTION' is granted to non-administrative users, allowing them to grant privileges.</NonCompliantComment>
@@ -70,6 +115,12 @@
   </Rule>
 
   <Rule id="5.8">
+    <Name>Restrict REPLICATION SLAVE Privilege to Administrative Users (Automated)</Name>
+    <Chapter id="5">MariaDB User Authorization</Chapter>
+    <Section id="5.8">Restrict REPLICATION SLAVE Privilege to Administrative Users</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>The 'REPLICATION SLAVE' privilege is granted to non-administrative users.</NonCompliantComment>
@@ -80,6 +131,12 @@
   </Rule>
 
   <Rule id="5.9">
+    <Name>Restrict DML/DDL Privileges (Automated)</Name>
+    <Chapter id="5">MariaDB User Authorization</Chapter>
+    <Section id="5.9">Restrict DML/DDL Privileges</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>DML/DDL privileges are granted broadly, increasing security risks.</NonCompliantComment>
@@ -90,6 +147,12 @@
   </Rule>
 
   <Rule id="5.10">
+    <Name>Secure Stored Procedures and Functions (Automated)</Name>
+    <Chapter id="5">MariaDB User Authorization</Chapter>
+    <Section id="5.10">Secure Stored Procedures and Functions</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>Stored procedures and functions are defined without secure DEFINER/INVOKER settings.</NonCompliantComment>

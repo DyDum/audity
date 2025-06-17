@@ -1,5 +1,14 @@
 <RulesCIS>
   <Rule id="10.1">
+    <Name>Ensure LimitRequestLine is Set to 8190 or Less (Automated)</Name>
+    <Chapter id="10">Request Limits</Chapter>
+    <Section id="10.1">LimitRequestLine</Section>
+    <SubSection id="10.1.1">LimitRequestLine Directive</SubSection>
+
+    <Profiles>
+      <Profile level="2" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/httpd/conf</BasePath>
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>LimitRequestLine is set to a value greater than 8190, increasing the risk of buffer overflow attacks.</NonCompliantComment>
@@ -8,7 +17,17 @@
     <Verification>grep "^LimitRequestLine 8190" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
+
   <Rule id="10.2">
+    <Name>Ensure LimitRequestFields is Set to 100 or Less (Automated)</Name>
+    <Chapter id="10">Request Limits</Chapter>
+    <Section id="10.2">LimitRequestFields</Section>
+    <SubSection id="10.2.1">LimitRequestFields Directive</SubSection>
+
+    <Profiles>
+      <Profile level="2" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/httpd/conf</BasePath>
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>LimitRequestFields is set to a value greater than 100, which may allow excessive header fields.</NonCompliantComment>
@@ -17,7 +36,17 @@
     <Verification>grep "^LimitRequestFields 100" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
+
   <Rule id="10.3">
+    <Name>Ensure LimitRequestFieldsize is Set to 1024 or Less (Automated)</Name>
+    <Chapter id="10">Request Limits</Chapter>
+    <Section id="10.3">LimitRequestFieldsize</Section>
+    <SubSection id="10.3.1">LimitRequestFieldsize Directive</SubSection>
+
+    <Profiles>
+      <Profile level="2" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/httpd/conf</BasePath>
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>LimitRequestFieldsize is set to a value greater than 1024, potentially exposing the server to large header attacks.</NonCompliantComment>
@@ -26,7 +55,17 @@
     <Verification>grep "^LimitRequestFieldsize 1024" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
+
   <Rule id="10.4">
+    <Name>Ensure LimitRequestBody is Set to 102400 or Less (Automated)</Name>
+    <Chapter id="10">Request Limits</Chapter>
+    <Section id="10.4">LimitRequestBody</Section>
+    <SubSection id="10.4.1">LimitRequestBody Directive</SubSection>
+
+    <Profiles>
+      <Profile level="2" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/httpd/conf</BasePath>
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>LimitRequestBody is set to a value greater than 102400, which may allow oversized requests.</NonCompliantComment>

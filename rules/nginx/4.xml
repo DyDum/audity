@@ -1,5 +1,13 @@
 <RulesCIS>
   <Rule id="4.1.1">
+    <Name>Ensure HTTP is redirected to HTTPS (Automated)</Name>
+    <Chapter id="4">TLS Settings</Chapter>
+    <Section id="4.1.1">Ensure HTTP is redirected to HTTPS</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>HTTP is not redirected to HTTPS, which exposes unencrypted traffic to interception.</NonCompliantComment>
@@ -10,6 +18,14 @@
   </Rule>
 
   <Rule id="4.1.2">
+    <Name>Ensure Trusted SSL Certificate is Installed (Automated)</Name>
+    <Chapter id="4">TLS Settings</Chapter>
+    <Section id="4.1.2">Ensure Trusted SSL Certificate is Installed</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/ssl/certs/</BasePath>
     <FileName>nginx-selfsigned.crt</FileName>
     <NonCompliantComment>A self-signed or untrusted SSL certificate is used, which reduces trust.</NonCompliantComment>
@@ -20,6 +36,14 @@
   </Rule>
 
   <Rule id="4.1.3">
+    <Name>Ensure Private Key Permissions are Set Appropriately (Automated)</Name>
+    <Chapter id="4">TLS Settings</Chapter>
+    <Section id="4.1.3">Ensure Private Key Permissions are Set Appropriately</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/ssl/private/</BasePath>
     <FileName>nginx-selfsigned.key</FileName>
     <NonCompliantComment>The private key has weak or improper permissions, making it vulnerable to unauthorized access.</NonCompliantComment>
@@ -30,6 +54,14 @@
   </Rule>
 
   <Rule id="4.1.4">
+    <Name>Ensure SSL/TLS Protocols Are Configured Appropriately (Automated)</Name>
+    <Chapter id="4">TLS Settings</Chapter>
+    <Section id="4.1.4">Ensure SSL/TLS Protocols Are Configured Appropriately</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Weak or deprecated SSL/TLS protocols are enabled, increasing vulnerability to attacks.</NonCompliantComment>
@@ -40,6 +72,14 @@
   </Rule>
 
   <Rule id="4.1.5">
+    <Name>Ensure SSL/TLS Ciphers Are Configured Appropriately (Automated)</Name>
+    <Chapter id="4">TLS Settings</Chapter>
+    <Section id="4.1.5">Ensure SSL/TLS Ciphers Are Configured Appropriately</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Weak SSL/TLS ciphers are enabled, increasing the risk of exploitation.</NonCompliantComment>
@@ -50,6 +90,14 @@
   </Rule>
 
   <Rule id="4.1.6">
+    <Name>Ensure Diffie-Hellman Parameters Are Configured (Automated)</Name>
+    <Chapter id="4">TLS Settings</Chapter>
+    <Section id="4.1.6">Ensure Diffie-Hellman Parameters Are Configured</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Custom Diffie-Hellman parameters are not used, reducing security.</NonCompliantComment>
@@ -60,6 +108,14 @@
   </Rule>
 
   <Rule id="4.1.7">
+    <Name>Ensure OCSP Stapling Is Configured (Automated)</Name>
+    <Chapter id="4">TLS Settings</Chapter>
+    <Section id="4.1.7">Ensure OCSP Stapling Is Configured</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>OCSP stapling is not enabled, increasing SSL handshake time and reducing security.</NonCompliantComment>
@@ -70,6 +126,14 @@
   </Rule>
 
   <Rule id="4.1.8">
+    <Name>Ensure HTTP Strict Transport Security Is Enabled (Automated)</Name>
+    <Chapter id="4">TLS Settings</Chapter>
+    <Section id="4.1.8">Ensure HTTP Strict Transport Security Is Enabled</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>HTTP Strict Transport Security (HSTS) is not enabled, reducing HTTPS security.</NonCompliantComment>
@@ -80,6 +144,13 @@
   </Rule>
 
   <Rule id="4.1.9">
+    <Name>Ensure Client Certificate Authentication Is Configured for Upstream Servers (Automated)</Name>
+    <Chapter id="4">TLS Settings</Chapter>
+    <Section id="4.1.9">Ensure Client Certificate Authentication Is Configured for Upstream Servers</Section>
+    <Profiles>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Upstream server traffic is not authenticated with a client certificate, reducing security.</NonCompliantComment>
@@ -90,6 +161,13 @@
   </Rule>
 
   <Rule id="4.1.10">
+    <Name>Ensure Upstream Server Certificate Is Verified (Automated)</Name>
+    <Chapter id="4">TLS Settings</Chapter>
+    <Section id="4.1.10">Ensure Upstream Server Certificate Is Verified</Section>
+    <Profiles>
+      <Profile level="2" type="Proxy"/>
+      <Profile level="2" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>The upstream server certificate is not verified, making the server vulnerable to Man-in-the-Middle attacks.</NonCompliantComment>
@@ -100,6 +178,14 @@
   </Rule>
 
   <Rule id="4.1.11">
+    <Name>Ensure HSTS Preload Is Configured (Automated)</Name>
+    <Chapter id="4">TLS Settings</Chapter>
+    <Section id="4.1.11">Ensure HSTS Preload Is Configured</Section>
+    <Profiles>
+      <Profile level="2" type="Webserver"/>
+      <Profile level="2" type="Proxy"/>
+      <Profile level="2" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Your domain is not preloaded in HSTS, reducing the effectiveness of HTTPS.</NonCompliantComment>
@@ -110,6 +196,14 @@
   </Rule>
 
   <Rule id="4.1.12">
+    <Name>Ensure SSL Session Resumption Is Disabled (Automated)</Name>
+    <Chapter id="4">TLS Settings</Chapter>
+    <Section id="4.1.12">Ensure SSL Session Resumption Is Disabled</Section>
+    <Profiles>
+      <Profile level="2" type="Webserver"/>
+      <Profile level="2" type="Proxy"/>
+      <Profile level="2" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>SSL session resumption is enabled, reducing the benefits of Perfect Forward Secrecy (PFS).</NonCompliantComment>
@@ -120,6 +214,12 @@
   </Rule>
 
   <Rule id="4.1.13">
+    <Name>Ensure HTTP/2 Is Enabled (Automated)</Name>
+    <Chapter id="4">TLS Settings</Chapter>
+    <Section id="4.1.13">Ensure HTTP/2 Is Enabled</Section>
+    <Profiles>
+      <Profile level="2" type="Webserver"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>HTTP/2.0 is not enabled, which reduces the performance of HTTPS connections.</NonCompliantComment>
@@ -130,6 +230,14 @@
   </Rule>
 
   <Rule id="4.1.14">
+    <Name>Ensure Only Perfect Forward Secrecy Ciphers Are Used (Automated)</Name>
+    <Chapter id="4">TLS Settings</Chapter>
+    <Section id="4.1.14">Ensure Only Perfect Forward Secrecy Ciphers Are Used</Section>
+    <Profiles>
+      <Profile level="2" type="Webserver"/>
+      <Profile level="2" type="Proxy"/>
+      <Profile level="2" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Perfect Forward Secrecy (PFS) ciphers are not enforced, reducing SSL/TLS security.</NonCompliantComment>

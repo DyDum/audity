@@ -1,42 +1,47 @@
 <RulesCIS>
   <Rule id="2.1">
+    <Name>Ensure Authentication is Configured (Automated)</Name>
+    <Chapter id="2">MongoDB Authentication and Authorization</Chapter>
+    <Section id="2.1">Ensure Authentication is Configured</Section>
+    <Profiles>
+      <Profile level="1" type="MongoDB"/>
+    </Profiles>
     <BasePath>/etc/mongod.conf</BasePath>
     <FileName>mongod.conf</FileName>
     <NonCompliantComment>Authentication is not configured in MongoDB, which may allow unauthorized access.</NonCompliantComment>
-    <CorrectiveComment>Ensure Authentication is configured in MongoDB. Command: 
-    1. Open the MongoDB configuration file (mongod.conf). 
-    2. Add or modify the following lines: 
-    security: 
-      authorization: "enabled" 
-    3. Restart the MongoDB service using systemctl restart mongod.</CorrectiveComment>
+    <CorrectiveComment>Ensure Authentication is configured in MongoDB.</CorrectiveComment>
     <Correction>sed -i '/security:/a\  authorization: "enabled"' /etc/mongod.conf; systemctl restart mongod</Correction>
     <Verification>mongo --eval "db.getSiblingDB('admin').auth('username', 'password');"</Verification>
     <Manual>NO</Manual>
   </Rule>
 
   <Rule id="2.2">
+    <Name>Disable Localhost Exception (Automated)</Name>
+    <Chapter id="2">MongoDB Authentication and Authorization</Chapter>
+    <Section id="2.2">Disable Localhost Exception</Section>
+    <Profiles>
+      <Profile level="1" type="MongoDB"/>
+    </Profiles>
     <BasePath>/etc/mongod.conf</BasePath>
     <FileName>mongod.conf</FileName>
     <NonCompliantComment>MongoDB is configured to bypass authentication via the localhost exception, allowing unauthorized local access.</NonCompliantComment>
-    <CorrectiveComment>Ensure that MongoDB does not bypass authentication via the localhost exception. Command: 
-    1. Open the MongoDB configuration file (mongod.conf). 
-    2. Ensure the localhost exception is disabled by setting net.bindIp to the server IP instead of 127.0.0.1. 
-    3. Restart the MongoDB service using systemctl restart mongod.</CorrectiveComment>
+    <CorrectiveComment>Ensure that MongoDB does not bypass authentication via the localhost exception.</CorrectiveComment>
     <Correction>sed -i '/bindIp:/s/127.0.0.1/192.168.1.100/' /etc/mongod.conf; systemctl restart mongod</Correction>
     <Verification>mongo --eval "db.getSiblingDB('admin').auth('username', 'password');"</Verification>
     <Manual>NO</Manual>
   </Rule>
 
   <Rule id="2.3">
+    <Name>Enable Authentication on Sharded Cluster (Automated)</Name>
+    <Chapter id="2">MongoDB Authentication and Authorization</Chapter>
+    <Section id="2.3">Enable Authentication on Sharded Cluster</Section>
+    <Profiles>
+      <Profile level="2" type="MongoDB"/>
+    </Profiles>
     <BasePath>/etc/mongod.conf</BasePath>
     <FileName>mongod.conf</FileName>
     <NonCompliantComment>Authentication is not enabled in the sharded cluster, which may allow unauthorized access to shards.</NonCompliantComment>
-    <CorrectiveComment>Ensure authentication is enabled in the sharded cluster. Command: 
-    1. Edit the mongod.conf file for each shard and config server. 
-    2. Add or modify the following lines: 
-    security: 
-      authorization: "enabled" 
-    3. Restart the MongoDB instances.</CorrectiveComment>
+    <CorrectiveComment>Ensure authentication is enabled in the sharded cluster.</CorrectiveComment>
     <Correction>sed -i '/security:/a\  authorization: "enabled"' /etc/mongod.conf; systemctl restart mongod</Correction>
     <Verification>mongo --eval "db.getSiblingDB('admin').auth('username', 'password');"</Verification>
     <Manual>NO</Manual>

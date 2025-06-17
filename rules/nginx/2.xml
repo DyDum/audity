@@ -1,5 +1,13 @@
 <RulesCIS>
   <Rule id="2.1.1">
+    <Name>Ensure only required modules are installed (Automated)</Name>
+    <Chapter id="2">Server Hardening</Chapter>
+    <Section id="2.1.1">Ensure only required modules are installed</Section>
+    <Profiles>
+      <Profile level="2" type="Webserver"/>
+      <Profile level="2" type="Proxy"/>
+      <Profile level="2" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Unnecessary NGINX modules are installed, increasing the attack surface.</NonCompliantComment>
@@ -10,6 +18,14 @@
   </Rule>
 
   <Rule id="2.1.2">
+    <Name>Ensure HTTP WebDAV module is not installed (Automated)</Name>
+    <Chapter id="2">Server Hardening</Chapter>
+    <Section id="2.1.2">Ensure HTTP WebDAV module is not installed</Section>
+    <Profiles>
+      <Profile level="2" type="Webserver"/>
+      <Profile level="2" type="Proxy"/>
+      <Profile level="2" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>The HTTP WebDAV module is installed, which can allow unauthorized file operations on the server.</NonCompliantComment>
@@ -20,6 +36,14 @@
   </Rule>
 
   <Rule id="2.1.3">
+    <Name>Ensure modules with gzip functionality are disabled (Automated)</Name>
+    <Chapter id="2">Server Hardening</Chapter>
+    <Section id="2.1.3">Ensure modules with gzip functionality are disabled</Section>
+    <Profiles>
+      <Profile level="2" type="Webserver"/>
+      <Profile level="2" type="Proxy"/>
+      <Profile level="2" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>The gzip module is enabled, which may expose the server to BREACH attacks.</NonCompliantComment>
@@ -30,6 +54,12 @@
   </Rule>
 
   <Rule id="2.1.4">
+    <Name>Ensure the autoindex module is disabled (Automated)</Name>
+    <Chapter id="2">Server Hardening</Chapter>
+    <Section id="2.1.4">Ensure the autoindex module is disabled</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+    </Profiles>
     <BasePath>/etc/nginx/nginx.conf</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>The autoindex module is enabled, which can reveal directory contents to attackers.</NonCompliantComment>
@@ -40,6 +70,14 @@
   </Rule>
 
   <Rule id="2.2.1">
+    <Name>Ensure NGINX is run using a non-privileged, dedicated service account (Automated)</Name>
+    <Chapter id="2">Server Hardening</Chapter>
+    <Section id="2.2.1">Ensure NGINX is run using a non-privileged, dedicated service account</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>NGINX is not configured to run with a non-privileged, dedicated user account, increasing security risks.</NonCompliantComment>
@@ -50,6 +88,14 @@
   </Rule>
 
   <Rule id="2.2.2">
+    <Name>Ensure the NGINX service account is locked (Automated)</Name>
+    <Chapter id="2">Server Hardening</Chapter>
+    <Section id="2.2.2">Ensure the NGINX service account is locked</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>The NGINX service account is not locked, which may allow unauthorized access.</NonCompliantComment>
@@ -60,6 +106,14 @@
   </Rule>
 
   <Rule id="2.2.3">
+    <Name>Ensure the NGINX service account has an invalid shell (Automated)</Name>
+    <Chapter id="2">Server Hardening</Chapter>
+    <Section id="2.2.3">Ensure the NGINX service account has an invalid shell</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>The NGINX service account has a valid shell, which may allow unauthorized access.</NonCompliantComment>
@@ -69,7 +123,15 @@
     <Manual>NO</Manual>
   </Rule>
 
-    <Rule id="2.3.1">
+  <Rule id="2.3.1">
+    <Name>Ensure NGINX directories and files are owned by root (Automated)</Name>
+    <Chapter id="2">Server Hardening</Chapter>
+    <Section id="2.3.1">Ensure NGINX directories and files are owned by root</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>NGINX directories and files are not owned by root, making them vulnerable to unauthorized modifications.</NonCompliantComment>
@@ -80,6 +142,14 @@
   </Rule>
 
   <Rule id="2.3.2">
+    <Name>Ensure access to NGINX directories and files is restricted (Automated)</Name>
+    <Chapter id="2">Server Hardening</Chapter>
+    <Section id="2.3.2">Ensure access to NGINX directories and files is restricted</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Access to NGINX directories and files is not restricted, increasing the risk of unauthorized modifications.</NonCompliantComment>
@@ -90,6 +160,14 @@
   </Rule>
 
   <Rule id="2.3.3">
+    <Name>Ensure the NGINX process ID (PID) file is secured (Automated)</Name>
+    <Chapter id="2">Server Hardening</Chapter>
+    <Section id="2.3.3">Ensure the NGINX process ID (PID) file is secured</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/var/run/</BasePath>
     <FileName>nginx.pid</FileName>
     <NonCompliantComment>The NGINX PID file is not secured, making it vulnerable to unauthorized modifications.</NonCompliantComment>
@@ -100,6 +178,12 @@
   </Rule>
 
   <Rule id="2.3.4">
+    <Name>Ensure the core dump directory is secured (Automated)</Name>
+    <Chapter id="2">Server Hardening</Chapter>
+    <Section id="2.3.4">Ensure the core dump directory is secured</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+    </Profiles>
     <BasePath>/var/log/nginx/</BasePath>
     <FileName>core/</FileName>
     <NonCompliantComment>The NGINX core dump directory is not secured, exposing sensitive memory data to unauthorized users.</NonCompliantComment>
@@ -110,6 +194,14 @@
   </Rule>
 
   <Rule id="2.4.1">
+    <Name>Ensure NGINX listens only on authorized ports (Automated)</Name>
+    <Chapter id="2">Server Hardening</Chapter>
+    <Section id="2.4.1">Ensure NGINX listens only on authorized ports</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>NGINX is listening on unauthorized ports, increasing the risk of unauthorized access.</NonCompliantComment>
@@ -120,6 +212,14 @@
   </Rule>
 
   <Rule id="2.4.2">
+    <Name>Ensure requests for unknown hostnames are rejected (Automated)</Name>
+    <Chapter id="2">Server Hardening</Chapter>
+    <Section id="2.4.2">Ensure requests for unknown hostnames are rejected</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>NGINX is responding to requests for unknown hostnames, which may lead to domain spoofing.</NonCompliantComment>
@@ -130,6 +230,14 @@
   </Rule>
 
   <Rule id="2.4.3">
+    <Name>Ensure keepalive_timeout is 10s or less (Automated)</Name>
+    <Chapter id="2">Server Hardening</Chapter>
+    <Section id="2.4.3">Ensure keepalive_timeout is 10s or less</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>The keepalive_timeout value is not set to 10 seconds or less, increasing the risk of resource exhaustion attacks.</NonCompliantComment>
@@ -140,6 +248,14 @@
   </Rule>
 
   <Rule id="2.4.4">
+    <Name>Ensure send_timeout is 10s or less (Automated)</Name>
+    <Chapter id="2">Server Hardening</Chapter>
+    <Section id="2.4.4">Ensure send_timeout is 10s or less</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>The send_timeout value is not set to 10 seconds or less, which may allow slow client attacks.</NonCompliantComment>
@@ -150,6 +266,12 @@
   </Rule>
 
   <Rule id="2.5.1">
+    <Name>Ensure server_tokens is set to off (Automated)</Name>
+    <Chapter id="2">Server Hardening</Chapter>
+    <Section id="2.5.1">Ensure server_tokens is set to off</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>The server_tokens directive is set to "on", exposing the NGINX version in HTTP responses, increasing the risk of targeted attacks.</NonCompliantComment>
@@ -160,6 +282,14 @@
   </Rule>
 
   <Rule id="2.5.2">
+    <Name>Ensure default pages do not contain NGINX references (Automated)</Name>
+    <Chapter id="2">Server Hardening</Chapter>
+    <Section id="2.5.2">Ensure default pages do not contain NGINX references</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/usr/share/nginx/html/</BasePath>
     <FileName>index.html</FileName>
     <NonCompliantComment>The default error and index pages contain references to NGINX, exposing the server type and version to attackers.</NonCompliantComment>
@@ -170,6 +300,12 @@
   </Rule>
 
   <Rule id="2.5.3">
+    <Name>Ensure access to hidden files is disabled (Automated)</Name>
+    <Chapter id="2">Server Hardening</Chapter>
+    <Section id="2.5.3">Ensure access to hidden files is disabled</Section>
+    <Profiles>
+      <Profile level="2" type="Webserver"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Hidden files (such as .git) are accessible through NGINX, which can expose sensitive data.</NonCompliantComment>
@@ -180,6 +316,13 @@
   </Rule>
 
   <Rule id="2.5.4">
+    <Name>Ensure reverse proxy headers are removed (Automated)</Name>
+    <Chapter id="2">Server Hardening</Chapter>
+    <Section id="2.5.4">Ensure reverse proxy headers are removed</Section>
+    <Profiles>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>The reverse proxy configuration leaks information about backend servers, increasing the risk of targeted attacks.</NonCompliantComment>

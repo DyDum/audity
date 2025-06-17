@@ -1,5 +1,14 @@
 <RulesCIS>
   <Rule id="9.1">
+    <Name>Ensure the TimeOut Is Set to 10 or Less (Automated)</Name>
+    <Chapter id="9">Denial of Service Mitigations</Chapter>
+    <Section id="9.1">Timeout Configuration</Section>
+    <SubSection id="9.1.1">TimeOut Directive</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/httpd/conf</BasePath>
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>TimeOut directive is set higher than 10 seconds.</NonCompliantComment>
@@ -8,7 +17,17 @@
     <Verification>grep -q "^TimeOut 10" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
+
   <Rule id="9.2">
+    <Name>Ensure KeepAlive Is Enabled (Automated)</Name>
+    <Chapter id="9">Denial of Service Mitigations</Chapter>
+    <Section id="9.2">KeepAlive Configuration</Section>
+    <SubSection id="9.2.1">KeepAlive Directive</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/httpd/conf</BasePath>
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>KeepAlive is not enabled.</NonCompliantComment>
@@ -17,7 +36,17 @@
     <Verification>grep -q "^KeepAlive On" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
+
   <Rule id="9.3">
+    <Name>Ensure MaxKeepAliveRequests is Set to 100 or Greater (Automated)</Name>
+    <Chapter id="9">Denial of Service Mitigations</Chapter>
+    <Section id="9.3">MaxKeepAliveRequests</Section>
+    <SubSection id="9.3.1">MaxKeepAliveRequests Directive</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/httpd/conf</BasePath>
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>MaxKeepAliveRequests is set lower than 100.</NonCompliantComment>
@@ -26,7 +55,17 @@
     <Verification>grep -q "^MaxKeepAliveRequests 100" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
+
   <Rule id="9.4">
+    <Name>Ensure KeepAliveTimeout is Set to 15 or Less (Automated)</Name>
+    <Chapter id="9">Denial of Service Mitigations</Chapter>
+    <Section id="9.4">KeepAliveTimeout</Section>
+    <SubSection id="9.4.1">KeepAliveTimeout Directive</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/httpd/conf</BasePath>
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>KeepAliveTimeout is set higher than 15 seconds.</NonCompliantComment>
@@ -35,7 +74,17 @@
     <Verification>grep -q "^KeepAliveTimeout 15" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
+
   <Rule id="9.5">
+    <Name>Ensure Request Headers Timeout is Set to 40 or Less (Automated)</Name>
+    <Chapter id="9">Denial of Service Mitigations</Chapter>
+    <Section id="9.5">RequestReadTimeout Header</Section>
+    <SubSection id="9.5.1">Header Timeout Directive</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/httpd/conf</BasePath>
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>Timeout limits for request headers are set higher than 40 seconds.</NonCompliantComment>
@@ -44,7 +93,17 @@
     <Verification>grep -q "RequestReadTimeout header=40" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
+
   <Rule id="9.6">
+    <Name>Ensure Request Body Timeout is Set to 20 or Less (Automated)</Name>
+    <Chapter id="9">Denial of Service Mitigations</Chapter>
+    <Section id="9.6">RequestReadTimeout Body</Section>
+    <SubSection id="9.6.1">Body Timeout Directive</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/httpd/conf</BasePath>
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>Timeout limits for the request body are set higher than 20 seconds.</NonCompliantComment>

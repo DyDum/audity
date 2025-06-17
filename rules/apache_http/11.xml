@@ -1,5 +1,14 @@
 <RulesCIS>
   <Rule id="11.1">
+    <Name>Ensure SELinux Is Enabled in Enforcing Mode (Automated)</Name>
+    <Chapter id="11">SELinux Configuration</Chapter>
+    <Section id="11.1">SELinux Enforcing Mode</Section>
+    <SubSection id="11.1.1">SELinux State</SubSection>
+
+    <Profiles>
+      <Profile level="2" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/selinux</BasePath>
     <FileName>config</FileName>
     <NonCompliantComment>SELinux is not enabled in enforcing mode.</NonCompliantComment>
@@ -8,7 +17,17 @@
     <Verification>getenforce | grep -q "Enforcing" &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
+
   <Rule id="11.2">
+    <Name>Ensure Apache Processes Run in the httpd_t Confined Context (Automated)</Name>
+    <Chapter id="11">SELinux Configuration</Chapter>
+    <Section id="11.2">Apache Context</Section>
+    <SubSection id="11.2.1">Process SELinux Context</SubSection>
+
+    <Profiles>
+      <Profile level="2" type="Server"/>
+    </Profiles>
+
     <BasePath>/usr/sbin</BasePath>
     <FileName>httpd</FileName>
     <NonCompliantComment>Apache processes are not running in the httpd_t SELinux context.</NonCompliantComment>
@@ -17,7 +36,17 @@
     <Verification>ps -eZ | grep httpd | grep -q "httpd_t" &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
+
   <Rule id="11.3">
+    <Name>Ensure the httpd_t Type is Not in Permissive Mode (Automated)</Name>
+    <Chapter id="11">SELinux Configuration</Chapter>
+    <Section id="11.3">Permissive Mode</Section>
+    <SubSection id="11.3.1">SELinux Domain Mode</SubSection>
+
+    <Profiles>
+      <Profile level="2" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/selinux</BasePath>
     <FileName>permissive.list</FileName>
     <NonCompliantComment>The SELinux domain httpd_t is in permissive mode.</NonCompliantComment>
@@ -26,7 +55,17 @@
     <Verification>semanage permissive -l | grep -q "^httpd_t" &amp;&amp; echo 1 || echo 0</Verification>
     <Manual>NO</Manual>
   </Rule>
+
   <Rule id="11.4">
+    <Name>Ensure Only the Necessary SELinux Booleans are Enabled (Manual)</Name>
+    <Chapter id="11">SELinux Configuration</Chapter>
+    <Section id="11.4">SELinux Booleans</Section>
+    <SubSection id="11.4.1">Review Enabled Booleans</SubSection>
+
+    <Profiles>
+      <Profile level="2" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/selinux</BasePath>
     <FileName>booleans</FileName>
     <NonCompliantComment>Unnecessary SELinux booleans for Apache are enabled.</NonCompliantComment>

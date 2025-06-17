@@ -1,20 +1,27 @@
 <RulesCIS>
   <Rule id="6.1">
+    <Name>Ensure MongoDB is Not Using Default Port (Automated)</Name>
+    <Chapter id="6">MongoDB General Hardening</Chapter>
+    <Section id="6.1">Ensure MongoDB is Not Using Default Port</Section>
+    <Profiles>
+      <Profile level="1" type="MongoDB"/>
+    </Profiles>
     <BasePath>/etc/mongod.conf</BasePath>
     <FileName>mongod.conf</FileName>
     <NonCompliantComment>MongoDB is using the default port, which may expose the server to unauthorized access.</NonCompliantComment>
-    <CorrectiveComment>Ensure that MongoDB uses a non-default port. Command: 
-    1. Open the MongoDB configuration file (mongod.conf). 
-    2. Set the following under net: 
-       net: 
-         port: <CustomPortNumber> 
-    3. Restart the MongoDB service using systemctl restart mongod.</CorrectiveComment>
+    <CorrectiveComment>Ensure that MongoDB uses a non-default port.</CorrectiveComment>
     <Correction>sed -i '/net:/a\  port: 27018' /etc/mongod.conf; systemctl restart mongod</Correction>
     <Verification>mongo --port 27018 --eval "db.runCommand({ping: 1})"</Verification>
     <Manual>NO</Manual>
   </Rule>
 
   <Rule id="6.2">
+    <Name>Ensure Operating System Resource Limits Are Set (Manual)</Name>
+    <Chapter id="6">MongoDB General Hardening</Chapter>
+    <Section id="6.2">Ensure Operating System Resource Limits Are Set</Section>
+    <Profiles>
+      <Profile level="2" type="MongoDB"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>Operating system resource limits are not set for MongoDB, which may allow resource exhaustion.</NonCompliantComment>
@@ -30,15 +37,16 @@
   </Rule>
 
   <Rule id="6.3">
+    <Name>Disable Server-Side Scripting (Automated)</Name>
+    <Chapter id="6">MongoDB General Hardening</Chapter>
+    <Section id="6.3">Disable Server-Side Scripting</Section>
+    <Profiles>
+      <Profile level="2" type="MongoDB"/>
+    </Profiles>
     <BasePath>/etc/mongod.conf</BasePath>
     <FileName>mongod.conf</FileName>
     <NonCompliantComment>Server-side scripting is enabled in MongoDB, which may allow execution of unauthorized JavaScript code.</NonCompliantComment>
-    <CorrectiveComment>Ensure that server-side scripting is disabled if not needed. Command: 
-    1. Open the MongoDB configuration file (mongod.conf). 
-    2. Set the following under security: 
-       security: 
-         javascriptEnabled: false 
-    3. Restart the MongoDB service using systemctl restart mongod.</CorrectiveComment>
+    <CorrectiveComment>Ensure that server-side scripting is disabled if not needed.</CorrectiveComment>
     <Correction>sed -i '/security:/a\  javascriptEnabled: false' /etc/mongod.conf; systemctl restart mongod</Correction>
     <Verification>mongo --eval "db.runCommand({getParameter: 1, 'security.javascriptEnabled': 1})"</Verification>
     <Manual>NO</Manual>

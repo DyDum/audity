@@ -1,5 +1,11 @@
 <RulesCIS>
-    <Rule id="8.1">
+  <Rule id="8.1">
+    <Name>Enable require_secure_transport (Automated)</Name>
+    <Chapter id="8">MariaDB Network Security</Chapter>
+    <Section id="8.1">Enable require_secure_transport</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>The 'require_secure_transport' setting is not enabled, which may allow unencrypted connections.</NonCompliantComment>
@@ -10,6 +16,12 @@
   </Rule>
 
   <Rule id="8.2">
+    <Name>Require SSL for Remote Users (Automated)</Name>
+    <Chapter id="8">MariaDB Network Security</Chapter>
+    <Section id="8.2">Require SSL for Remote Users</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>mysql.user</FileName>
     <NonCompliantComment>SSL is not required for remote users, which may allow unencrypted connections.</NonCompliantComment>
@@ -20,6 +32,12 @@
   </Rule>
 
   <Rule id="8.3">
+    <Name>Set Connection Limits (Automated)</Name>
+    <Chapter id="8">MariaDB Network Security</Chapter>
+    <Section id="8.3">Set Connection Limits</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>No connection limits are set, which may allow resource exhaustion (DoS).</NonCompliantComment>

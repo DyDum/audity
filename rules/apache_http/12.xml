@@ -1,5 +1,14 @@
 <RulesCIS>
   <Rule id="12.1">
+    <Name>Ensure the AppArmor Framework Is Enabled (Automated)</Name>
+    <Chapter id="12">AppArmor Configuration</Chapter>
+    <Section id="12.1">AppArmor Framework</Section>
+    <SubSection id="12.1.1">AppArmor Enabled</SubSection>
+
+    <Profiles>
+      <Profile level="2" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/apparmor.d</BasePath>
     <FileName>apparmor_status</FileName>
     <NonCompliantComment>The AppArmor framework is not enabled on the system.</NonCompliantComment>
@@ -8,7 +17,17 @@
     <Verification>aa-status | grep -q "profiles are in enforce mode" &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
+
   <Rule id="12.2">
+    <Name>Ensure the Apache AppArmor Profile Is Configured Properly (Manual)</Name>
+    <Chapter id="12">AppArmor Configuration</Chapter>
+    <Section id="12.2">Apache AppArmor Profile</Section>
+    <SubSection id="12.2.1">AppArmor Profile Configuration</SubSection>
+
+    <Profiles>
+      <Profile level="2" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/apparmor.d</BasePath>
     <FileName>usr.sbin.apache2</FileName>
     <NonCompliantComment>The Apache AppArmor profile is not properly configured.</NonCompliantComment>
@@ -17,7 +36,17 @@
     <Verification>Manual verification required</Verification>
     <Manual>YES</Manual>
   </Rule>
+
   <Rule id="12.3">
+    <Name>Ensure Apache AppArmor Profile Is in Enforce Mode (Automated)</Name>
+    <Chapter id="12">AppArmor Configuration</Chapter>
+    <Section id="12.3">Apache AppArmor Enforce Mode</Section>
+    <SubSection id="12.3.1">AppArmor Enforce Mode</SubSection>
+
+    <Profiles>
+      <Profile level="2" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/apparmor.d</BasePath>
     <FileName>usr.sbin.apache2</FileName>
     <NonCompliantComment>The Apache AppArmor profile is not in enforce mode.</NonCompliantComment>

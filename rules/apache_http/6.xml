@@ -1,5 +1,14 @@
 <RulesCIS>
   <Rule id="6.1">
+    <Name>Ensure ErrorLog and LogLevel are configured per best practices (Automated)</Name>
+    <Chapter id="6">Logging and Monitoring</Chapter>
+    <Section id="6.1">Error Logging</Section>
+    <SubSection id="6.1.1">ErrorLog and LogLevel Configuration</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/httpd/conf</BasePath>
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>Error log filename and severity level are not configured per best practices.</NonCompliantComment>
@@ -8,7 +17,17 @@
     <Verification>grep -q "^LogLevel notice core:info" /etc/httpd/conf/httpd.conf &amp;&amp; grep -q "ErrorLog" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
+
   <Rule id="6.2">
+    <Name>Ensure ErrorLog is configured to send logs to syslog (Automated)</Name>
+    <Chapter id="6">Logging and Monitoring</Chapter>
+    <Section id="6.1">Error Logging</Section>
+    <SubSection id="6.1.2">Syslog Integration</SubSection>
+
+    <Profiles>
+      <Profile level="2" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/httpd/conf</BasePath>
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>Error logs are not being sent to a syslog facility.</NonCompliantComment>
@@ -17,7 +36,17 @@
     <Verification>grep -q '^ErrorLog "syslog:local1"' /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
+
   <Rule id="6.3">
+    <Name>Ensure server access log is configured with proper format (Automated)</Name>
+    <Chapter id="6">Logging and Monitoring</Chapter>
+    <Section id="6.2">Access Logging</Section>
+    <SubSection id="6.2.1">LogFormat and CustomLog</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/httpd/conf</BasePath>
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>The server access log is not configured with the proper log format.</NonCompliantComment>
@@ -26,7 +55,17 @@
     <Verification>grep -q "CustomLog \"logs/access_log\" combined" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
+
   <Rule id="6.4">
+    <Name>Ensure log rotation is configured for at least 3 months (Automated)</Name>
+    <Chapter id="6">Logging and Monitoring</Chapter>
+    <Section id="6.3">Log Retention</Section>
+    <SubSection id="6.3.1">Logrotate Configuration</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/logrotate.d</BasePath>
     <FileName>httpd</FileName>
     <NonCompliantComment>Log rotation is not configured to retain logs for at least 3 months.</NonCompliantComment>
@@ -35,7 +74,17 @@
     <Verification>grep -q "rotate 13" /etc/logrotate.d/httpd &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
+
   <Rule id="6.5">
+    <Name>Ensure Apache patches are applied timely (Manual)</Name>
+    <Chapter id="6">Logging and Monitoring</Chapter>
+    <Section id="6.4">Patch Management</Section>
+    <SubSection id="6.4.1">Patch Updates</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/httpd</BasePath>
     <FileName>apache_version</FileName>
     <NonCompliantComment>Apache patches are not up-to-date, leaving the server vulnerable.</NonCompliantComment>
@@ -44,7 +93,17 @@
     <Verification>Manual verification required</Verification>
     <Manual>YES</Manual>
   </Rule>
+
   <Rule id="6.6">
+    <Name>Ensure ModSecurity is installed and enabled (Automated)</Name>
+    <Chapter id="6">Logging and Monitoring</Chapter>
+    <Section id="6.5">Web Application Firewall</Section>
+    <SubSection id="6.5.1">ModSecurity Installation</SubSection>
+
+    <Profiles>
+      <Profile level="2" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/httpd/modules</BasePath>
     <FileName>mod_security2.so</FileName>
     <NonCompliantComment>ModSecurity is not installed or enabled, reducing web application firewall capabilities.</NonCompliantComment>
@@ -53,7 +112,17 @@
     <Verification>httpd -M | grep -q security2_module &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
+
   <Rule id="6.7">
+    <Name>Ensure OWASP ModSecurity CRS is installed and enabled (Manual)</Name>
+    <Chapter id="6">Logging and Monitoring</Chapter>
+    <Section id="6.5">Web Application Firewall</Section>
+    <SubSection id="6.5.2">OWASP CRS Installation</SubSection>
+
+    <Profiles>
+      <Profile level="2" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/modsecurity.d</BasePath>
     <FileName>crs-setup.conf</FileName>
     <NonCompliantComment>OWASP ModSecurity Core Rule Set is not installed or enabled.</NonCompliantComment>
