@@ -15,8 +15,9 @@
     <CorrectiveComment>Disable ServerSignature to prevent information disclosure on error pages.</CorrectiveComment>
     <Correction>sed -i 's/^ServerSignature .*/ServerSignature Off/' /etc/httpd/conf/httpd.conf; systemctl restart httpd</Correction>
     <Verification>grep -q "^ServerSignature Off" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
-  </Rule>
     <Manual>NO</Manual>
+  </Rule>
+    
   <Rule id="8.3">
     <BasePath>/var/www/html</BasePath>
     <FileName>default_content</FileName>

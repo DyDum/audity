@@ -10,7 +10,6 @@
 //!
 //! Only serialisable structures are exposed; the template engine (Askama)
 //! consumes them directly.
-
 use std::{
     fs,
     fs::File,
@@ -89,7 +88,7 @@ pub struct Rule {
 #[derive(Debug, serde::Serialize)]
 pub struct ReportData {
     pub profile_name: String,
-    pub audit_time: DateTime<Local>, // ← horodatage
+    pub audit_time: DateTime<Local>,
     pub host_info: HostInfo,
     pub stats: Stats,
     pub non_compliant: Vec<Rule>,
