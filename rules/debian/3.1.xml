@@ -1,29 +1,51 @@
 <RulesCIS>
+    <!-- 3.1 ── Disable unused network protocols and devices ───────────── -->
     <Rule id="3.1.1">
+        <Name>Disable IPv6 (Manual)</Name>
+        <Chapter id="3">Network</Chapter>
+        <Section id="3.1">Disable unused network protocols and devices</Section>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
         <BasePath>/usr/bin/</BasePath>
         <FileName>ip</FileName>
-        <NonCompliantComment> The IPv6 configuration status has not been verified, potentially leaving unmanaged network exposure. </NonCompliantComment>
-        <CorrectiveComment> Review and document the IPv6 configuration by running "ip -6 addr show". This is a manual audit. </CorrectiveComment>
+        <NonCompliantComment>The IPv6 configuration has not been reviewed, potentially leaving unmanaged exposure.</NonCompliantComment>
+        <CorrectiveComment>Identify and document IPv6 status with <code>ip -6 addr show</code>. This is a manual audit step.</CorrectiveComment>
         <Correction>ip -6 addr show</Correction>
         <Verification>echo "Manual review required"</Verification>
-        <Manual>VERIFICATION</Manual>
+        <Manual>YES</Manual>
     </Rule>
+
     <Rule id="3.1.2">
+        <Name>Ensure wireless interfaces are disabled (Automated)</Name>
+        <Chapter id="3">Network</Chapter>
+        <Section id="3.1">Disable unused network protocols and devices</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+        </Profiles>
         <BasePath>/usr/sbin/</BasePath>
         <FileName>rfkill</FileName>
-        <NonCompliantComment> Wireless interfaces are enabled, which increases the risk of unauthorized wireless access. </NonCompliantComment>
-        <CorrectiveComment> Disable wireless interfaces by using "rfkill block all" or unloading wireless drivers. </CorrectiveComment>
+        <NonCompliantComment>Wireless interfaces are enabled, increasing the risk of unauthorized wireless access.</NonCompliantComment>
+        <CorrectiveComment>Disable wireless interfaces with <code>rfkill block all</code> or by unloading wireless drivers.</CorrectiveComment>
         <Correction>rfkill block all</Correction>
-        <Verification> rfkill list | grep -E "Wireless" | grep -q "Soft blocked: yes" &amp;&amp; echo 0 || echo 1 </Verification>
+        <Verification>rfkill list | grep -E "Wireless" | grep -q "Soft blocked: yes" &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
     <Rule id="3.1.3">
+        <Name>Ensure Bluetooth is disabled (Automated)</Name>
+        <Chapter id="3">Network</Chapter>
+        <Section id="3.1">Disable unused network protocols and devices</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+        </Profiles>
         <BasePath>/etc/systemd/system/</BasePath>
         <FileName>bluetooth.service</FileName>
-        <NonCompliantComment> The Bluetooth service is enabled, which may expose the system to unauthorized access via wireless connections. </NonCompliantComment>
-        <CorrectiveComment> Disable and stop the Bluetooth service if it is not required. </CorrectiveComment>
+        <NonCompliantComment>The Bluetooth service is enabled, which may expose the system to unauthorized wireless connections.</NonCompliantComment>
+        <CorrectiveComment>Disable and stop the Bluetooth service if it is not required.</CorrectiveComment>
         <Correction>systemctl disable bluetooth; systemctl stop bluetooth</Correction>
-        <Verification> systemctl is-active bluetooth | grep -q "inactive" &amp;&amp; echo 0 || echo 1 </Verification>
+        <Verification>systemctl is-active bluetooth | grep -q "inactive" &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
-    </RulesCIS>
+</RulesCIS>

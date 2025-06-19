@@ -1,5 +1,12 @@
 <RulesCIS>
     <Rule id="3.2.1">
+        <Name>Ensure dccp kernel module is not available (Automated)</Name>
+        <Chapter id="3">Network</Chapter>
+        <Section id="3.2">Configure Network Kernel Modules</Section>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/modprobe.d/</BasePath>
         <FileName>dccp.conf</FileName>
         <NonCompliantComment>The dccp kernel module is available, increasing the attack surface.</NonCompliantComment>
@@ -8,7 +15,15 @@
         <Verification>lsmod | grep -q '^dccp' &amp;&amp; echo 1 || echo 0</Verification>
         <Manual>NO</Manual>
     </Rule>
+
     <Rule id="3.2.2">
+        <Name>Ensure tipc kernel module is not available (Automated)</Name>
+        <Chapter id="3">Network</Chapter>
+        <Section id="3.2">Configure Network Kernel Modules</Section>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/modprobe.d/</BasePath>
         <FileName>tipc.conf</FileName>
         <NonCompliantComment>The tipc kernel module is available, which may increase the attack surface unnecessarily.</NonCompliantComment>
@@ -17,7 +32,15 @@
         <Verification>lsmod | grep -q '^tipc' &amp;&amp; echo 1 || echo 0</Verification>
         <Manual>NO</Manual>
     </Rule>
+
     <Rule id="3.2.3">
+        <Name>Ensure rds kernel module is not available (Automated)</Name>
+        <Chapter id="3">Network</Chapter>
+        <Section id="3.2">Configure Network Kernel Modules</Section>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/modprobe.d/</BasePath>
         <FileName>rds.conf</FileName>
         <NonCompliantComment>The rds kernel module is available, potentially exposing the system to vulnerabilities.</NonCompliantComment>
@@ -26,7 +49,15 @@
         <Verification>lsmod | grep -q '^rds' &amp;&amp; echo 1 || echo 0</Verification>
         <Manual>NO</Manual>
     </Rule>
+
     <Rule id="3.2.4">
+        <Name>Ensure sctp kernel module is not available (Automated)</Name>
+        <Chapter id="3">Network</Chapter>
+        <Section id="3.2">Configure Network Kernel Modules</Section>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/modprobe.d/</BasePath>
         <FileName>sctp.conf</FileName>
         <NonCompliantComment>The sctp kernel module is available, which may not be necessary and could increase security risks.</NonCompliantComment>
@@ -35,4 +66,4 @@
         <Verification>lsmod | grep -q '^sctp' &amp;&amp; echo 1 || echo 0</Verification>
         <Manual>NO</Manual>
     </Rule>
-    </RulesCIS>
+</RulesCIS>

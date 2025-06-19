@@ -1,20 +1,36 @@
 <RulesCIS>
-   <Rule id="1.4.1">
+    <Rule id="1.4.1">
+        <Name>Ensure bootloader password is set (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.4">Configure Bootloader</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/grub.d/</BasePath>
         <FileName>40_custom</FileName>
-        <NonCompliantComment> The bootloader does not have a password set, leaving it vulnerable to unauthorized modifications. </NonCompliantComment>
-        <CorrectiveComment> Configure a bootloader password to secure the boot process. </CorrectiveComment>
-        <Correction> echo "set superusers=&quot;admin&quot;" &gt;&gt; /etc/grub.d/40_custom; echo "password_pbkdf2 admin &lt;hashed_password&gt;" &gt;&gt; /etc/grub.d/40_custom; update-grub </Correction>
-        <Verification> grep -q "password_pbkdf2" /etc/grub.d/40_custom &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>The bootloader does not have a password set, leaving it vulnerable to unauthorized modifications.</NonCompliantComment>
+        <CorrectiveComment>Configure a bootloader password to secure the boot process.</CorrectiveComment>
+        <Correction>echo "set superusers=&quot;admin&quot;" &gt;&gt; /etc/grub.d/40_custom; echo "password_pbkdf2 admin &lt;hashed_password&gt;" &gt;&gt; /etc/grub.d/40_custom; update-grub</Correction>
+        <Verification>grep -q "password_pbkdf2" /etc/grub.d/40_custom &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
     <Rule id="1.4.2">
+        <Name>Ensure access to bootloader config is configured (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.4">Configure Bootloader</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/boot/grub/</BasePath>
         <FileName>grub.cfg</FileName>
-        <NonCompliantComment> The bootloader configuration file has insecure permissions, potentially allowing unauthorized modifications. </NonCompliantComment>
-        <CorrectiveComment> Restrict the permissions on the bootloader configuration file. </CorrectiveComment>
-        <Correction> chmod 600 /boot/grub/grub.cfg </Correction>
-        <Verification> stat -c "%a" /boot/grub/grub.cfg | grep -q "^600$" &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>The bootloader configuration file has insecure permissions, potentially allowing unauthorized modifications.</NonCompliantComment>
+        <CorrectiveComment>Restrict the permissions on the bootloader configuration file.</CorrectiveComment>
+        <Correction>chmod 600 /boot/grub/grub.cfg</Correction>
+        <Verification>stat -c "%a" /boot/grub/grub.cfg | grep -q "^600$" &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
 </RulesCIS>

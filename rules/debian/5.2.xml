@@ -1,15 +1,33 @@
 <RulesCIS>
+
+    <!-- 5 Access Control  »  5.2 Configure privilege escalation -->
+
     <Rule id="5.2.1">
+        <Name>Ensure sudo is installed (Automated)</Name>
+        <Chapter id="5">Access Control</Chapter>
+        <Section id="5.2">Configure privilege escalation</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/usr/bin/</BasePath>
         <FileName>sudo</FileName>
-        <NonCompliantComment>Sudo is not installed, which prevents secure privilege escalation controls.</NonCompliantComment>
+        <NonCompliantComment>Sudo is not installed, which prevents secure privilege-escalation controls.</NonCompliantComment>
         <CorrectiveComment>Install the sudo package to manage privilege escalation securely.</CorrectiveComment>
         <Correction>apt-get install -y sudo</Correction>
         <Verification>dpkg -l | grep -q sudo &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
     <Rule id="5.2.2">
-        <BasePath>/etc/sudoers</BasePath>
+        <Name>Ensure sudo commands use pty (Automated)</Name>
+        <Chapter id="5">Access Control</Chapter>
+        <Section id="5.2">Configure privilege escalation</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/</BasePath>
         <FileName>sudoers</FileName>
         <NonCompliantComment>Sudo commands are not forced to use a pseudo-terminal (pty), which may expose them to security risks.</NonCompliantComment>
         <CorrectiveComment>Configure sudo to use a pty by ensuring "Defaults use_pty" is present in the sudoers file.</CorrectiveComment>
@@ -17,7 +35,15 @@
         <Verification>grep -q "^Defaults use_pty" /etc/sudoers &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
     <Rule id="5.2.3">
+        <Name>Ensure sudo log file exists (Automated)</Name>
+        <Chapter id="5">Access Control</Chapter>
+        <Section id="5.2">Configure privilege escalation</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/var/log/</BasePath>
         <FileName>sudo.log</FileName>
         <NonCompliantComment>The sudo log file does not exist, limiting auditability of sudo commands.</NonCompliantComment>
@@ -26,17 +52,33 @@
         <Verification>test -f /var/log/sudo.log &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
     <Rule id="5.2.4">
-        <BasePath>/etc/sudoers</BasePath>
+        <Name>Ensure users must provide password for privilege escalation (Automated)</Name>
+        <Chapter id="5">Access Control</Chapter>
+        <Section id="5.2">Configure privilege escalation</Section>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/</BasePath>
         <FileName>sudoers</FileName>
         <NonCompliantComment>Users are not required to provide a password for privilege escalation, increasing the risk of unauthorized access.</NonCompliantComment>
         <CorrectiveComment>Ensure sudoers is configured to require authentication for all sudo commands.</CorrectiveComment>
-        <Correction>sed -i 's/^\(Defaults.*\)\!authenticate/\1authenticate/' /etc/sudoers</Correction>
+        <Correction>sed -i 's/^\(Defaults.*\)!authenticate/\1authenticate/' /etc/sudoers</Correction>
         <Verification>grep -q "Defaults.*authenticate" /etc/sudoers &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
     <Rule id="5.2.5">
-        <BasePath>/etc/sudoers</BasePath>
+        <Name>Ensure re-authentication for privilege escalation is not disabled globally (Automated)</Name>
+        <Chapter id="5">Access Control</Chapter>
+        <Section id="5.2">Configure privilege escalation</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/</BasePath>
         <FileName>sudoers</FileName>
         <NonCompliantComment>Global re-authentication for privilege escalation is disabled, reducing security.</NonCompliantComment>
         <CorrectiveComment>Review sudoers to ensure that re-authentication is enabled and not disabled globally.</CorrectiveComment>
@@ -44,22 +86,39 @@
         <Verification>echo "Manual review required"</Verification>
         <Manual>VERIFICATION</Manual>
     </Rule>
+
     <Rule id="5.2.6">
-        <BasePath>/etc/sudoers</BasePath>
+        <Name>Ensure sudo authentication timeout is configured correctly (Automated)</Name>
+        <Chapter id="5">Access Control</Chapter>
+        <Section id="5.2">Configure privilege escalation</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/</BasePath>
         <FileName>sudoers</FileName>
         <NonCompliantComment>The sudo authentication timeout is not configured properly, allowing prolonged access after authentication.</NonCompliantComment>
-        <CorrectiveComment>Set the sudo authentication timeout to a reasonable value (e.g., 5 minutes) using Defaults timestamp_timeout=5.</CorrectiveComment>
+        <CorrectiveComment>Set the sudo authentication timeout to a reasonable value (e.g., 5 minutes) using "Defaults timestamp_timeout=5".</CorrectiveComment>
         <Correction>echo "Defaults timestamp_timeout=5" &gt;&gt; /etc/sudoers</Correction>
         <Verification>grep -q "Defaults timestamp_timeout=5" /etc/sudoers &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
     <Rule id="5.2.7">
-        <BasePath>/etc/login.defs</BasePath>
-        <FileName>login.defs</FileName>
+        <Name>Ensure access to the su command is restricted (Automated)</Name>
+        <Chapter id="5">Access Control</Chapter>
+        <Section id="5.2">Configure privilege escalation</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/bin/</BasePath>
+        <FileName>su</FileName>
         <NonCompliantComment>The su command is unrestricted, potentially allowing unauthorized privilege escalation.</NonCompliantComment>
         <CorrectiveComment>Restrict access to the su command by modifying its permissions and assigning it to an authorized group.</CorrectiveComment>
         <Correction>chmod 750 /bin/su; chown root:authorizedgroup /bin/su</Correction>
         <Verification>stat -c "%a" /bin/su | grep -q "^750$" &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
 </RulesCIS>
