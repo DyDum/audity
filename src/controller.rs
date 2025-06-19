@@ -14,13 +14,16 @@ pub fn run_full_audit() {
 
 pub fn run_package_audit(update: bool, upgrade: bool) {
     if update {
-        if !is_root() {
-            println!("You must run as root to update the package list.");
-            process::exit(1);
-        }
         if let Err(e) = package_management::update::update_package_list() {
             println!("Failed to update package list: {}", e);
             return;
+        }
+    }
+
+    if upgrade {
+        if !is_root() {
+            println!("You must run as root to upgrade the package list.");
+            process::exit(1);
         }
     }
 
@@ -35,7 +38,7 @@ pub fn run_package_audit(update: bool, upgrade: bool) {
 
     match package_management::xml_report::generate_xml_report(total_installed, &installed_packages, &upgradable_packages) {
         Ok(xml_data) => {
-            std::fs::write("./reports/report.xml", xml_data).expect("Failed to write XML report");
+            std::fs::write("./reports/packages.xml", xml_data).expect("Failed to write XML report");
             println!("XML report generated successfully and saved to 'report.xml'.");
         },
         Err(e) => {
@@ -45,7 +48,7 @@ pub fn run_package_audit(update: bool, upgrade: bool) {
 }
 
 pub fn run_audit_rules() {
-    let dir = "rules/debian";
+    let dir = "rules/apache_http";
     if let Err(e) = scan_directory(dir) {
         eprintln!("Error: {e}");
         process::exit(1);
