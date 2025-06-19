@@ -1,11 +1,18 @@
 <RulesCIS>
     <Rule id="4.1.1">
+        <Name>Ensure a single firewall configuration utility is in use (Automated)</Name>
+        <Chapter id="4">Host Based Firewall</Chapter>
+        <Section id="4.1">Configure a single firewall utility</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/</BasePath>
         <FileName>firewall_utilities</FileName>
-        <NonCompliantComment> Multiple firewall configuration utilities are installed, which may lead to conflicts in firewall rules and overall security management. </NonCompliantComment>
-        <CorrectiveComment> Ensure only a single firewall configuration utility is in use by identifying and removing any unnecessary or conflicting firewall packages. </CorrectiveComment>
-        <Correction> Manual review required: use package management tools (e.g., dpkg -l) to list installed firewall utilities (such as ufw, iptables, nftables) and remove conflicting packages. </Correction>
-        <Verification> echo "Manual review required" </Verification>
+        <NonCompliantComment>Multiple firewall configuration utilities are installed, which may lead to conflicting rules and weaken security.</NonCompliantComment>
+        <CorrectiveComment>Ensure that only one firewall utility remains installed; remove or disable any others.</CorrectiveComment>
+        <Correction>Manual review required: use package tools (e.g. <code>dpkg -l</code>) to list packages such as <code>ufw</code>, <code>iptables-persistent</code>, <code>nftables</code> and uninstall the extras.</Correction>
+        <Verification>echo "Manual review required"</Verification>
         <Manual>YES</Manual>
     </Rule>
 </RulesCIS>

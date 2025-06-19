@@ -11,10 +11,16 @@
 //! Only serialisable structures are exposed; the template engine (Askama)
 //! consumes them directly.
 
-use std::{fs::File, io::BufReader, net::IpAddr, path::Path};
+use std::{
+    fs,
+    fs::File,
+    io::BufReader,
+    path::Path,
+};
 
 use anyhow::Result;
-use get_if_addrs::get_if_addrs;
+use chrono::{DateTime, Local};
+use get_if_addrs::{get_if_addrs, IfAddr};
 use os_info;
 use quick_xml::de::from_reader;
 use serde::Deserialize;
@@ -25,6 +31,7 @@ use sys_info::{cpu_num, mem_info, os_release, hostname};
 pub struct HostInfo {
     pub hostname: String,
     pub primary_ip: String,
+    pub mac_addr: String,
     pub os: String,
     pub kernel: String,
     pub architecture: String,
@@ -82,6 +89,7 @@ pub struct Rule {
 #[derive(Debug, serde::Serialize)]
 pub struct ReportData {
     pub profile_name: String,
+    pub audit_time: DateTime<Local>, // ← horodatage
     pub host_info: HostInfo,
     pub stats: Stats,
     pub non_compliant: Vec<Rule>,
@@ -132,16 +140,24 @@ impl HostInfo {
     pub fn gather() -> Self {
         let hostname = hostname().unwrap_or_else(|_| "N/A".into());
 
-        // Retrieve the first non-loopback IPv4 address found.
-        let primary_ip = get_if_addrs()
+        // Detect first non-loopback IPv4 and derive its MAC address.
+        let (primary_ip, mac_addr) = get_if_addrs()
             .ok()
             .and_then(|ifaces| {
-                ifaces.into_iter().find_map(|ifa| match ifa.addr.ip() {
-                    IpAddr::V4(ip) if !ip.is_loopback() => Some(ip.to_string()),
+                ifaces.into_iter().find_map(|ifa| match ifa.addr {
+                    IfAddr::V4(v4) if !v4.ip.is_loopback() => {
+                        // Try to read /sys/class/net/<iface>/address
+                        let mac = fs::read_to_string(
+                            format!("/sys/class/net/{}/address", ifa.name),
+                        )
+                        .map(|s| s.trim().to_string())
+                        .unwrap_or_else(|_| "N/A".into());
+                        Some((v4.ip.to_string(), mac))
+                    }
                     _ => None,
                 })
             })
-            .unwrap_or_else(|| "N/A".into());
+            .unwrap_or_else(|| ("N/A".into(), "N/A".into()));
 
         let distro = os_info::get();
         let os = format!("{} {}", distro.os_type(), distro.version());
@@ -153,6 +169,7 @@ impl HostInfo {
         Self {
             hostname,
             primary_ip,
+            mac_addr,
             os,
             kernel,
             architecture,
@@ -231,6 +248,7 @@ impl ReportData {
         // ---------- Assemble final struct ----------
         Ok(Self {
             profile_name: "Debian".into(), // TODO: make dynamic once profiles are introduced
+            audit_time: Local::now(),
             host_info: HostInfo::gather(),
             stats,
             non_compliant: nc,

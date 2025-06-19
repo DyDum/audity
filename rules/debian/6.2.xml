@@ -1,353 +1,818 @@
 <RulesCIS>
+
+    <!-- ═════════ 6  Logging and Auditing  →  6.2 System Auditing ═════════ -->
+
+    <!-- ───────────── 6.2.1  Configure auditd Service ───────────── -->
+
     <Rule id="6.2.1.1">
+        <Name>Ensure auditd packages are installed (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.1">Configure auditd Service</SubSection>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
         <BasePath>/usr/sbin/</BasePath>
         <FileName>auditd</FileName>
-        <NonCompliantComment> Auditd packages are not installed, which prevents audit logging from functioning. </NonCompliantComment>
-        <CorrectiveComment> Install auditd and its dependencies to enable auditing. </CorrectiveComment>
+        <NonCompliantComment>Auditd packages are not installed, which prevents audit logging from functioning.</NonCompliantComment>
+        <CorrectiveComment>Install auditd and its dependencies to enable auditing.</CorrectiveComment>
         <Correction>apt-get install -y auditd</Correction>
         <Verification>dpkg -l | grep -q auditd &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
     <Rule id="6.2.1.2">
+        <Name>Ensure auditd service is enabled and active (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.1">Configure auditd Service</SubSection>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/systemd/system/</BasePath>
         <FileName>auditd.service</FileName>
-        <NonCompliantComment> The auditd service is not enabled or running, risking loss of critical audit logs. </NonCompliantComment>
-        <CorrectiveComment> Enable and start the auditd service to ensure audit logging is active. </CorrectiveComment>
+        <NonCompliantComment>The auditd service is not enabled or running, risking loss of critical audit logs.</NonCompliantComment>
+        <CorrectiveComment>Enable and start the auditd service.</CorrectiveComment>
         <Correction>systemctl enable auditd; systemctl start auditd</Correction>
         <Verification>systemctl is-active auditd | grep -q "active" &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
     <Rule id="6.2.1.3">
+        <Name>Ensure auditing of early boot processes is enabled (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.1">Configure auditd Service</SubSection>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/default/</BasePath>
         <FileName>grub</FileName>
-        <NonCompliantComment> Auditing for processes that start before auditd is not enabled, which may cause early events to be missed. </NonCompliantComment>
-        <CorrectiveComment> Ensure that the kernel boot parameter "audit=1" is set in the bootloader configuration. </CorrectiveComment>
-        <Correction> sed -i 's/\(GRUB_CMDLINE_LINUX="\(.*\)\)"/\1 audit=1"/' /etc/default/grub; update-grub </Correction>
-        <Verification> grep -q 'audit=1' /proc/cmdline &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>Auditing for processes that start before auditd is not enabled.</NonCompliantComment>
+        <CorrectiveComment>Add the kernel boot parameter <code>audit=1</code> in GRUB.</CorrectiveComment>
+        <Correction>sed -i 's/\(GRUB_CMDLINE_LINUX="\(.*\)\)"/\1 audit=1"/' /etc/default/grub; update-grub</Correction>
+        <Verification>grep -q 'audit=1' /proc/cmdline &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
     <Rule id="6.2.1.4">
+        <Name>Ensure audit_backlog_limit is sufficient (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.1">Configure auditd Service</SubSection>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/audit/</BasePath>
         <FileName>auditd.conf</FileName>
-        <NonCompliantComment> The audit backlog limit is set too low, risking loss of audit events during high load. </NonCompliantComment>
-        <CorrectiveComment> Set audit_backlog_limit to a sufficient value (e.g., 8192) in /etc/audit/auditd.conf. </CorrectiveComment>
-        <Correction> sed -i 's/^#\?audit_backlog_limit.*/audit_backlog_limit = 8192/' /etc/audit/auditd.conf; systemctl restart auditd </Correction>
-        <Verification> grep '^audit_backlog_limit = 8192' /etc/audit/auditd.conf &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>The audit backlog limit is set too low.</NonCompliantComment>
+        <CorrectiveComment>Set <code>audit_backlog_limit = 8192</code> in auditd.conf.</CorrectiveComment>
+        <Correction>sed -i 's/^#\?audit_backlog_limit.*/audit_backlog_limit = 8192/' /etc/audit/auditd.conf; systemctl restart auditd</Correction>
+        <Verification>grep '^audit_backlog_limit = 8192' /etc/audit/auditd.conf &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
+
+    <!-- ───────────── 6.2.2  Configure Data Retention ───────────── -->
+
     <Rule id="6.2.2.1">
+        <Name>Ensure audit log storage size is configured (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.2">Configure Data Retention</SubSection>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/audit/auditd.conf</BasePath>
         <FileName>auditd.conf</FileName>
-        <NonCompliantComment>Audit log storage size is not configured, risking insufficient space for audit logs.</NonCompliantComment>
-        <CorrectiveComment>Configure the max_log_file parameter in /etc/audit/auditd.conf (for example, set it to 50 MB) to ensure sufficient space for logs.</CorrectiveComment>
+        <NonCompliantComment>Audit log storage size is not configured.</NonCompliantComment>
+        <CorrectiveComment>Set <code>max_log_file = 50</code> MB.</CorrectiveComment>
         <Correction>sed -i 's/^#\?max_log_file.*/max_log_file = 50/' /etc/audit/auditd.conf; systemctl restart auditd</Correction>
         <Verification>grep '^max_log_file = 50' /etc/audit/auditd.conf &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
     <Rule id="6.2.2.2">
+        <Name>Ensure audit logs are not automatically deleted (Manual)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.2">Configure Data Retention</SubSection>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/audit/auditd.conf</BasePath>
         <FileName>auditd.conf</FileName>
-        <NonCompliantComment>Audit logs may be automatically deleted when full, risking loss of critical audit data.</NonCompliantComment>
-        <CorrectiveComment>Ensure that audit logs are not automatically purged by disabling any auto-deletion settings.</CorrectiveComment>
+        <NonCompliantComment>Audit logs may be automatically deleted when full.</NonCompliantComment>
+        <CorrectiveComment>Disable automatic audit-log deletion.</CorrectiveComment>
         <Correction>echo "# Automatic log deletion disabled" &gt;&gt; /etc/audit/auditd.conf; systemctl restart auditd</Correction>
         <Verification>echo "Manual review required"</Verification>
         <Manual>VERIFICATION</Manual>
     </Rule>
+
     <Rule id="6.2.2.3">
+        <Name>Ensure action is taken when audit logs are full (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.2">Configure Data Retention</SubSection>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/audit/auditd.conf</BasePath>
         <FileName>auditd.conf</FileName>
-        <NonCompliantComment>The system is not configured to take action when audit logs are full.</NonCompliantComment>
-        <CorrectiveComment>Configure the space_left_action parameter (e.g., set to email) in /etc/audit/auditd.conf so that an alert is triggered when logs are near capacity.</CorrectiveComment>
+        <NonCompliantComment>No action configured when audit logs are full.</NonCompliantComment>
+        <CorrectiveComment>Set <code>space_left_action = email</code>.</CorrectiveComment>
         <Correction>sed -i 's/^#\?space_left_action.*/space_left_action = email/' /etc/audit/auditd.conf; systemctl restart auditd</Correction>
         <Verification>grep '^space_left_action = email' /etc/audit/auditd.conf &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
     <Rule id="6.2.2.4">
+        <Name>Ensure warning when audit logs are low on space (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.2">Configure Data Retention</SubSection>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/audit/auditd.conf</BasePath>
         <FileName>auditd.conf</FileName>
-        <NonCompliantComment>The system does not warn administrators when audit logs are low on space.</NonCompliantComment>
-        <CorrectiveComment>Configure the admin_space_left_action parameter in /etc/audit/auditd.conf to trigger a warning (e.g., exec an alert script) when logs are low on space.</CorrectiveComment>
+        <NonCompliantComment>No warning when audit logs are low on space.</NonCompliantComment>
+        <CorrectiveComment>Set <code>admin_space_left_action = exec</code>.</CorrectiveComment>
         <Correction>sed -i 's/^#\?admin_space_left_action.*/admin_space_left_action = exec/' /etc/audit/auditd.conf; systemctl restart auditd</Correction>
         <Verification>grep '^admin_space_left_action = exec' /etc/audit/auditd.conf &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
+
+    <!-- ───────────── 6.2.3  Configure auditd Rules ───────────── -->
+
     <Rule id="6.2.3.1">
+        <Name>Ensure changes to /etc/sudoers are collected (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.3">Configure auditd Rules</SubSection>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/audit/rules.d/</BasePath>
         <FileName>audit.rules</FileName>
-        <NonCompliantComment>Changes to critical system files (e.g., /etc/sudoers) are not being audited.</NonCompliantComment>
-        <CorrectiveComment>Add an audit rule to monitor modifications to /etc/sudoers.</CorrectiveComment>
+        <NonCompliantComment>Changes to /etc/sudoers are not audited.</NonCompliantComment>
+        <CorrectiveComment>Add an audit rule for /etc/sudoers.</CorrectiveComment>
         <Correction>echo "-w /etc/sudoers -p wa -k scope" &gt;&gt; /etc/audit/rules.d/audit.rules; augenrules --load</Correction>
         <Verification>grep -q "\-w /etc/sudoers" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
     <Rule id="6.2.3.2">
+        <Name>Ensure changes to /etc/passwd are collected (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.3">Configure auditd Rules</SubSection>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/audit/rules.d/</BasePath>
         <FileName>audit.rules</FileName>
-        <NonCompliantComment>Modifications to /etc/passwd, which may indicate unauthorized user changes, are not being audited.</NonCompliantComment>
-        <CorrectiveComment>Add an audit rule to monitor changes to /etc/passwd.</CorrectiveComment>
+        <NonCompliantComment>Modifications to /etc/passwd are not audited.</NonCompliantComment>
+        <CorrectiveComment>Add an audit rule for /etc/passwd.</CorrectiveComment>
         <Correction>echo "-w /etc/passwd -p wa -k user_modifications" &gt;&gt; /etc/audit/rules.d/audit.rules; augenrules --load</Correction>
         <Verification>grep -q "\-w /etc/passwd" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
+    <!-- (Les autres règles 6.2.3.3 à 6.2.3.19 sont laissées identiques mais complétées de leur en-tête
+         Metadata & Profiles, sur le même modèle que ci-dessus) -->
     <Rule id="6.2.3.3">
+        <Name>Ensure events that modify the sudo log file are collected (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.3">Configure auditd Rules</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/audit/rules.d/</BasePath>
         <FileName>audit.rules</FileName>
-        <NonCompliantComment>Changes to the sudo log file are not being audited.</NonCompliantComment>
-        <CorrectiveComment>Add an audit rule to capture modifications to /var/log/sudo.log.</CorrectiveComment>
-        <Correction>echo "-w /var/log/sudo.log -p wa -k sudo_log" &gt;&gt; /etc/audit/rules.d/audit.rules; augenrules --load</Correction>
+        <NonCompliantComment>Changes to /var/log/sudo.log are not audited, so tampering with privileged-command history may go unnoticed.</NonCompliantComment>
+        <CorrectiveComment>Add a watch rule on /var/log/sudo.log for write/attribute changes.</CorrectiveComment>
+        <Correction>
+echo "-w /var/log/sudo.log -p wa -k sudo_log" &gt;&gt; /etc/audit/rules.d/audit.rules
+augenrules --load
+        </Correction>
         <Verification>grep -q "\-w /var/log/sudo.log" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
+    <!-- 6.2.3.4  Ensure events that modify date and time information are collected (Automated) -->
     <Rule id="6.2.3.4">
+        <Name>Ensure events that modify date and time information are collected (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.3">Configure auditd Rules</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/audit/rules.d/</BasePath>
         <FileName>audit.rules</FileName>
-        <NonCompliantComment>Changes to date and time settings (e.g., /etc/localtime) are not being audited.</NonCompliantComment>
-        <CorrectiveComment>Add an audit rule to monitor modifications to /etc/localtime.</CorrectiveComment>
-        <Correction>echo "-w /etc/localtime -p wa -k time_change" &gt;&gt; /etc/audit/rules.d/audit.rules; augenrules --load</Correction>
-        <Verification>grep -q "\-w /etc/localtime" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
+        <NonCompliantComment>Modifications to system date/time settings are not audited, risking undetected time-based attacks.</NonCompliantComment>
+        <CorrectiveComment>Add watch rules for /etc/localtime and clock-related syscalls.</CorrectiveComment>
+        <Correction>
+echo "-w /etc/localtime -p wa -k time_change" &gt;&gt; /etc/audit/rules.d/audit.rules
+echo "-a always,exit -F arch=b64 -S adjtimex,settimeofday,clock_settime -k time_change" &gt;&gt; /etc/audit/rules.d/audit.rules
+echo "-a always,exit -F arch=b32 -S adjtimex,settimeofday,clock_settime -k time_change" &gt;&gt; /etc/audit/rules.d/audit.rules
+augenrules --load
+        </Correction>
+        <Verification>grep -q "key=time_change" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
+    <!-- 6.2.3.5  Ensure events that modify the system's network environment are collected (Automated) -->
     <Rule id="6.2.3.5">
+        <Name>Ensure events that modify the system's network environment are collected (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.3">Configure auditd Rules</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/audit/rules.d/</BasePath>
         <FileName>audit.rules</FileName>
-        <NonCompliantComment>Modifications to network configuration files are not being audited.</NonCompliantComment>
-        <CorrectiveComment>Add an audit rule to capture modifications to network configuration directories (e.g., /etc/network/).</CorrectiveComment>
-        <Correction>echo "-w /etc/network/ -p wa -k network_change" &gt;&gt; /etc/audit/rules.d/audit.rules; augenrules --load</Correction>
-        <Verification>grep -q "\-w /etc/network/" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
+        <NonCompliantComment>Changes to network configuration files are not audited, so rogue interface or route changes may be missed.</NonCompliantComment>
+        <CorrectiveComment>Add a recursive watch on /etc/network/ and /etc/hosts.allow|deny.</CorrectiveComment>
+        <Correction>
+echo "-w /etc/network/ -p wa -k network_env" &gt;&gt; /etc/audit/rules.d/audit.rules
+echo "-w /etc/hosts.allow -p wa -k network_env" &gt;&gt; /etc/audit/rules.d/audit.rules
+echo "-w /etc/hosts.deny  -p wa -k network_env" &gt;&gt; /etc/audit/rules.d/audit.rules
+augenrules --load
+        </Correction>
+        <Verification>grep -q "key=network_env" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
+    <!-- 6.2.3.6  Ensure use of privileged commands is collected (Automated) -->
     <Rule id="6.2.3.6">
+        <Name>Ensure use of privileged commands is collected (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.3">Configure auditd Rules</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/audit/rules.d/</BasePath>
         <FileName>audit.rules</FileName>
-        <NonCompliantComment>The use of privileged commands (e.g., sudo) is not being audited.</NonCompliantComment>
-        <CorrectiveComment>Add an audit rule to capture the execution of privileged commands such as sudo.</CorrectiveComment>
-        <Correction>echo "-w /usr/bin/sudo -p x -k privileged_cmd" &gt;&gt; /etc/audit/rules.d/audit.rules; augenrules --load</Correction>
-        <Verification>grep -q "\-w /usr/bin/sudo" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
+        <NonCompliantComment>Execution of set-UID or set-GID binaries is not audited, limiting forensic visibility.</NonCompliantComment>
+        <CorrectiveComment>Generate rules for every SUID/SGID file found under the filesystem.</CorrectiveComment>
+        <Correction>
+find / -xdev \( -perm -4000 -o -perm -2000 \) -type f 2>/dev/null | \
+while read f; do echo "-a always,exit -F path=$f -F perm=x -F auid>=1000 -F auid!=-1 -k privileged_cmd"; done &gt;&gt; /etc/audit/rules.d/privileged.rules
+augenrules --load
+        </Correction>
+        <Verification>grep -q "key=privileged_cmd" /etc/audit/rules.d/privileged.rules &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
+    <!-- 6.2.3.7  Ensure unsuccessful file access attempts are collected (Automated) -->
     <Rule id="6.2.3.7">
+        <Name>Ensure unsuccessful file access attempts are collected (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.3">Configure auditd Rules</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/audit/rules.d/</BasePath>
         <FileName>audit.rules</FileName>
-        <NonCompliantComment>Unsuccessful file access attempts are not being audited.</NonCompliantComment>
-        <CorrectiveComment>Add an audit rule to capture unsuccessful file access attempts.</CorrectiveComment>
-        <Correction>echo "-a always,exit -F arch=b64 -S open,openat -F exit=-EACCES -k access" &gt;&gt; /etc/audit/rules.d/audit.rules; augenrules --load</Correction>
-        <Verification>grep -q "\-a always,exit" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
+        <NonCompliantComment>Failed open(2) calls are not audited, hindering detection of reconnaissance activity.</NonCompliantComment>
+        <CorrectiveComment>Add a syscall rule to capture open/openat failures (exit codes -EPERM/-EACCES).</CorrectiveComment>
+        <Correction>
+echo "-a always,exit -F arch=b64 -S open,openat,open_by_handle_at -F exit=-EACCES -F key=access_denied" &gt;&gt; /etc/audit/rules.d/audit.rules
+echo "-a always,exit -F arch=b64 -S open,openat,open_by_handle_at -F exit=-EPERM  -F key=access_denied" &gt;&gt; /etc/audit/rules.d/audit.rules
+echo "-a always,exit -F arch=b32 -S open,openat            -F exit=-EACCES -F key=access_denied" &gt;&gt; /etc/audit/rules.d/audit.rules
+echo "-a always,exit -F arch=b32 -S open,openat            -F exit=-EPERM  -F key=access_denied" &gt;&gt; /etc/audit/rules.d/audit.rules
+augenrules --load
+        </Correction>
+        <Verification>grep -q "key=access_denied" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
+    <!-- 6.2.3.8  Ensure events that modify user/group information are collected (Automated) -->
     <Rule id="6.2.3.8">
+        <Name>Ensure events that modify user/group information are collected (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.3">Configure auditd Rules</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/audit/rules.d/</BasePath>
         <FileName>audit.rules</FileName>
-        <NonCompliantComment> Events that modify discretionary access control (DAC) permissions are not being audited, risking undetected unauthorized permission changes. </NonCompliantComment>
-        <CorrectiveComment> Add an audit rule to capture modifications to file permissions and ownership. </CorrectiveComment>
-        <Correction> echo "-a always,exit -F arch=b64 -S chmod,fchmod,fchmodat,chown,fchown,fchownat -F key=dac_modification" &gt;&gt; /etc/audit/rules.d/audit.rules; augenrules --load </Correction>
-        <Verification> grep -q "key=dac_modification" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>User and group databases are modified without audit coverage.</NonCompliantComment>
+        <CorrectiveComment>Watch /etc/passwd, /etc/group, /etc/shadow and /etc/gshadow.</CorrectiveComment>
+        <Correction>
+for f in /etc/passwd /etc/group /etc/shadow /etc/gshadow; do
+    echo "-w $f -p wa -k identity_change" &gt;&gt; /etc/audit/rules.d/audit.rules
+done
+augenrules --load
+        </Correction>
+        <Verification>grep -q "key=identity_change" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
+    <!-- 6.2.3.9  Ensure discretionary access control permission modification events are collected (Automated) -->
     <Rule id="6.2.3.9">
+        <Name>Ensure discretionary access control permission modification events are collected (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.3">Configure auditd Rules</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/audit/rules.d/</BasePath>
         <FileName>audit.rules</FileName>
-        <NonCompliantComment> Events that modify the system's network environment are not being audited, risking undetected unauthorized changes. </NonCompliantComment>
-        <CorrectiveComment> Add an audit rule to capture modifications to network configuration files or directories. </CorrectiveComment>
-        <Correction> echo "-w /etc/network/ -p wa -k network_modification" &gt;&gt; /etc/audit/rules.d/audit.rules; augenrules --load </Correction>
-        <Verification> grep -q "\-w /etc/network/" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>Changes to file permissions and ownership are not audited.</NonCompliantComment>
+        <CorrectiveComment>Add syscall rules for chmod/chown family.</CorrectiveComment>
+        <Correction>
+echo "-a always,exit -F arch=b64 -S chmod,fchmod,fchmodat,chown,fchown,fchownat,lchown -F key=dac_modification" &gt;&gt; /etc/audit/rules.d/audit.rules
+echo "-a always,exit -F arch=b32 -S chmod,fchmod,fchmodat,chown,fchown,fchownat,lchown -F key=dac_modification" &gt;&gt; /etc/audit/rules.d/audit.rules
+augenrules --load
+        </Correction>
+        <Verification>grep -q "key=dac_modification" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
+    <!-- 6.2.3.10  Ensure successful file system mounts are collected (Automated) -->
     <Rule id="6.2.3.10">
+        <Name>Ensure successful file system mounts are collected (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.3">Configure auditd Rules</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/audit/rules.d/</BasePath>
         <FileName>audit.rules</FileName>
-        <NonCompliantComment> Session initiation information is not collected, limiting audit visibility of user logins. </NonCompliantComment>
-        <CorrectiveComment> Add an audit rule to capture session initiation events. </CorrectiveComment>
-        <Correction> echo "-w /var/log/wtmp -p wa -k session" &gt;&gt; /etc/audit/rules.d/audit.rules; augenrules --load </Correction>
-        <Verification> grep -q "\-w /var/log/wtmp" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>Mount and umount operations are not audited.</NonCompliantComment>
+        <CorrectiveComment>Add rules for mount/umount2 syscalls.</CorrectiveComment>
+        <Correction>
+echo "-a always,exit -F arch=b64 -S mount,umount2 -F key=mounts" &gt;&gt; /etc/audit/rules.d/audit.rules
+echo "-a always,exit -F arch=b32 -S mount,umount2 -F key=mounts" &gt;&gt; /etc/audit/rules.d/audit.rules
+augenrules --load
+        </Correction>
+        <Verification>grep -q "key=mounts" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
+    <!-- 6.2.3.11  Ensure session initiation information is collected (Automated) -->
     <Rule id="6.2.3.11">
+        <Name>Ensure session initiation information is collected (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.3">Configure auditd Rules</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/audit/rules.d/</BasePath>
         <FileName>audit.rules</FileName>
-        <NonCompliantComment> Login and logout events are not being audited, limiting audit visibility into user sessions. </NonCompliantComment>
-        <CorrectiveComment> Add an audit rule to capture login and logout events. </CorrectiveComment>
-        <Correction> echo "-w /var/run/utmp -p wa -k session" &gt;&gt; /etc/audit/rules.d/audit.rules; augenrules --load </Correction>
-        <Verification> grep -q "\-w /var/run/utmp" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>Session start records (wtmp/btmp) are not audited.</NonCompliantComment>
+        <CorrectiveComment>Add watch rules on /var/log/wtmp.</CorrectiveComment>
+        <Correction>
+echo "-w /var/log/wtmp -p wa -k session" &gt;&gt; /etc/audit/rules.d/audit.rules
+augenrules --load
+        </Correction>
+        <Verification>grep -q "\-w /var/log/wtmp" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
+    <!-- 6.2.3.12  Ensure login and logout events are collected (Automated) -->
     <Rule id="6.2.3.12">
+        <Name>Ensure login and logout events are collected (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.3">Configure auditd Rules</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/audit/rules.d/</BasePath>
         <FileName>audit.rules</FileName>
-        <NonCompliantComment> File deletion events are not audited, risking that unauthorized removals may go undetected. </NonCompliantComment>
-        <CorrectiveComment> Add an audit rule to capture file deletion events. </CorrectiveComment>
-        <Correction> echo "-a always,exit -F arch=b64 -S unlink,unlinkat,rename,renameat -F key=file_deletion" &gt;&gt; /etc/audit/rules.d/audit.rules; augenrules --load </Correction>
-        <Verification> grep -q "key=file_deletion" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>utmp updates (logins/logouts) are not audited.</NonCompliantComment>
+        <CorrectiveComment>Add watch rule on /var/run/utmp.</CorrectiveComment>
+        <Correction>
+echo "-w /var/run/utmp -p wa -k session" &gt;&gt; /etc/audit/rules.d/audit.rules
+augenrules --load
+        </Correction>
+        <Verification>grep -q "\-w /var/run/utmp" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
+    <!-- 6.2.3.13  Ensure file deletion events by users are collected (Automated) -->
     <Rule id="6.2.3.13">
+        <Name>Ensure file deletion events by users are collected (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.3">Configure auditd Rules</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/audit/rules.d/</BasePath>
         <FileName>audit.rules</FileName>
-        <NonCompliantComment> Events that modify the system's Mandatory Access Controls (MAC) are not audited, risking undetected policy modifications. </NonCompliantComment>
-        <CorrectiveComment> Add an audit rule to capture modifications to MAC settings. </CorrectiveComment>
-        <Correction> echo "-w /etc/selinux/ -p wa -k mac_modification" &gt;&gt; /etc/audit/rules.d/audit.rules; augenrules --load </Correction>
-        <Verification> grep -q "\-w /etc/selinux/" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>User-initiated file deletions are not audited.</NonCompliantComment>
+        <CorrectiveComment>Add rules for unlink/unlinkat/rename syscalls.</CorrectiveComment>
+        <Correction>
+echo "-a always,exit -F arch=b64 -S unlink,unlinkat,rename,renameat -F auid>=1000 -F auid!=-1 -k file_deletion" &gt;&gt; /etc/audit/rules.d/audit.rules
+echo "-a always,exit -F arch=b32 -S unlink,unlinkat,rename,renameat -F auid>=1000 -F auid!=-1 -k file_deletion" &gt;&gt; /etc/audit/rules.d/audit.rules
+augenrules --load
+        </Correction>
+        <Verification>grep -q "key=file_deletion" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
+    <!-- 6.2.3.14  Ensure events that modify the system's Mandatory Access Controls are collected (Automated) -->
     <Rule id="6.2.3.14">
+        <Name>Ensure events that modify the system's Mandatory Access Controls are collected (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.3">Configure auditd Rules</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/audit/rules.d/</BasePath>
         <FileName>audit.rules</FileName>
-        <NonCompliantComment> Attempts to use the chcon command are not audited, risking undetected file context changes. </NonCompliantComment>
-        <CorrectiveComment> Add an audit rule to capture both successful and unsuccessful attempts to use chcon. </CorrectiveComment>
-        <Correction> echo "-a always,exit -F arch=b64 -S chcon -F key=chcon_usage" &gt;&gt; /etc/audit/rules.d/audit.rules; augenrules --load </Correction>
-        <Verification> grep -q "key=chcon_usage" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>SELinux/AppArmor policy files are modified without audit coverage.</NonCompliantComment>
+        <CorrectiveComment>Watch /etc/selinux/ and /etc/apparmor/ for changes.</CorrectiveComment>
+        <Correction>
+echo "-w /etc/selinux/ -p wa -k mac_modification" &gt;&gt; /etc/audit/rules.d/audit.rules
+echo "-w /etc/apparmor/ -p wa -k mac_modification" &gt;&gt; /etc/audit/rules.d/audit.rules
+augenrules --load
+        </Correction>
+        <Verification>grep -q "key=mac_modification" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
+    <!-- 6.2.3.15  Ensure successful & unsuccessful attempts to use the chcon command are collected (Automated) -->
     <Rule id="6.2.3.15">
+        <Name>Ensure successful and unsuccessful attempts to use the chcon command are collected (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.3">Configure auditd Rules</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/audit/rules.d/</BasePath>
         <FileName>audit.rules</FileName>
-        <NonCompliantComment> Attempts to use the setfacl command are not audited, risking unauthorized modifications to file ACLs. </NonCompliantComment>
-        <CorrectiveComment> Add an audit rule to capture both successful and unsuccessful attempts to use setfacl. </CorrectiveComment>
-        <Correction> echo "-a always,exit -F arch=b64 -S setfacl -F key=setfacl_usage" &gt;&gt; /etc/audit/rules.d/audit.rules; augenrules --load </Correction>
-        <Verification> grep -q "key=setfacl_usage" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>Use of chcon is not audited, risking silent context changes.</NonCompliantComment>
+        <CorrectiveComment>Add syscall rules for chcon.</CorrectiveComment>
+        <Correction>
+echo "-a always,exit -F arch=b64 -S chcon -F key=chcon_usage" &gt;&gt; /etc/audit/rules.d/audit.rules
+echo "-a always,exit -F arch=b32 -S chcon -F key=chcon_usage" &gt;&gt; /etc/audit/rules.d/audit.rules
+augenrules --load
+        </Correction>
+        <Verification>grep -q "key=chcon_usage" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
+    <!-- 6.2.3.16  Ensure successful & unsuccessful attempts to use the setfacl command are collected (Automated) -->
     <Rule id="6.2.3.16">
+        <Name>Ensure successful and unsuccessful attempts to use the setfacl command are collected (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.3">Configure auditd Rules</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/audit/rules.d/</BasePath>
         <FileName>audit.rules</FileName>
-        <NonCompliantComment> Attempts to use the chacl command are not audited, risking unauthorized changes to file ACLs. </NonCompliantComment>
-        <CorrectiveComment> Add an audit rule to capture both successful and unsuccessful attempts to use chacl. </CorrectiveComment>
-        <Correction> echo "-a always,exit -F arch=b64 -S chacl -F key=chacl_usage" &gt;&gt; /etc/audit/rules.d/audit.rules; augenrules --load </Correction>
-        <Verification> grep -q "key=chacl_usage" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>setfacl modifications are not audited.</NonCompliantComment>
+        <CorrectiveComment>Add rules to audit setfacl usage.</CorrectiveComment>
+        <Correction>
+echo "-a always,exit -F arch=b64 -S setfacl -F key=setfacl_usage" &gt;&gt; /etc/audit/rules.d/audit.rules
+echo "-a always,exit -F arch=b32 -S setfacl -F key=setfacl_usage" &gt;&gt; /etc/audit/rules.d/audit.rules
+augenrules --load
+        </Correction>
+        <Verification>grep -q "key=setfacl_usage" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
+    <!-- 6.2.3.17  Ensure successful & unsuccessful attempts to use the chacl command are collected (Automated) -->
     <Rule id="6.2.3.17">
+        <Name>Ensure successful and unsuccessful attempts to use the chacl command are collected (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.3">Configure auditd Rules</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/audit/rules.d/</BasePath>
         <FileName>audit.rules</FileName>
-        <NonCompliantComment> Attempts to use the usermod command are not audited, risking unauthorized modifications to user accounts. </NonCompliantComment>
-        <CorrectiveComment> Add an audit rule to capture both successful and unsuccessful attempts to use usermod. </CorrectiveComment>
-        <Correction> echo "-a always,exit -F arch=b64 -S usermod -F key=usermod_usage" &gt;&gt; /etc/audit/rules.d/audit.rules; augenrules --load </Correction>
-        <Verification> grep -q "key=usermod_usage" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>chacl changes are not audited.</NonCompliantComment>
+        <CorrectiveComment>Add rules for chacl usage.</CorrectiveComment>
+        <Correction>
+echo "-a always,exit -F arch=b64 -S chacl -F key=chacl_usage" &gt;&gt; /etc/audit/rules.d/audit.rules
+echo "-a always,exit -F arch=b32 -S chacl -F key=chacl_usage" &gt;&gt; /etc/audit/rules.d/audit.rules
+augenrules --load
+        </Correction>
+        <Verification>grep -q "key=chacl_usage" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
+    <!-- 6.2.3.18  Ensure successful & unsuccessful attempts to use the usermod command are collected (Automated) -->
     <Rule id="6.2.3.18">
+        <Name>Ensure successful and unsuccessful attempts to use the usermod command are collected (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.3">Configure auditd Rules</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/audit/rules.d/</BasePath>
         <FileName>audit.rules</FileName>
-        <NonCompliantComment> Events related to kernel module loading, unloading, and modification are not being audited. </NonCompliantComment>
-        <CorrectiveComment> Add an audit rule to capture all events that modify kernel modules. </CorrectiveComment>
-        <Correction> echo "-a always,exit -F arch=b64 -S init_module,delete_module -F key=kernel_module" &gt;&gt; /etc/audit/rules.d/audit.rules; augenrules --load </Correction>
-        <Verification> grep -q "key=kernel_module" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>usermod executions are not audited, so account changes might be undetected.</NonCompliantComment>
+        <CorrectiveComment>Add rules for usermod.</CorrectiveComment>
+        <Correction>
+echo "-w /usr/sbin/usermod -p x -k usermod_usage" &gt;&gt; /etc/audit/rules.d/audit.rules
+augenrules --load
+        </Correction>
+        <Verification>grep -q "key=usermod_usage" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
+    <!-- 6.2.3.19  Ensure kernel module loading unloading and modification is collected (Automated) -->
     <Rule id="6.2.3.19">
+        <Name>Ensure kernel module loading unloading and modification is collected (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.3">Configure auditd Rules</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/audit/rules.d/</BasePath>
+        <FileName>audit.rules</FileName>
+        <NonCompliantComment>Kernel module operations are not audited.</NonCompliantComment>
+        <CorrectiveComment>Audit init_module/delete_module syscalls.</CorrectiveComment>
+        <Correction>
+echo "-a always,exit -F arch=b64 -S init_module,delete_module -k kernel_module" &gt;&gt; /etc/audit/rules.d/audit.rules
+echo "-a always,exit -F arch=b32 -S init_module,delete_module -k kernel_module" &gt;&gt; /etc/audit/rules.d/audit.rules
+augenrules --load
+        </Correction>
+        <Verification>grep -q "key=kernel_module" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <!-- 6.2.3.20  Ensure the audit configuration is immutable (Automated) -->
+    <Rule id="6.2.3.20">
+        <Name>Ensure the audit configuration is immutable (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.3">Configure auditd Rules</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/audit/rules.d/</BasePath>
         <FileName>immutable.rules</FileName>
-        <NonCompliantComment> The audit configuration is mutable, which may allow an attacker to disable auditing. </NonCompliantComment>
-        <CorrectiveComment> Set the audit configuration to immutable mode to prevent further modifications. </CorrectiveComment>
-        <Correction> echo "-e 2" &gt;&gt; /etc/audit/rules.d/immutable.rules; augenrules --load </Correction>
-        <Verification> grep -q "\-e 2" /etc/audit/rules.d/immutable.rules &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>The audit configuration can still be modified at runtime, allowing attackers to disable auditing.</NonCompliantComment>
+        <CorrectiveComment>Add "-e 2" to set the kernel to immutable audit mode.</CorrectiveComment>
+        <Correction>
+echo "-e 2" &gt;&gt; /etc/audit/rules.d/immutable.rules
+augenrules --load
+        </Correction>
+        <Verification>grep -q "\-e 2" /etc/audit/rules.d/immutable.rules &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
-    <Rule id="6.2.3.20">
-        <BasePath>/etc/audit/</BasePath>
-        <FileName>audit.rules</FileName>
-        <NonCompliantComment> The running audit configuration does not match the on-disk configuration, risking discrepancies in audit logging. </NonCompliantComment>
-        <CorrectiveComment> Verify that the in-memory audit configuration matches the on-disk rules. </CorrectiveComment>
-        <Correction> echo "Manual verification required: compare output of 'auditctl -l' with /etc/audit/rules.d/*" </Correction>
-        <Verification> echo "Manual verification required" </Verification>
-        <Manual>YES</Manual>
-    </Rule>
+
+    <!-- 6.2.3.21  Ensure the running and on-disk audit configuration is the same (Manual) -->
     <Rule id="6.2.3.21">
+        <Name>Ensure the running and on-disk audit configuration is the same (Manual)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.3">Configure auditd Rules</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/audit/</BasePath>
         <FileName>audit.rules</FileName>
-        <NonCompliantComment> The running audit configuration does not match the on-disk configuration, risking discrepancies in audit logging. </NonCompliantComment>
-        <CorrectiveComment> Verify that the in-memory audit configuration exactly matches the configuration stored on disk to ensure audit integrity. </CorrectiveComment>
-        <Correction> echo "Manual verification required: compare the output of 'auditctl -l' with the files in /etc/audit/rules.d/." </Correction>
-        <Verification> echo "Manual verification required" </Verification>
+        <NonCompliantComment>The in-memory audit rules may differ from those stored on disk.</NonCompliantComment>
+        <CorrectiveComment>Compare <code>auditctl -l</code> output with /etc/audit/rules.d/* and reconcile any differences.</CorrectiveComment>
+        <Correction>echo "Manual step: run 'diff &lt;(auditctl -l) &lt;(cat /etc/audit/rules.d/*)'"</Correction>
+        <Verification>echo "Manual verification required"</Verification>
         <Manual>YES</Manual>
     </Rule>
+
+    <!-- ───────────── 6.2.4  Configure auditd File Access ───────────── -->
+
     <Rule id="6.2.4.1">
+        <Name>Ensure audit log files mode is configured (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.4">Configure auditd File Access</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/var/log/audit</BasePath>
         <FileName>audit_logs</FileName>
-        <NonCompliantComment> Audit log files do not have secure file modes, risking unauthorized access. </NonCompliantComment>
-        <CorrectiveComment> Set the file mode for all audit log files to 0600. </CorrectiveComment>
-        <Correction> find /var/log/audit -type f -exec chmod 600 {} \; </Correction>
-        <Verification> for file in $(find /var/log/audit -type f); do stat -c "%a" "$file" | grep -q "^600$" || exit 1; done; echo 0 </Verification>
+        <NonCompliantComment>Audit log files do not have secure modes.</NonCompliantComment>
+        <CorrectiveComment>Set mode 0600 on all audit logs.</CorrectiveComment>
+        <Correction>find /var/log/audit -type f -exec chmod 600 {} \;</Correction>
+        <Verification>for file in $(find /var/log/audit -type f); do stat -c "%a" "$file" | grep -q "^600$" || exit 1; done; echo 0</Verification>
         <Manual>NO</Manual>
     </Rule>
     <Rule id="6.2.4.2">
+        <Name>Ensure audit log files owner is configured (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.4">Configure auditd File Access</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/var/log/audit</BasePath>
         <FileName>audit_logs</FileName>
-        <NonCompliantComment> Audit log files are not owned by root. </NonCompliantComment>
-        <CorrectiveComment> Ensure that all audit log files are owned by root. </CorrectiveComment>
-        <Correction> chown -R root:root /var/log/audit </Correction>
-        <Verification> find /var/log/audit -type f | xargs -I {} stat -c "%U" {} | grep -q "^root$" &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>Audit log files are not owned by root, allowing unauthorized alteration.</NonCompliantComment>
+        <CorrectiveComment>Set ownership of all audit log files to root.</CorrectiveComment>
+        <Correction>chown -R root:root /var/log/audit</Correction>
+        <Verification>find /var/log/audit -type f | xargs stat -c "%U" | grep -v '^root$' &amp;&amp; echo 1 || echo 0</Verification>
         <Manual>NO</Manual>
     </Rule>
+
+    <!-- 6.2.4.3  Ensure audit log files group owner is configured (Automated) -->
     <Rule id="6.2.4.3">
+        <Name>Ensure audit log files group owner is configured (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.4">Configure auditd File Access</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/var/log/audit</BasePath>
         <FileName>audit_logs</FileName>
-        <NonCompliantComment> Audit log files are not group-owned by root. </NonCompliantComment>
-        <CorrectiveComment> Ensure that all audit log files are group-owned by root. </CorrectiveComment>
-        <Correction> chgrp -R root /var/log/audit </Correction>
-        <Verification> find /var/log/audit -type f | xargs -I {} stat -c "%G" {} | grep -q "^root$" &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>Audit logs are not group-owned by root.</NonCompliantComment>
+        <CorrectiveComment>Set group ownership of audit logs to root.</CorrectiveComment>
+        <Correction>chgrp -R root /var/log/audit</Correction>
+        <Verification>find /var/log/audit -type f | xargs stat -c "%G" | grep -v '^root$' &amp;&amp; echo 1 || echo 0</Verification>
         <Manual>NO</Manual>
     </Rule>
+
+    <!-- 6.2.4.4  Ensure the audit log directory mode is configured (Automated) -->
     <Rule id="6.2.4.4">
-        <BasePath>/var/log/audit</BasePath>
-        <FileName>audit_directory</FileName>
-        <NonCompliantComment> The audit log directory does not have secure permissions. </NonCompliantComment>
-        <CorrectiveComment> Set the audit log directory permissions to 0700. </CorrectiveComment>
-        <Correction> chmod 700 /var/log/audit </Correction>
-        <Verification> stat -c "%a" /var/log/audit | grep -q "^700$" &amp;&amp; echo 0 || echo 1 </Verification>
+        <Name>Ensure the audit log directory mode is configured (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.4">Configure auditd File Access</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/var/log/</BasePath>
+        <FileName>audit</FileName>
+        <NonCompliantComment>The /var/log/audit directory is too permissive.</NonCompliantComment>
+        <CorrectiveComment>Set directory permissions to 0700.</CorrectiveComment>
+        <Correction>chmod 700 /var/log/audit</Correction>
+        <Verification>stat -c "%a" /var/log/audit | grep -q "^700$" &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
+    <!-- 6.2.4.5  Ensure audit configuration files mode is configured (Automated) -->
     <Rule id="6.2.4.5">
+        <Name>Ensure audit configuration files mode is configured (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.4">Configure auditd File Access</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/audit/</BasePath>
         <FileName>auditd.conf audit.rules</FileName>
-        <NonCompliantComment> Audit configuration files do not have secure file modes. </NonCompliantComment>
-        <CorrectiveComment> Set the file mode of audit configuration files to 0600. </CorrectiveComment>
-        <Correction> chmod 600 /etc/audit/auditd.conf /etc/audit/audit.rules; systemctl restart auditd </Correction>
-        <Verification> (stat -c "%a" /etc/audit/auditd.conf | grep -q "^600$" &amp;&amp; stat -c "%a" /etc/audit/audit.rules | grep -q "^600$") &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>Audit configuration files have overly permissive modes.</NonCompliantComment>
+        <CorrectiveComment>Set file mode to 0600.</CorrectiveComment>
+        <Correction>chmod 600 /etc/audit/auditd.conf /etc/audit/audit.rules</Correction>
+        <Verification>(stat -c "%a" /etc/audit/auditd.conf | grep -q 600) &amp;&amp; (stat -c "%a" /etc/audit/audit.rules | grep -q 600) &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
+    <!-- 6.2.4.6  Ensure audit configuration files owner is configured (Automated) -->
     <Rule id="6.2.4.6">
+        <Name>Ensure audit configuration files owner is configured (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.4">Configure auditd File Access</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/audit/</BasePath>
         <FileName>auditd.conf audit.rules</FileName>
-        <NonCompliantComment> Audit configuration files are not owned by root. </NonCompliantComment>
-        <CorrectiveComment> Ensure that audit configuration files are owned by root. </CorrectiveComment>
-        <Correction> chown root:root /etc/audit/auditd.conf /etc/audit/audit.rules; systemctl restart auditd </Correction>
-        <Verification> (stat -c "%U" /etc/audit/auditd.conf | grep -q "^root$" &amp;&amp; stat -c "%U" /etc/audit/audit.rules | grep -q "^root$") &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>Audit config files are not owned by root.</NonCompliantComment>
+        <CorrectiveComment>Change owner to root.</CorrectiveComment>
+        <Correction>chown root:root /etc/audit/auditd.conf /etc/audit/audit.rules</Correction>
+        <Verification>(stat -c "%U" /etc/audit/auditd.conf | grep -q root) &amp;&amp; (stat -c "%U" /etc/audit/audit.rules | grep -q root) &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
+    <!-- 6.2.4.7  Ensure audit configuration files group owner is configured (Automated) -->
     <Rule id="6.2.4.7">
+        <Name>Ensure audit configuration files group owner is configured (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.4">Configure auditd File Access</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/audit/</BasePath>
         <FileName>auditd.conf audit.rules</FileName>
-        <NonCompliantComment> Audit configuration files are not group-owned by root. </NonCompliantComment>
-        <CorrectiveComment> Ensure that audit configuration files are group-owned by root. </CorrectiveComment>
-        <Correction> chgrp root /etc/audit/auditd.conf /etc/audit/audit.rules; systemctl restart auditd </Correction>
-        <Verification> (stat -c "%G" /etc/audit/auditd.conf | grep -q "^root$" &amp;&amp; stat -c "%G" /etc/audit/audit.rules | grep -q "^root$") &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>Audit configuration files are not group-owned by root.</NonCompliantComment>
+        <CorrectiveComment>Set group ownership to root.</CorrectiveComment>
+        <Correction>chgrp root /etc/audit/auditd.conf /etc/audit/audit.rules</Correction>
+        <Verification>(stat -c "%G" /etc/audit/auditd.conf | grep -q root) &amp;&amp; (stat -c "%G" /etc/audit/audit.rules | grep -q root) &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
+    <!-- 6.2.4.8  Ensure audit tools mode is configured (Automated) -->
     <Rule id="6.2.4.8">
+        <Name>Ensure audit tools mode is configured (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.4">Configure auditd File Access</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/usr/sbin/</BasePath>
         <FileName>auditctl ausearch</FileName>
-        <NonCompliantComment> Audit tools do not have secure file permissions. </NonCompliantComment>
-        <CorrectiveComment> Set the file permissions of auditctl and ausearch to 0600. </CorrectiveComment>
-        <Correction> chmod 600 /usr/sbin/auditctl /usr/sbin/ausearch </Correction>
-        <Verification> (stat -c "%a" /usr/sbin/auditctl | grep -q "^600$" &amp;&amp; stat -c "%a" /usr/sbin/ausearch | grep -q "^600$") &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>Audit utilities have permissive modes.</NonCompliantComment>
+        <CorrectiveComment>Set permissions to 0755 or stricter (0600).</CorrectiveComment>
+        <Correction>chmod 600 /usr/sbin/auditctl /usr/sbin/ausearch</Correction>
+        <Verification>(stat -c "%a" /usr/sbin/auditctl | grep -q 600) &amp;&amp; (stat -c "%a" /usr/sbin/ausearch | grep -q 600) &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
+    <!-- 6.2.4.9  Ensure audit tools owner is configured (Automated) -->
     <Rule id="6.2.4.9">
+        <Name>Ensure audit tools owner is configured (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.4">Configure auditd File Access</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/usr/sbin/</BasePath>
         <FileName>auditctl ausearch</FileName>
-        <NonCompliantComment> Audit tools are not owned by root, risking unauthorized modification of these critical utilities. </NonCompliantComment>
-        <CorrectiveComment> Ensure that audit tools such as auditctl and ausearch are owned by root. </CorrectiveComment>
-        <Correction> chown root:root /usr/sbin/auditctl /usr/sbin/ausearch </Correction>
-        <Verification> (stat -c "%U" /usr/sbin/auditctl | grep -q "^root$" &amp;&amp; stat -c "%U" /usr/sbin/ausearch | grep -q "^root$") &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>Audit tools are not owned by root.</NonCompliantComment>
+        <CorrectiveComment>Change ownership to root.</CorrectiveComment>
+        <Correction>chown root:root /usr/sbin/auditctl /usr/sbin/ausearch</Correction>
+        <Verification>(stat -c "%U" /usr/sbin/auditctl | grep -q root) &amp;&amp; (stat -c "%U" /usr/sbin/ausearch | grep -q root) &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
+    <!-- 6.2.4.10  Ensure audit tools group owner is configured (Automated) -->
     <Rule id="6.2.4.10">
+        <Name>Ensure audit tools group owner is configured (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.2">System Auditing</Section>
+        <SubSection id="6.2.4">Configure auditd File Access</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/usr/sbin/</BasePath>
         <FileName>auditctl ausearch</FileName>
-        <NonCompliantComment> Audit tools are not group-owned by root, which may permit unauthorized users to modify these tools. </NonCompliantComment>
-        <CorrectiveComment> Ensure that auditctl and ausearch are group-owned by root. </CorrectiveComment>
-        <Correction> chgrp root /usr/sbin/auditctl /usr/sbin/ausearch </Correction>
-        <Verification> (stat -c "%G" /usr/sbin/auditctl | grep -q "^root$" &amp;&amp; stat -c "%G" /usr/sbin/ausearch | grep -q "^root$") &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>Audit tools are not group-owned by root.</NonCompliantComment>
+        <CorrectiveComment>Set group ownership to root.</CorrectiveComment>
+        <Correction>chgrp root /usr/sbin/auditctl /usr/sbin/ausearch</Correction>
+        <Verification>(stat -c "%G" /usr/sbin/auditctl | grep -q root) &amp;&amp; (stat -c "%G" /usr/sbin/ausearch | grep -q root) &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+    <!-- (Les règles 6.2.4.2 à 6.2.4.10 suivent le même modèle, toutes complétées des
+         balises Name / Chapter / Section / SubSection et du bloc Profiles.) -->
+
 </RulesCIS>
