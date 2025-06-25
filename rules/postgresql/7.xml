@@ -1,5 +1,10 @@
 <RulesCIS>
   <Rule id="7.1">
+    <Name>Ensure a dedicated replication-only user is created</Name>
+    <Chapter id="7">7 Replication</Chapter>
+    <Profiles>
+      <Profile level="1" type="PostgreSQL"/>
+    </Profiles>
     <BasePath>/var/lib/pgsql/17/data/</BasePath>
     <FileName>pg_hba.conf</FileName>
     <NonCompliantComment>No dedicated replication-only user is created, which may lead to unauthorized replication access.</NonCompliantComment>
@@ -9,20 +14,26 @@
   </Rule>
 
   <Rule id="7.2">
+    <Name>Ensure logging of replication commands is enabled</Name>
+    <Chapter id="7">7 Replication</Chapter>
+    <Profiles>
+      <Profile level="1" type="PostgreSQL"/>
+    </Profiles>
     <BasePath>/var/lib/pgsql/17/data/</BasePath>
     <FileName>postgresql.conf</FileName>
     <NonCompliantComment>Logging of replication commands is not configured, which may prevent monitoring of replication activities.</NonCompliantComment>
-    <CorrectiveComment>Ensure logging of replication commands is enabled. Command: 
-    1. Edit the postgresql.conf file. 
-    2. Set the following: 
-       log_replication_commands = on 
-    3. Restart PostgreSQL using systemctl restart postgresql-17.</CorrectiveComment>
+    <CorrectiveComment>Ensure logging of replication commands is enabled in postgresql.conf.</CorrectiveComment>
     <Correction>sed -i '/log_replication_commands/s/#//;s/=.*/= on/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
     <Verification>psql -c "SHOW log_replication_commands;" | grep 'on'</Verification>
     <Manual>NO</Manual>
   </Rule>
 
   <Rule id="7.3">
+    <Name>Ensure base backups are configured and functional</Name>
+    <Chapter id="7">7 Replication</Chapter>
+    <Profiles>
+      <Profile level="1" type="PostgreSQL"/>
+    </Profiles>
     <BasePath>/var/lib/pgsql/17/data/</BasePath>
     <FileName>pg_basebackup</FileName>
     <NonCompliantComment>Base backups are not configured, which may lead to incomplete disaster recovery.</NonCompliantComment>
@@ -33,21 +44,26 @@
   </Rule>
 
   <Rule id="7.4">
+    <Name>Ensure WAL archiving is configured and functional</Name>
+    <Chapter id="7">7 Replication</Chapter>
+    <Profiles>
+      <Profile level="1" type="PostgreSQL on Linux"/>
+    </Profiles>
     <BasePath>/var/lib/pgsql/17/data/</BasePath>
     <FileName>postgresql.conf</FileName>
     <NonCompliantComment>WAL (Write-Ahead Logging) archiving is not configured, which may prevent recovery of committed transactions.</NonCompliantComment>
-    <CorrectiveComment>Ensure WAL archiving is configured and functional. Command: 
-    1. Edit the postgresql.conf file. 
-    2. Set the following: 
-       archive_mode = on 
-       archive_command = 'cp %p /var/lib/pgsql/17/wal_archive/%f' 
-    3. Restart PostgreSQL using systemctl restart postgresql-17.</CorrectiveComment>
+    <CorrectiveComment>Ensure WAL archiving is enabled and archive_command is properly set.</CorrectiveComment>
     <Correction>sed -i '/archive_mode/s/#//;s/=.*/= on/' /var/lib/pgsql/17/data/postgresql.conf; sed -i '/archive_command/s/#//;s/=.*/= 'cp %p /var/lib/pgsql/17/wal_archive/%f'/' /var/lib/pgsql/17/data/postgresql.conf; systemctl restart postgresql-17</Correction>
     <Verification>psql -c "SHOW archive_mode;" | grep 'on'</Verification>
     <Manual>NO</Manual>
   </Rule>
 
   <Rule id="7.5">
+    <Name>Ensure streaming replication parameters are configured correctly</Name>
+    <Chapter id="7">7 Replication</Chapter>
+    <Profiles>
+      <Profile level="1" type="PostgreSQL"/>
+    </Profiles>
     <BasePath>/var/lib/pgsql/17/data/</BasePath>
     <FileName>postgresql.conf</FileName>
     <NonCompliantComment>Streaming replication parameters are not configured correctly, which may result in unstable replication.</NonCompliantComment>

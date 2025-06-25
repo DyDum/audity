@@ -1,24 +1,40 @@
 <RulesCIS>
   <Rule id="4.1">
+    <Name>Ensure interactive login for the PostgreSQL user is disabled</Name>
+    <Chapter id="4">4 User Access and Authorization</Chapter>
+    <Profiles>
+      <Profile level="1" type="PostgreSQL on Linux"/>
+    </Profiles>
     <BasePath>/etc/passwd</BasePath>
     <FileName>passwd</FileName>
     <NonCompliantComment>Interactive login is enabled for PostgreSQL user, which may allow unauthorized access.</NonCompliantComment>
-    <CorrectiveComment>Ensure interactive login for the PostgreSQL user is disabled. Command: 
-    usermod -s /sbin/nologin postgres</CorrectiveComment>
-    <Manual>YES</Manual>
+    <CorrectiveComment>Ensure interactive login for the PostgreSQL user is disabled.</CorrectiveComment>
+    <Correction>usermod -s /sbin/nologin postgres</Correction>
+    <Verification>getent passwd postgres | grep -q '/sbin/nologin' && echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
   </Rule>
 
   <Rule id="4.2">
+    <Name>Ensure sudo is restricted to authorized users for PostgreSQL administration</Name>
+    <Chapter id="4">4 User Access and Authorization</Chapter>
+    <Profiles>
+      <Profile level="1" type="PostgreSQL on Linux"/>
+    </Profiles>
     <BasePath>/etc/sudoers</BasePath>
     <FileName>sudoers</FileName>
     <NonCompliantComment>Sudo is not configured correctly for PostgreSQL administration, which may allow privilege escalation.</NonCompliantComment>
     <CorrectiveComment>Ensure sudo is restricted to authorized users. Command: 
     1. Edit the sudoers file using visudo. 
-    2. Ensure PostgreSQL administrative commands are restricted to authorized users only.</CorrectiveComment>
+    2. Ensure PostgreSQL administrative commands are restricted to authorized users only. </CorrectiveComment>
     <Manual>YES</Manual>
   </Rule>
 
   <Rule id="4.3">
+    <Name>Ensure PostgreSQL users do not have excessive administrative group memberships</Name>
+    <Chapter id="4">4 User Access and Authorization</Chapter>
+    <Profiles>
+      <Profile level="1" type="PostgreSQL on Linux"/>
+    </Profiles>
     <BasePath>/etc/group</BasePath>
     <FileName>group</FileName>
     <NonCompliantComment>Excessive administrative privileges are granted to PostgreSQL users, which may lead to unauthorized actions.</NonCompliantComment>
@@ -28,6 +44,11 @@
   </Rule>
 
   <Rule id="4.4">
+    <Name>Ensure inactive PostgreSQL accounts are locked</Name>
+    <Chapter id="4">4 User Access and Authorization</Chapter>
+    <Profiles>
+      <Profile level="1" type="PostgreSQL on Linux"/>
+    </Profiles>
     <BasePath>/etc/shadow</BasePath>
     <FileName>shadow</FileName>
     <NonCompliantComment>Inactive PostgreSQL accounts are not locked, which may allow unauthorized access.</NonCompliantComment>
@@ -37,17 +58,26 @@
   </Rule>
 
   <Rule id="4.5">
+    <Name>Ensure excessive function privileges are revoked</Name>
+    <Chapter id="4">4 User Access and Authorization</Chapter>
+    <Profiles>
+      <Profile level="1" type="PostgreSQL"/>
+    </Profiles>
     <BasePath>/var/lib/pgsql/17/data/</BasePath>
     <FileName>pg_hba.conf</FileName>
     <NonCompliantComment>Excessive function privileges are granted, which may allow unauthorized users to execute dangerous functions.</NonCompliantComment>
-    <CorrectiveComment>Ensure excessive function privileges are revoked. Command: 
-    REVOKE EXECUTE ON FUNCTION pg_read_file, pg_write_file FROM PUBLIC;</CorrectiveComment>
+    <CorrectiveComment>Ensure excessive function privileges are revoked.</CorrectiveComment>
     <Correction>psql -c "REVOKE EXECUTE ON FUNCTION pg_read_file, pg_write_file FROM PUBLIC;"</Correction>
     <Verification>psql -c "SELECT * FROM information_schema.routine_privileges WHERE specific_name IN ('pg_read_file', 'pg_write_file');"</Verification>
     <Manual>NO</Manual>
   </Rule>
 
   <Rule id="4.6">
+    <Name>Ensure excessive DML privileges are revoked</Name>
+    <Chapter id="4">4 User Access and Authorization</Chapter>
+    <Profiles>
+      <Profile level="1" type="PostgreSQL"/>
+    </Profiles>
     <BasePath>/var/lib/pgsql/17/data/</BasePath>
     <FileName>pg_hba.conf</FileName>
     <NonCompliantComment>Excessive DML (Data Manipulation Language) privileges are granted, which may lead to unauthorized modifications.</NonCompliantComment>
@@ -58,6 +88,11 @@
   </Rule>
 
   <Rule id="4.7">
+    <Name>Ensure Row Level Security (RLS) is enabled and configured</Name>
+    <Chapter id="4">4 User Access and Authorization</Chapter>
+    <Profiles>
+      <Profile level="1" type="PostgreSQL"/>
+    </Profiles>
     <BasePath>/var/lib/pgsql/17/data/</BasePath>
     <FileName>pg_hba.conf</FileName>
     <NonCompliantComment>Row Level Security (RLS) is not configured, which may allow unauthorized access to sensitive data.</NonCompliantComment>
@@ -68,17 +103,26 @@
   </Rule>
 
   <Rule id="4.8">
+    <Name>Ensure the set_user extension is installed</Name>
+    <Chapter id="4">4 User Access and Authorization</Chapter>
+    <Profiles>
+      <Profile level="1" type="PostgreSQL"/>
+    </Profiles>
     <BasePath>/usr/pgsql-17/lib/</BasePath>
     <FileName>set_user.so</FileName>
     <NonCompliantComment>The set_user extension is not installed, which may limit the ability to enforce user impersonation.</NonCompliantComment>
-    <CorrectiveComment>Install the set_user extension. Command: 
-    CREATE EXTENSION set_user;</CorrectiveComment>
+    <CorrectiveComment>Install the set_user extension.</CorrectiveComment>
     <Correction>psql -c "CREATE EXTENSION set_user;"</Correction>
     <Verification>psql -c "SELECT * FROM pg_available_extensions WHERE name = 'set_user';"</Verification>
     <Manual>NO</Manual>
   </Rule>
 
   <Rule id="4.9">
+    <Name>Ensure predefined roles are used for access control</Name>
+    <Chapter id="4">4 User Access and Authorization</Chapter>
+    <Profiles>
+      <Profile level="1" type="PostgreSQL"/>
+    </Profiles>
     <BasePath>/var/lib/pgsql/17/data/</BasePath>
     <FileName>pg_hba.conf</FileName>
     <NonCompliantComment>Predefined PostgreSQL roles are not being used, which may lead to excessive privileges.</NonCompliantComment>

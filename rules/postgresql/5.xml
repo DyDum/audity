@@ -1,5 +1,10 @@
 <RulesCIS>
   <Rule id="5.1">
+    <Name>Ensure passwords are not specified in the command line</Name>
+    <Chapter id="5">5 Connection and Login</Chapter>
+    <Profiles>
+      <Profile level="1" type="PostgreSQL"/>
+    </Profiles>
     <BasePath>/var/lib/pgsql/17/data/</BasePath>
     <FileName>pg_hba.conf</FileName>
     <NonCompliantComment>Passwords are specified in the command line, which may expose them to unauthorized users.</NonCompliantComment>
@@ -8,6 +13,11 @@
   </Rule>
 
   <Rule id="5.2">
+    <Name>Ensure PostgreSQL is bound to a specific IP address</Name>
+    <Chapter id="5">5 Connection and Login</Chapter>
+    <Profiles>
+      <Profile level="1" type="PostgreSQL on Linux"/>
+    </Profiles>
     <BasePath>/var/lib/pgsql/17/data/</BasePath>
     <FileName>postgresql.conf</FileName>
     <NonCompliantComment>PostgreSQL is not bound to a specific IP address, which may expose it to unauthorized access.</NonCompliantComment>
@@ -19,6 +29,11 @@
   </Rule>
 
   <Rule id="5.3">
+    <Name>Ensure local UNIX socket connections use secure authentication</Name>
+    <Chapter id="5">5 Connection and Login</Chapter>
+    <Profiles>
+      <Profile level="1" type="PostgreSQL"/>
+    </Profiles>
     <BasePath>/var/lib/pgsql/17/data/</BasePath>
     <FileName>pg_hba.conf</FileName>
     <NonCompliantComment>Login via "local" UNIX Domain Socket is not configured correctly, which may allow unauthorized access.</NonCompliantComment>
@@ -28,6 +43,11 @@
   </Rule>
 
   <Rule id="5.4">
+    <Name>Ensure host-based access is properly configured</Name>
+    <Chapter id="5">5 Connection and Login</Chapter>
+    <Profiles>
+      <Profile level="1" type="PostgreSQL"/>
+    </Profiles>
     <BasePath>/var/lib/pgsql/17/data/</BasePath>
     <FileName>pg_hba.conf</FileName>
     <NonCompliantComment>Login via "host" TCP/IP Socket is not configured correctly, which may allow unauthorized access.</NonCompliantComment>
@@ -37,17 +57,26 @@
   </Rule>
 
   <Rule id="5.5">
+    <Name>Ensure per-account connection limits are configured</Name>
+    <Chapter id="5">5 Connection and Login</Chapter>
+    <Profiles>
+      <Profile level="1" type="PostgreSQL"/>
+    </Profiles>
     <BasePath>/var/lib/pgsql/17/data/</BasePath>
     <FileName>postgresql.conf</FileName>
     <NonCompliantComment>Per-account connection limits are not configured, which may allow excessive connections from a single user.</NonCompliantComment>
-    <CorrectiveComment>Set per-account connection limits. Command: 
-    ALTER ROLE username CONNECTION LIMIT 10;</CorrectiveComment>
+    <CorrectiveComment>Set per-account connection limits using ALTER ROLE.</CorrectiveComment>
     <Correction>psql -c "ALTER ROLE username CONNECTION LIMIT 10;"</Correction>
     <Verification>psql -c "SELECT rolname, rolconnlimit FROM pg_roles WHERE rolconnlimit > 0;"</Verification>
     <Manual>NO</Manual>
   </Rule>
 
   <Rule id="5.6">
+    <Name>Ensure password complexity is enforced</Name>
+    <Chapter id="5">5 Connection and Login</Chapter>
+    <Profiles>
+      <Profile level="1" type="PostgreSQL"/>
+    </Profiles>
     <BasePath>/var/lib/pgsql/17/data/</BasePath>
     <FileName>pg_hba.conf</FileName>
     <NonCompliantComment>Password complexity is not configured, which may allow weak passwords.</NonCompliantComment>

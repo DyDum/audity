@@ -1,5 +1,10 @@
 <RulesCIS>
   <Rule id="8.1">
+    <Name>Ensure PostgreSQL subdirectory locations are outside the data cluster</Name>
+    <Chapter id="8">8 Special Configuration Considerations</Chapter>
+    <Profiles>
+      <Profile level="1" type="PostgreSQL"/>
+    </Profiles>
     <BasePath>/var/lib/pgsql/17/</BasePath>
     <FileName>data</FileName>
     <NonCompliantComment>PostgreSQL subdirectory locations are inside the data cluster, which may expose them to unauthorized access.</NonCompliantComment>
@@ -10,19 +15,26 @@
   </Rule>
 
   <Rule id="8.2">
+    <Name>Ensure pgBackRest is installed and configured correctly</Name>
+    <Chapter id="8">8 Special Configuration Considerations</Chapter>
+    <Profiles>
+      <Profile level="1" type="PostgreSQL on Linux"/>
+    </Profiles>
     <BasePath>/usr/bin/</BasePath>
     <FileName>pgBackRest</FileName>
     <NonCompliantComment>The backup and restore tool, 'pgBackRest', is not installed or not configured correctly, which may prevent reliable backups.</NonCompliantComment>
-    <CorrectiveComment>Ensure pgBackRest is installed and configured correctly. Command: 
-    1. Install pgBackRest using the package manager (e.g., dnf install pgbackrest). 
-    2. Configure pgBackRest with a secure configuration file (e.g., /etc/pgbackrest/pgbackrest.conf). 
-    3. Test the configuration using: pgbackrest --stanza=main check</CorrectiveComment>
+    <CorrectiveComment>Ensure pgBackRest is installed and configured properly with a secure configuration file and validated with a check command.</CorrectiveComment>
     <Correction>dnf install pgbackrest -y; pgbackrest --stanza=main check</Correction>
     <Verification>pgbackrest --stanza=main check</Verification>
     <Manual>NO</Manual>
   </Rule>
 
   <Rule id="8.3">
+    <Name>Ensure miscellaneous configuration settings are correctly set</Name>
+    <Chapter id="8">8 Special Configuration Considerations</Chapter>
+    <Profiles>
+      <Profile level="1" type="PostgreSQL"/>
+    </Profiles>
     <BasePath>/var/lib/pgsql/17/data/</BasePath>
     <FileName>postgresql.conf</FileName>
     <NonCompliantComment>Miscellaneous configuration settings are not configured correctly, which may affect security and performance.</NonCompliantComment>
