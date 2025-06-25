@@ -1,5 +1,10 @@
 <RulesCIS>
   <Rule id="6.1">
+    <Name>Ensure user input is sanitized to prevent SQL injection</Name>
+    <Chapter id="6">6 Application Development</Chapter>
+    <Profiles>
+      <Profile level="1" type="Database Engine"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>Database and application user input is not properly sanitized, which may lead to SQL injection vulnerabilities.</NonCompliantComment>
@@ -8,12 +13,18 @@
   </Rule>
 
   <Rule id="6.2">
+    <Name>Ensure CLR assemblies use SAFE permission set</Name>
+    <Chapter id="6">6 Application Development</Chapter>
+    <Profiles>
+      <Profile level="1" type="Database Engine"/>
+      <Profile level="1" type="AWS RDS"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>The 'CLR Assembly Permission Set' is not set to 'SAFE_ACCESS' for all CLR assemblies, which may allow unsafe code execution.</NonCompliantComment>
     <CorrectiveComment>Set the 'CLR Assembly Permission Set' to 'SAFE_ACCESS' for all CLR assemblies. Command: ALTER ASSEMBLY [AssemblyName] WITH PERMISSION_SET = SAFE;</CorrectiveComment>
     <Correction>ALTER ASSEMBLY [AssemblyName] WITH PERMISSION_SET = SAFE;</Correction>
-    <Verification>SELECT name, permission_set_desc FROM sys.assemblies WHERE permission_set_desc <> 'SAFE_ACCESS';</Verification>
+    <Verification>SELECT name, permission_set_desc FROM sys.assemblies WHERE permission_set_desc &lt;&gt; 'SAFE_ACCESS';</Verification>
     <Manual>CORRECTION</Manual>
   </Rule>
 </RulesCIS>

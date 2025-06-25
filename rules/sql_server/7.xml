@@ -1,50 +1,77 @@
 <RulesCIS>
   <Rule id="7.1">
+    <Name>Ensure symmetric keys use AES_128 or stronger algorithm</Name>
+    <Chapter id="7">7 Encryption</Chapter>
+    <Profiles>
+      <Profile level="1" type="Database Engine"/>
+      <Profile level="1" type="AWS RDS"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>The 'Symmetric Key encryption algorithm' is not set to 'AES_128' or higher in non-system databases, which may allow weak encryption.</NonCompliantComment>
-    <CorrectiveComment>Ensure 'Symmetric Key encryption algorithm' is set to 'AES_128' or higher in non-system databases. Command: USE <DatabaseName>; ALTER SYMMETRIC KEY <KeyName> WITH ALGORITHM = AES_128;</CorrectiveComment>
-    <Correction>USE <DatabaseName>; ALTER SYMMETRIC KEY <KeyName> WITH ALGORITHM = AES_128;</Correction>
+    <CorrectiveComment>Ensure 'Symmetric Key encryption algorithm' is set to 'AES_128' or higher in non-system databases.</CorrectiveComment>
+    <Correction>USE &lt;DatabaseName&gt;; ALTER SYMMETRIC KEY &lt;KeyName&gt; WITH ALGORITHM = AES_128;</Correction>
     <Verification>SELECT name, algorithm_desc FROM sys.symmetric_keys WHERE algorithm_desc NOT LIKE 'AES%';</Verification>
     <Manual>CORRECTION</Manual>
   </Rule>
 
   <Rule id="7.2">
+    <Name>Ensure asymmetric keys are at least 2048 bits</Name>
+    <Chapter id="7">7 Encryption</Chapter>
+    <Profiles>
+      <Profile level="1" type="Database Engine"/>
+      <Profile level="1" type="AWS RDS"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>The 'Asymmetric Key Size' is set to less than 2048 bits in non-system databases, which may allow weak encryption.</NonCompliantComment>
     <CorrectiveComment>Ensure Asymmetric Key Size is set to 2048 bits or higher in non-system databases. Command: USE <DatabaseName>; CREATE ASYMMETRIC KEY <KeyName> WITH ALGORITHM = RSA_2048;</CorrectiveComment>
-    <Correction>USE <DatabaseName>; CREATE ASYMMETRIC KEY <KeyName> WITH ALGORITHM = RSA_2048;</Correction>
-    <Verification>SELECT name, key_length FROM sys.asymmetric_keys WHERE key_length < 2048;</Verification>
+    <Correction>USE &lt;DatabaseName&gt;; CREATE ASYMMETRIC KEY &lt;KeyName&gt; WITH ALGORITHM = RSA_2048;</Correction>
+    <Verification>SELECT name, key_length FROM sys.asymmetric_keys WHERE key_length &lt; 2048;</Verification>
     <Manual>CORRECTION</Manual>
   </Rule>
 
   <Rule id="7.3">
+    <Name>Ensure backups are encrypted</Name>
+    <Chapter id="7">7 Encryption</Chapter>
+    <Profiles>
+      <Profile level="2" type="Database Engine"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>Database backups are not encrypted, which may expose sensitive data.</NonCompliantComment>
     <CorrectiveComment>Ensure all database backups are encrypted. Command: BACKUP DATABASE <DatabaseName> TO DISK = 'C:\\Backup\\<DatabaseName>.bak' WITH ENCRYPTION (ALGORITHM = AES_256, SERVER CERTIFICATE = [CertificateName]);</CorrectiveComment>
-    <Correction>BACKUP DATABASE <DatabaseName> TO DISK = 'C:\\Backup\\<DatabaseName>.bak' WITH ENCRYPTION (ALGORITHM = AES_256, SERVER CERTIFICATE = [CertificateName]);</Correction>
+    <Correction>BACKUP DATABASE &lt;DatabaseName&gt; TO DISK = 'C:\\Backup\\&lt;DatabaseName&gt;.bak' WITH ENCRYPTION (ALGORITHM = AES_256, SERVER CERTIFICATE = [CertificateName]);</Correction>
     <Verification>SELECT name, is_encrypted FROM msdb.dbo.backupset WHERE is_encrypted = 0;</Verification>
     <Manual>CORRECTION</Manual>
   </Rule>
 
   <Rule id="7.4">
+    <Name>Ensure network encryption is enabled</Name>
+    <Chapter id="7">7 Encryption</Chapter>
+    <Profiles>
+      <Profile level="2" type="Database Engine"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>Network encryption is not configured or enabled, which may allow unencrypted communications.</NonCompliantComment>
-    <CorrectiveComment>Ensure network encryption is configured and enabled. Command: EXEC sp_configure 'force encryption', 1; RECONFIGURE;</CorrectiveComment>
+    <CorrectiveComment>Ensure network encryption is configured and enabled.</CorrectiveComment>
     <Correction>EXEC sp_configure 'force encryption', 1; RECONFIGURE;</Correction>
     <Verification>SELECT value_in_use FROM sys.configurations WHERE name = 'force encryption';</Verification>
     <Manual>NO</Manual>
   </Rule>
 
   <Rule id="7.5">
+    <Name>Ensure Transparent Data Encryption (TDE) is enabled</Name>
+    <Chapter id="7">7 Encryption</Chapter>
+    <Profiles>
+      <Profile level="2" type="Database Engine"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>Transparent Data Encryption (TDE) is not enabled on databases, which may leave sensitive data at risk.</NonCompliantComment>
     <CorrectiveComment>Enable Transparent Data Encryption (TDE) for databases. Command: USE <DatabaseName>; CREATE DATABASE ENCRYPTION KEY WITH ALGORITHM = AES_256 ENCRYPTION BY SERVER CERTIFICATE [CertificateName]; ALTER DATABASE <DatabaseName> SET ENCRYPTION ON;</CorrectiveComment>
-    <Correction>USE <DatabaseName>; CREATE DATABASE ENCRYPTION KEY WITH ALGORITHM = AES_256 ENCRYPTION BY SERVER CERTIFICATE [CertificateName]; ALTER DATABASE <DatabaseName> SET ENCRYPTION ON;</Correction>
+    <Correction>USE &lt;DatabaseName&gt;; CREATE DATABASE ENCRYPTION KEY WITH ALGORITHM = AES_256 ENCRYPTION BY SERVER CERTIFICATE [CertificateName]; ALTER DATABASE &lt;DatabaseName&gt; SET ENCRYPTION ON;</Correction>
     <Verification>SELECT name, is_encrypted FROM sys.databases WHERE is_encrypted = 0;</Verification>
     <Manual>CORRECTION</Manual>
   </Rule>

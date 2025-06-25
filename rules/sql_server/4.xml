@@ -1,5 +1,10 @@
 <RulesCIS>
   <Rule id="4.1">
+    <Name>Ensure 'MUST_CHANGE' is set to 'ON' for all SQL authenticated logins</Name>
+    <Chapter id="4">4 Password Policies</Chapter>
+    <Profiles>
+      <Profile level="1" type="Database Engine"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>The 'MUST_CHANGE' option is not set to 'ON' for all SQL authenticated logins.</NonCompliantComment>
@@ -8,6 +13,12 @@
   </Rule>
 
   <Rule id="4.2">
+    <Name>Ensure 'CHECK_EXPIRATION' is set to 'ON' for all SQL authenticated logins in the Sysadmin role</Name>
+    <Chapter id="4">4 Password Policies</Chapter>
+    <Profiles>
+      <Profile level="1" type="Database Engine"/>
+      <Profile level="1" type="AWS RDS"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>The 'CHECK_EXPIRATION' option is not set to 'ON' for all SQL authenticated logins within the Sysadmin role.</NonCompliantComment>
@@ -18,6 +29,12 @@
   </Rule>
 
   <Rule id="4.3">
+    <Name>Ensure 'CHECK_POLICY' is set to 'ON' for all SQL authenticated logins</Name>
+    <Chapter id="4">4 Password Policies</Chapter>
+    <Profiles>
+      <Profile level="1" type="Database Engine"/>
+      <Profile level="1" type="AWS RDS"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>The 'CHECK_POLICY' option is not set to 'ON' for all SQL authenticated logins.</NonCompliantComment>

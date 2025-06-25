@@ -1,5 +1,11 @@
 <RulesCIS>
   <Rule id="1.1">
+    <Name>Ensure Latest SQL Server Cumulative and Security Updates are Installed</Name>
+    <Chapter id="1">1 Installation, Updates and Patches</Chapter>
+    <Profiles>
+      <Profile level="1" type="Database Engine"/>
+      <Profile level="1" type="AWS RDS"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>The latest SQL Server cumulative and security updates are not installed, leaving the server vulnerable to known vulnerabilities.</NonCompliantComment>
@@ -19,6 +25,12 @@
   </Rule>
 
   <Rule id="1.2">
+    <Name>Ensure SQL Server is Installed on a Dedicated, Single-Function Member Server</Name>
+    <Chapter id="1">1 Installation, Updates and Patches</Chapter>
+    <Profiles>
+      <Profile level="1" type="Database Engine"/>
+      <Profile level="1" type="AWS RDS"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>SQL Server is installed on a multi-function server, which increases the attack surface and may impact performance.</NonCompliantComment>

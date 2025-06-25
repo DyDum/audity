@@ -1,35 +1,59 @@
 <RulesCIS>
   <Rule id="5.1">
+    <Name>Ensure 'Maximum number of error log files' is set to 12 or greater</Name>
+    <Chapter id="5">5 Auditing and Logging</Chapter>
+    <Profiles>
+      <Profile level="1" type="Database Engine"/>
+      <Profile level="1" type="AWS RDS"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>The 'Maximum number of error log files' is set to a value less than '12'.</NonCompliantComment>
-    <CorrectiveComment>Set the 'Maximum number of error log files' to '12' or greater. Command: EXEC sp_configure 'show advanced options', 1; RECONFIGURE; EXEC sp_configure 'max error logs', 12; RECONFIGURE;</CorrectiveComment>
+    <CorrectiveComment>Set the 'Maximum number of error log files' to '12' or greater.</CorrectiveComment>
     <Correction>EXEC sp_configure 'show advanced options', 1; RECONFIGURE; EXEC sp_configure 'max error logs', 12; RECONFIGURE;</Correction>
     <Verification>SELECT value_in_use FROM sys.configurations WHERE name = 'max error logs';</Verification>
     <Manual>NO</Manual>
   </Rule>
 
   <Rule id="5.2">
+    <Name>Ensure 'Default Trace Enabled' is set to 1</Name>
+    <Chapter id="5">5 Auditing and Logging</Chapter>
+    <Profiles>
+      <Profile level="1" type="Database Engine"/>
+      <Profile level="1" type="AWS RDS"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>The 'Default Trace Enabled' server configuration option is set to '0'.</NonCompliantComment>
-    <CorrectiveComment>Ensure 'Default Trace Enabled' is set to '1'. Command: EXEC sp_configure 'show advanced options', 1; RECONFIGURE; EXEC sp_configure 'default trace enabled', 1; RECONFIGURE;</CorrectiveComment>
+    <CorrectiveComment>Ensure 'Default Trace Enabled' is set to '1'.</CorrectiveComment>
     <Correction>EXEC sp_configure 'show advanced options', 1; RECONFIGURE; EXEC sp_configure 'default trace enabled', 1; RECONFIGURE;</Correction>
     <Verification>SELECT value_in_use FROM sys.configurations WHERE name = 'default trace enabled';</Verification>
     <Manual>NO</Manual>
   </Rule>
 
   <Rule id="5.3">
+    <Name>Ensure 'Login Auditing' is set to capture 'Failed Logins'</Name>
+    <Chapter id="5">5 Auditing and Logging</Chapter>
+    <Profiles>
+      <Profile level="1" type="Database Engine"/>
+      <Profile level="1" type="AWS RDS"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>The 'Login Auditing' setting is not set to 'Failed Logins'.</NonCompliantComment>
-    <CorrectiveComment>Set 'Login Auditing' to capture 'Failed Logins'. Command: EXEC sp_configure 'show advanced options', 1; RECONFIGURE; EXEC sp_configure 'login auditing', 2; RECONFIGURE;</CorrectiveComment>
+    <CorrectiveComment>Set 'Login Auditing' to capture 'Failed Logins'.</CorrectiveComment>
     <Correction>EXEC sp_configure 'show advanced options', 1; RECONFIGURE; EXEC sp_configure 'login auditing', 2; RECONFIGURE;</Correction>
     <Verification>SELECT value_in_use FROM sys.configurations WHERE name = 'login auditing';</Verification>
     <Manual>NO</Manual>
   </Rule>
 
   <Rule id="5.4">
+    <Name>Ensure 'SQL Server Audit' is configured to capture both Failed and Successful Logins</Name>
+    <Chapter id="5">5 Auditing and Logging</Chapter>
+    <Profiles>
+      <Profile level="1" type="Database Engine"/>
+      <Profile level="1" type="AWS RDS"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>'SQL Server Audit' is not configured to capture both 'Failed' and 'Successful Logins'.</NonCompliantComment>

@@ -1,5 +1,10 @@
 <RulesCIS>
   <Rule id="8.1">
+    <Name>Ensure SQL Server Browser service is disabled unless required</Name>
+    <Chapter>8 Appendix: Additional Considerations</Chapter>
+    <Profiles>
+      <Profile level="1" type="Microsoft SQL Server"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>The 'SQL Server Browser Service' is not configured correctly, which may expose the server to unauthorized access.</NonCompliantComment>

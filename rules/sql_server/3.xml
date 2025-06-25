@@ -1,5 +1,10 @@
 <RulesCIS>
   <Rule id="3.1">
+    <Name>Ensure 'Server Authentication' is set to 'Windows Authentication Mode'</Name>
+    <Chapter id="3">3 Authentication and Authorization</Chapter>
+    <Profiles>
+      <Profile level="1" type="Database Engine"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>The 'Server Authentication' property is not set to 'Windows Authentication Mode'.</NonCompliantComment>
@@ -10,6 +15,12 @@
   </Rule>
 
   <Rule id="3.2">
+    <Name>Ensure guest user CONNECT permissions are revoked in all databases</Name>
+    <Chapter id="3">3 Authentication and Authorization</Chapter>
+    <Profiles>
+      <Profile level="1" type="Database Engine"/>
+      <Profile level="1" type="AWS RDS"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>The guest user has CONNECT permissions within one or more databases.</NonCompliantComment>
@@ -20,6 +31,12 @@
   </Rule>
 
   <Rule id="3.3">
+    <Name>Ensure no orphaned users exist</Name>
+    <Chapter id="3">3 Authentication and Authorization</Chapter>
+    <Profiles>
+      <Profile level="1" type="Database Engine"/>
+      <Profile level="1" type="AWS RDS"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>Orphaned users exist within SQL Server databases.</NonCompliantComment>
@@ -30,6 +47,12 @@
   </Rule>
 
   <Rule id="3.4">
+    <Name>Ensure SQL Authentication is disabled in contained databases</Name>
+    <Chapter id="3">3 Authentication and Authorization</Chapter>
+    <Profiles>
+      <Profile level="1" type="Database Engine"/>
+      <Profile level="1" type="AWS RDS"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>SQL Authentication is used in contained databases.</NonCompliantComment>
@@ -40,6 +63,12 @@
   </Rule>
 
   <Rule id="3.5">
+    <Name>Ensure MSSQL Service Account is not an administrator</Name>
+    <Chapter id="3">3 Authentication and Authorization</Chapter>
+    <Profiles>
+      <Profile level="1" type="Database Engine"/>
+      <Profile level="1" type="AWS RDS"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>The MSSQL Service Account has administrative privileges.</NonCompliantComment>
@@ -48,6 +77,12 @@
   </Rule>
 
   <Rule id="3.6">
+    <Name>Ensure SQLAgent Service Account is not an administrator</Name>
+    <Chapter id="3">3 Authentication and Authorization</Chapter>
+    <Profiles>
+      <Profile level="1" type="Database Engine"/>
+      <Profile level="1" type="AWS RDS"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>The SQLAgent Service Account has administrative privileges.</NonCompliantComment>
@@ -56,6 +91,12 @@
   </Rule>
 
   <Rule id="3.7">
+    <Name>Ensure Full-Text Service Account is not an administrator</Name>
+    <Chapter id="3">3 Authentication and Authorization</Chapter>
+    <Profiles>
+      <Profile level="1" type="Database Engine"/>
+      <Profile level="1" type="AWS RDS"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>The Full-Text Service Account has administrative privileges.</NonCompliantComment>
@@ -64,6 +105,12 @@
   </Rule>
 
   <Rule id="3.8">
+    <Name>Ensure public server role has only default permissions</Name>
+    <Chapter id="3">3 Authentication and Authorization</Chapter>
+    <Profiles>
+      <Profile level="1" type="Database Engine"/>
+      <Profile level="1" type="AWS RDS"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>The public server role has more permissions than the default settings.</NonCompliantComment>
@@ -74,6 +121,12 @@
   </Rule>
 
   <Rule id="3.9">
+    <Name>Ensure BUILTIN Windows groups are not SQL Server logins</Name>
+    <Chapter id="3">3 Authentication and Authorization</Chapter>
+    <Profiles>
+      <Profile level="1" type="Database Engine"/>
+      <Profile level="1" type="AWS RDS"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>Windows BUILTIN groups are SQL Logins, increasing the risk of unauthorized access.</NonCompliantComment>
@@ -84,6 +137,12 @@
   </Rule>
 
   <Rule id="3.10">
+    <Name>Ensure Windows local groups are not SQL Server logins</Name>
+    <Chapter id="3">3 Authentication and Authorization</Chapter>
+    <Profiles>
+      <Profile level="1" type="Database Engine"/>
+      <Profile level="1" type="AWS RDS"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>Windows local groups are SQL Logins, increasing the risk of unauthorized access.</NonCompliantComment>
@@ -94,6 +153,11 @@
   </Rule>
 
   <Rule id="3.11">
+    <Name>Ensure public role in msdb does not have access to SQL Agent proxies</Name>
+    <Chapter id="3">3 Authentication and Authorization</Chapter>
+    <Profiles>
+      <Profile level="1" type="Database Engine"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>The public role in the msdb database has access to SQL Agent proxies.</NonCompliantComment>
@@ -104,6 +168,11 @@
   </Rule>
 
   <Rule id="3.12">
+    <Name>Ensure only authorized users are members of the SYSADMIN role</Name>
+    <Chapter id="3">3 Authentication and Authorization</Chapter>
+    <Profiles>
+      <Profile level="1" type="Database Engine"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>The 'SYSADMIN' role is assigned to accounts that are not administrative or built-in accounts.</NonCompliantComment>
@@ -112,6 +181,11 @@
   </Rule>
 
   <Rule id="3.13">
+    <Name>Ensure admin roles in msdb are limited to authorized users</Name>
+    <Chapter id="3">3 Authentication and Authorization</Chapter>
+    <Profiles>
+      <Profile level="1" type="Database Engine"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>Membership in admin roles in the MSDB database is not limited, increasing security risks.</NonCompliantComment>
