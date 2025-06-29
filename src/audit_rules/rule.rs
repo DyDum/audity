@@ -1,7 +1,7 @@
 //! Data structures that model CIS rules and their compliance status,
 //! together with (de)serialisation helpers for **quick-xml** + **serde**.
 
-use serde::{de, Deserialize, Deserializer, Serialize, Serializer};
+use serde::{Deserialize, Deserializer, Serialize, Serializer, de};
 
 /// Compliance status written to the `<Compliant>` tag.
 ///
@@ -112,7 +112,11 @@ pub struct Rule {
     pub section: Option<SectionId>,
 
     /// Sous-section (facultative)
-    #[serde(rename = "SubSection", default, skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "SubSection",
+        default,
+        skip_serializing_if = "Option::is_none"
+    )]
     pub sub_section: Option<SectionId>,
 
     pub profiles: Profiles,
