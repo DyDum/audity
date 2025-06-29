@@ -11,7 +11,7 @@
         <BasePath>/usr/bin/</BasePath>
         <FileName>ip</FileName>
         <NonCompliantComment>The IPv6 configuration has not been reviewed, potentially leaving unmanaged exposure.</NonCompliantComment>
-        <CorrectiveComment>Identify and document IPv6 status with <code>ip -6 addr show</code>. This is a manual audit step.</CorrectiveComment>
+        <CorrectiveComment>Identify and document IPv6 status with ip -6 addr show. This is a manual audit step.</CorrectiveComment>
         <Correction>ip -6 addr show</Correction>
         <Verification>echo "Manual review required"</Verification>
         <Manual>YES</Manual>
@@ -27,7 +27,7 @@
         <BasePath>/usr/sbin/</BasePath>
         <FileName>rfkill</FileName>
         <NonCompliantComment>Wireless interfaces are enabled, increasing the risk of unauthorized wireless access.</NonCompliantComment>
-        <CorrectiveComment>Disable wireless interfaces with <code>rfkill block all</code> or by unloading wireless drivers.</CorrectiveComment>
+        <CorrectiveComment>Disable wireless interfaces with rfkill block all or by unloading wireless drivers.</CorrectiveComment>
         <Correction>rfkill block all</Correction>
         <Verification>rfkill list | grep -E "Wireless" | grep -q "Soft blocked: yes" &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>

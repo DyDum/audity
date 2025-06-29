@@ -96,7 +96,7 @@
         <BasePath>/etc/ufw/</BasePath>
         <FileName>rules</FileName>
         <NonCompliantComment>Some listening ports lack corresponding UFW rules, exposing services unintentionally.</NonCompliantComment>
-        <CorrectiveComment>Add UFW rules for every TCP/UDP port reported by <code>ss -tuln</code> (or <code>netstat -tuln</code>).</CorrectiveComment>
+        <CorrectiveComment>Add UFW rules for every TCP/UDP port reported by ss -tuln (or netstat -tuln).</CorrectiveComment>
         <Correction>for p in $(ss -H -tuln | awk '{print $5}' | grep -oE '[0-9]+$' | sort -u); do ufw status numbered | grep -q ":.*ALLOW.*$p" || ufw allow "$p"; done</Correction>
         <Verification>missing=$(ss -H -tuln | awk '{print $5}' | grep -oE '[0-9]+$' | sort -u | while read p; do ufw status numbered | grep -q ":.*ALLOW.*$p" || echo $p; done); [ -z "$missing" ] &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>

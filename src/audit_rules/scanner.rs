@@ -66,7 +66,18 @@ pub fn scan_directory(dir: &str) -> Result<(), ScanError> {
     // Parse each file and evaluate compliance
     for file in files {
         let raw = fs::read_to_string(file.path())?;
-        let local: RulesCis = from_str(&raw)?;
+        
+        let local = match from_str::<RulesCis>(&raw) {
+            Ok(r) => r,
+            Err(e) => {
+                eprintln!(
+                    "Erreur XML dans «{}» : {}",
+                    file.path().display(),
+                    e
+                );
+                return Err(ScanError::Xml(e));
+            }
+        };
 
         for mut rule in local.rules {
             // Compliance decision

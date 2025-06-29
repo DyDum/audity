@@ -166,7 +166,7 @@
     <BasePath>/home</BasePath>
     <FileName>dotfiles</FileName>
     <NonCompliantComment>User "dot" files may have insecure permissions.</NonCompliantComment>
-    <CorrectiveComment>Set secure permissions (<= 644) on dot files for all interactive users.</CorrectiveComment>
+    <CorrectiveComment>Set secure permissions (&lt;= 644) on dot files for all interactive users.</CorrectiveComment>
     <Correction>echo "Manual review required: find /home -maxdepth 2 -name \".*\" -type f -exec chmod go-w {} +"</Correction>
     <Verification>echo "Manual verification required"</Verification>
     <Manual>YES</Manual>
