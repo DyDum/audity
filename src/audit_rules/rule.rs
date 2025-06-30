@@ -125,7 +125,9 @@ pub struct Rule {
     pub file_name: String,
     pub non_compliant_comment: String,
     pub corrective_comment: String,
+    #[serde(default)]
     pub correction: String,
+    #[serde(default)]
     pub verification: String,
     pub manual: Option<String>,
 

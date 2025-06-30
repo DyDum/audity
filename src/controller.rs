@@ -60,11 +60,54 @@ pub fn run_package_audit(update: bool, upgrade: bool) {
     }
 }
 
+
+/// Run applicable audit rule scans based on packages found in packages.xml.
+///
+/// This function checks which rule directories correspond to installed packages
+/// and runs the scan only on those.
 pub fn run_audit_rules() {
-    let dir = "rules/debian";
-    if let Err(e) = scan_directory(dir) {
-        eprintln!("Error: {e}");
-        process::exit(1);
+    let package_file = "reports/packages.xml";
+
+    match audit_rules::scanner::load_installed_packages(package_file) {
+        Ok(installed_rules) => {
+            for rule in installed_rules {
+                let dir = format!("rules/{}", rule);
+                if let Err(e) = audit_rules::scanner::scan_directory(&dir) {
+                    eprintln!("Error scanning {dir}: {e}");
+                    std::process::exit(1);
+                }
+            }
+        }
+        Err(e) => {
+            eprintln!("Failed to load installed packages: {e}");
+            std::process::exit(1);
+        }
+    }
+}
+
+
+/// Run automatic corrections for applicable rule sets based on packages found in packages.xml.
+///
+/// This function checks which rule directories correspond to installed packages,
+/// and runs the correction logic only on those.
+pub fn run_correction() {
+    run_package_audit(false, false);
+    let package_file = "reports/packages.xml";
+
+    match audit_rules::scanner::load_installed_packages(package_file) {
+        Ok(installed_rules) => {
+            for rule in installed_rules {
+                let dir = format!("rules/{}", rule);
+                if let Err(e) = package_management::correction::correct_directory(&dir) {
+                    eprintln!("Error correcting {dir}: {e}");
+                    std::process::exit(1);
+                }
+            }
+        }
+        Err(e) => {
+            eprintln!("Failed to load installed packages: {e}");
+            std::process::exit(1);
+        }
     }
 }
 

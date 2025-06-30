@@ -13,7 +13,7 @@ use std::process::Command;
 /// | `Ok(true)`         | **Compliant** – the command reports success (prints `0` or exits with code 0).    |
 /// | `Ok(false)`        | **Not compliant** – the command reports failure (prints `1` or exits with code 1).|
 /// | `Err(String)`      | Any execution error, non-UTF-8 output, stderr content, or unexpected output.      |
-pub fn execute_verification_command(cmd: &str) -> Result<bool, String> {
+pub fn execute_command(cmd: &str) -> Result<bool, String> {
     let output = Command::new("sh")
         .arg("-c")
         .arg(cmd)
@@ -29,22 +29,13 @@ pub fn execute_verification_command(cmd: &str) -> Result<bool, String> {
     }
 
     match stdout.as_str() {
-        // Explicit textual result from the command.
         "0" => Ok(true),
         "1" => Ok(false),
-        // No textual result: fall back to the exit-code.
-        "" => {
-            if output.status.code() == Some(0) {
-                Ok(true)
-            } else if output.status.code() == Some(1) {
-                Ok(false)
-            } else {
-                Err(format!(
-                    "Erreur d'exécution : code {}",
-                    output.status.code().unwrap_or(-1)
-                ))
-            }
-        }
-        other => Err(format!("Sortie inattendue : '{other}'")),
+        "" => match output.status.code() {
+            Some(0) => Ok(true),
+            Some(1) => Ok(false),
+            _ => Err(format!("Erreur d'exécution : code {}", output.status.code().unwrap_or(-1)))
+        },
+        other => Err(format!("Sortie inattendue : '{}'", other)),
     }
 }
