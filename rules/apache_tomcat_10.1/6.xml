@@ -11,7 +11,7 @@
     <FileName>server.xml</FileName>
     <NonCompliantComment>Client-cert authentication is not enabled for sensitive connectors, which may expose the server to unauthorized access.</NonCompliantComment>
     <CorrectiveComment>Setup client-cert authentication for secure connectors.</CorrectiveComment>
-    <Manual>NO</Manual>
+    <Manual>YES</Manual>
   </Rule>
 
   <Rule id="6.2">
@@ -26,8 +26,8 @@
     <FileName>server.xml</FileName>
     <NonCompliantComment>The SSLEnabled attribute is not set to 'true' for sensitive connectors, which may allow unencrypted communications.</NonCompliantComment>
     <CorrectiveComment>Ensure SSLEnabled is set to 'true' for sensitive connectors.</CorrectiveComment>
-    <Correction>sed -i '/&lt;Connector/s/SSLEnabled="false"/SSLEnabled="true"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat</Correction>
-    <Verification>grep 'SSLEnabled="true"' $CATALINA_HOME/conf/server.xml &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[sed -i '/<Connector/s/SSLEnabled="false"/SSLEnabled="true"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat10]]></Correction>
+    <Verification><![CDATA[grep 'SSLEnabled="true"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -43,8 +43,8 @@
     <FileName>server.xml</FileName>
     <NonCompliantComment>The scheme attribute for connectors is not set accurately, which may lead to insecure configurations.</NonCompliantComment>
     <CorrectiveComment>Ensure the scheme is set accurately (e.g., "https" for secure connectors).</CorrectiveComment>
-    <Correction>sed -i '/&lt;Connector/s/scheme=".*"/scheme="https"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat</Correction>
-    <Verification>grep 'scheme="https"' $CATALINA_HOME/conf/server.xml &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[grep -q 'scheme=' $CATALINA_HOME/conf/server.xml && sed -i 's|scheme="[^"]*"|scheme="https"|' $CATALINA_HOME/conf/server.xml || sed -i '/<Connector/ s|<Connector|<Connector scheme="https"|' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat10]]></Correction>
+    <Verification><![CDATA[grep -q 'scheme="https"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -60,8 +60,8 @@
     <FileName>server.xml</FileName>
     <NonCompliantComment>The secure attribute is not set correctly, which may expose the server to insecure communications.</NonCompliantComment>
     <CorrectiveComment>Ensure the secure attribute is set to true only for SSL-enabled connectors.</CorrectiveComment>
-    <Correction>sed -i '/&lt;Connector/s/secure=".*"/secure="true"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat</Correction>
-    <Verification>grep 'secure="true"' $CATALINA_HOME/conf/server.xml &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[grep -q 'secure=' $CATALINA_HOME/conf/server.xml && sed -i 's|secure="[^"]*"|secure="true"|' $CATALINA_HOME/conf/server.xml || sed -i '/<Connector/ s|<Connector|<Connector secure="true"|' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat10]]></Correction>
+    <Verification><![CDATA[grep -q 'secure="true"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -77,8 +77,8 @@
     <FileName>server.xml</FileName>
     <NonCompliantComment>The 'sslProtocol' attribute is not configured correctly for secure connectors, which may allow weak SSL/TLS protocols.</NonCompliantComment>
     <CorrectiveComment>Ensure 'sslProtocol' is configured correctly for secure connectors.</CorrectiveComment>
-    <Correction>sed -i '/&lt;Connector/s/sslProtocol=".*"/sslProtocol="TLSv1.2"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat</Correction>
-    <Verification>grep 'sslProtocol="TLSv1.2"' $CATALINA_HOME/conf/server.xml &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[grep -q 'sslProtocol=' $CATALINA_HOME/conf/server.xml && sed -i 's|sslProtocol="[^"]*"|sslProtocol="TLSv1.2"|' $CATALINA_HOME/conf/server.xml || sed -i '/<Connector/ s|<Connector|<Connector sslProtocol="TLSv1.2"|' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat10]]></Correction>
+    <Verification><![CDATA[grep -q 'sslProtocol="TLSv1.2"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 </RulesCIS>

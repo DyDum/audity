@@ -11,8 +11,8 @@
     <FileName>N/A</FileName>
     <NonCompliantComment>Access to the $CATALINA_HOME directory is not restricted, which may allow unauthorized modifications.</NonCompliantComment>
     <CorrectiveComment>Restrict access to the $CATALINA_HOME directory.</CorrectiveComment>
-    <Correction>chmod -R 750 $CATALINA_HOME; chown -R tomcat:tomcat $CATALINA_HOME;</Correction>
-    <Verification>stat -c "%A %U %G" $CATALINA_HOME</Verification>
+    <Correction><![CDATA[chmod -R 750 $CATALINA_HOME; chown -R tomcat:tomcat $CATALINA_HOME;]]></Correction>
+    <Verification><![CDATA[[ "$(stat -c '%a %U %G' $CATALINA_HOME)" = "750 tomcat tomcat" ] && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -28,8 +28,8 @@
     <FileName>N/A</FileName>
     <NonCompliantComment>Access to the $CATALINA_BASE directory is not restricted, which may allow unauthorized modifications.</NonCompliantComment>
     <CorrectiveComment>Restrict access to the $CATALINA_BASE directory.</CorrectiveComment>
-    <Correction>chmod -R 750 $CATALINA_BASE; chown -R tomcat:tomcat $CATALINA_BASE;</Correction>
-    <Verification>stat -c "%A %U %G" $CATALINA_BASE</Verification>
+    <Correction><![CDATA[chmod -R 750 $CATALINA_BASE; chown -R tomcat:tomcat $CATALINA_BASE;]]></Correction>
+    <Verification><![CDATA[[ "$(stat -c '%a %U %G' $CATALINA_BASE)" = "750 tomcat tomcat" ] && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -45,8 +45,8 @@
     <FileName>N/A</FileName>
     <NonCompliantComment>Access to the Tomcat configuration directory is not restricted, which may allow unauthorized modifications.</NonCompliantComment>
     <CorrectiveComment>Restrict access to the Tomcat configuration directory.</CorrectiveComment>
-    <Correction>chmod -R 750 $CATALINA_HOME/conf; chown -R tomcat:tomcat $CATALINA_HOME/conf;</Correction>
-    <Verification>stat -c "%A %U %G" $CATALINA_HOME/conf</Verification>
+    <Correction><![CDATA[chmod -R 750 $CATALINA_HOME/conf; chown -R tomcat:tomcat $CATALINA_HOME/conf;]]></Correction>
+    <Verification><![CDATA[[ "$(stat -c '%a %U %G' $CATALINA_HOME/conf)" = "750 tomcat tomcat" ] && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -62,8 +62,8 @@
     <FileName>N/A</FileName>
     <NonCompliantComment>Access to the Tomcat logs directory is not restricted, which may allow unauthorized modifications.</NonCompliantComment>
     <CorrectiveComment>Restrict access to the Tomcat logs directory.</CorrectiveComment>
-    <Correction>chmod -R 750 $CATALINA_HOME/logs; chown -R tomcat:tomcat $CATALINA_HOME/logs;</Correction>
-    <Verification>stat -c "%A %U %G" $CATALINA_HOME/logs</Verification>
+    <Correction><![CDATA[chmod -R 750 $CATALINA_HOME/logs; chown -R tomcat:tomcat $CATALINA_HOME/logs;]]></Correction>
+    <Verification><![CDATA[[ "$(stat -c '%a %U %G' $CATALINA_HOME/logs)" = "750 tomcat tomcat" ] && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -79,8 +79,8 @@
     <FileName>N/A</FileName>
     <NonCompliantComment>Access to the Tomcat temp directory is not restricted, which may allow unauthorized modifications.</NonCompliantComment>
     <CorrectiveComment>Restrict access to the Tomcat temp directory.</CorrectiveComment>
-    <Correction>chmod -R 750 $CATALINA_HOME/temp; chown -R tomcat:tomcat $CATALINA_HOME/temp;</Correction>
-    <Verification>stat -c "%A %U %G" $CATALINA_HOME/temp</Verification>
+    <Correction><![CDATA[chmod -R 750 $CATALINA_HOME/temp; chown -R tomcat:tomcat $CATALINA_HOME/temp;]]></Correction>
+    <Verification><![CDATA[[ "$(stat -c '%a %U %G' $CATALINA_HOME/temp)" = "750 tomcat tomcat" ] && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -96,8 +96,8 @@
     <FileName>N/A</FileName>
     <NonCompliantComment>Access to the Tomcat binaries directory is not restricted, which may allow unauthorized modifications.</NonCompliantComment>
     <CorrectiveComment>Restrict access to the Tomcat binaries directory.</CorrectiveComment>
-    <Correction>chmod -R 750 $CATALINA_HOME/bin; chown -R tomcat:tomcat $CATALINA_HOME/bin;</Correction>
-    <Verification>stat -c "%A %U %G" $CATALINA_HOME/bin</Verification>
+    <Correction><![CDATA[chmod -R 750 $CATALINA_HOME/bin; chown -R tomcat:tomcat $CATALINA_HOME/bin;]]></Correction>
+    <Verification><![CDATA[[ "$(stat -c '%a %U %G' $CATALINA_HOME/bin)" = "750 tomcat tomcat" ] && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -113,8 +113,8 @@
     <FileName>N/A</FileName>
     <NonCompliantComment>Access to the Tomcat web application directory is not restricted, which may allow unauthorized modifications.</NonCompliantComment>
     <CorrectiveComment>Restrict access to the Tomcat web application directory.</CorrectiveComment>
-    <Correction>chmod -R 750 $CATALINA_HOME/webapps; chown -R tomcat:tomcat $CATALINA_HOME/webapps;</Correction>
-    <Verification>stat -c "%A %U %G" $CATALINA_HOME/webapps</Verification>
+    <Correction><![CDATA[chmod -R 750 $CATALINA_HOME/webapps; chown -R tomcat:tomcat $CATALINA_HOME/webapps;]]></Correction>
+    <Verification><![CDATA[[ "$(stat -c '%a %U %G' $CATALINA_HOME/webapps)" = "750 tomcat tomcat" ] && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 </RulesCIS>

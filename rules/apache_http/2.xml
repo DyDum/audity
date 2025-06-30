@@ -12,8 +12,8 @@
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>Unnecessary authentication and authorization modules are enabled.</NonCompliantComment>
     <CorrectiveComment>Disable unused authentication and authorization modules by commenting out their LoadModule directives.</CorrectiveComment>
-    <Correction>Manual review required; edit httpd.conf to comment out unused auth modules.</Correction>
-    <Verification>Manual verification required</Verification>
+    <Correction><![CDATA[Manual review required; edit httpd.conf to comment out unused auth modules.]]></Correction>
+    <Verification><![CDATA[Manual verification required]]></Verification>
     <Manual>YES</Manual>
   </Rule>
 
@@ -30,8 +30,8 @@
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>The log configuration module is not enabled, which may lead to misconfigured logging.</NonCompliantComment>
     <CorrectiveComment>Enable the log_config module by ensuring its LoadModule directive is present.</CorrectiveComment>
-    <Correction>sed -i 's/^#LoadModule log_config_module/LoadModule log_config_module/' /etc/httpd/conf/httpd.conf</Correction>
-    <Verification>httpd -M | grep -q log_config_module &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[sed -i 's/^#LoadModule log_config_module/LoadModule log_config_module/' /usr/local/apache2/conf/httpd.conf]]></Correction>
+    <Verification><![CDATA[httpd -M | grep -q log_config_module && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -48,8 +48,8 @@
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>WebDAV modules are enabled, increasing the risk of unauthorized file manipulation.</NonCompliantComment>
     <CorrectiveComment>Disable the WebDAV modules by commenting out their LoadModule directives.</CorrectiveComment>
-    <Correction>sed -i 's/^LoadModule dav_module/#LoadModule dav_module/' /etc/httpd/conf/httpd.conf; sed -i 's/^LoadModule dav_fs_module/#LoadModule dav_fs_module/' /etc/httpd/conf/httpd.conf</Correction>
-    <Verification>httpd -M | grep -E 'dav_module|dav_fs_module' &amp;&amp; echo 1 || echo 0</Verification>
+    <Correction><![CDATA[sed -i 's/^\s*LoadModule dav_module/#&/' /usr/local/apache2/conf/httpd.conf; sed -i 's/^\s*LoadModule dav_fs_module/#&/' /usr/local/apache2/conf/httpd.conf]]></Correction>
+    <Verification><![CDATA[httpd -M | grep -E 'dav_module|dav_fs_module' && echo 1 || echo 0]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -66,8 +66,8 @@
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>The status module is enabled, which can expose sensitive server performance information.</NonCompliantComment>
     <CorrectiveComment>Disable the mod_status module by commenting out its LoadModule directive.</CorrectiveComment>
-    <Correction>sed -i 's/^LoadModule status_module/#LoadModule status_module/' /etc/httpd/conf/httpd.conf</Correction>
-    <Verification>httpd -M | grep -q status_module &amp;&amp; echo 1 || echo 0</Verification>
+    <Correction><![CDATA[sed -i 's/^LoadModule status_module/#LoadModule status_module/' /usr/local/apache2/conf/httpd.conf]]></Correction>
+    <Verification><![CDATA[httpd -M | grep -q status_module && echo 1 || echo 0]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -84,8 +84,8 @@
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>The autoindex module is enabled, which may expose directory listings.</NonCompliantComment>
     <CorrectiveComment>Disable the mod_autoindex module by commenting out its LoadModule directive.</CorrectiveComment>
-    <Correction>sed -i 's/^LoadModule autoindex_module/#LoadModule autoindex_module/' /etc/httpd/conf/httpd.conf</Correction>
-    <Verification>httpd -M | grep -q autoindex_module &amp;&amp; echo 1 || echo 0</Verification>
+    <Correction><![CDATA[sed -i 's/^LoadModule autoindex_module/#LoadModule autoindex_module/' /usr/local/apache2/conf/httpd.conf]]></Correction>
+    <Verification><![CDATA[httpd -M | grep -q autoindex_module && echo 1 || echo 0]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -102,8 +102,8 @@
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>Unnecessary proxy modules are enabled, increasing the attack surface.</NonCompliantComment>
     <CorrectiveComment>Disable proxy modules by commenting out their LoadModule directives.</CorrectiveComment>
-    <Correction>sed -i 's/^LoadModule proxy_module/#LoadModule proxy_module/' /etc/httpd/conf/httpd.conf</Correction>
-    <Verification>httpd -M | grep -q proxy_module &amp;&amp; echo 1 || echo 0</Verification>
+    <Correction><![CDATA[sed -i 's/^LoadModule proxy_module/#LoadModule proxy_module/' /usr/local/apache2/conf/httpd.conf]]></Correction>
+    <Verification><![CDATA[httpd -M | grep -q proxy_module && echo 1 || echo 0]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -120,8 +120,8 @@
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>The user directories module is enabled, which may allow access to user home directories.</NonCompliantComment>
     <CorrectiveComment>Disable the mod_userdir module by commenting out its LoadModule directive.</CorrectiveComment>
-    <Correction>sed -i 's/^LoadModule userdir_module/#LoadModule userdir_module/' /etc/httpd/conf/httpd.conf</Correction>
-    <Verification>httpd -M | grep -q userdir_module &amp;&amp; echo 1 || echo 0</Verification>
+    <Correction><![CDATA[sed -i 's/^LoadModule userdir_module/#LoadModule userdir_module/' /usr/local/apache2/conf/httpd.conf]]></Correction>
+    <Verification><![CDATA[httpd -M | grep -q userdir_module && echo 1 || echo 0]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -138,8 +138,8 @@
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>The info module is enabled, which can expose sensitive server configuration details.</NonCompliantComment>
     <CorrectiveComment>Disable the mod_info module by commenting out its LoadModule directive.</CorrectiveComment>
-    <Correction>sed -i 's/^LoadModule info_module/#LoadModule info_module/' /etc/httpd/conf/httpd.conf</Correction>
-    <Verification>httpd -M | grep -q info_module &amp;&amp; echo 1 || echo 0</Verification>
+    <Correction><![CDATA[sed -i 's/^LoadModule info_module/#LoadModule info_module/' /usr/local/apache2/conf/httpd.conf]]></Correction>
+    <Verification><![CDATA[httpd -M | grep -q info_module && echo 1 || echo 0]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -156,8 +156,8 @@
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>The basic and digest authentication modules are enabled, which are considered insecure.</NonCompliantComment>
     <CorrectiveComment>Disable the mod_auth_basic and mod_auth_digest modules by commenting out their LoadModule directives.</CorrectiveComment>
-    <Correction>sed -i 's/^LoadModule auth_basic_module/#LoadModule auth_basic_module/' /etc/httpd/conf/httpd.conf; sed -i 's/^LoadModule auth_digest_module/#LoadModule auth_digest_module/' /etc/httpd/conf/httpd.conf</Correction>
-    <Verification>httpd -M | grep -E 'auth_basic_module|auth_digest_module' &amp;&amp; echo 1 || echo 0</Verification>
+    <Correction><![CDATA[sed -i 's/^LoadModule auth_basic_module/#LoadModule auth_basic_module/' /usr/local/apache2/conf/httpd.conf; sed -i 's/^LoadModule auth_digest_module/#LoadModule auth_digest_module/' /usr/local/apache2/conf/httpd.conf]]></Correction>
+    <Verification><![CDATA[httpd -M | grep -E 'auth_basic_module|auth_digest_module' && echo 1 || echo 0]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 </RulesCIS>

@@ -11,8 +11,8 @@
     <FileName>extraneous files and directories</FileName>
     <NonCompliantComment>Extraneous files and directories (e.g., examples, docs, ROOT, manager, host-manager) exist in the Tomcat webapps directory, which may introduce security risks.</NonCompliantComment>
     <CorrectiveComment>Remove extraneous files and directories to reduce the attack surface.</CorrectiveComment>
-    <Correction>rm -rf $CATALINA_HOME/webapps/docs $CATALINA_HOME/webapps/examples $CATALINA_HOME/webapps/ROOT $CATALINA_HOME/webapps/manager $CATALINA_HOME/webapps/host-manager</Correction>
-    <Verification>ls -l $CATALINA_HOME/webapps | grep -E 'docs|examples|ROOT|manager|host-manager' &amp;&amp; echo 1 || echo 0</Verification>
+    <Correction><![CDATA[rm -rf $CATALINA_HOME/webapps/docs $CATALINA_HOME/webapps/examples $CATALINA_HOME/webapps/ROOT $CATALINA_HOME/webapps/manager $CATALINA_HOME/webapps/host-manager]]></Correction>
+    <Verification><![CDATA[ls -l $CATALINA_HOME/webapps | grep -E 'docs|examples|ROOT|manager|host-manager' && echo 1 || echo 0]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -28,8 +28,8 @@
     <FileName>server.xml</FileName>
     <NonCompliantComment>Unused connectors are enabled, which may expose the server to unnecessary security risks.</NonCompliantComment>
     <CorrectiveComment>Disable unused connectors in the Tomcat server.xml file.</CorrectiveComment>
-    <Correction>sed -i '/&lt;Connector/,/&lt;/Connector>/s/^/<!--/; /&lt;/Connector>/s/$/-->/' $CATALINA_HOME/conf/server.xml</Correction>
-    <Verification>grep -E '&lt;!--.*&lt;Connector.*-->' $CATALINA_HOME/conf/server.xml &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[sed -i 's|^\s*<Connector port="8080"|<!-- <Connector port="8080|; s|"/>|\"/> -->|' $CATALINA_HOME/conf/server.xml]]></Correction>
+    <Verification><![CDATA[grep -q '^[[:space:]]*<Connector port="8080"' $CATALINA_HOME/conf/server.xml && echo 1 || echo 0]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 </RulesCIS>

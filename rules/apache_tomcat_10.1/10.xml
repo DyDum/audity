@@ -17,10 +17,9 @@
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>server.xml</FileName>
     <NonCompliantComment>Access to the web administration application is not restricted, which may allow unauthorized access.</NonCompliantComment>
-    <CorrectiveComment>Restrict access to the web administration application.</CorrectiveComment>
-    <Correction>sed -i '/&lt;Context/s/allow=".*"/allow="192.168.1.0\/24"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat</Correction>
-    <Verification>grep '&lt;Context.*allow="192.168.1.0/24"' $CATALINA_HOME/conf/server.xml &amp;&amp; echo 0 || echo 1</Verification>
-    <Manual>NO</Manual>
+    <CorrectiveComment>Restrict access to the web administration application. Command : <![CDATA[sed -i '/<Context/s/allow=".*"/allow="192.168.1.0\/24"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat10]]></CorrectiveComment>
+    <Verification><![CDATA[grep -Eq '<Context[^>]+allow="([0-9]{1,3}\.){3}[0-9]{1,3}/[0-9]{1,2}"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1]]></Verification>
+    <Manual>CORRECTION</Manual>
   </Rule>
 
   <Rule id="10.3">
@@ -97,8 +96,8 @@
     <FileName>server.xml</FileName>
     <NonCompliantComment>The connectionTimeout attribute is not configured, which may cause performance issues or allow unauthorized connections.</NonCompliantComment>
     <CorrectiveComment>Configure the connectionTimeout attribute for secure connectors.</CorrectiveComment>
-    <Correction>sed -i '/&lt;Connector/s/connectionTimeout=".*"/connectionTimeout="20000"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat</Correction>
-    <Verification>grep 'connectionTimeout="20000"' $CATALINA_HOME/conf/server.xml &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[sed -i '/<Connector/s/connectionTimeout=".*"/connectionTimeout="20000"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat10]]></Correction>
+    <Verification><![CDATA[grep -q 'connectionTimeout="20000"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -110,8 +109,8 @@
     <FileName>server.xml</FileName>
     <NonCompliantComment>The maxHttpHeaderSize attribute is not configured, which may expose the server to denial of service attacks.</NonCompliantComment>
     <CorrectiveComment>Configure the maxHttpHeaderSize attribute for secure connectors.</CorrectiveComment>
-    <Correction>sed -i '/&lt;Connector/s/maxHttpHeaderSize=".*"/maxHttpHeaderSize="8192"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat</Correction>
-    <Verification>grep 'maxHttpHeaderSize="8192"' $CATALINA_HOME/conf/server.xml &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[grep -q 'maxHttpHeaderSize=' $CATALINA_HOME/conf/server.xml && sed -i 's|maxHttpHeaderSize="[^"]*"|maxHttpHeaderSize="8192"|' $CATALINA_HOME/conf/server.xml || sed -i '/<Connector /{/maxHttpHeaderSize=/!s/\(<Connector [^>]*\)/\1 maxHttpHeaderSize="8192"/}' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat10]]></Correction>
+    <Verification><![CDATA[grep -q 'maxHttpHeaderSize="8192"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -134,8 +133,8 @@
     <FileName>server.xml</FileName>
     <NonCompliantComment>Symbolic linking is enabled, which may expose sensitive files through unauthorized links.</NonCompliantComment>
     <CorrectiveComment>Disable symbolic linking.</CorrectiveComment>
-    <Correction>sed -i '/&lt;Context/s/allowLinking=".*"/allowLinking="false"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat</Correction>
-    <Verification>grep '&lt;Context.*allowLinking="false"' $CATALINA_HOME/conf/server.xml &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[sed -i '/<Context/s/allowLinking=".*"/allowLinking="false"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat10]]></Correction>
+    <Verification><![CDATA[! grep -q '<Context' $CATALINA_HOME/conf/server.xml || grep -q 'allowLinking="false"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -147,8 +146,8 @@
     <FileName>context.xml</FileName>
     <NonCompliantComment>Applications are allowed to run as privileged, which may allow them to perform unauthorized actions.</NonCompliantComment>
     <CorrectiveComment>Ensure applications are not run as privileged.</CorrectiveComment>
-    <Correction>sed -i '/&lt;Context/s/privileged=".*"/privileged="false"/' $CATALINA_HOME/conf/context.xml; systemctl restart tomcat</Correction>
-    <Verification>grep 'privileged="false"' $CATALINA_HOME/conf/context.xml &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[grep -q 'privileged=' $CATALINA_HOME/conf/context.xml && sed -i 's|privileged="[^"]*"|privileged="false"|' $CATALINA_HOME/conf/context.xml || sed -i 's|<Context|<Context privileged="false"|' $CATALINA_HOME/conf/context.xml; systemctl restart tomcat10]]></Correction>
+    <Verification><![CDATA[grep -q 'privileged="false"' $CATALINA_HOME/conf/context.xml && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -160,8 +159,8 @@
     <FileName>context.xml</FileName>
     <NonCompliantComment>Cross-context requests are allowed, which may allow unauthorized access between applications.</NonCompliantComment>
     <CorrectiveComment>Disable cross-context requests.</CorrectiveComment>
-    <Correction>sed -i '/&lt;Context/s/crossContext=".*"/crossContext="false"/' $CATALINA_HOME/conf/context.xml; systemctl restart tomcat</Correction>
-    <Verification>grep 'crossContext="false"' $CATALINA_HOME/conf/context.xml &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[grep -q 'crossContext=' $CATALINA_HOME/conf/context.xml && sed -i 's|crossContext="[^"]*"|crossContext="false"|' $CATALINA_HOME/conf/context.xml || sed -i 's|<Context|<Context crossContext="false"|' $CATALINA_HOME/conf/context.xml; systemctl restart tomcat10]]></Correction>
+    <Verification><![CDATA[grep -q 'crossContext="false"' $CATALINA_HOME/conf/context.xml && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -173,8 +172,8 @@
     <FileName>server.xml</FileName>
     <NonCompliantComment>The server resolves hostnames on logging valves, which may introduce performance issues.</NonCompliantComment>
     <CorrectiveComment>Disable hostname resolution on logging valves.</CorrectiveComment>
-    <Correction>sed -i '/&lt;Valve/s/resolveHosts=".*"/resolveHosts="false"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat</Correction>
-    <Verification>grep 'resolveHosts="false"' $CATALINA_HOME/conf/server.xml &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[grep -q 'resolveHosts=' $CATALINA_HOME/conf/server.xml && sed -i 's|resolveHosts="[^"]*"|resolveHosts="false"|' $CATALINA_HOME/conf/server.xml || sed -i '/<Valve/ s|<Valve|<Valve resolveHosts="false"|' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat10]]></Correction>
+    <Verification><![CDATA[grep -q 'resolveHosts="false"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 

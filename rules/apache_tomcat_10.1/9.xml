@@ -11,8 +11,8 @@
     <FileName>context.xml</FileName>
     <NonCompliantComment>Auto deployment of applications is enabled, which may allow unauthorized applications to be deployed automatically.</NonCompliantComment>
     <CorrectiveComment>Disable auto deployment of applications.</CorrectiveComment>
-    <Correction>sed -i '/&lt;Context/s/deployOnStartup=".*"/deployOnStartup="false"/' $CATALINA_HOME/conf/context.xml; sed -i '/&lt;Context/s/autoDeploy=".*"/autoDeploy="false"/' $CATALINA_HOME/conf/context.xml; systemctl restart tomcat</Correction>
-    <Verification>grep '&lt;Context.*deployOnStartup="false".*autoDeploy="false"' $CATALINA_HOME/conf/context.xml &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[sed -i '/<Context/ { /autoDeploy=/! s|<Context|<Context autoDeploy="false"|; }' $CATALINA_HOME/conf/context.xml && systemctl restart tomcat10]]></Correction>
+    <Verification><![CDATA[grep -q 'autoDeploy="false"' $CATALINA_HOME/conf/context.xml && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -28,8 +28,8 @@
     <FileName>context.xml</FileName>
     <NonCompliantComment>Deploy on startup of applications is enabled, which may allow unauthorized applications to be deployed automatically on server startup.</NonCompliantComment>
     <CorrectiveComment>Disable deploy on startup of applications.</CorrectiveComment>
-    <Correction>sed -i '/&lt;Context/s/deployOnStartup=".*"/deployOnStartup="false"/' $CATALINA_HOME/conf/context.xml; systemctl restart tomcat</Correction>
-    <Verification>grep '&lt;Context.*deployOnStartup="false"' $CATALINA_HOME/conf/context.xml &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[sed -i '/<Context/s/deployOnStartup=".*"/deployOnStartup="false"/' $CATALINA_HOME/conf/context.xml; systemctl restart tomcat10]]></Correction>
+    <Verification><![CDATA[grep -q '<Context.*deployOnStartup="false"' $CATALINA_HOME/conf/context.xml && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 </RulesCIS>

@@ -13,8 +13,8 @@
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>TimeOut directive is set higher than 10 seconds.</NonCompliantComment>
     <CorrectiveComment>Set TimeOut to 10 or less.</CorrectiveComment>
-    <Correction>sed -i 's/^TimeOut .*/TimeOut 10/' /etc/httpd/conf/httpd.conf; systemctl restart httpd</Correction>
-    <Verification>grep -q "^TimeOut 10" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[grep -q "^TimeOut" /usr/local/apache2/conf/httpd.conf && sed -i 's|^TimeOut.*|TimeOut 10|' /usr/local/apache2/conf/httpd.conf || echo 'TimeOut 10' >> /usr/local/apache2/conf/httpd.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
+    <Verification><![CDATA[grep -q "^TimeOut 10" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -32,8 +32,8 @@
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>KeepAlive is not enabled.</NonCompliantComment>
     <CorrectiveComment>Enable KeepAlive in the Apache configuration.</CorrectiveComment>
-    <Correction>sed -i 's/^#KeepAlive On/KeepAlive On/' /etc/httpd/conf/httpd.conf; systemctl restart httpd</Correction>
-    <Verification>grep -q "^KeepAlive On" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[grep -q "^#\?KeepAlive" /usr/local/apache2/conf/httpd.conf && sed -i 's|^#\?KeepAlive.*|KeepAlive On|' /usr/local/apache2/conf/httpd.conf || echo 'KeepAlive On' >> /usr/local/apache2/conf/httpd.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
+    <Verification><![CDATA[grep -q "^KeepAlive On" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -51,8 +51,8 @@
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>MaxKeepAliveRequests is set lower than 100.</NonCompliantComment>
     <CorrectiveComment>Set MaxKeepAliveRequests to 100 or greater.</CorrectiveComment>
-    <Correction>sed -i 's/^MaxKeepAliveRequests .*/MaxKeepAliveRequests 100/' /etc/httpd/conf/httpd.conf; systemctl restart httpd</Correction>
-    <Verification>grep -q "^MaxKeepAliveRequests 100" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[grep -q "^MaxKeepAliveRequests" /usr/local/apache2/conf/httpd.conf && sed -i 's|^MaxKeepAliveRequests.*|MaxKeepAliveRequests 100|' /usr/local/apache2/conf/httpd.conf || echo 'MaxKeepAliveRequests 100' >> /usr/local/apache2/conf/httpd.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
+    <Verification><![CDATA[grep -q "^MaxKeepAliveRequests 100" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -70,8 +70,8 @@
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>KeepAliveTimeout is set higher than 15 seconds.</NonCompliantComment>
     <CorrectiveComment>Set KeepAliveTimeout to 15 or less.</CorrectiveComment>
-    <Correction>sed -i 's/^KeepAliveTimeout .*/KeepAliveTimeout 15/' /etc/httpd/conf/httpd.conf; systemctl restart httpd</Correction>
-    <Verification>grep -q "^KeepAliveTimeout 15" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[grep -q "^KeepAliveTimeout" /usr/local/apache2/conf/httpd.conf && sed -i 's|^KeepAliveTimeout.*|KeepAliveTimeout 15|' /usr/local/apache2/conf/httpd.conf || echo 'KeepAliveTimeout 15' >> /usr/local/apache2/conf/httpd.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
+    <Verification><![CDATA[grep -q "^KeepAliveTimeout 15" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -89,8 +89,8 @@
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>Timeout limits for request headers are set higher than 40 seconds.</NonCompliantComment>
     <CorrectiveComment>Set request header timeout to 40 seconds or less using mod_reqtimeout.</CorrectiveComment>
-    <Correction>echo "RequestReadTimeout header=40" &gt;&gt; /etc/httpd/conf/httpd.conf; systemctl restart httpd</Correction>
-    <Verification>grep -q "RequestReadTimeout header=40" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[grep -q "^RequestReadTimeout" /usr/local/apache2/conf/httpd.conf && sed -i 's|^RequestReadTimeout.*|RequestReadTimeout header=40|' /usr/local/apache2/conf/httpd.conf || echo 'RequestReadTimeout header=40' >> /usr/local/apache2/conf/httpd.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
+    <Verification><![CDATA[grep -q "RequestReadTimeout header=40" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -108,8 +108,8 @@
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>Timeout limits for the request body are set higher than 20 seconds.</NonCompliantComment>
     <CorrectiveComment>Set request body timeout to 20 seconds or less using mod_reqtimeout.</CorrectiveComment>
-    <Correction>echo "RequestReadTimeout body=20" &gt;&gt; /etc/httpd/conf/httpd.conf; systemctl restart httpd</Correction>
-    <Verification>grep -q "RequestReadTimeout body=20" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[grep -q "^RequestReadTimeout body=" /usr/local/apache2/conf/httpd.conf && sed -i 's|^RequestReadTimeout body=.*|RequestReadTimeout body=20|' /usr/local/apache2/conf/httpd.conf || echo 'RequestReadTimeout body=20' >> /usr/local/apache2/conf/httpd.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
+    <Verification><![CDATA[grep -q "RequestReadTimeout body=20" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 </RulesCIS>

@@ -56,8 +56,8 @@
     <FileName>server.xml</FileName>
     <NonCompliantComment>The X-Powered-By HTTP header is enabled, which may expose server information.</NonCompliantComment>
     <CorrectiveComment>Disable the X-Powered-By HTTP header by configuring the server attribute in the Connector.</CorrectiveComment>
-    <Correction>sed -i '/&lt;Connector/s/server=".*"/server="SecureServer"/' $CATALINA_HOME/conf/server.xml</Correction>
-    <Verification>grep -E '&lt;Connector.*server="SecureServer"' $CATALINA_HOME/conf/server.xml &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[grep -q 'server=' $CATALINA_HOME/conf/server.xml && sed -i 's|server="[^"]*"|server="SecureServer"|' $CATALINA_HOME/conf/server.xml || sed -i '/<Connector/ s|<Connector|<Connector server="SecureServer"|' $CATALINA_HOME/conf/server.xml]]></Correction>
+    <Verification><![CDATA[grep -qE '<Connector.*server="SecureServer"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -73,8 +73,8 @@
     <FileName>web.xml</FileName>
     <NonCompliantComment>Client-facing stack traces are enabled, which may expose sensitive information to users.</NonCompliantComment>
     <CorrectiveComment>Disable client-facing stack traces by defining proper error pages.</CorrectiveComment>
-    <Correction>sed -i '/&lt;param-name&gt;showServerInfo&lt;\/param-name&gt;/!b;n;c&lt;param-value&gt;false&lt;/param-value&gt;' $CATALINA_HOME/conf/web.xml</Correction>
-    <Verification>grep -A 1 '&lt;param-name&gt;showServerInfo&lt;/param-name&gt;' $CATALINA_HOME/conf/web.xml | grep '&lt;param-value&gt;false&lt;/param-value&gt;' &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[sed -i '/<\/web-app>/i <context-param>\n    <param-name>showServerInfo</param-name>\n    <param-value>false</param-value>\n  </context-param>' $CATALINA_HOME/conf/web.xml; systemctl restart tomcat10]]></Correction>
+    <Verification><![CDATA[awk '/<param-name>showServerInfo<\/param-name>/ {show=1} show && /<param-value>false<\/param-value>/ {found=1} END {exit !found}' $CATALINA_HOME/conf/web.xml && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -90,8 +90,8 @@
     <FileName>web.xml</FileName>
     <NonCompliantComment>The HTTP TRACE method is enabled, which may allow cross-site tracing attacks.</NonCompliantComment>
     <CorrectiveComment>Turn off the TRACE method in web.xml.</CorrectiveComment>
-    <Correction>sed -i '/&lt;LimitExcept GET POST HEAD&gt;/!b;n;cDeny from all' $CATALINA_HOME/conf/web.xml</Correction>
-    <Verification>grep -A 1 '&lt;LimitExcept GET POST HEAD&gt;' $CATALINA_HOME/conf/web.xml | grep 'Deny from all' &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[sed -i '/<LimitExcept GET POST HEAD>/!b;n;cDeny from all' $CATALINA_HOME/conf/web.xml]]></Correction>
+    <Verification><![CDATA[grep -A 5 '<LimitExcept GET POST HEAD>' $CATALINA_HOME/conf/web.xml | grep -q 'Deny from all' && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -107,8 +107,8 @@
     <FileName>server.xml</FileName>
     <NonCompliantComment>The 'Server' header is not modified, which may expose server information to clients.</NonCompliantComment>
     <CorrectiveComment>Ensure the 'Server' header is modified to prevent information disclosure.</CorrectiveComment>
-    <Correction>sed -i '/&lt;Connector/s/server=".*"/server="SecureServer"/' $CATALINA_HOME/conf/server.xml</Correction>
-    <Verification>grep -E '&lt;Connector.*server="SecureServer"' $CATALINA_HOME/conf/server.xml &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[sed -i '/<Connector/s/server=".*"/server="SecureServer"/' $CATALINA_HOME/conf/server.xml]]></Correction>
+    <Verification><![CDATA[grep -qE '<Connector.*server="SecureServer"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 </RulesCIS>

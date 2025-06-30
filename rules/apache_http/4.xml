@@ -12,8 +12,8 @@
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>Access to OS root directory is not denied by default.</NonCompliantComment>
     <CorrectiveComment>Add a Directory directive for "/" with "Require all denied".</CorrectiveComment>
-    <Correction>echo "&lt;Directory /&gt;&lt;Require all denied&gt;&lt;/Require all denied&gt;&lt;/Directory&gt;" &gt;&gt; /etc/httpd/conf/httpd.conf</Correction>
-    <Verification>grep -q "&lt;Directory /&gt;" /etc/httpd/conf/httpd.conf &amp;&amp; grep -q "Require all denied" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[echo "<Directory /><Require all denied></Require all denied></Directory>" >> /usr/local/apache2/conf/httpd.conf]]></Correction>
+    <Verification><![CDATA[grep -q "<Directory />" /usr/local/apache2/conf/httpd.conf && grep -q "Require all denied" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -30,8 +30,8 @@
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>Access to web content is not properly restricted.</NonCompliantComment>
     <CorrectiveComment>Manually configure appropriate Directory directives with proper access controls for web content.</CorrectiveComment>
-    <Correction>Manual review required; update Directory directives with appropriate "Require" statements.</Correction>
-    <Verification>Manual verification required</Verification>
+    <Correction><![CDATA[Manual review required; update Directory directives with appropriate "Require" statements.]]></Correction>
+    <Verification><![CDATA[Manual verification required]]></Verification>
     <Manual>YES</Manual>
   </Rule>
 
@@ -48,8 +48,8 @@
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>AllowOverride is not set to "None" for the OS root directory.</NonCompliantComment>
     <CorrectiveComment>Set AllowOverride to "None" for the root directory in the Apache configuration.</CorrectiveComment>
-    <Correction>sed -i 's/AllowOverride .*/AllowOverride None/' /etc/httpd/conf/httpd.conf</Correction>
-    <Verification>grep -q "AllowOverride None" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[sed -i 's/AllowOverride .*/AllowOverride None/' /usr/local/apache2/conf/httpd.conf]]></Correction>
+    <Verification><![CDATA[grep -q "AllowOverride None" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -66,8 +66,8 @@
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>One or more directories have AllowOverride enabled.</NonCompliantComment>
     <CorrectiveComment>Set AllowOverride to "None" for all directories in the Apache configuration.</CorrectiveComment>
-    <Correction>sed -i 's/AllowOverride .*/AllowOverride None/g' /etc/httpd/conf/httpd.conf</Correction>
-    <Verification>grep -q "AllowOverride None" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[sed -i 's/AllowOverride .*/AllowOverride None/g' /usr/local/apache2/conf/httpd.conf]]></Correction>
+    <Verification><![CDATA[grep -q "AllowOverride None" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 </RulesCIS>

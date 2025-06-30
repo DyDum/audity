@@ -11,8 +11,8 @@
     <FileName>catalina.policy</FileName>
     <NonCompliantComment>Runtime access to sensitive packages is not restricted, which may allow unauthorized code execution or manipulation of critical Java classes.</NonCompliantComment>
     <CorrectiveComment>Restrict runtime access to sensitive packages.</CorrectiveComment>
-    <Correction>sed -i '/grant codeBase "file:${catalina.home}\/webapps\/-"/a\\tpermission java.lang.RuntimePermission "accessClassInPackage.sun.*", "deny";\\n\\tpermission java.lang.RuntimePermission "accessClassInPackage.com.sun.*", "deny";\\n\\tpermission java.lang.RuntimePermission "accessClassInPackage.org.apache.catalina.*", "deny";' $CATALINA_HOME/conf/catalina.policy; systemctl restart tomcat</Correction>
-    <Verification>grep -E 'accessClassInPackage.sun|accessClassInPackage.com|accessClassInPackage.org.apache.catalina' $CATALINA_HOME/conf/catalina.policy &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[sed -i '/grant codeBase "file:${catalina.home}\/webapps\/-"/a permission java.lang.RuntimePermission "accessClassInPackage.sun.*", "deny"; permission java.lang.RuntimePermission "accessClassInPackage.com.sun.*", "deny"; permission java.lang.RuntimePermission "accessClassInPackage.org.apache.catalina.*", "deny";' $CATALINA_HOME/policy/catalina.policy]]></Correction>
+    <Verification><![CDATA[grep -qE 'accessClassInPackage.sun|accessClassInPackage.com|accessClassInPackage.org.apache.catalina' $CATALINA_HOME/policy/catalina.policy && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 </RulesCIS>
