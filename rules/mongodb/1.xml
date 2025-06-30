@@ -1,5 +1,11 @@
 <RulesCIS>
   <Rule id="1.1">
+    <Name>Ensure MongoDB Software Version / Patches are Up to Date (Manual)</Name>
+    <Chapter id="1">Initial Setup</Chapter>
+    <Section id="1.1">Ensure MongoDB Software Version / Patches are Up to Date</Section>
+    <Profiles>
+      <Profile level="1" type="MongoDB"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>The MongoDB software version or patches are not up to date, which may expose the server to known vulnerabilities.</NonCompliantComment>

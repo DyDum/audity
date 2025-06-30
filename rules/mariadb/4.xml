@@ -1,5 +1,11 @@
 <RulesCIS>
   <Rule id="4.1">
+    <Name>Apply Latest Security Patches (Automated)</Name>
+    <Chapter id="4">MariaDB Security Configuration</Chapter>
+    <Section id="4.1">Apply Latest Security Patches</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>MariaDB is not running the latest security patches, which may expose it to vulnerabilities.</NonCompliantComment>
@@ -10,6 +16,12 @@
   </Rule>
 
   <Rule id="4.2">
+    <Name>Remove Test Databases (Automated)</Name>
+    <Chapter id="4">MariaDB Security Configuration</Chapter>
+    <Section id="4.2">Remove Test Databases</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
     <BasePath>/var/lib/mysql/</BasePath>
     <FileName>test/</FileName>
     <NonCompliantComment>Example or test databases are installed on the production server, increasing security risks.</NonCompliantComment>
@@ -20,6 +32,12 @@
   </Rule>
 
   <Rule id="4.3">
+    <Name>Disable Suspicious UDFs (Automated)</Name>
+    <Chapter id="4">MariaDB Security Configuration</Chapter>
+    <Section id="4.3">Disable Suspicious UDFs</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>The 'allow-suspicious-udfs' parameter is enabled, which may allow unsafe user-defined functions (UDFs).</NonCompliantComment>
@@ -30,6 +48,12 @@
   </Rule>
 
   <Rule id="4.4">
+    <Name>Disable Local Infile (Automated)</Name>
+    <Chapter id="4">MariaDB Security Configuration</Chapter>
+    <Section id="4.4">Disable Local Infile</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>The 'local_infile' parameter is enabled, which may allow unauthorized file imports.</NonCompliantComment>
@@ -40,6 +64,12 @@
   </Rule>
 
   <Rule id="4.5">
+    <Name>Remove Skip Grant Tables (Automated)</Name>
+    <Chapter id="4">MariaDB Security Configuration</Chapter>
+    <Section id="4.5">Remove Skip Grant Tables</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>MariaDB is started with 'skip-grant-tables', which disables access control and authentication.</NonCompliantComment>
@@ -50,6 +80,12 @@
   </Rule>
 
   <Rule id="4.6">
+    <Name>Disable Symbolic Links (Automated)</Name>
+    <Chapter id="4">MariaDB Security Configuration</Chapter>
+    <Section id="4.6">Disable Symbolic Links</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>Symbolic links are enabled, which may allow unauthorized file access.</NonCompliantComment>
@@ -60,6 +96,12 @@
   </Rule>
 
   <Rule id="4.7">
+    <Name>Set Secure File Priv Directory (Automated)</Name>
+    <Chapter id="4">MariaDB Security Configuration</Chapter>
+    <Section id="4.7">Set Secure File Priv Directory</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>The 'secure_file_priv' parameter is not set, which may allow unrestricted file access.</NonCompliantComment>
@@ -70,6 +112,13 @@
   </Rule>
 
   <Rule id="4.8">
+    <Name>Set Strict SQL Mode (Automated)</Name>
+    <Chapter id="4">MariaDB Security Configuration</Chapter>
+    <Section id="4.8">Set Strict SQL Mode</Section>
+    <Profiles>
+      <Profile level="2" type="MariaDB RDBMS"/>
+      <Profile level="2" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>The 'sql_mode' parameter does not contain 'STRICT_ALL_TABLES', which may allow invalid data entries.</NonCompliantComment>
@@ -80,6 +129,13 @@
   </Rule>
 
   <Rule id="4.9">
+    <Name>Enable Data-at-Rest Encryption (Automated)</Name>
+    <Chapter id="4">MariaDB Security Configuration</Chapter>
+    <Section id="4.9">Enable Data-at-Rest Encryption</Section>
+    <Profiles>
+      <Profile level="2" type="MariaDB RDBMS"/>
+      <Profile level="2" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>Data-at-rest encryption is not enabled, which may expose sensitive data.</NonCompliantComment>

@@ -1,5 +1,11 @@
 <RulesCIS>
-    <Rule id="1.1">
+  <Rule id="1.1">
+    <Name>Separate Data Directory From System Partition (Automated)</Name>
+    <Chapter id="1">Operating System Level Configuration</Chapter>
+    <Section id="1.1">Separate Data Directory From System Partition</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
     <BasePath>/var/lib/mysql/</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>MariaDB databases are stored on the system partition, which may impact performance and security.</NonCompliantComment>
@@ -10,6 +16,12 @@
   </Rule>
 
   <Rule id="1.2">
+    <Name>Run MariaDB as Dedicated Non-Root User (Automated)</Name>
+    <Chapter id="1">Operating System Level Configuration</Chapter>
+    <Section id="1.2">Run MariaDB as Dedicated Non-Root User</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>mariadb.conf.d/50-server.cnf</FileName>
     <NonCompliantComment>MariaDB is not running under a dedicated, least-privileged account, increasing security risks.</NonCompliantComment>
@@ -20,6 +32,12 @@
   </Rule>
 
   <Rule id="1.3">
+    <Name>Disable MariaDB Command History (Automated)</Name>
+    <Chapter id="1">Operating System Level Configuration</Chapter>
+    <Section id="1.3">Disable MariaDB Command History</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>MariaDB command history is enabled, which may expose sensitive commands and passwords.</NonCompliantComment>
@@ -30,6 +48,12 @@
   </Rule>
 
   <Rule id="1.4">
+    <Name>Do Not Use MYSQL_PWD Environment Variable (Automated)</Name>
+    <Chapter id="1">Operating System Level Configuration</Chapter>
+    <Section id="1.4">Do Not Use MYSQL_PWD Environment Variable</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>The MYSQL_PWD environment variable is used, which exposes passwords to other users.</NonCompliantComment>
@@ -40,6 +64,12 @@
   </Rule>
 
   <Rule id="1.5">
+    <Name>Disable Interactive Login for MariaDB User (Automated)</Name>
+    <Chapter id="1">Operating System Level Configuration</Chapter>
+    <Section id="1.5">Disable Interactive Login for MariaDB User</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>Interactive login is enabled for the MariaDB account, increasing security risks.</NonCompliantComment>
@@ -50,6 +80,12 @@
   </Rule>
 
   <Rule id="1.6">
+    <Name>Do Not Set MYSQL_PWD in User Profiles (Automated)</Name>
+    <Chapter id="1">Operating System Level Configuration</Chapter>
+    <Section id="1.6">Do Not Set MYSQL_PWD in User Profiles</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
     <BasePath>/etc/profile.d/</BasePath>
     <FileName>mariadb.sh</FileName>
     <NonCompliantComment>The MYSQL_PWD variable is set in user profiles, which may expose passwords.</NonCompliantComment>
@@ -60,6 +96,13 @@
   </Rule>
 
   <Rule id="1.7">
+    <Name>Run MariaDB in a Sandbox Environment (Manual)</Name>
+    <Chapter id="1">Operating System Level Configuration</Chapter>
+    <Section id="1.7">Run MariaDB in a Sandbox Environment</Section>
+    <Profiles>
+      <Profile level="2" type="MariaDB RDBMS"/>
+      <Profile level="2" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>mariadb.conf.d/50-server.cnf</FileName>
     <NonCompliantComment>MariaDB is not running under a sandbox environment, which may increase the risk of security breaches.</NonCompliantComment>

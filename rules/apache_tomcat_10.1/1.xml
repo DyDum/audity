@@ -1,0 +1,35 @@
+<RulesCIS>
+  <Rule id="1.1">
+    <Name>Remove extraneous files and directories (Manual)</Name>
+    <Chapter id="1">Remove Extraneous Resources</Chapter>
+    <Section id="1.1">Remove extraneous files and directories</Section>
+    <Profiles>
+      <Profile level="2" type="Server"/>
+      <Profile level="2" type="Workstation"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/webapps/</BasePath>
+    <FileName>extraneous files and directories</FileName>
+    <NonCompliantComment>Extraneous files and directories (e.g., examples, docs, ROOT, manager, host-manager) exist in the Tomcat webapps directory, which may introduce security risks.</NonCompliantComment>
+    <CorrectiveComment>Remove extraneous files and directories to reduce the attack surface.</CorrectiveComment>
+    <Correction><![CDATA[rm -rf $CATALINA_HOME/webapps/docs $CATALINA_HOME/webapps/examples $CATALINA_HOME/webapps/ROOT $CATALINA_HOME/webapps/manager $CATALINA_HOME/webapps/host-manager]]></Correction>
+    <Verification><![CDATA[ls -l $CATALINA_HOME/webapps | grep -E 'docs|examples|ROOT|manager|host-manager' && echo 1 || echo 0]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="1.2">
+    <Name>Disable unused connectors (Manual)</Name>
+    <Chapter id="1">Remove Extraneous Resources</Chapter>
+    <Section id="1.2">Disable Unused Connectors</Section>
+    <Profiles>
+      <Profile level="2" type="Server"/>
+      <Profile level="2" type="Workstation"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>server.xml</FileName>
+    <NonCompliantComment>Unused connectors are enabled, which may expose the server to unnecessary security risks.</NonCompliantComment>
+    <CorrectiveComment>Disable unused connectors in the Tomcat server.xml file.</CorrectiveComment>
+    <Correction><![CDATA[sed -i 's|^\s*<Connector port="8080"|<!-- <Connector port="8080|; s|"/>|\"/> -->|' $CATALINA_HOME/conf/server.xml]]></Correction>
+    <Verification><![CDATA[grep -q '^[[:space:]]*<Connector port="8080"' $CATALINA_HOME/conf/server.xml && echo 1 || echo 0]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+</RulesCIS>

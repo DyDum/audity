@@ -1,0 +1,99 @@
+<RulesCIS>
+  <Rule id="7.1">
+    <Name>Enable Application-Specific Logging (Automated)</Name>
+    <Chapter id="7">Configure Tomcat Application Logging</Chapter>
+    <Section id="7.1">Enable Application-Specific Logging</Section>
+    <Profiles>
+      <Profile level="1" type="Server"/>
+      <Profile level="1" type="Workstation"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>logging.properties</FileName>
+    <NonCompliantComment>Application-specific logging is not enabled, which may reduce visibility into application events.</NonCompliantComment>
+    <CorrectiveComment>Ensure application-specific logging is enabled.</CorrectiveComment>
+    <Correction><![CDATA[grep -q '^org.apache.catalina.level' $CATALINA_HOME/conf/logging.properties && sed -i 's|^org.apache.catalina.level.*|org.apache.catalina.level = FINE|' $CATALINA_HOME/conf/logging.properties || echo 'org.apache.catalina.level = FINE' >> $CATALINA_HOME/conf/logging.properties; systemctl restart tomcat10]]></Correction>
+    <Verification><![CDATA[grep -q 'org.apache.catalina.level = FINE' $CATALINA_HOME/conf/logging.properties && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="7.2">
+    <Name>Specify File Handler for Logging (Automated)</Name>
+    <Chapter id="7">Configure Tomcat Application Logging</Chapter>
+    <Section id="7.2">Specify File Handler for Logging</Section>
+    <Profiles>
+      <Profile level="1" type="Server"/>
+      <Profile level="1" type="Workstation"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>logging.properties</FileName>
+    <NonCompliantComment>No file handler is specified for logging, which may result in logs not being saved to disk.</NonCompliantComment>
+    <CorrectiveComment>Specify a file handler for logging.</CorrectiveComment>
+    <Correction><![CDATA[echo "java.util.logging.FileHandler.pattern = $CATALINA_HOME/logs/tomcat.log" >> $CATALINA_HOME/conf/logging.properties; systemctl restart tomcat10]]></Correction>
+    <Verification><![CDATA[grep -q 'java.util.logging.FileHandler.pattern' $CATALINA_HOME/conf/logging.properties && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="7.3">
+    <Name>Set Logger className in context.xml (Automated)</Name>
+    <Chapter id="7">Configure Tomcat Application Logging</Chapter>
+    <Section id="7.3">Set Logger className in context.xml</Section>
+    <Profiles>
+      <Profile level="1" type="Server"/>
+      <Profile level="1" type="Workstation"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>context.xml</FileName>
+    <NonCompliantComment>The className attribute for logging is not set correctly in context.xml, which may prevent correct logging.</NonCompliantComment>
+    <CorrectiveComment>Ensure the className is set correctly for logging in context.xml.</CorrectiveComment>
+    <Correction><![CDATA[grep -q '<Logger' $CATALINA_HOME/conf/context.xml && sed -i '/<Logger/ s|<Logger|<Logger className="org.apache.catalina.logger.FileLogger"|' $CATALINA_HOME/conf/context.xml || sed -i '/<\/Context>/i <Logger className="org.apache.catalina.logger.FileLogger" directory="logs" prefix="catalina." suffix=".log" timestamp="true"/>' $CATALINA_HOME/conf/context.xml; systemctl restart tomcat10]]></Correction>
+    <Verification><![CDATA[grep -q 'className="org.apache.catalina.logger.FileLogger"' $CATALINA_HOME/conf/context.xml && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="7.4">
+    <Name>Set Logger Directory to Secure Location in context.xml (Manual)</Name>
+    <Chapter id="7">Configure Tomcat Application Logging</Chapter>
+    <Section id="7.4">Set Logger Directory to Secure Location</Section>
+    <Profiles>
+      <Profile level="1" type="Server"/>
+      <Profile level="1" type="Workstation"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>context.xml</FileName>
+    <NonCompliantComment>The logging directory specified in context.xml is not a secure location, which may allow unauthorized access.</NonCompliantComment>
+    <CorrectiveComment>Ensure the logging directory in context.xml is set to a secure location.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="7.5">
+    <Name>Ensure Logging Pattern is Correct (Automated)</Name>
+    <Chapter id="7">Configure Tomcat Application Logging</Chapter>
+    <Section id="7.5">Ensure Logging Pattern is Correct</Section>
+    <Profiles>
+      <Profile level="1" type="Server"/>
+      <Profile level="1" type="Workstation"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>context.xml</FileName>
+    <NonCompliantComment>The logging pattern in context.xml is not set correctly, which may result in incomplete log information.</NonCompliantComment>
+    <CorrectiveComment>Ensure the logging pattern in context.xml is correct.</CorrectiveComment>
+    <Correction><![CDATA[grep -q 'pattern=' $CATALINA_HOME/conf/context.xml && sed -i 's|pattern="[^"]*"|pattern="%h %l %u %t \"%r\" %s %b"|' $CATALINA_HOME/conf/context.xml || sed -i '/<Logger / s|<Logger|<Logger pattern="%h %l %u %t \"%r\" %s %b"|' $CATALINA_HOME/conf/context.xml; systemctl restart tomcat10]]></Correction>
+    <Verification><![CDATA[grep -Eq 'pattern="%h %l %u %t (&quot;|")%r(&quot;|") %s %b"' $CATALINA_HOME/conf/context.xml && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="7.6">
+    <Name>Set Logging Directory to Secure Location in logging.properties (Manual)</Name>
+    <Chapter id="7">Configure Tomcat Application Logging</Chapter>
+    <Section id="7.6">Set Logging Directory to Secure Location in logging.properties</Section>
+    <Profiles>
+      <Profile level="1" type="Server"/>
+      <Profile level="1" type="Workstation"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>logging.properties</FileName>
+    <NonCompliantComment>The directory specified in logging.properties for log files is not a secure location.</NonCompliantComment>
+    <CorrectiveComment>Ensure the directory specified in logging.properties is a secure location.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+</RulesCIS>

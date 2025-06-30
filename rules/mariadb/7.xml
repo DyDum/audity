@@ -1,5 +1,11 @@
 <RulesCIS>
-    <Rule id="7.1">
+  <Rule id="7.1">
+    <Name>Disable mysql_old_password Plugin (Automated)</Name>
+    <Chapter id="7">MariaDB Authentication and Access Control</Chapter>
+    <Section id="7.1">Disable mysql_old_password Plugin</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>The 'mysql_old_password' plugin is enabled, which may allow the use of weak password hashing algorithms.</NonCompliantComment>
@@ -10,6 +16,12 @@
   </Rule>
 
   <Rule id="7.2">
+    <Name>Remove Passwords from Global Configuration (Automated)</Name>
+    <Chapter id="7">MariaDB Authentication and Access Control</Chapter>
+    <Section id="7.2">Remove Passwords from Global Configuration</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>Passwords are stored in the global configuration, which may expose them to unauthorized users.</NonCompliantComment>
@@ -20,6 +32,12 @@
   </Rule>
 
   <Rule id="7.3">
+    <Name>Use Strong Authentication Mechanisms (Automated)</Name>
+    <Chapter id="7">MariaDB Authentication and Access Control</Chapter>
+    <Section id="7.3">Use Strong Authentication Mechanisms</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>Weak authentication mechanisms are used for user accounts, increasing security risks.</NonCompliantComment>
@@ -30,6 +48,12 @@
   </Rule>
 
   <Rule id="7.4">
+    <Name>Enforce Password Complexity Policies (Automated)</Name>
+    <Chapter id="7">MariaDB Authentication and Access Control</Chapter>
+    <Section id="7.4">Enforce Password Complexity Policies</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>No password complexity policies are enforced, which may allow weak passwords.</NonCompliantComment>
@@ -40,6 +64,12 @@
   </Rule>
 
   <Rule id="7.5">
+    <Name>Restrict Wildcard Hostnames for Users (Automated)</Name>
+    <Chapter id="7">MariaDB Authentication and Access Control</Chapter>
+    <Section id="7.5">Restrict Wildcard Hostnames for Users</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>mysql.user</FileName>
     <NonCompliantComment>Users have wildcard hostnames, which may allow unauthorized access.</NonCompliantComment>
@@ -50,6 +80,12 @@
   </Rule>
 
   <Rule id="7.6">
+    <Name>Remove Anonymous Accounts (Automated)</Name>
+    <Chapter id="7">MariaDB Authentication and Access Control</Chapter>
+    <Section id="7.6">Remove Anonymous Accounts</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>mysql.user</FileName>
     <NonCompliantComment>Anonymous accounts exist, which may allow unauthorized access.</NonCompliantComment>
@@ -60,6 +96,13 @@
   </Rule>
 
   <Rule id="7.7">
+    <Name>Enforce Password Reuse Policy (Automated)</Name>
+    <Chapter id="7">MariaDB Authentication and Access Control</Chapter>
+    <Section id="7.7">Enforce Password Reuse Policy</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>Passwords can be reused without restriction, which may weaken account security.</NonCompliantComment>

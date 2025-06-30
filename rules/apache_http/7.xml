@@ -1,115 +1,228 @@
 <RulesCIS>
   <Rule id="7.1">
+    <Name>Ensure mod_ssl and/or mod_nss is installed (Automated)</Name>
+    <Chapter id="7">SSL/TLS Configuration</Chapter>
+    <Section id="7.1">Module Installation</Section>
+    <SubSection id="7.1.1">mod_ssl and mod_nss</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/httpd/conf.d</BasePath>
     <FileName>ssl.conf</FileName>
     <NonCompliantComment>mod_ssl and mod_nss are not installed or enabled.</NonCompliantComment>
     <CorrectiveComment>Install and enable mod_ssl and/or mod_nss using your package manager.</CorrectiveComment>
-    <Correction>yum install mod_ssl -y || apt-get install libapache2-mod-ssl -y; systemctl restart httpd</Correction>
-    <Verification>httpd -M | grep -q "ssl_module" &amp;&amp; echo 0 || echo 1</Verification>
-    <Manual>NO</Manual>
+    <Verification><![CDATA[httpd -M | grep -q "ssl_module" && echo 0 || echo 1]]></Verification>
+    <Manual>CORRECTION</Manual>
   </Rule>
+
   <Rule id="7.2">
+    <Name>Ensure a valid trusted certificate is installed (Manual)</Name>
+    <Chapter id="7">SSL/TLS Configuration</Chapter>
+    <Section id="7.2">Certificate Installation</Section>
+    <SubSection id="7.2.1">Trusted SSL Certificate</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/ssl/certs</BasePath>
     <FileName>server.crt</FileName>
     <NonCompliantComment>No valid trusted SSL certificate is installed.</NonCompliantComment>
     <CorrectiveComment>Install a valid SSL certificate signed by a trusted CA with an appropriate common name.</CorrectiveComment>
-    <Correction>Manual installation required; obtain and install a trusted certificate.</Correction>
-    <Verification>openssl x509 -in /etc/ssl/certs/server.crt -noout -subject &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[Manual installation required; obtain and install a trusted certificate.]]></Correction>
+    <Verification><![CDATA[openssl x509 -in /etc/ssl/certs/server.crt -noout -subject && echo 0 || echo 1]]></Verification>
     <Manual>CORRECTION</Manual>
   </Rule>
+
   <Rule id="7.3">
+    <Name>Ensure private key permissions are correctly set (Automated)</Name>
+    <Chapter id="7">SSL/TLS Configuration</Chapter>
+    <Section id="7.3">Private Key Protection</Section>
+    <SubSection id="7.3.1">Key File Permissions</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/ssl/private</BasePath>
     <FileName>server.key</FileName>
     <NonCompliantComment>The server's private key is not adequately protected.</NonCompliantComment>
     <CorrectiveComment>Set ownership to root and permissions to 400 on the private key.</CorrectiveComment>
-    <Correction>chown root:root /etc/ssl/private/server.key; chmod 400 /etc/ssl/private/server.key</Correction>
-    <Verification>stat -c "%a" /etc/ssl/private/server.key | grep -q "^400$" &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[chown root:root /etc/ssl/private/server.key; chmod 400 /etc/ssl/private/server.key]]></Correction>
+    <Verification><![CDATA[stat -c "%a" /etc/ssl/private/server.key | grep -q "^400$" && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
+
   <Rule id="7.4">
+    <Name>Ensure TLSv1.0 and TLSv1.1 are disabled (Automated)</Name>
+    <Chapter id="7">SSL/TLS Configuration</Chapter>
+    <Section id="7.4">Protocol Configuration</Section>
+    <SubSection id="7.4.1">TLS Protocol Versions</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/httpd/conf.d</BasePath>
     <FileName>ssl.conf</FileName>
     <NonCompliantComment>TLSv1.0 and TLSv1.1 protocols are enabled.</NonCompliantComment>
     <CorrectiveComment>Disable TLSv1.0 and TLSv1.1, enabling only TLSv1.2 and TLSv1.3.</CorrectiveComment>
-    <Correction>sed -i 's/^SSLProtocol .*/SSLProtocol +TLSv1.2 +TLSv1.3/' /etc/httpd/conf.d/ssl.conf; systemctl restart httpd</Correction>
-    <Verification>grep '^SSLProtocol' /etc/httpd/conf.d/ssl.conf | grep -q "+TLSv1.2" &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[sed -i 's|^SSLProtocol .*|SSLProtocol +TLSv1.2 +TLSv1.3|' /usr/local/apache2/conf/extra/httpd-ssl.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
+    <Verification><![CDATA[grep '^SSLProtocol' /usr/local/apache2/conf/extra/httpd-ssl.conf | grep -q '+TLSv1.2' && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
+
   <Rule id="7.5">
+    <Name>Ensure weak SSL/TLS ciphers are disabled (Automated)</Name>
+    <Chapter id="7">SSL/TLS Configuration</Chapter>
+    <Section id="7.5">Cipher Suites</Section>
+    <SubSection id="7.5.1">Disable Weak Ciphers</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/httpd/conf.d</BasePath>
     <FileName>ssl.conf</FileName>
     <NonCompliantComment>Weak SSL/TLS ciphers are enabled.</NonCompliantComment>
     <CorrectiveComment>Configure the SSLCipherSuite to disable weak ciphers.</CorrectiveComment>
-    <Correction>sed -i 's/^SSLCipherSuite .*/SSLCipherSuite HIGH:!aNULL:!MD5:!3DES/' /etc/httpd/conf.d/ssl.conf; systemctl restart httpd</Correction>
-    <Verification>grep '^SSLCipherSuite' /etc/httpd/conf.d/ssl.conf | grep -q "HIGH:!aNULL:!MD5:!3DES" &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[sed -i 's|^SSLCipherSuite .*|SSLCipherSuite HIGH:!aNULL:!MD5:!3DES|' /usr/local/apache2/conf/extra/httpd-ssl.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
+    <Verification><![CDATA[grep '^SSLCipherSuite' /usr/local/apache2/conf/extra/httpd-ssl.conf | grep -q "HIGH:!aNULL:!MD5:!3DES" && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
+
   <Rule id="7.6">
+    <Name>Ensure insecure SSL renegotiation is disabled (Automated)</Name>
+    <Chapter id="7">SSL/TLS Configuration</Chapter>
+    <Section id="7.6">Renegotiation</Section>
+    <SubSection id="7.6.1">SSL Renegotiation</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/httpd/conf.d</BasePath>
     <FileName>ssl.conf</FileName>
     <NonCompliantComment>Insecure SSL renegotiation is enabled.</NonCompliantComment>
     <CorrectiveComment>Disable insecure SSL renegotiation.</CorrectiveComment>
-    <Correction>sed -i 's/^SSLInsecureRenegotiation .*/SSLInsecureRenegotiation off/' /etc/httpd/conf.d/ssl.conf; systemctl restart httpd</Correction>
-    <Verification>grep '^SSLInsecureRenegotiation off' /etc/httpd/conf.d/ssl.conf &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[grep -q "^SSLInsecureRenegotiation" /usr/local/apache2/conf/extra/httpd-ssl.conf && sed -i 's|^SSLInsecureRenegotiation.*|SSLInsecureRenegotiation off|' /usr/local/apache2/conf/extra/httpd-ssl.conf || echo 'SSLInsecureRenegotiation off' >> /usr/local/apache2/conf/extra/httpd-ssl.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
+    <Verification><![CDATA[grep -q '^SSLInsecureRenegotiation off' /usr/local/apache2/conf/extra/httpd-ssl.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
+
   <Rule id="7.7">
+    <Name>Ensure SSL compression is disabled (Automated)</Name>
+    <Chapter id="7">SSL/TLS Configuration</Chapter>
+    <Section id="7.7">Compression</Section>
+    <SubSection id="7.7.1">SSL Compression</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/httpd/conf.d</BasePath>
     <FileName>ssl.conf</FileName>
     <NonCompliantComment>SSL compression is enabled.</NonCompliantComment>
     <CorrectiveComment>Disable SSL compression.</CorrectiveComment>
-    <Correction>sed -i 's/^SSLCompression .*/SSLCompression off/' /etc/httpd/conf.d/ssl.conf; systemctl restart httpd</Correction>
-    <Verification>grep '^SSLCompression off' /etc/httpd/conf.d/ssl.conf &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[grep -q "^SSLCompression" /usr/local/apache2/conf/extra/httpd-ssl.conf && sed -i 's|^SSLCompression.*|SSLCompression off|' /usr/local/apache2/conf/extra/httpd-ssl.conf || echo 'SSLCompression off' >> /usr/local/apache2/conf/extra/httpd-ssl.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
+    <Verification><![CDATA[grep '^SSLCompression off' /usr/local/apache2/conf/extra/httpd-ssl.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
+
   <Rule id="7.8">
+    <Name>Ensure medium strength SSL/TLS ciphers are disabled (Automated)</Name>
+    <Chapter id="7">SSL/TLS Configuration</Chapter>
+    <Section id="7.8">Cipher Suites</Section>
+    <SubSection id="7.8.1">Disable Medium Strength Ciphers</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/httpd/conf.d</BasePath>
     <FileName>ssl.conf</FileName>
     <NonCompliantComment>Medium strength SSL/TLS ciphers are enabled.</NonCompliantComment>
     <CorrectiveComment>Disable medium strength ciphers by adjusting the SSLCipherSuite.</CorrectiveComment>
-    <Correction>sed -i 's/^SSLCipherSuite .*/SSLCipherSuite HIGH:!aNULL:!MD5:!3DES:!RC4:!MEDIUM/' /etc/httpd/conf.d/ssl.conf; systemctl restart httpd</Correction>
-    <Verification>grep '^SSLCipherSuite' /etc/httpd/conf.d/ssl.conf | grep -q "!MEDIUM" &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[sed -i 's/^SSLCipherSuite .*/SSLCipherSuite HIGH:!aNULL:!MD5:!3DES:!RC4:!MEDIUM/' /usr/local/apache2/conf/extra/httpd-ssl.conf;/usr/local/apache2/bin/apachectl restart]]></Correction>
+    <Verification><![CDATA[grep '^SSLCipherSuite' /usr/local/apache2/conf/extra/httpd-ssl.conf | grep -q '!MEDIUM' && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
+
   <Rule id="7.9">
+    <Name>Ensure all HTTP requests are redirected to HTTPS (Automated)</Name>
+    <Chapter id="7">SSL/TLS Configuration</Chapter>
+    <Section id="7.9">Redirect HTTP to HTTPS</Section>
+    <SubSection id="7.9.1">HTTPS Enforcement</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/httpd/conf</BasePath>
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>Not all web content is forced to be accessed via HTTPS.</NonCompliantComment>
     <CorrectiveComment>Configure rewrite rules to redirect HTTP requests to HTTPS.</CorrectiveComment>
-    <Correction>
-      echo "RewriteEngine On" &gt;&gt; /etc/httpd/conf/httpd.conf; 
-      echo "RewriteCond %{HTTPS} !=on" &gt;&gt; /etc/httpd/conf/httpd.conf; 
-      echo "RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]" &gt;&gt; /etc/httpd/conf/httpd.conf; 
-      systemctl restart httpd
-    </Correction>
-    <Verification>grep -q "RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI}" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[echo "RewriteEngine On" >> /usr/local/apache2/conf/httpd.conf; echo "RewriteCond %{HTTPS} !=on" >> /usr/local/apache2/conf/httpd.conf; echo "RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]" >> /usr/local/apache2/conf/httpd.conf;/usr/local/apache2/bin/apachectl restart]]></Correction>
+    <Verification><![CDATA[grep -q "RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI}" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
+
   <Rule id="7.10">
+    <Name>Ensure OCSP Stapling is enabled (Automated)</Name>
+    <Chapter id="7">SSL/TLS Configuration</Chapter>
+    <Section id="7.10">OCSP Stapling</Section>
+    <SubSection id="7.10.1">OCSP Stapling Configuration</SubSection>
+
+    <Profiles>
+      <Profile level="2" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/httpd/conf.d</BasePath>
     <FileName>ssl.conf</FileName>
     <NonCompliantComment>OCSP Stapling is not enabled.</NonCompliantComment>
     <CorrectiveComment>Enable OCSP Stapling in the SSL configuration.</CorrectiveComment>
-    <Correction>sed -i 's/^#SSLOCSPStapling .*/SSLOCSPStapling On/' /etc/httpd/conf.d/ssl.conf; systemctl restart httpd</Correction>
-    <Verification>grep '^SSLOCSPStapling On' /etc/httpd/conf.d/ssl.conf &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[grep -q "^SSLOCSPStapling" /usr/local/apache2/conf/extra/httpd-ssl.conf && sed -i 's|^#\?SSLOCSPStapling.*|SSLOCSPStapling On|' /usr/local/apache2/conf/extra/httpd-ssl.conf || echo 'SSLOCSPStapling On' >> /usr/local/apache2/conf/extra/httpd-ssl.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
+    <Verification><![CDATA[grep '^SSLOCSPStapling On' /usr/local/apache2/conf/extra/httpd-ssl.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
+
   <Rule id="7.11">
+    <Name>Ensure HTTP Strict-Transport-Security (HSTS) is enabled (Automated)</Name>
+    <Chapter id="7">SSL/TLS Configuration</Chapter>
+    <Section id="7.11">HSTS</Section>
+    <SubSection id="7.11.1">HSTS Configuration</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/httpd/conf</BasePath>
     <FileName>httpd.conf</FileName>
     <NonCompliantComment>HTTP Strict Transport Security (HSTS) is not enabled.</NonCompliantComment>
     <CorrectiveComment>Configure HSTS by adding the Strict-Transport-Security header.</CorrectiveComment>
-    <Correction>echo "Header always set Strict-Transport-Security &quot;max-age=63072000; includeSubDomains&quot;" &gt;&gt; /etc/httpd/conf/httpd.conf; systemctl restart httpd</Correction>
-    <Verification>grep -q "Strict-Transport-Security" /etc/httpd/conf/httpd.conf &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[echo "Header always set Strict-Transport-Security \"max-age=63072000; includeSubDomains\"" >> /usr/local/apache2/conf/httpd.conf;/usr/local/apache2/bin/apachectl restart]]></Correction>
+    <Verification><![CDATA[grep -q "Strict-Transport-Security" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
+
   <Rule id="7.12">
+    <Name>Ensure only cipher suites with forward secrecy are allowed (Automated)</Name>
+    <Chapter id="7">SSL/TLS Configuration</Chapter>
+    <Section id="7.12">Forward Secrecy</Section>
+    <SubSection id="7.12.1">Forward Secrecy Cipher Suites</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+
     <BasePath>/etc/httpd/conf.d</BasePath>
     <FileName>ssl.conf</FileName>
     <NonCompliantComment>Cipher suites that do not provide forward secrecy are enabled.</NonCompliantComment>
     <CorrectiveComment>Configure the SSLCipherSuite to allow only ciphers that provide forward secrecy.</CorrectiveComment>
-    <Correction>sed -i 's/^SSLCipherSuite .*/SSLCipherSuite HIGH:!aNULL:!MD5:!3DES:!RC4:!MEDIUM:!DES:!EXPORT/' /etc/httpd/conf.d/ssl.conf; systemctl restart httpd</Correction>
-    <Verification>grep '^SSLCipherSuite' /etc/httpd/conf.d/ssl.conf | grep -q "!EXPORT" &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[sed -i 's/^SSLCipherSuite .*/SSLCipherSuite HIGH:!aNULL:!MD5:!3DES:!RC4:!MEDIUM:!DES:!EXPORT/' /usr/local/apache2/conf/extra/httpd-ssl.conf;/usr/local/apache2/bin/apachectl restart]]></Correction>
+    <Verification><![CDATA[grep '^SSLCipherSuite' /usr/local/apache2/conf/extra/httpd-ssl.conf | grep -q '!EXPORT' && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 </RulesCIS>

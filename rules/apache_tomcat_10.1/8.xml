@@ -1,0 +1,18 @@
+<RulesCIS>
+  <Rule id="8.1">
+    <Name>Restrict Runtime Access to Sensitive Packages (Automated)</Name>
+    <Chapter id="8">Configure Tomcat Security Manager and Permissions</Chapter>
+    <Section id="8.1">Restrict Runtime Access to Sensitive Packages</Section>
+    <Profiles>
+      <Profile level="2" type="Server"/>
+      <Profile level="2" type="Workstation"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>catalina.policy</FileName>
+    <NonCompliantComment>Runtime access to sensitive packages is not restricted, which may allow unauthorized code execution or manipulation of critical Java classes.</NonCompliantComment>
+    <CorrectiveComment>Restrict runtime access to sensitive packages.</CorrectiveComment>
+    <Correction><![CDATA[sed -i '/grant codeBase "file:${catalina.home}\/webapps\/-"/a permission java.lang.RuntimePermission "accessClassInPackage.sun.*", "deny"; permission java.lang.RuntimePermission "accessClassInPackage.com.sun.*", "deny"; permission java.lang.RuntimePermission "accessClassInPackage.org.apache.catalina.*", "deny";' $CATALINA_HOME/policy/catalina.policy]]></Correction>
+    <Verification><![CDATA[grep -qE 'accessClassInPackage.sun|accessClassInPackage.com|accessClassInPackage.org.apache.catalina' $CATALINA_HOME/policy/catalina.policy && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+</RulesCIS>

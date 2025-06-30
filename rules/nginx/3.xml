@@ -1,5 +1,13 @@
 <RulesCIS>
   <Rule id="3.1">
+    <Name>Ensure Detailed Logging is Enabled (Automated)</Name>
+    <Chapter id="3">Logging and Auditing</Chapter>
+    <Section id="3.1">Ensure Detailed Logging is Enabled</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Detailed logging is not enabled, which reduces the ability to detect and investigate security incidents.</NonCompliantComment>
@@ -10,6 +18,14 @@
   </Rule>
 
   <Rule id="3.2">
+    <Name>Ensure Access Logging is Enabled (Automated)</Name>
+    <Chapter id="3">Logging and Auditing</Chapter>
+    <Section id="3.2">Ensure Access Logging is Enabled</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Access logging is not enabled, which prevents the monitoring of HTTP requests.</NonCompliantComment>
@@ -20,6 +36,14 @@
   </Rule>
 
   <Rule id="3.3">
+    <Name>Ensure Error Logging is Set to Info (Automated)</Name>
+    <Chapter id="3">Logging and Auditing</Chapter>
+    <Section id="3.3">Ensure Error Logging is Set to Info</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Error logging is not set to "info" level, reducing the ability to debug and monitor issues.</NonCompliantComment>
@@ -30,6 +54,14 @@
   </Rule>
 
   <Rule id="3.4">
+    <Name>Ensure Log Files Are Rotated (Automated)</Name>
+    <Chapter id="3">Logging and Auditing</Chapter>
+    <Section id="3.4">Ensure Log Files Are Rotated</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/logrotate.d/</BasePath>
     <FileName>nginx</FileName>
     <NonCompliantComment>Log files are not rotated, which can lead to disk space exhaustion.</NonCompliantComment>
@@ -40,6 +72,14 @@
   </Rule>
 
   <Rule id="3.5">
+    <Name>Ensure Error Logs Are Sent to a Remote Syslog Server (Automated)</Name>
+    <Chapter id="3">Logging and Auditing</Chapter>
+    <Section id="3.5">Ensure Error Logs Are Sent to a Remote Syslog Server</Section>
+    <Profiles>
+      <Profile level="2" type="Webserver"/>
+      <Profile level="2" type="Proxy"/>
+      <Profile level="2" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Error logs are not sent to a remote syslog server, which can result in loss of logs during an incident.</NonCompliantComment>
@@ -50,6 +90,14 @@
   </Rule>
 
   <Rule id="3.6">
+    <Name>Ensure Access Logs Are Sent to a Remote Syslog Server (Automated)</Name>
+    <Chapter id="3">Logging and Auditing</Chapter>
+    <Section id="3.6">Ensure Access Logs Are Sent to a Remote Syslog Server</Section>
+    <Profiles>
+      <Profile level="2" type="Webserver"/>
+      <Profile level="2" type="Proxy"/>
+      <Profile level="2" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Access logs are not sent to a remote syslog server, which can result in loss of logs during an incident.</NonCompliantComment>
@@ -60,6 +108,13 @@
   </Rule>
 
   <Rule id="3.7">
+    <Name>Ensure Proxies Pass Source IP Information (Automated)</Name>
+    <Chapter id="3">Logging and Auditing</Chapter>
+    <Section id="3.7">Ensure Proxies Pass Source IP Information</Section>
+    <Profiles>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
     <BasePath>/etc/nginx/</BasePath>
     <FileName>nginx.conf</FileName>
     <NonCompliantComment>Proxies do not pass source IP information, making it difficult to trace client requests.</NonCompliantComment>

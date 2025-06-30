@@ -1,5 +1,11 @@
 <RulesCIS>
-    <Rule id="9.1">
+  <Rule id="9.1">
+    <Name>Encrypt Replication Traffic (Automated)</Name>
+    <Chapter id="9">MariaDB Replication Security</Chapter>
+    <Section id="9.1">Encrypt Replication Traffic</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>Replication traffic is not encrypted, which may expose sensitive data to interception.</NonCompliantComment>
@@ -10,6 +16,12 @@
   </Rule>
 
   <Rule id="9.2">
+    <Name>Verify SSL Server Certificate (Automated)</Name>
+    <Chapter id="9">MariaDB Replication Security</Chapter>
+    <Section id="9.2">Verify SSL Server Certificate</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>The 'MASTER_SSL_VERIFY_SERVER_CERT' setting is disabled, which may allow untrusted SSL certificates.</NonCompliantComment>
@@ -20,6 +32,12 @@
   </Rule>
 
   <Rule id="9.3">
+    <Name>Restrict SUPER Privilege for Replication Users (Automated)</Name>
+    <Chapter id="9">MariaDB Replication Security</Chapter>
+    <Section id="9.3">Restrict SUPER Privilege for Replication Users</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>mysql.user</FileName>
     <NonCompliantComment>Replication users have 'SUPER' privileges, which may allow them to perform unauthorized actions.</NonCompliantComment>
@@ -30,6 +48,13 @@
   </Rule>
 
   <Rule id="9.4">
+    <Name>Use Approved Ciphers for Replication (Automated)</Name>
+    <Chapter id="9">MariaDB Replication Security</Chapter>
+    <Section id="9.4">Use Approved Ciphers for Replication</Section>
+    <Profiles>
+      <Profile level="2" type="MariaDB RDBMS"/>
+      <Profile level="2" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>Weak or unapproved ciphers are used for replication, reducing the security of the connection.</NonCompliantComment>
@@ -40,6 +65,12 @@
   </Rule>
 
   <Rule id="9.5">
+    <Name>Enable Mutual TLS for Replication (Automated)</Name>
+    <Chapter id="9">MariaDB Replication Security</Chapter>
+    <Section id="9.5">Enable Mutual TLS for Replication</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>Mutual TLS is not enabled for replication, which may allow unauthenticated connections.</NonCompliantComment>

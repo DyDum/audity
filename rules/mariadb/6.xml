@@ -1,5 +1,11 @@
 <RulesCIS>
-    <Rule id="6.1">
+  <Rule id="6.1">
+    <Name>Configure log_error Parameter (Automated)</Name>
+    <Chapter id="6">MariaDB Logging and Auditing</Chapter>
+    <Section id="6.1">Configure log_error Parameter</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>The 'log_error' parameter is not configured correctly, which may result in missing error logs.</NonCompliantComment>
@@ -10,6 +16,12 @@
   </Rule>
 
   <Rule id="6.2">
+    <Name>Store Logs on Separate Partition (Automated)</Name>
+    <Chapter id="6">MariaDB Logging and Auditing</Chapter>
+    <Section id="6.2">Store Logs on Separate Partition</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
     <BasePath>/var/log/mysql/</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>Log files are stored on the system partition, which may cause disk space exhaustion or unauthorized access.</NonCompliantComment>
@@ -20,6 +32,13 @@
   </Rule>
 
   <Rule id="6.3">
+    <Name>Set log_warnings to 2 (Automated)</Name>
+    <Chapter id="6">MariaDB Logging and Auditing</Chapter>
+    <Section id="6.3">Set log_warnings to 2</Section>
+    <Profiles>
+      <Profile level="2" type="MariaDB RDBMS"/>
+      <Profile level="2" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>The 'log_warnings' parameter is not set to '2', which may reduce logging verbosity.</NonCompliantComment>
@@ -30,6 +49,13 @@
   </Rule>
 
   <Rule id="6.4">
+    <Name>Enable Audit Logging Plugin (Automated)</Name>
+    <Chapter id="6">MariaDB Logging and Auditing</Chapter>
+    <Section id="6.4">Enable Audit Logging Plugin</Section>
+    <Profiles>
+      <Profile level="2" type="MariaDB RDBMS"/>
+      <Profile level="2" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>Audit logging is not enabled, reducing visibility on database activities.</NonCompliantComment>
@@ -40,6 +66,12 @@
   </Rule>
 
   <Rule id="6.5">
+    <Name>Prevent Audit Plugin Unloading (Automated)</Name>
+    <Chapter id="6">MariaDB Logging and Auditing</Chapter>
+    <Section id="6.5">Prevent Audit Plugin Unloading</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>The audit plugin can be unloaded, which may allow attackers to disable logging.</NonCompliantComment>
@@ -50,6 +82,13 @@
   </Rule>
 
   <Rule id="6.6">
+    <Name>Encrypt Binary and Relay Logs (Automated)</Name>
+    <Chapter id="6">MariaDB Logging and Auditing</Chapter>
+    <Section id="6.6">Encrypt Binary and Relay Logs</Section>
+    <Profiles>
+      <Profile level="2" type="MariaDB RDBMS"/>
+      <Profile level="2" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
     <BasePath>/etc/mysql/</BasePath>
     <FileName>my.cnf</FileName>
     <NonCompliantComment>Binary and relay logs are not encrypted, which may expose sensitive data.</NonCompliantComment>

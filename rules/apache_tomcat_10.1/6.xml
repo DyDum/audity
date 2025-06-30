@@ -1,0 +1,84 @@
+<RulesCIS>
+  <Rule id="6.1">
+    <Name>Enable Client Certificate Authentication for HTTPS (Manual)</Name>
+    <Chapter id="6">Configure Tomcat Secure Communication (SSL/TLS)</Chapter>
+    <Section id="6.1">Enable Client Certificate Authentication for HTTPS</Section>
+    <Profiles>
+      <Profile level="2" type="Server"/>
+      <Profile level="2" type="Workstation"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>server.xml</FileName>
+    <NonCompliantComment>Client-cert authentication is not enabled for sensitive connectors, which may expose the server to unauthorized access.</NonCompliantComment>
+    <CorrectiveComment>Setup client-cert authentication for secure connectors.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="6.2">
+    <Name>Enable SSLEnabled attribute for HTTPS Connectors (Automated)</Name>
+    <Chapter id="6">Configure Tomcat Secure Communication (SSL/TLS)</Chapter>
+    <Section id="6.2">Enable SSLEnabled attribute</Section>
+    <Profiles>
+      <Profile level="1" type="Server"/>
+      <Profile level="1" type="Workstation"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>server.xml</FileName>
+    <NonCompliantComment>The SSLEnabled attribute is not set to 'true' for sensitive connectors, which may allow unencrypted communications.</NonCompliantComment>
+    <CorrectiveComment>Ensure SSLEnabled is set to 'true' for sensitive connectors.</CorrectiveComment>
+    <Correction><![CDATA[sed -i '/<Connector/s/SSLEnabled="false"/SSLEnabled="true"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat10]]></Correction>
+    <Verification><![CDATA[grep 'SSLEnabled="true"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="6.3">
+    <Name>Set scheme attribute to HTTPS for secure connectors (Automated)</Name>
+    <Chapter id="6">Configure Tomcat Secure Communication (SSL/TLS)</Chapter>
+    <Section id="6.3">Set scheme attribute to HTTPS</Section>
+    <Profiles>
+      <Profile level="1" type="Server"/>
+      <Profile level="1" type="Workstation"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>server.xml</FileName>
+    <NonCompliantComment>The scheme attribute for connectors is not set accurately, which may lead to insecure configurations.</NonCompliantComment>
+    <CorrectiveComment>Ensure the scheme is set accurately (e.g., "https" for secure connectors).</CorrectiveComment>
+    <Correction><![CDATA[grep -q 'scheme=' $CATALINA_HOME/conf/server.xml && sed -i 's|scheme="[^"]*"|scheme="https"|' $CATALINA_HOME/conf/server.xml || sed -i '/<Connector/ s|<Connector|<Connector scheme="https"|' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat10]]></Correction>
+    <Verification><![CDATA[grep -q 'scheme="https"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="6.4">
+    <Name>Set secure attribute to true for SSL-enabled connectors (Automated)</Name>
+    <Chapter id="6">Configure Tomcat Secure Communication (SSL/TLS)</Chapter>
+    <Section id="6.4">Set secure attribute to true for SSL-enabled connectors</Section>
+    <Profiles>
+      <Profile level="1" type="Server"/>
+      <Profile level="1" type="Workstation"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>server.xml</FileName>
+    <NonCompliantComment>The secure attribute is not set correctly, which may expose the server to insecure communications.</NonCompliantComment>
+    <CorrectiveComment>Ensure the secure attribute is set to true only for SSL-enabled connectors.</CorrectiveComment>
+    <Correction><![CDATA[grep -q 'secure=' $CATALINA_HOME/conf/server.xml && sed -i 's|secure="[^"]*"|secure="true"|' $CATALINA_HOME/conf/server.xml || sed -i '/<Connector/ s|<Connector|<Connector secure="true"|' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat10]]></Correction>
+    <Verification><![CDATA[grep -q 'secure="true"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="6.5">
+    <Name>Use Strong SSL Protocols (Automated)</Name>
+    <Chapter id="6">Configure Tomcat Secure Communication (SSL/TLS)</Chapter>
+    <Section id="6.5">Use Strong SSL Protocols</Section>
+    <Profiles>
+      <Profile level="1" type="Server"/>
+      <Profile level="1" type="Workstation"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>server.xml</FileName>
+    <NonCompliantComment>The 'sslProtocol' attribute is not configured correctly for secure connectors, which may allow weak SSL/TLS protocols.</NonCompliantComment>
+    <CorrectiveComment>Ensure 'sslProtocol' is configured correctly for secure connectors.</CorrectiveComment>
+    <Correction><![CDATA[grep -q 'sslProtocol=' $CATALINA_HOME/conf/server.xml && sed -i 's|sslProtocol="[^"]*"|sslProtocol="TLSv1.2"|' $CATALINA_HOME/conf/server.xml || sed -i '/<Connector/ s|<Connector|<Connector sslProtocol="TLSv1.2"|' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat10]]></Correction>
+    <Verification><![CDATA[grep -q 'sslProtocol="TLSv1.2"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+</RulesCIS>
