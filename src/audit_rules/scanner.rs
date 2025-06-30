@@ -34,13 +34,12 @@ pub enum ScanError {
     Ser(#[from] quick_xml::Error),
 }
 
-/// Convert any serialisable value to a pretty-printed XML string
-/// using four spaces per indentation level.
 pub fn pretty_xml<T: Serialize>(value: &T) -> Result<String, ScanError> {
     let mut buf = String::new();              // `String` implements `fmt::Write`
+
     let mut ser = Serializer::new(&mut buf);
-    ser.indent(' ', 4);                       // 4-space indentation
-    value.serialize(ser)?;                    // move the serializer into `serialize`
+    ser.indent(' ', 4); // 4-space indentation
+    value.serialize(ser)?; // move the serializer into `serialize`
     Ok(buf)
 }
 
@@ -57,7 +56,12 @@ pub fn scan_directory(dir: &str) -> Result<(), ScanError> {
     // Collect `*.xml` files and sort alphabetically
     let mut files: Vec<_> = fs::read_dir(dir)?
         .filter_map(Result::ok)
-        .filter(|e| e.path().extension().map(|ext| ext == "xml").unwrap_or(false))
+        .filter(|e| {
+            e.path()
+                .extension()
+                .map(|ext| ext == "xml")
+                .unwrap_or(false)
+        })
         .collect();
     files.sort_by_key(|e| e.file_name());
 
@@ -66,7 +70,14 @@ pub fn scan_directory(dir: &str) -> Result<(), ScanError> {
     // Parse each file and evaluate compliance
     for file in files {
         let raw = fs::read_to_string(file.path())?;
-        let local: RulesCis = from_str(&raw)?;
+
+        let local = match from_str::<RulesCis>(&raw) {
+            Ok(r) => r,
+            Err(e) => {
+                eprintln!("Erreur XML dans «{}» : {}", file.path().display(), e);
+                return Err(ScanError::Xml(e));
+            }
+        };
 
         for mut rule in local.rules {
             // Compliance decision
@@ -88,7 +99,7 @@ pub fn scan_directory(dir: &str) -> Result<(), ScanError> {
     fs::create_dir_all("reports")?;
 
     // Get the folder name from the path:
-    // e.g. "rules/debian" → "debian" 
+    // e.g. "rules/debian" → "debian"
     let folder_name = Path::new(dir)
         .file_name()
         .and_then(|s| s.to_str())

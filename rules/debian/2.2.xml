@@ -1,5 +1,12 @@
 <RulesCIS>
     <Rule id="2.2.1">
+        <Name>Ensure NIS Client is not installed (Automated)</Name>
+        <Chapter id="2">Services</Chapter>
+        <Section id="2.2">Configure Client Services</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/usr/bin/</BasePath>
         <FileName>nis</FileName>
         <NonCompliantComment>The NIS client is installed, increasing the potential attack surface.</NonCompliantComment>
@@ -8,7 +15,15 @@
         <Verification>dpkg -l | grep -q '^ii\s*nis\s' &amp;&amp; echo 1 || echo 0</Verification>
         <Manual>NO</Manual>
     </Rule>
+
     <Rule id="2.2.2">
+        <Name>Ensure rsh client is not installed (Automated)</Name>
+        <Chapter id="2">Services</Chapter>
+        <Section id="2.2">Configure Client Services</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/usr/bin/</BasePath>
         <FileName>rsh-client</FileName>
         <NonCompliantComment>The rsh client is installed, which may allow insecure remote shell access.</NonCompliantComment>
@@ -17,7 +32,15 @@
         <Verification>dpkg -l | grep -q '^ii\s*rsh-client\s' &amp;&amp; echo 1 || echo 0</Verification>
         <Manual>NO</Manual>
     </Rule>
+
     <Rule id="2.2.3">
+        <Name>Ensure talk client is not installed (Automated)</Name>
+        <Chapter id="2">Services</Chapter>
+        <Section id="2.2">Configure Client Services</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/usr/bin/</BasePath>
         <FileName>talk</FileName>
         <NonCompliantComment>The talk client is installed, which could be used for unauthorized communication.</NonCompliantComment>
@@ -26,7 +49,15 @@
         <Verification>dpkg -l | grep -q '^ii\s*talk\s' &amp;&amp; echo 1 || echo 0</Verification>
         <Manual>NO</Manual>
     </Rule>
+
     <Rule id="2.2.4">
+        <Name>Ensure telnet client is not installed (Automated)</Name>
+        <Chapter id="2">Services</Chapter>
+        <Section id="2.2">Configure Client Services</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/usr/bin/</BasePath>
         <FileName>telnet</FileName>
         <NonCompliantComment>The telnet client is installed, which transmits data in clear text.</NonCompliantComment>
@@ -35,7 +66,15 @@
         <Verification>dpkg -l | grep -q '^ii\s*telnet\s' &amp;&amp; echo 1 || echo 0</Verification>
         <Manual>NO</Manual>
     </Rule>
+
     <Rule id="2.2.5">
+        <Name>Ensure LDAP client is not installed (Automated)</Name>
+        <Chapter id="2">Services</Chapter>
+        <Section id="2.2">Configure Client Services</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/usr/bin/</BasePath>
         <FileName>ldap-utils</FileName>
         <NonCompliantComment>The LDAP client is installed, which may expose sensitive directory queries.</NonCompliantComment>
@@ -44,7 +83,15 @@
         <Verification>dpkg -l | grep -q '^ii\s*ldap-utils\s' &amp;&amp; echo 1 || echo 0</Verification>
         <Manual>NO</Manual>
     </Rule>
+
     <Rule id="2.2.6">
+        <Name>Ensure FTP client is not installed (Automated)</Name>
+        <Chapter id="2">Services</Chapter>
+        <Section id="2.2">Configure Client Services</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/usr/bin/</BasePath>
         <FileName>ftp</FileName>
         <NonCompliantComment>The FTP client is installed, which may transmit data insecurely.</NonCompliantComment>
