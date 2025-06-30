@@ -210,7 +210,7 @@
         </Profiles>
         <BasePath>/etc/pam.d/</BasePath>
         <FileName>common-password</FileName>
-        <NonCompliantComment><code>difok</code> (number of changed characters) is not enforced.</NonCompliantComment>
+        <NonCompliantComment>difok (number of changed characters) is not enforced.</NonCompliantComment>
         <CorrectiveComment>Set "difok=4".</CorrectiveComment>
         <Correction>sed -i '/pam_pwquality.so/ s/\(difok=\)[0-9]*/difok=4/; /pam_pwquality.so/!{s/pam_pwquality.so/pam_pwquality.so difok=4/}' /etc/pam.d/common-password</Correction>
         <Verification>grep -E "pam_pwquality\.so.*difok=4" /etc/pam.d/common-password &amp;&amp; echo 0 || echo 1</Verification>

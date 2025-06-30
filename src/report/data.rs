@@ -1,31 +1,34 @@
-//! Host inventory, CIS XML parsing and high-level statistics.
+//! Host inventory collection, CIS XML parsing and statistics aggregation.
 //!
-//! This module aggregates three concerns needed by the report layer:
-//! 1. **Host discovery**: collect basic runtime information (hostname, IP,
-//!    OS, kernel, hardware).
-//! 2. **CIS XML parsing**: read the `<RulesCIS>` document produced by the
-//!    scanner and convert it into Rust structs.
-//! 3. **Statistics**: compute global pass / fail ratios for display in the
-//!    HTML report.
-//!
-//! Only serialisable structures are exposed; the template engine (Askama)
-//! consumes them directly.
+//! The file is organised in four blocks:
+//! 1. **Public data structures** – exposed by the library.
+//! 2. **Private XML helpers** – low-level routines to parse the custom CIS XML.
+//! 3. **`HostInfo` implementation** – gathers live host information.
+//! 4. **`ReportData` builder** – turns a CIS XML file into a fully populated
+//!    `ReportData` instance ready for HTML rendering.
+
 use std::{
-    fs,
-    fs::File,
-    io::BufReader,
+    collections::HashMap,
+    fs::{self, File},
+    io::{BufRead, BufReader},
     path::Path,
 };
 
-use anyhow::Result;
+use anyhow::{Context, Result};
 use chrono::{DateTime, Local};
 use get_if_addrs::{get_if_addrs, IfAddr};
 use os_info;
-use quick_xml::de::from_reader;
+use quick_xml::{
+    de::from_reader,
+    events::{BytesStart, Event},
+    Reader,
+};
 use serde::Deserialize;
 use sys_info::{cpu_num, mem_info, os_release, hostname};
 
-/// High-level system résumé displayed at the top of the report.
+/* ───────────── host résumé & statistics ───────────── */
+
+/// Basic hardware / OS facts detected at runtime.
 #[derive(Debug, serde::Serialize)]
 pub struct HostInfo {
     pub hostname: String,
@@ -38,7 +41,7 @@ pub struct HostInfo {
     pub memory_mb: u64,
 }
 
-/// Global CIS statistics used for the coloured dashboard.
+/// Global compliance counters (absolute and percentage).
 #[derive(Debug, serde::Serialize)]
 pub struct Stats {
     pub total: usize,
@@ -50,67 +53,92 @@ pub struct Stats {
     pub percent_not_tested: u8,
 }
 
-/// Raw rule as it appears in the XML file (internal only).
-#[derive(Debug, Deserialize)]
-struct RuleRaw {
-    #[serde(rename = "@id")]
-    id: String,
-    #[serde(rename = "NonCompliantComment")]
-    description: Option<String>,
-    #[serde(rename = "CorrectiveComment")]
-    corrective: Option<String>,
-    #[serde(rename = "Correction")]
-    correction_cmd: Option<String>,
-    #[serde(rename = "Verification")]
-    verification: Option<String>,
-    #[serde(rename = "Compliant")]
-    compliant: String,
+/* ───────────────────── public API ───────────────────── */
+
+/// Heading appearing in the CIS document (chapter, section, …).
+#[derive(Debug, Clone, serde::Serialize)]
+pub struct Heading {
+    pub id: String,
+    pub name: String,
 }
 
-/// Wrapper for the root `<RulesCIS>` element (internal only).
-#[derive(Debug, Deserialize)]
-struct RulesCIS {
-    #[serde(rename = "Rule")]
-    rules: Vec<RuleRaw>,
+/// Profile metadata (level / type) attached to a rule.
+#[derive(Debug, Clone, serde::Serialize)]
+pub struct Profile {
+    pub level: u8,
+    #[serde(rename = "type")]
+    pub r#type: String,
 }
 
-/// Sanitised rule exported to the HTML template.
+/// One line of the HTML summary table (level 0→4).
+#[derive(Debug, serde::Serialize)]
+pub struct SummaryRow {
+    /// 0 = chapter, 1 = section, 2 = sub-section, 3 = sub-sub-section, 4 = rule.
+    pub level: u8,
+    /// Displayed text (e.g. `“1.2 – Disable root login”`).
+    pub label: String,
+    /// `Compliant`, `Non-compliant`, `Not tested` or `""` for headings.
+    pub status: String,
+    /// CSS class: `success`, `danger`, `warning` or `""` for headings.
+    pub class: String,
+    /// HTML anchor (rule id) or empty for headings.
+    pub anchor: String,
+}
+
+/// Fully parsed CIS `<Rule>` enriched with headings and profiles.
 #[derive(Debug, serde::Serialize)]
 pub struct Rule {
     pub id: String,
+    pub name: String,
+    pub chapter: Heading,
+    pub section: Heading,
+    pub subsection: Option<Heading>,
+    pub subsubsection: Option<Heading>,
+    pub profiles: Vec<Profile>,
     pub description: String,
     pub corrective: String,
     pub correction_cmd: String,
     pub manual_review: String,
 }
 
-/// Aggregate structure directly consumed by Askama.
+/// Top-level container returned by `ReportData::from_xml`.
 #[derive(Debug, serde::Serialize)]
 pub struct ReportData {
     pub profile_name: String,
     pub audit_time: DateTime<Local>,
     pub host_info: HostInfo,
     pub stats: Stats,
+    pub summary: Vec<SummaryRow>,
     pub non_compliant: Vec<Rule>,
     pub not_tested: Vec<Rule>,
     pub compliant: Vec<Rule>,
 }
 
-/* ───────────────────────── utilities ───────────────────────── */
+/* ───────── private XML helper structs (raw mapping) ───────── */
 
-/// Extract a “manual review required” message from a shell snippet.
+#[derive(Debug, Deserialize)]
+struct RuleRaw {
+    #[serde(rename = "@id")]
+    id: String,
+    #[serde(rename = "Compliant")]
+    compliant: String,
+    #[serde(rename = "Manual")]
+    manual: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct RulesCIS {
+    #[serde(rename = "Rule")]
+    rules: Vec<RuleRaw>,
+}
+
+/* ──────────────── small XML helper functions ─────────────── */
+
+/// Strip a known *“Manual review required:”* prefix from a shell snippet.
 ///
-/// Some correction/verification commands merely echo a message
-/// that asks the auditor to check the control manually.  
-/// This helper normalises those messages so that the UI can display
-/// them in a dedicated column.
-///
-/// * `text` – Full content of the `<Correction>` or `<Verification>` tag.
-///
-/// Returns `Some(message)` if a prefixed *echo* string is found,
+/// Returns `Some(pure_message)` if a recognised prefix is present,  
 /// otherwise `None`.
 fn extract_manual(text: &str) -> Option<String> {
-    // Known prefixes used by the benchmark authors.
     let prefixes = [
         r#"echo "Manual review required:"#,
         r#"echo "Manual configuration required:"#,
@@ -130,34 +158,189 @@ fn extract_manual(text: &str) -> Option<String> {
     None
 }
 
+/// Read the text content of the current XML element (handles `<![CDATA[…]]>`).
+fn read_text<R: BufRead>(reader: &mut Reader<R>, end: &[u8]) -> Result<String> {
+    let mut buf = Vec::new();
+    let mut out = String::new();
+    loop {
+        match reader.read_event_into(&mut buf)? {
+            Event::Text(t) => out.push_str(&t.unescape()?),
+            Event::CData(c) => out.push_str(&String::from_utf8_lossy(c.into_inner().as_ref())),
+            Event::End(e) if e.name().as_ref() == end => break,
+            Event::Eof => break,
+            _ => {}
+        }
+        buf.clear();
+    }
+    Ok(out.trim().to_owned())
+}
+
+/// Parse an XML heading (`<Chapter>`, `<Section>`, …) and return `(id, name)`.
+fn read_heading<R: BufRead>(reader: &mut Reader<R>, start: &BytesStart) -> Result<(String, String)> {
+    let id = start
+        .attributes()
+        .flatten()
+        .find(|a| a.key.as_ref() == b"id")
+        .map(|a| a.unescape_value().unwrap().to_string())
+        .unwrap_or_default();
+    Ok((id, read_text(reader, start.name().as_ref())?))
+}
+
+/// Collect all `<Profile>` sub-elements into a `Vec<Profile>`.
+fn collect_profiles<R: BufRead>(reader: &mut Reader<R>) -> Result<Vec<Profile>> {
+    let mut out = Vec::new();
+    let mut buf = Vec::new();
+    loop {
+        match reader.read_event_into(&mut buf)? {
+            Event::Start(t) if t.name().as_ref() == b"Profile" => {
+                let mut level = 0;
+                let mut typ = String::new();
+                for a in t.attributes().flatten() {
+                    match a.key.as_ref() {
+                        b"level" => level = a.unescape_value()?.parse()?,
+                        b"type" => typ = a.unescape_value()?.to_string(),
+                        _ => {}
+                    }
+                }
+                let _ = read_text(reader, b"Profile")?; // consume inner text
+                out.push(Profile { level, r#type: typ });
+            }
+            Event::End(e) if e.name().as_ref() == b"Profiles" => break,
+            Event::Eof => break,
+            _ => {}
+        }
+        buf.clear();
+    }
+    Ok(out)
+}
+
+/// Fully parse all `<Rule>` elements from a CIS XML file.
+fn parse_rules<P: AsRef<Path>>(path: P) -> Result<Vec<Rule>> {
+    let mut reader = Reader::from_reader(BufReader::new(File::open(path)?));
+    reader.trim_text(true);
+
+    let mut rules = Vec::new();
+    let mut buf = Vec::new();
+    let mut cur: Option<Rule> = None;
+
+    loop {
+        match reader.read_event_into(&mut buf)? {
+            // ───── rule start ─────
+            Event::Start(t) if t.name().as_ref() == b"Rule" => {
+                let id = t
+                    .attributes()
+                    .flatten()
+                    .find(|a| a.key.as_ref() == b"id")
+                    .context("Rule without id")?
+                    .unescape_value()?;
+                cur = Some(Rule {
+                    id: id.to_string(),
+                    name: String::new(),
+                    chapter: Heading { id: String::new(), name: String::new() },
+                    section: Heading { id: String::new(), name: String::new() },
+                    subsection: None,
+                    subsubsection: None,
+                    profiles: Vec::new(),
+                    description: String::new(),
+                    corrective: String::new(),
+                    correction_cmd: String::new(),
+                    manual_review: String::new(),
+                });
+            }
+            // ───── rule end ─────
+            Event::End(e) if e.name().as_ref() == b"Rule" => {
+                rules.push(cur.take().expect("unbalanced <Rule>"));
+            }
+            // ───── fields inside a rule ─────
+            Event::Start(t) if cur.is_some() => {
+                let r = cur.as_mut().unwrap();
+                match t.name().as_ref() {
+                    b"Name" => r.name = read_text(&mut reader, b"Name")?,
+                    b"Chapter" => {
+                        let (id, name) = read_heading(&mut reader, &t)?;
+                        r.chapter = Heading { id, name };
+                    }
+                    b"Section" => {
+                        let (id, name) = read_heading(&mut reader, &t)?;
+                        r.section = Heading { id, name };
+                    }
+                    b"SubSection" => {
+                        let (id, name) = read_heading(&mut reader, &t)?;
+                        r.subsection = Some(Heading { id, name });
+                    }
+                    b"SubSubSection" => {
+                        let (id, name) = read_heading(&mut reader, &t)?;
+                        r.subsubsection = Some(Heading { id, name });
+                    }
+                    b"Profiles" => r.profiles = collect_profiles(&mut reader)?,
+                    b"NonCompliantComment" => {
+                        r.description = read_text(&mut reader, b"NonCompliantComment")?;
+                    }
+                    b"CorrectiveComment" => {
+                        r.corrective = read_text(&mut reader, b"CorrectiveComment")?;
+                    }
+                    b"Correction" => {
+                        let txt = read_text(&mut reader, b"Correction")?;
+                        if let Some(m) = extract_manual(&txt) {
+                            r.manual_review = m;
+                        } else {
+                            r.correction_cmd = txt;
+                        }
+                    }
+                    b"Verification" => {
+                        let txt = read_text(&mut reader, b"Verification")?;
+                        // If no manual review yet, maybe it is stated here.
+                        if r.manual_review.is_empty() {
+                            if let Some(m) = extract_manual(&txt) {
+                                r.manual_review = m;
+                            }
+                        }
+                    }
+                    // Any other tag → consume and discard.
+                    _ => {
+                        let _ = read_text(&mut reader, t.name().as_ref())?;
+                    }
+                }
+            }
+            Event::Eof => break,
+            _ => {}
+        }
+        buf.clear();
+    }
+    Ok(rules)
+}
+
+/* ──────────────── HostInfo implementation ─────────────── */
+
 impl HostInfo {
-    /// Collect runtime information about the current host.
+    /// Collect live system information using `sys_info`, `/sys` and `get_if_addrs`.
     ///
-    /// No external commands are spawned; everything relies on safe,
-    /// cross-platform crates where possible.  Any failure returns the
-    /// placeholder string `"N/A"` or `0`.
+    /// | Field         | Source                                         |
+    /// |---------------|------------------------------------------------|
+    /// | `hostname`    | `sys_info::hostname()`                         |
+    /// | `primary_ip`  | first non-loopback V4 interface via `get_if_addrs` |
+    /// | `mac_addr`    | `/sys/class/net/<iface>/address`               |
+    /// | `os`          | `os_info` crate                                |
+    /// | `kernel`      | `sys_info::os_release()`                       |
+    /// | `architecture`| `std::env::consts::ARCH`                       |
+    /// | `cpu_cores`   | `sys_info::cpu_num()`                          |
+    /// | `memory_mb`   | `sys_info::mem_info().total / 1024`            |
     pub fn gather() -> Self {
         let hostname = hostname().unwrap_or_else(|_| "N/A".into());
-
-        // Detect first non-loopback IPv4 and derive its MAC address.
         let (primary_ip, mac_addr) = get_if_addrs()
             .ok()
-            .and_then(|ifaces| {
-                ifaces.into_iter().find_map(|ifa| match ifa.addr {
+            .and_then(|ifs| {
+                ifs.into_iter().find_map(|ifa| match ifa.addr {
                     IfAddr::V4(v4) if !v4.ip.is_loopback() => {
-                        // Try to read /sys/class/net/<iface>/address
-                        let mac = fs::read_to_string(
-                            format!("/sys/class/net/{}/address", ifa.name),
-                        )
-                        .map(|s| s.trim().to_string())
-                        .unwrap_or_else(|_| "N/A".into());
+                        let mac = fs::read_to_string(format!("/sys/class/net/{}/address", ifa.name))
+                            .map(|s| s.trim().into())
+                            .unwrap_or_else(|_| "N/A".into());
                         Some((v4.ip.to_string(), mac))
                     }
                     _ => None,
                 })
             })
             .unwrap_or_else(|| ("N/A".into(), "N/A".into()));
-
         let distro = os_info::get();
         let os = format!("{} {}", distro.os_type(), distro.version());
         let kernel = os_release().unwrap_or_else(|_| "N/A".into());
@@ -178,113 +361,157 @@ impl HostInfo {
     }
 }
 
+/* ──────────────── ReportData high-level builder ─────────────── */
+
 impl ReportData {
-    /// Load a CIS XML file, compute statistics and build a `ReportData`.
+    /// Build a complete `ReportData` from a CIS XML export.
     ///
-    /// * `path` – Path to the XML document produced by the scanner.
+    /// Steps performed internally:
+    /// 1. Parse the XML twice:
+    ///    * once with `parse_rules` (rich `Rule` objects),
+    ///    * once with **quick-xml + serde** (`RulesCIS`) to read `<Compliant>`
+    ///      and `<Manual>` flags.
+    /// 2. Split rules into **compliant**, **non-compliant** and **not tested**.
+    /// 3. Generate a hierarchical `summary` table (4 levels).
+    /// 4. Compute `Stats`.
     ///
     /// # Errors
-    /// Returns any I/O or XML deserialisation error wrapped by `anyhow`.
+    /// Any I/O or XML parse error is propagated wrapped in `anyhow::Result`.
     pub fn from_xml(path: &Path) -> Result<Self> {
-        // ---------- Parse XML into raw rules ----------
-        let RulesCIS { rules } = from_reader(BufReader::new(File::open(path)?))?;
+        let rules = parse_rules(path)?;
+        let RulesCIS { rules: raw } = from_reader::<_, RulesCIS>(BufReader::new(File::open(path)?))?;
 
-        // ---------- Categorise rules ----------
-        let mut nc = Vec::new(); // non-compliant
-        let mut nt = Vec::new(); // not tested
-        let mut ok = Vec::new(); // compliant
+        // Map rule-id → (compliance string, manual flag)
+        let mut compliance = HashMap::<String, (&str, bool)>::new();
+        for r in &raw {
+            compliance.insert(
+                r.id.clone(),
+                (
+                    r.compliant.as_str(),
+                    r.manual.as_deref().map(|s| s.eq_ignore_ascii_case("yes")).unwrap_or(false),
+                ),
+            );
+        }
+
+        // Buckets
+        let mut compliant = Vec::new();
+        let mut non_compliant = Vec::new();
+        let mut not_tested = Vec::new();
 
         for r in rules {
-            // Extract potential manual review message or correction command.
-            let mut manual_review = String::new();
-            let mut correction_cmd = String::new();
-
-            if let Some(cmd) = r.correction_cmd.clone() {
-                if let Some(ex) = extract_manual(&cmd) {
-                    manual_review = ex;
-                } else {
-                    correction_cmd = cmd;
-                }
-            }
-            // Fallback to <Verification> if <Correction> did not yield a message.
-            if manual_review.is_empty() {
-                if let Some(ver) = &r.verification {
-                    if let Some(ex) = extract_manual(ver) {
-                        manual_review = ex;
-                    }
-                }
-            }
-
-            let rule = Rule {
-                id: r.id,
-                description: r.description.unwrap_or_default(),
-                corrective: r.corrective.unwrap_or_default(),
-                correction_cmd,
-                manual_review,
-            };
-
-            match r.compliant.as_str() {
-                "YES" => ok.push(rule),
-                "NO" => nc.push(rule),
-                _ => nt.push(rule),
+            let (cmp, manual) = compliance.get(&r.id).copied().unwrap_or(("NA", false));
+            if manual {
+                not_tested.push(r);
+            } else if cmp == "YES" {
+                compliant.push(r);
+            } else if cmp == "NO" {
+                non_compliant.push(r);
+            } else {
+                not_tested.push(r);
             }
         }
 
-        // ---------- Compute statistics ----------
-        let total = ok.len() + nc.len() + nt.len();
-        let percent = |n| ((n as f32 / total as f32) * 100.0).round() as u8;
+        /* ---- build summary table ---- */
+
+        // Flatten all rules with their UI status/class.
+        let mut combined = Vec::new();
+        combined.extend(compliant.iter().map(|r| (r, "Compliant", "success")));
+        combined.extend(non_compliant.iter().map(|r| (r, "Non-compliant", "danger")));
+        combined.extend(not_tested.iter().map(|r| (r, "Not tested", "warning")));
+        combined.sort_by(|(a, ..), (b, ..)| a.id.cmp(&b.id));
+
+        let mut summary = Vec::<SummaryRow>::new();
+        let mut last_chap = String::new();
+        let mut last_sec = String::new();
+        let mut last_sub = String::new();
+        let mut last_subsub = String::new();
+
+        for (r, status, class) in &combined {
+            // Hierarchical headings (avoid duplicates).
+            if r.chapter.id != last_chap {
+                summary.push(SummaryRow {
+                    level: 0,
+                    label: format!("{} – {}", r.chapter.id, r.chapter.name),
+                    status: String::new(),
+                    class: String::new(),
+                    anchor: String::new(),
+                });
+                last_chap = r.chapter.id.clone();
+                last_sec.clear();
+                last_sub.clear();
+                last_subsub.clear();
+            }
+            if r.section.id != last_sec {
+                summary.push(SummaryRow {
+                    level: 1,
+                    label: format!("{} – {}", r.section.id, r.section.name),
+                    status: String::new(),
+                    class: String::new(),
+                    anchor: String::new(),
+                });
+                last_sec = r.section.id.clone();
+                last_sub.clear();
+                last_subsub.clear();
+            }
+            if let Some(sub) = &r.subsection {
+                if sub.id != last_sub {
+                    summary.push(SummaryRow {
+                        level: 2,
+                        label: format!("{} – {}", sub.id, sub.name),
+                        status: String::new(),
+                        class: String::new(),
+                        anchor: String::new(),
+                    });
+                    last_sub = sub.id.clone();
+                    last_subsub.clear();
+                }
+            }
+            if let Some(sub2) = &r.subsubsection {
+                if sub2.id != last_subsub {
+                    summary.push(SummaryRow {
+                        level: 3,
+                        label: format!("{} – {}", sub2.id, sub2.name),
+                        status: String::new(),
+                        class: String::new(),
+                        anchor: String::new(),
+                    });
+                    last_subsub = sub2.id.clone();
+                }
+            }
+            // Actual rule line (level 4).
+            summary.push(SummaryRow {
+                level: 4,
+                label: format!("{} – {}", r.id, r.name),
+                status: (*status).into(),
+                class: (*class).into(),
+                anchor: r.id.clone(),
+            });
+        }
+
+        /* ---- global statistics ---- */
+
+        let total = compliant.len() + non_compliant.len() + not_tested.len();
+        let percent = |n| if total == 0 { 0 } else { ((n as f32 / total as f32) * 100.0).round() as u8 };
 
         let stats = Stats {
             total,
-            pass: ok.len(),
-            fail: nc.len(),
-            not_tested: nt.len(),
-            percent_pass: percent(ok.len()),
-            percent_fail: percent(nc.len()),
-            percent_not_tested: percent(nt.len()),
+            pass: compliant.len(),
+            fail: non_compliant.len(),
+            not_tested: not_tested.len(),
+            percent_pass: percent(compliant.len()),
+            percent_fail: percent(non_compliant.len()),
+            percent_not_tested: percent(not_tested.len()),
         };
 
-        // ---------- Assemble final struct ----------
         Ok(Self {
-            profile_name: "Debian".into(), // TODO: make dynamic once profiles are introduced
+            profile_name: "Debian".into(), // TODO: read from XML once available.
             audit_time: Local::now(),
             host_info: HostInfo::gather(),
             stats,
-            non_compliant: nc,
-            not_tested: nt,
-            compliant: ok,
+            summary,
+            non_compliant,
+            not_tested,
+            compliant,
         })
-    }
-}
-
-/* ─────────────────────────── tests ─────────────────────────── */
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn manual_extraction_works() {
-        let sample = r#"echo "Manual review required: check file permissions""#;
-        assert_eq!(
-            extract_manual(sample).unwrap(),
-            "check file permissions"
-        );
-        let negative = r#"echo "Nothing to see here""#;
-        assert!(extract_manual(negative).is_none());
-    }
-
-    #[test]
-    fn percent_calculation_is_correct() {
-        // Artificial stats: 2 pass, 1 fail, 1 nt
-        let stats = Stats {
-            total: 4,
-            pass: 2,
-            fail: 1,
-            not_tested: 1,
-            percent_pass: 50,
-            percent_fail: 25,
-            percent_not_tested: 25,
-        };
-        assert_eq!(stats.percent_pass + stats.percent_fail + stats.percent_not_tested, 100);
     }
 }

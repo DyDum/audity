@@ -17,7 +17,7 @@
         <BasePath>/etc/systemd/journald.conf</BasePath>
         <FileName>journald.conf</FileName>
         <NonCompliantComment>Log forwarding is enabled (or not explicitly disabled).</NonCompliantComment>
-        <CorrectiveComment>Set <code>ForwardToSyslog=no</code>.</CorrectiveComment>
+        <CorrectiveComment>Set ForwardToSyslog=no.</CorrectiveComment>
         <Correction>sed -i 's/^#\?ForwardToSyslog=.*/ForwardToSyslog=no/' /etc/systemd/journald.conf; systemctl restart systemd-journald</Correction>
         <Verification>grep '^ForwardToSyslog=no' /etc/systemd/journald.conf &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
@@ -36,7 +36,7 @@
         <BasePath>/etc/systemd/journald.conf</BasePath>
         <FileName>journald.conf</FileName>
         <NonCompliantComment>Log compression is not enabled.</NonCompliantComment>
-        <CorrectiveComment>Set <code>Compress=yes</code>.</CorrectiveComment>
+        <CorrectiveComment>Set Compress=yes.</CorrectiveComment>
         <Correction>sed -i 's/^#\?Compress=.*/Compress=yes/' /etc/systemd/journald.conf; systemctl restart systemd-journald</Correction>
         <Verification>grep '^Compress=yes' /etc/systemd/journald.conf &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
@@ -55,7 +55,7 @@
         <BasePath>/etc/systemd/journald.conf</BasePath>
         <FileName>journald.conf</FileName>
         <NonCompliantComment>The log storage mode is not persistent.</NonCompliantComment>
-        <CorrectiveComment>Set <code>Storage=persistent</code>.</CorrectiveComment>
+        <CorrectiveComment>Set Storage=persistent.</CorrectiveComment>
         <Correction>sed -i 's/^#\?Storage=.*/Storage=persistent/' /etc/systemd/journald.conf; systemctl restart systemd-journald</Correction>
         <Verification>grep '^Storage=persistent' /etc/systemd/journald.conf &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
@@ -73,7 +73,7 @@
         <BasePath>/etc/systemd/journald.conf</BasePath>
         <FileName>journald.conf</FileName>
         <NonCompliantComment>Journald compression is not enabled.</NonCompliantComment>
-        <CorrectiveComment>Enable <code>Compress=yes</code>.</CorrectiveComment>
+        <CorrectiveComment>Enable Compress=yes.</CorrectiveComment>
         <Correction>sed -i 's/^#\?Compress=.*/Compress=yes/' /etc/systemd/journald.conf; systemctl restart systemd-journald</Correction>
         <Verification>grep '^Compress=yes' /etc/systemd/journald.conf &amp;&amp; systemctl is-active systemd-journald | grep -q "active" &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
@@ -91,7 +91,7 @@
         <BasePath>/etc/systemd/journald.conf</BasePath>
         <FileName>journald.conf</FileName>
         <NonCompliantComment>The storage setting is not persistent.</NonCompliantComment>
-        <CorrectiveComment>Set <code>Storage=persistent</code>.</CorrectiveComment>
+        <CorrectiveComment>Set Storage=persistent.</CorrectiveComment>
         <Correction>sed -i 's/^#\?Storage=.*/Storage=persistent/' /etc/systemd/journald.conf; systemctl restart systemd-journald</Correction>
         <Verification>grep '^Storage=persistent' /etc/systemd/journald.conf &amp;&amp; systemctl is-active systemd-journald | grep -q "active" &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>

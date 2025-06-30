@@ -52,7 +52,7 @@
         <BasePath>/etc/default/</BasePath>
         <FileName>grub</FileName>
         <NonCompliantComment>Auditing for processes that start before auditd is not enabled.</NonCompliantComment>
-        <CorrectiveComment>Add the kernel boot parameter <code>audit=1</code> in GRUB.</CorrectiveComment>
+        <CorrectiveComment>Add the kernel boot parameter audit=1 in GRUB.</CorrectiveComment>
         <Correction>sed -i 's/\(GRUB_CMDLINE_LINUX="\(.*\)\)"/\1 audit=1"/' /etc/default/grub; update-grub</Correction>
         <Verification>grep -q 'audit=1' /proc/cmdline &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
@@ -70,7 +70,7 @@
         <BasePath>/etc/audit/</BasePath>
         <FileName>auditd.conf</FileName>
         <NonCompliantComment>The audit backlog limit is set too low.</NonCompliantComment>
-        <CorrectiveComment>Set <code>audit_backlog_limit = 8192</code> in auditd.conf.</CorrectiveComment>
+        <CorrectiveComment>Set audit_backlog_limit = 8192 in auditd.conf.</CorrectiveComment>
         <Correction>sed -i 's/^#\?audit_backlog_limit.*/audit_backlog_limit = 8192/' /etc/audit/auditd.conf; systemctl restart auditd</Correction>
         <Verification>grep '^audit_backlog_limit = 8192' /etc/audit/auditd.conf &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
@@ -91,7 +91,7 @@
         <BasePath>/etc/audit/auditd.conf</BasePath>
         <FileName>auditd.conf</FileName>
         <NonCompliantComment>Audit log storage size is not configured.</NonCompliantComment>
-        <CorrectiveComment>Set <code>max_log_file = 50</code> MB.</CorrectiveComment>
+        <CorrectiveComment>Set max_log_file = 50 MB.</CorrectiveComment>
         <Correction>sed -i 's/^#\?max_log_file.*/max_log_file = 50/' /etc/audit/auditd.conf; systemctl restart auditd</Correction>
         <Verification>grep '^max_log_file = 50' /etc/audit/auditd.conf &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
@@ -127,7 +127,7 @@
         <BasePath>/etc/audit/auditd.conf</BasePath>
         <FileName>auditd.conf</FileName>
         <NonCompliantComment>No action configured when audit logs are full.</NonCompliantComment>
-        <CorrectiveComment>Set <code>space_left_action = email</code>.</CorrectiveComment>
+        <CorrectiveComment>Set space_left_action = email.</CorrectiveComment>
         <Correction>sed -i 's/^#\?space_left_action.*/space_left_action = email/' /etc/audit/auditd.conf; systemctl restart auditd</Correction>
         <Verification>grep '^space_left_action = email' /etc/audit/auditd.conf &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
@@ -145,7 +145,7 @@
         <BasePath>/etc/audit/auditd.conf</BasePath>
         <FileName>auditd.conf</FileName>
         <NonCompliantComment>No warning when audit logs are low on space.</NonCompliantComment>
-        <CorrectiveComment>Set <code>admin_space_left_action = exec</code>.</CorrectiveComment>
+        <CorrectiveComment>Set admin_space_left_action = exec.</CorrectiveComment>
         <Correction>sed -i 's/^#\?admin_space_left_action.*/admin_space_left_action = exec/' /etc/audit/auditd.conf; systemctl restart auditd</Correction>
         <Verification>grep '^admin_space_left_action = exec' /etc/audit/auditd.conf &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
@@ -618,7 +618,7 @@ augenrules --load
         <BasePath>/etc/audit/</BasePath>
         <FileName>audit.rules</FileName>
         <NonCompliantComment>The in-memory audit rules may differ from those stored on disk.</NonCompliantComment>
-        <CorrectiveComment>Compare <code>auditctl -l</code> output with /etc/audit/rules.d/* and reconcile any differences.</CorrectiveComment>
+        <CorrectiveComment>Compare auditctl -l output with /etc/audit/rules.d/* and reconcile any differences.</CorrectiveComment>
         <Correction>echo "Manual step: run 'diff &lt;(auditctl -l) &lt;(cat /etc/audit/rules.d/*)'"</Correction>
         <Verification>echo "Manual verification required"</Verification>
         <Manual>YES</Manual>

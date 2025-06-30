@@ -16,7 +16,7 @@
         <NonCompliantComment>The iptables package is not installed, leaving the system without proper IPv4 firewall management.</NonCompliantComment>
         <CorrectiveComment>Install the iptables package to manage IPv4 firewall rules.</CorrectiveComment>
         <Correction>apt-get install -y iptables</Correction>
-        <Verification>dpkg -l | grep -q '\<iptables\>' &amp;&amp; echo 0 || echo 1</Verification>
+        <Verification>dpkg -l | grep -q '\&lt;iptables\&gt;' &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -34,7 +34,7 @@
         <NonCompliantComment>nftables is installed and active, which may conflict with iptables.</NonCompliantComment>
         <CorrectiveComment>Remove or disable nftables to ensure iptables is solely in use.</CorrectiveComment>
         <Correction>apt-get purge -y nftables</Correction>
-        <Verification>dpkg -l | grep -q '\<nftables\>' &amp;&amp; echo 1 || echo 0</Verification>
+        <Verification>dpkg -l | grep -q '\&lt;nftables\&gt;' &amp;&amp; echo 1 || echo 0</Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -52,7 +52,7 @@
         <NonCompliantComment>UFW is installed and may conflict with iptables management.</NonCompliantComment>
         <CorrectiveComment>Uninstall UFW when using iptables exclusively.</CorrectiveComment>
         <Correction>apt-get purge -y ufw</Correction>
-        <Verification>dpkg -l | grep -q '\<ufw\>' &amp;&amp; echo 1 || echo 0</Verification>
+        <Verification>dpkg -l | grep -q '\&lt;ufw\&gt;' &amp;&amp; echo 1 || echo 0</Verification>
         <Manual>NO</Manual>
     </Rule>
 
