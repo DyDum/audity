@@ -1,6 +1,7 @@
 use std::process::Command;
 use std::str;
 use std::io::{self, Error as IoError};
+use std::fs::File;
 
 /// Executes the 'sudo apt update' command to update the package list.
 ///
@@ -16,6 +17,8 @@ pub fn update_package_list() -> Result<(), io::Error> {
     let status = Command::new("sudo")
         .arg("apt")
         .arg("update")
+        .arg("-qq") // Use -qq for quiet mode, suppressing output unless there's an error
+        .stdout(File::create("/dev/null")?) // Use -qq for quiet mode, suppressing output unless there's an error
         .status()?;
 
     if status.success() {
@@ -41,6 +44,7 @@ pub fn check_upgradable_packages() -> Result<String, IoError> {
     let output = Command::new("apt")
         .arg("list")
         .arg("--upgradable")
+        .arg("-qq") // Use -qq for quiet mode, suppressing output unless there's an error
         .output()?;
 
     if output.status.success() {

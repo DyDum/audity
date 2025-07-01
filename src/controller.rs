@@ -1,8 +1,16 @@
-use crate::package_management;
 use crate::audit_rules;
+use crate::package_management;
+use crate::report;
 
 use audit_rules::scanner::scan_directory;
-use std::process;
+use std::{
+    process,
+    fs,
+    path::{Path, PathBuf},
+};
+
+use anyhow::{bail, Context, Result};
+use askama::Template;
 
 /// Runs the full audit process: updates packages (if needed), audits packages and audit rules.
 ///
@@ -53,18 +61,23 @@ pub fn run_package_audit(update: bool, upgrade: bool) {
 
     package_management::sources::read_sources_list().unwrap_or_default();
     let total_installed = package_management::list::get_installed_packages_count().unwrap_or(0);
-    let installed_packages = package_management::list::list_installed_packages().unwrap_or_default();
+    let installed_packages =
+        package_management::list::list_installed_packages().unwrap_or_default();
     let upgradable_packages = if upgrade {
         package_management::update::check_upgradable_packages().unwrap_or_default()
     } else {
         String::new()
     };
 
-    match package_management::xml_report::generate_xml_report(total_installed, &installed_packages, &upgradable_packages) {
+    match package_management::xml_report::generate_xml_report(
+        total_installed,
+        &installed_packages,
+        &upgradable_packages,
+    ) {
         Ok(xml_data) => {
             std::fs::write("./reports/packages.xml", xml_data).expect("Failed to write XML report");
             println!("XML report generated successfully and saved to 'report.xml'.");
-        },
+        }
         Err(e) => {
             println!("Failed to generate XML report: {e}");
         },
@@ -84,10 +97,48 @@ pub fn run_package_audit(update: bool, upgrade: bool) {
 /// Errors during directory scanning are not returned but printed to stderr
 /// before terminating the process.
 pub fn run_audit_rules() {
-    let dir = "rules/apache_http";
-    if let Err(e) = scan_directory(dir) {
-        eprintln!("Error: {e}");
-        process::exit(1);
+    let package_file = "reports/packages.xml";
+
+    match audit_rules::scanner::load_installed_packages(package_file) {
+        Ok(installed_rules) => {
+            for rule in installed_rules {
+                let dir = format!("rules/{}", rule);
+                if let Err(e) = audit_rules::scanner::scan_directory(&dir) {
+                    eprintln!("Error scanning {dir}: {e}");
+                    std::process::exit(1);
+                }
+            }
+        }
+        Err(e) => {
+            eprintln!("Failed to load installed packages: {e}");
+            std::process::exit(1);
+        }
+    }
+}
+
+
+/// Run automatic corrections for applicable rule sets based on packages found in packages.xml.
+///
+/// This function checks which rule directories correspond to installed packages,
+/// and runs the correction logic only on those.
+pub fn run_correction() {
+    run_package_audit(false, false);
+    let package_file = "reports/packages.xml";
+
+    match audit_rules::scanner::load_installed_packages(package_file) {
+        Ok(installed_rules) => {
+            for rule in installed_rules {
+                let dir = format!("rules/{}", rule);
+                if let Err(e) = package_management::correction::correct_directory(&dir) {
+                    eprintln!("Error correcting {dir}: {e}");
+                    std::process::exit(1);
+                }
+            }
+        }
+        Err(e) => {
+            eprintln!("Failed to load installed packages: {e}");
+            std::process::exit(1);
+        }
     }
 }
 
@@ -141,4 +192,40 @@ fn is_root() -> bool {
         }
     }
     false
+}
+
+const SUFFIX_IN: &str = "_cis_result.xml";
+const SUFFIX_OUT: &str = "_cis_report.html";
+
+/// Generate an HTML report from the given XML path.
+///
+/// * `src` – path to a file whose name ends with `_cis_result.xml`.
+///
+/// Returns the full path of the created HTML report.
+pub fn generate_report<P: AsRef<Path>>(src: P) -> Result<PathBuf> {
+    let src = src.as_ref();
+
+    // --- derive output file name ---
+    let file_str = src
+        .file_name()
+        .and_then(|n| n.to_str())
+        .context("input path is not valid UTF-8")?;
+
+    if !file_str.ends_with(SUFFIX_IN) {
+        bail!("input file name must end with {SUFFIX_IN}");
+    }
+    let base = &file_str[..file_str.len() - SUFFIX_IN.len()];
+    let dst = src.with_file_name(format!("Benchmark_reports/{base}{SUFFIX_OUT}"));
+
+    // --- parse XML & render HTML ---
+    let data = report::data::ReportData::from_xml(src)?;
+    let html = report::html::ReportTemplate::from(&data).render()?;
+
+    // --- write output file ---
+    if let Some(dir) = dst.parent() {
+        fs::create_dir_all(dir)?;
+    }
+    fs::write(&dst, html)?;
+
+    Ok(dst)
 }

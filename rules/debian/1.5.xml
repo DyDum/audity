@@ -1,29 +1,52 @@
 <RulesCIS>
     <Rule id="1.5.1">
+        <Name>Ensure address space layout randomization is enabled (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.5">Configure Additional Process Hardening</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/sysctl.conf</BasePath>
         <FileName>sysctl.conf</FileName>
-        <NonCompliantComment> Address Space Layout Randomization (ASLR) is not enabled, leaving system processes vulnerable to memory exploitation. </NonCompliantComment>
-        <CorrectiveComment> Enable ASLR by setting kernel.randomize_va_space to 2. </CorrectiveComment>
-        <Correction> echo 'kernel.randomize_va_space = 2' &gt;&gt; /etc/sysctl.conf; sysctl -p </Correction>
-        <Verification> grep 'kernel.randomize_va_space' /proc/sys/kernel/randomize_va_space | grep -q '^2$' &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>Address Space Layout Randomization (ASLR) is not enabled, leaving system processes vulnerable to memory exploitation.</NonCompliantComment>
+        <CorrectiveComment>Enable ASLR by setting kernel.randomize_va_space to 2.</CorrectiveComment>
+        <Correction>echo 'kernel.randomize_va_space = 2' &gt;&gt; /etc/sysctl.conf; sysctl -p</Correction>
+        <Verification>grep -q '^2$' /proc/sys/kernel/randomize_va_space &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
     <Rule id="1.5.2">
+        <Name>Ensure ptrace_scope is restricted (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.5">Configure Additional Process Hardening</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/sysctl.conf</BasePath>
         <FileName>sysctl.conf</FileName>
-        <NonCompliantComment> The ptrace_scope setting is not restricted, potentially allowing unauthorized process memory inspection. </NonCompliantComment>
-        <CorrectiveComment> Restrict ptrace by setting kernel.yama.ptrace_scope to 1. </CorrectiveComment>
-        <Correction> echo 'kernel.yama.ptrace_scope = 1' &gt;&gt; /etc/sysctl.conf; sysctl -p </Correction>
-        <Verification> grep 'kernel.yama.ptrace_scope' /proc/sys/kernel/yama/ptrace_scope | grep -q '^1$' &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>The ptrace_scope setting is not restricted, potentially allowing unauthorized process memory inspection.</NonCompliantComment>
+        <CorrectiveComment>Restrict ptrace by setting kernel.yama.ptrace_scope to 1.</CorrectiveComment>
+        <Correction>echo 'kernel.yama.ptrace_scope = 1' &gt;&gt; /etc/sysctl.conf; sysctl -p</Correction>
+        <Verification>grep -q '^1$' /proc/sys/kernel/yama/ptrace_scope &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
     <Rule id="1.5.3">
+        <Name>Ensure core dumps are restricted (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.5">Configure Additional Process Hardening</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/sysctl.conf</BasePath>
         <FileName>sysctl.conf</FileName>
-        <NonCompliantComment> Core dumps are not restricted, which may expose sensitive memory contents during crashes. </NonCompliantComment>
-        <CorrectiveComment> Restrict core dumps by setting fs.suid_dumpable to 0 and limiting the core file size. </CorrectiveComment>
-        <Correction> echo 'fs.suid_dumpable = 0' &gt;&gt; /etc/sysctl.conf; sysctl -p; ulimit -c 0 </Correction>
-        <Verification> grep 'fs.suid_dumpable' /proc/sys/fs/suid_dumpable | grep -q '^0$' &amp;&amp; ulimit -c | grep -q '^0$' &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>Core dumps are not restricted, which may expose sensitive memory contents during crashes.</NonCompliantComment>
+        <CorrectiveComment>Restrict core dumps by setting fs.suid_dumpable to 0 and limiting the core file size.</CorrectiveComment>
+        <Correction>echo 'fs.suid_dumpable = 0' &gt;&gt; /etc/sysctl.conf; sysctl -p; ulimit -c 0</Correction>
+        <Verification>grep -q '^0$' /proc/sys/fs/suid_dumpable &amp;&amp; ulimit -c | grep -q '^0$' &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
 </RulesCIS>

@@ -1,14 +1,14 @@
 //! Data structures that model CIS rules and their compliance status,
 //! together with (de)serialisation helpers for **quick-xml** + **serde**.
 
-use serde::{de, Deserialize, Deserializer, Serialize, Serializer};
+use serde::{Deserialize, Deserializer, Serialize, Serializer, de};
 
 /// Compliance status written to the `<Compliant>` tag.
 ///
 /// | Rust variant  | XML text   |
 /// |---------------|-----------|
-/// | `Yes`         | `YES` |
-/// | `No`          | `NO` |
+/// | `Yes`         | `YES`     |
+/// | `No`          | `NO`      |
 /// | `NotTested`   | `NOT_TESTED` |
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum CompliantStatus {
@@ -62,6 +62,31 @@ impl<'de> Deserialize<'de> for CompliantStatus {
     }
 }
 
+/// Représente une balise contenant un attribut `id` et son contenu texte.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SectionId {
+    #[serde(rename = "@id")]
+    pub id: String,
+    #[serde(rename = "$value")]
+    pub value: String,
+}
+
+/// Wrapper pour la liste des profils.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Profiles {
+    #[serde(rename = "Profile")]
+    pub profiles: Vec<Profile>,
+}
+
+/// Détail d'un profil (niveau et type).
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Profile {
+    #[serde(rename = "@level")]
+    pub level: String,
+    #[serde(rename = "@type")]
+    pub r#type: String,
+}
+
 /// Single CIS `<Rule>` element.
 ///
 /// Field names mirror the XML tag names (`PascalCase`) except the `id`
@@ -73,11 +98,33 @@ pub struct Rule {
     #[serde(rename = "@id")]
     pub id: String,
 
+    pub name: String,
+
+    /// Chapitre (facultatif)
+    #[serde(rename = "Chapter", default, skip_serializing_if = "Option::is_none")]
+    pub chapter: Option<SectionId>,
+
+    /// Section (facultative)
+    #[serde(rename = "Section", default, skip_serializing_if = "Option::is_none")]
+    pub section: Option<SectionId>,
+
+    /// Sous-section (facultative)
+    #[serde(
+        rename = "SubSection",
+        default,
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub sub_section: Option<SectionId>,
+
+    pub profiles: Profiles,
+
     pub base_path: String,
     pub file_name: String,
     pub non_compliant_comment: String,
     pub corrective_comment: String,
+    #[serde(default)]
     pub correction: String,
+    #[serde(default)]
     pub verification: String,
     pub manual: Option<String>,
 

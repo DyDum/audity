@@ -35,22 +35,13 @@ pub fn execute_verification_command(cmd: &str) -> Result<bool, String> {
     }
 
     match stdout.as_str() {
-        // Explicit textual result from the command.
         "0" => Ok(true),
         "1" => Ok(false),
-        // No textual result: fall back to the exit-code.
-        "" => {
-            if output.status.code() == Some(0) {
-                Ok(true)
-            } else if output.status.code() == Some(1) {
-                Ok(false)
-            } else {
-                Err(format!(
-                    "Erreur d'exécution : code {}",
-                    output.status.code().unwrap_or(-1)
-                ))
-            }
-        }
-        other => Err(format!("Sortie inattendue : '{other}'")),
+        "" => match output.status.code() {
+            Some(0) => Ok(true),
+            Some(1) => Ok(false),
+            _ => Err(format!("Erreur d'exécution : code {}", output.status.code().unwrap_or(-1)))
+        },
+        other => Err(format!("Sortie inattendue : '{}'", other)),
     }
 }

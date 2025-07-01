@@ -13,7 +13,7 @@
 //  5. Save the result in `reports/…_cis_result.xml` (folder name prefix).
 
 use crate::audit_rules::{
-    exec_command::execute_verification_command,
+    exec_command::execute_command,
     rule::{CompliantStatus, RulesCis},
 };
 use quick_xml::{de::from_str, se::Serializer};
@@ -64,7 +64,14 @@ pub fn scan_directory(dir: &str) -> Result<(), ScanError> {
 
     for file in files {
         let raw = fs::read_to_string(file.path())?;
-        let local: RulesCis = from_str(&raw)?;
+
+        let local = match from_str::<RulesCis>(&raw) {
+            Ok(r) => r,
+            Err(e) => {
+                eprintln!("Erreur XML dans «{}» : {}", file.path().display(), e);
+                return Err(ScanError::Xml(e));
+            }
+        };
 
         for mut rule in local.rules {
             // Compliance decision
@@ -83,6 +90,7 @@ pub fn scan_directory(dir: &str) -> Result<(), ScanError> {
     let xml = pretty_xml(&global)?;
 
     fs::create_dir_all("reports")?;
+  
     let folder_name = Path::new(dir)
         .file_name()
         .and_then(|s| s.to_str())
@@ -93,4 +101,50 @@ pub fn scan_directory(dir: &str) -> Result<(), ScanError> {
 
     println!("Report written to {file_path}");
     Ok(())
+}
+
+/// Load installed packages by comparing rule folder names directly with lines in packages.xml.
+///
+/// This is more efficient than loading and parsing the whole XML file.
+///
+/// * `packages_path` – Path to the packages.xml file.
+///
+/// # Returns
+/// A list of rule names for which a corresponding package was found.
+pub fn load_installed_packages(packages_path: &str) -> anyhow::Result<Vec<String>> {
+    let rules_dir = fs::read_dir("rules")?;
+    let file = File::open(packages_path)?;
+    let reader = BufReader::new(file);
+
+    let mut installed = Vec::new();
+    let lines: Vec<_> = reader.lines().flatten().collect();
+
+    for entry in rules_dir.flatten() {
+        let rule_dir = entry.path();
+        if !rule_dir.is_dir() {
+            continue;
+        }
+
+        if let Some(rule_name) = rule_dir.file_name().and_then(|s| s.to_str()) {
+            if lines.iter().any(|line| rule_matches_package(rule_name, line)) {
+                installed.push(rule_name.to_string());
+            }
+        }
+    }
+
+    Ok(installed)
+}
+
+fn rule_matches_package(rule_name: &str, line: &str) -> bool {
+    match rule_name {
+        "apache_http" => line.contains("name=\"apache2\""),
+        "apache_tomcat_10.1" => line.contains("name=\"tomcat10\""),
+        "debian" => line.contains("name=\"debianutils\"") || line.contains("name=\"debian-faq\""),
+        "nginx" => line.contains("name=\"nginx\""),
+        "mariadb" => line.contains("name=\"mariadb\""),
+        "postgresql" => line.contains("name=\"postgresql\""),
+        "mongodb" => line.contains("name=\"mongodb\""),
+        "sql_server" => line.contains("name=\"mssql\"") || line.contains("name=\"sql-server\""),
+        _ => line.contains(&format!("name=\"{}\"", rule_name)), // fallback : nom exact
+    }
 }

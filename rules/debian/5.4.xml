@@ -1,128 +1,265 @@
 <RulesCIS>
+
+    <!-- ═════════ 5  Access Control  →  5.4 User Accounts and Environment ═════════ -->
+
+    <!-- ───────────── 5.4.1  Configure shadow password suite parameters ───────────── -->
+
     <Rule id="5.4.1.1">
+        <Name>Ensure password expiration is configured (Automated)</Name>
+        <Chapter id="5">Access Control</Chapter>
+        <Section id="5.4">User Accounts and Environment</Section>
+        <SubSection id="5.4.1">Configure shadow password suite parameters</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/login.defs</BasePath>
         <FileName>login.defs</FileName>
-        <NonCompliantComment> Password expiration is not configured, which may allow stale credentials to persist. </NonCompliantComment>
-        <CorrectiveComment> Set PASS_MAX_DAYS to an appropriate value (e.g., 90) in /etc/login.defs to enforce password expiration. </CorrectiveComment>
-        <Correction> sed -i 's/^PASS_MAX_DAYS.*/PASS_MAX_DAYS 90/' /etc/login.defs </Correction>
-        <Verification> grep '^PASS_MAX_DAYS' /etc/login.defs | grep -q '90' &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>Password expiration is not configured.</NonCompliantComment>
+        <CorrectiveComment>Set PASS_MAX_DAYS to 90.</CorrectiveComment>
+        <Correction>sed -i 's/^PASS_MAX_DAYS.*/PASS_MAX_DAYS 90/' /etc/login.defs</Correction>
+        <Verification>grep '^PASS_MAX_DAYS' /etc/login.defs | grep -q '90' &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
     <Rule id="5.4.1.2">
+        <Name>Ensure minimum password days is configured (Manual)</Name>
+        <Chapter id="5">Access Control</Chapter>
+        <Section id="5.4">User Accounts and Environment</Section>
+        <SubSection id="5.4.1">Configure shadow password suite parameters</SubSection>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/login.defs</BasePath>
         <FileName>login.defs</FileName>
-        <NonCompliantComment> The minimum password days parameter is not set, allowing users to change passwords too frequently. </NonCompliantComment>
-        <CorrectiveComment> Set PASS_MIN_DAYS to an appropriate value (e.g., 7) in /etc/login.defs to prevent too frequent password changes. </CorrectiveComment>
-        <Correction> sed -i 's/^PASS_MIN_DAYS.*/PASS_MIN_DAYS 7/' /etc/login.defs </Correction>
-        <Verification> grep '^PASS_MIN_DAYS' /etc/login.defs | grep -q '7' &amp;&amp; echo 0 || echo 1 </Verification>
-        <Manual>NO</Manual>
+        <NonCompliantComment>PASS_MIN_DAYS is not set.</NonCompliantComment>
+        <CorrectiveComment>Set PASS_MIN_DAYS to 7.</CorrectiveComment>
+        <Correction>sed -i 's/^PASS_MIN_DAYS.*/PASS_MIN_DAYS 7/' /etc/login.defs</Correction>
+        <Verification>grep '^PASS_MIN_DAYS' /etc/login.defs | grep -q '7' &amp;&amp; echo 0 || echo 1</Verification>
+        <Manual>YES</Manual>
     </Rule>
+
     <Rule id="5.4.1.3">
+        <Name>Ensure password expiration warning days is configured (Automated)</Name>
+        <Chapter id="5">Access Control</Chapter>
+        <Section id="5.4">User Accounts and Environment</Section>
+        <SubSection id="5.4.1">Configure shadow password suite parameters</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/login.defs</BasePath>
         <FileName>login.defs</FileName>
-        <NonCompliantComment> Password expiration warning days are not configured, risking that users may not receive adequate notice. </NonCompliantComment>
-        <CorrectiveComment> Set PASS_WARN_AGE (e.g., 7 days) in /etc/login.defs to warn users before passwords expire. </CorrectiveComment>
-        <Correction> sed -i 's/^PASS_WARN_AGE.*/PASS_WARN_AGE 7/' /etc/login.defs </Correction>
-        <Verification> grep '^PASS_WARN_AGE' /etc/login.defs | grep -q '7' &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>PASS_WARN_AGE is not set.</NonCompliantComment>
+        <CorrectiveComment>Set PASS_WARN_AGE to 7.</CorrectiveComment>
+        <Correction>sed -i 's/^PASS_WARN_AGE.*/PASS_WARN_AGE 7/' /etc/login.defs</Correction>
+        <Verification>grep '^PASS_WARN_AGE' /etc/login.defs | grep -q '7' &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
     <Rule id="5.4.1.4">
+        <Name>Ensure strong password hashing algorithm is configured (Automated)</Name>
+        <Chapter id="5">Access Control</Chapter>
+        <Section id="5.4">User Accounts and Environment</Section>
+        <SubSection id="5.4.1">Configure shadow password suite parameters</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/login.defs</BasePath>
         <FileName>login.defs</FileName>
-        <NonCompliantComment> The password hashing algorithm is not explicitly configured, possibly using a weak default. </NonCompliantComment>
-        <CorrectiveComment> Ensure a strong password hashing algorithm (e.g., SHA-512) is used by setting ENCRYPT_METHOD in /etc/login.defs. </CorrectiveComment>
-        <Correction> echo "ENCRYPT_METHOD SHA512" &gt;&gt; /etc/login.defs </Correction>
-        <Verification> grep -q "ENCRYPT_METHOD SHA512" /etc/login.defs &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>ENCRYPT_METHOD is not set.</NonCompliantComment>
+        <CorrectiveComment>Set ENCRYPT_METHOD to SHA512.</CorrectiveComment>
+        <Correction>echo "ENCRYPT_METHOD SHA512" &gt;&gt; /etc/login.defs</Correction>
+        <Verification>grep -q "ENCRYPT_METHOD SHA512" /etc/login.defs &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
     <Rule id="5.4.1.5">
+        <Name>Ensure inactive password lock is configured (Automated)</Name>
+        <Chapter id="5">Access Control</Chapter>
+        <Section id="5.4">User Accounts and Environment</Section>
+        <SubSection id="5.4.1">Configure shadow password suite parameters</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/default/</BasePath>
         <FileName>useradd</FileName>
-        <NonCompliantComment> Inactive password lock is not configured, risking prolonged access for inactive accounts. </NonCompliantComment>
-        <CorrectiveComment> Configure the system to lock accounts after a period of inactivity by setting the inactive parameter (e.g., 30 days) in /etc/default/useradd. </CorrectiveComment>
-        <Correction> echo "INACTIVE=30" &gt;&gt; /etc/default/useradd </Correction>
-        <Verification> grep -q "INACTIVE=30" /etc/default/useradd &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>Inactive password lock is not configured.</NonCompliantComment>
+        <CorrectiveComment>Set INACTIVE=30 in /etc/default/useradd.</CorrectiveComment>
+        <Correction>echo "INACTIVE=30" &gt;&gt; /etc/default/useradd</Correction>
+        <Verification>grep -q "INACTIVE=30" /etc/default/useradd &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
     <Rule id="5.4.1.6">
+        <Name>Ensure all users last password change date is in the past (Automated)</Name>
+        <Chapter id="5">Access Control</Chapter>
+        <Section id="5.4">User Accounts and Environment</Section>
+        <SubSection id="5.4.1">Configure shadow password suite parameters</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/shadow</BasePath>
         <FileName>shadow</FileName>
-        <NonCompliantComment> Not all user accounts have a valid last password change date, which may indicate configuration issues. </NonCompliantComment>
-        <CorrectiveComment> Manually review /etc/shadow to ensure that all user accounts have a recorded last password change date. </CorrectiveComment>
-        <Correction> echo "Manual review required: verify that all user accounts in /etc/shadow have a valid last password change date." </Correction>
-        <Verification> echo "Manual verification required" </Verification>
+        <NonCompliantComment>Some accounts have no last-change date.</NonCompliantComment>
+        <CorrectiveComment>Audit /etc/shadow entries.</CorrectiveComment>
+        <Correction>echo "Manual review required." </Correction>
+        <Verification>echo "Manual verification required"</Verification>
         <Manual>YES</Manual>
     </Rule>
+
+
+    <!-- ───────────── 5.4.2  Configure root and system accounts and environment ───────────── -->
+
     <Rule id="5.4.2.1">
-        <BasePath>etc/passwd</BasePath>
-        <FileName>passwd</FileName>
-        <NonCompliantComment> Multiple accounts with UID 0 exist, increasing the risk of unauthorized privileged access. </NonCompliantComment>
-        <CorrectiveComment> Ensure that only the root account has UID 0 by reviewing /etc/passwd and correcting any additional UID 0 entries. </CorrectiveComment>
-        <Correction> echo "Manual review required: check /etc/passwd for additional UID 0 entries and modify them accordingly." </Correction>
-        <Verification> grep '^[^:]*:[^:]*:0:' /etc/passwd | wc -l | grep -q '^1$' &amp;&amp; echo 0 || echo 1 </Verification>
-        <Manual>CORRECTION</Manual>
-    </Rule>
-    <Rule id="5.4.2.2">
+        <Name>Ensure root is the only UID 0 account (Automated)</Name>
+        <Chapter id="5">Access Control</Chapter>
+        <Section id="5.4">User Accounts and Environment</Section>
+        <SubSection id="5.4.2">Configure root and system accounts and environment</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/passwd</BasePath>
         <FileName>passwd</FileName>
-        <NonCompliantComment> The root account's environment is not strictly controlled, which may lead to security risks. </NonCompliantComment>
-        <CorrectiveComment> Review and restrict the environment variables and login shell of the root account. </CorrectiveComment>
-        <Correction> echo "Manual review required: verify that the root account has a secure login shell and a restricted environment." </Correction>
-        <Verification> echo "Manual verification required" </Verification>
+        <NonCompliantComment>Extra UID 0 accounts found.</NonCompliantComment>
+        <CorrectiveComment>Convert extra UID 0 accounts to non-privileged UIDs.</CorrectiveComment>
+        <Correction>echo "Manual review required."</Correction>
+        <Verification>grep '^[^:]*:[^:]*:0:' /etc/passwd | wc -l | grep -q '^1$' &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>YES</Manual>
     </Rule>
+
+    <Rule id="5.4.2.2">
+        <Name>Ensure root account access is controlled (Automated)</Name>
+        <Chapter id="5">Access Control</Chapter>
+        <Section id="5.4">User Accounts and Environment</Section>
+        <SubSection id="5.4.2">Configure root and system accounts and environment</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/passwd</BasePath>
+        <FileName>passwd</FileName>
+        <NonCompliantComment>Root shell or environment not restricted.</NonCompliantComment>
+        <CorrectiveComment>Harden root shell and env.</CorrectiveComment>
+        <Correction>echo "Manual review required."</Correction>
+        <Verification>echo "Manual verification required"</Verification>
+        <Manual>YES</Manual>
+    </Rule>
+
     <Rule id="5.4.2.3">
+        <Name>Ensure system accounts do not have a valid login shell (Automated)</Name>
+        <Chapter id="5">Access Control</Chapter>
+        <Section id="5.4">User Accounts and Environment</Section>
+        <SubSection id="5.4.2">Configure root and system accounts and environment</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/</BasePath>
         <FileName>user_account_review</FileName>
-        <NonCompliantComment> System accounts are not clearly separated from regular user accounts, increasing the risk of privilege escalation. </NonCompliantComment>
-        <CorrectiveComment> Ensure that system accounts are properly segregated from regular user accounts and that access restrictions are applied appropriately. </CorrectiveComment>
-        <Correction> echo "Manual review required: segregate system accounts from regular user accounts and apply appropriate restrictions." </Correction>
-        <Verification> echo "Manual verification required" </Verification>
+        <NonCompliantComment>System accounts have interactive shells.</NonCompliantComment>
+        <CorrectiveComment>Assign nologin shells.</CorrectiveComment>
+        <Correction>echo "Manual review required."</Correction>
+        <Verification>echo "Manual verification required"</Verification>
         <Manual>YES</Manual>
     </Rule>
+
     <Rule id="5.4.2.4">
+        <Name>Ensure root path integrity (Automated)</Name>
+        <Chapter id="5">Access Control</Chapter>
+        <Section id="5.4">User Accounts and Environment</Section>
+        <SubSection id="5.4.2">Configure root and system accounts and environment</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/</BasePath>
         <FileName>integrity_monitoring.sh</FileName>
-        <NonCompliantComment> Root path integrity is not enforced, risking unauthorized modifications to critical system binaries. </NonCompliantComment>
-        <CorrectiveComment> Implement file integrity monitoring (e.g., AIDE) to regularly check the integrity of system binaries. </CorrectiveComment>
-        <Correction> echo "Manual configuration required: deploy and configure a file integrity monitoring tool such as AIDE." </Correction>
-        <Verification> echo "Manual verification required" </Verification>
+        <NonCompliantComment>No integrity monitoring.</NonCompliantComment>
+        <CorrectiveComment>Deploy AIDE.</CorrectiveComment>
+        <Correction>echo "Manual configuration required."</Correction>
+        <Verification>echo "Manual verification required"</Verification>
         <Manual>YES</Manual>
     </Rule>
+
     <Rule id="5.4.2.5">
+        <Name>Ensure root user umask is configured (Automated)</Name>
+        <Chapter id="5">Access Control</Chapter>
+        <Section id="5.4">User Accounts and Environment</Section>
+        <SubSection id="5.4.2">Configure root and system accounts and environment</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/profile</BasePath>
         <FileName>profile</FileName>
-        <NonCompliantComment> The root user's umask is not securely configured, which may lead to insecure default file permissions. </NonCompliantComment>
-        <CorrectiveComment> Configure the root user's umask to a secure value (e.g., 027) in the system profile. </CorrectiveComment>
-        <Correction> echo "umask 027" &gt;&gt; /etc/profile; source /etc/profile </Correction>
-        <Verification> grep -q "umask 027" /etc/profile &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>Root umask insecure.</NonCompliantComment>
+        <CorrectiveComment>Set umask 027.</CorrectiveComment>
+        <Correction>echo "umask 027" &gt;&gt; /etc/profile</Correction>
+        <Verification>grep -q "umask 027" /etc/profile &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
+
+    <!-- ───────────── 5.4.3  Configure user default environment ───────────── -->
+
     <Rule id="5.4.3.1">
+        <Name>Ensure nologin is not listed in /etc/shells (Automated)</Name>
+        <Chapter id="5">Access Control</Chapter>
+        <Section id="5.4">User Accounts and Environment</Section>
+        <SubSection id="5.4.3">Configure user default environment</SubSection>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/shells</BasePath>
         <FileName>shells</FileName>
-        <NonCompliantComment> The nologin binary is listed in /etc/shells, which may allow non-interactive users to obtain a shell. </NonCompliantComment>
-        <CorrectiveComment> Remove or comment out nologin from /etc/shells to ensure that only valid login shells are used. </CorrectiveComment>
-        <Correction> sed -i '/nologin/d' /etc/shells </Correction>
-        <Verification> ! grep -q "nologin" /etc/shells &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>nologin present in /etc/shells.</NonCompliantComment>
+        <CorrectiveComment>Remove nologin.</CorrectiveComment>
+        <Correction>sed -i '/nologin/d' /etc/shells</Correction>
+        <Verification>! grep -q "nologin" /etc/shells &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
     <Rule id="5.4.3.2">
+        <Name>Ensure default user shell timeout is configured (Automated)</Name>
+        <Chapter id="5">Access Control</Chapter>
+        <Section id="5.4">User Accounts and Environment</Section>
+        <SubSection id="5.4.3">Configure user default environment</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/profile</BasePath>
         <FileName>profile</FileName>
-        <NonCompliantComment> The default user shell timeout is not configured, potentially allowing prolonged inactive sessions. </NonCompliantComment>
-        <CorrectiveComment> Set a default shell timeout by configuring TMOUT in /etc/profile (e.g., TMOUT=600 for a 10-minute timeout). </CorrectiveComment>
-        <Correction> echo "TMOUT=600" &gt;&gt; /etc/profile; source /etc/profile </Correction>
-        <Verification> grep -q "TMOUT=600" /etc/profile &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>No TMOUT configured.</NonCompliantComment>
+        <CorrectiveComment>Set TMOUT=600.</CorrectiveComment>
+        <Correction>echo "TMOUT=600" &gt;&gt; /etc/profile</Correction>
+        <Verification>grep -q "TMOUT=600" /etc/profile &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
     <Rule id="5.4.3.3">
+        <Name>Ensure default user umask is configured (Automated)</Name>
+        <Chapter id="5">Access Control</Chapter>
+        <Section id="5.4">User Accounts and Environment</Section>
+        <SubSection id="5.4.3">Configure user default environment</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
         <BasePath>/etc/profile</BasePath>
         <FileName>profile</FileName>
-        <NonCompliantComment> The default user umask is not securely configured, which may lead to insecure permissions for new files. </NonCompliantComment>
-        <CorrectiveComment> Configure a secure default umask (e.g., 027) in /etc/profile to apply to all users. </CorrectiveComment>
-        <Correction> echo "umask 027" &gt;&gt; /etc/profile; source /etc/profile </Correction>
-        <Verification> grep -q "umask 027" /etc/profile &amp;&amp; echo 0 || echo 1 </Verification>
+        <NonCompliantComment>Default umask insecure.</NonCompliantComment>
+        <CorrectiveComment>Set umask 027.</CorrectiveComment>
+        <Correction>echo "umask 027" &gt;&gt; /etc/profile</Correction>
+        <Verification>grep -q "umask 027" /etc/profile &amp;&amp; echo 0 || echo 1</Verification>
         <Manual>NO</Manual>
     </Rule>
+
 </RulesCIS>
