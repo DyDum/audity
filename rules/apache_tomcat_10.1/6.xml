@@ -4,8 +4,7 @@
     <Chapter id="6">Configure Tomcat Secure Communication (SSL/TLS)</Chapter>
     <Section id="6.1">Enable Client Certificate Authentication for HTTPS</Section>
     <Profiles>
-      <Profile level="2" type="Server"/>
-      <Profile level="2" type="Workstation"/>
+      <Profile level="2"/>
     </Profiles>
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>server.xml</FileName>
@@ -19,8 +18,7 @@
     <Chapter id="6">Configure Tomcat Secure Communication (SSL/TLS)</Chapter>
     <Section id="6.2">Enable SSLEnabled attribute</Section>
     <Profiles>
-      <Profile level="1" type="Server"/>
-      <Profile level="1" type="Workstation"/>
+      <Profile level="1"/>
     </Profiles>
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>server.xml</FileName>
@@ -36,8 +34,7 @@
     <Chapter id="6">Configure Tomcat Secure Communication (SSL/TLS)</Chapter>
     <Section id="6.3">Set scheme attribute to HTTPS</Section>
     <Profiles>
-      <Profile level="1" type="Server"/>
-      <Profile level="1" type="Workstation"/>
+      <Profile level="1"/>
     </Profiles>
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>server.xml</FileName>
@@ -53,8 +50,7 @@
     <Chapter id="6">Configure Tomcat Secure Communication (SSL/TLS)</Chapter>
     <Section id="6.4">Set secure attribute to true for SSL-enabled connectors</Section>
     <Profiles>
-      <Profile level="1" type="Server"/>
-      <Profile level="1" type="Workstation"/>
+      <Profile level="1"/>
     </Profiles>
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>server.xml</FileName>
@@ -70,8 +66,7 @@
     <Chapter id="6">Configure Tomcat Secure Communication (SSL/TLS)</Chapter>
     <Section id="6.5">Use Strong SSL Protocols</Section>
     <Profiles>
-      <Profile level="1" type="Server"/>
-      <Profile level="1" type="Workstation"/>
+      <Profile level="1"/>
     </Profiles>
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>server.xml</FileName>

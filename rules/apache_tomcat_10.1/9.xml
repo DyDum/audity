@@ -4,8 +4,7 @@
     <Chapter id="9">Restrict Deployment Behavior</Chapter>
     <Section id="9.1">Disable Auto Deployment of Applications</Section>
     <Profiles>
-      <Profile level="1" type="Server"/>
-      <Profile level="1" type="Workstation"/>
+      <Profile level="1"/>
     </Profiles>
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>context.xml</FileName>
@@ -21,8 +20,7 @@
     <Chapter id="9">Restrict Deployment Behavior</Chapter>
     <Section id="9.2">Disable Deploy On Startup of Applications</Section>
     <Profiles>
-      <Profile level="1" type="Server"/>
-      <Profile level="1" type="Workstation"/>
+      <Profile level="1"/>
     </Profiles>
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>context.xml</FileName>
