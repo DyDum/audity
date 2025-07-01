@@ -72,7 +72,7 @@ pub fn run_audit_rules() {
         Ok(installed_rules) => {
             for rule in installed_rules {
                 let dir = format!("rules/{}", rule);
-                if let Err(e) = audit_rules::scanner::scan_directory(&dir) {
+                if let Err(e) = scan_directory(&dir) {
                     eprintln!("Error scanning {dir}: {e}");
                     std::process::exit(1);
                 }
