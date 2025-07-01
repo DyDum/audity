@@ -16,3 +16,6 @@ get_if_addrs  = "0.5"
 os_info = "3"
 clap = { version = "4.5.4", features = ["derive"] }
 roxmltree = "0.20.0"
+
+[alias]
+check-pedantic = "clippy -- -D warnings -W clippy::pedantic"

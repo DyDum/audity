@@ -1,18 +1,30 @@
 //! Askama template that renders a **single CIS benchmark report**
 //! as a fully self-contained HTML page.
 //!
-//! Sections displayed in the page:
-//! 1. Header + host metadata  
-//! 2. Global statistics  
-//! 3. Summary (table of contents)  
-//! 4. Non-compliant rules (detailed cards)  
-//! 5. Not-tested rules (detailed cards)  
-//! 6. Compliant rules (compact list)
+//! The template is embedded *inline* (via the `source` attribute) so that the
+//! whole page lives in a single Rust source file – handy for packaging a
+//! standalone CLI.  The visual design is intentionally lightweight:
+//! * **Responsive**: media-queries are not required thanks to the centred
+//!   `.container` and fluid widths.
+//! * **Dark-aware colours** can be added later by extending the `:root`
+//!   palette (CSS variables).
+//! * **Animated chevrons**: the arrow buttons rotate when sections are
+//!   collapsed / expanded, powered only by a tiny inline script.
+//
+//!   The public API of this module is limited to `ReportTemplate`, which
+//!   dereferences to the underlying `askama::Template`.  All rendering logic
+//!   stays in the HTML; Rust merely passes a strongly-typed `ReportData`.
 
 use askama::Template;
 use super::data::ReportData;
 
-/// Askama HTML template rendered from a [`ReportData`] reference.
+/// Concrete Askama template wrapping a borrowed `ReportData`.
+///
+/// The HTML is supplied through the `source` attribute to avoid touching the
+/// filesystem at runtime.  The template language is *Jinja-like* – see
+/// <https://docs.rs/askama> for syntax.
+///
+/// * `'a` – lifetime of the borrowed `ReportData`.
 #[derive(Template)]
 #[template(
     source = r###"

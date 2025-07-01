@@ -10,7 +10,14 @@ use std::io::{Cursor, Error as IoError, ErrorKind, Result}; // I/O types and err
 /// * `upgradable_packages` – multiline string: each line contains a package name.
 ///
 /// # Returns
-/// XML string wrapped in `Result`, or `IoError` on failure.
+/// A `Result` which is either:
+/// - `Ok(String)` — the XML-formatted string.
+/// - `Err(IoError)` — if any error occurs during XML generation or conversion to UTF-8.
+/// # Errors
+/// This function returns an error if:
+/// - Writing to the internal XML buffer fails (e.g. XML formatting issue).
+/// - The final output cannot be converted from bytes to UTF-8.
+/// - Any quick-xml internal error occurs and is wrapped into an I/O error.
 pub fn generate_xml_report(
     total_installed: usize,
     installed_packages: &str,
