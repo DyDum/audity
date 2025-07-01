@@ -13,12 +13,12 @@
 //  5. Save the result in `reports/…_cis_result.xml` (folder name prefix).
 
 use crate::audit_rules::{
-    exec_command::execute_command,
+    exec_command::execute_verification_command,
     rule::{CompliantStatus, RulesCis},
 };
 use quick_xml::{de::from_str, se::Serializer};
 use serde::Serialize;
-use std::{fs::{self, DirEntry}, io, path::Path};
+use std::{fs::{self, DirEntry, File}, io::{self, BufRead, BufReader}, path::Path};
 use thiserror::Error;
 
 /// Errors returned by [`scan_directory`].
@@ -36,7 +36,7 @@ pub enum ScanError {
 
 /// Convert any serialisable value to a pretty-printed XML string
 /// using four spaces per indentation level.
-fn pretty_xml<T: Serialize>(value: &T) -> Result<String, ScanError> {
+pub fn pretty_xml<T: Serialize>(value: &T) -> Result<String, ScanError> {
     let mut buf = String::new();
     let mut ser = Serializer::new(&mut buf);
     ser.indent(' ', 4);

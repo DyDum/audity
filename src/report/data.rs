@@ -489,7 +489,7 @@ impl ReportData {
         }
 
         // ---------- Compute statistics ----------
-        let total = ok.len() + nc.len() + nt.len();
+        let total = compliant.len() + non_compliant.len() + not_tested.len();
         
         #[allow(clippy::cast_possible_truncation, clippy::cast_precision_loss, clippy::cast_sign_loss)]
         let percent = |n: usize| ((n as f64 / total as f64) * 100.0).round() as u8;
