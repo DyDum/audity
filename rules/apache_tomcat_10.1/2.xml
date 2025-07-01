@@ -4,8 +4,7 @@
     <Chapter id="2">Limit Server Platform Information Leaks</Chapter>
     <Section id="2.1">Alter the Advertised server.info String</Section>
     <Profiles>
-      <Profile level="2" type="Server"/>
-      <Profile level="2" type="Workstation"/>
+      <Profile level="2"/>
     </Profiles>
     <BasePath>$CATALINA_HOME/lib/</BasePath>
     <FileName>catalina.jar (ServerInfo.properties)</FileName>
@@ -19,8 +18,7 @@
     <Chapter id="2">Limit Server Platform Information Leaks</Chapter>
     <Section id="2.2">Alter the Advertised server.number String</Section>
     <Profiles>
-      <Profile level="2" type="Server"/>
-      <Profile level="2" type="Workstation"/>
+      <Profile level="2"/>
     </Profiles>
     <BasePath>$CATALINA_HOME/lib/</BasePath>
     <FileName>catalina.jar (ServerInfo.properties)</FileName>
@@ -34,8 +32,7 @@
     <Chapter id="2">Limit Server Platform Information Leaks</Chapter>
     <Section id="2.3">Alter the Advertised server.built Date</Section>
     <Profiles>
-      <Profile level="2" type="Server"/>
-      <Profile level="2" type="Workstation"/>
+      <Profile level="2"/>
     </Profiles>
     <BasePath>$CATALINA_HOME/lib/</BasePath>
     <FileName>catalina.jar (ServerInfo.properties)</FileName>
@@ -49,8 +46,7 @@
     <Chapter id="2">Limit Server Platform Information Leaks</Chapter>
     <Section id="2.4">Disable X-Powered-By HTTP Header and Rename the Server Value</Section>
     <Profiles>
-      <Profile level="2" type="Server"/>
-      <Profile level="2" type="Workstation"/>
+      <Profile level="2"/>
     </Profiles>
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>server.xml</FileName>
@@ -66,8 +62,7 @@
     <Chapter id="2">Limit Server Platform Information Leaks</Chapter>
     <Section id="2.5">Disable client facing Stack Traces</Section>
     <Profiles>
-      <Profile level="1" type="Server"/>
-      <Profile level="1" type="Workstation"/>
+      <Profile level="1"/>
     </Profiles>
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>web.xml</FileName>
@@ -83,8 +78,7 @@
     <Chapter id="2">Limit Server Platform Information Leaks</Chapter>
     <Section id="2.6">Turn off TRACE</Section>
     <Profiles>
-      <Profile level="1" type="Server"/>
-      <Profile level="1" type="Workstation"/>
+      <Profile level="1"/>
     </Profiles>
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>web.xml</FileName>
@@ -100,8 +94,7 @@
     <Chapter id="2">Limit Server Platform Information Leaks</Chapter>
     <Section id="2.7">Ensure Server Header is Modified</Section>
     <Profiles>
-      <Profile level="2" type="Server"/>
-      <Profile level="2" type="Workstation"/>
+      <Profile level="2"/>
     </Profiles>
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>server.xml</FileName>

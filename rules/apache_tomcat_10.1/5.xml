@@ -4,8 +4,7 @@
     <Chapter id="5">Configure Tomcat Logging</Chapter>
     <Section id="5.1">Use Secure Realms</Section>
     <Profiles>
-      <Profile level="1" type="Server"/>
-      <Profile level="1" type="Workstation"/>
+      <Profile level="1"/>
     </Profiles>
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>server.xml</FileName>
@@ -21,8 +20,7 @@
     <Chapter id="5">Configure Tomcat Logging</Chapter>
     <Section id="5.2">Use LockOut Realm</Section>
     <Profiles>
-      <Profile level="1" type="Server"/>
-      <Profile level="1" type="Workstation"/>
+      <Profile level="1"/>
     </Profiles>
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>server.xml</FileName>

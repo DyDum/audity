@@ -4,8 +4,7 @@
     <Chapter id="8">Configure Tomcat Security Manager and Permissions</Chapter>
     <Section id="8.1">Restrict Runtime Access to Sensitive Packages</Section>
     <Profiles>
-      <Profile level="2" type="Server"/>
-      <Profile level="2" type="Workstation"/>
+      <Profile level="1" />
     </Profiles>
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>catalina.policy</FileName>
