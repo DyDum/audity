@@ -1,3 +1,6 @@
+#![warn(clippy::pedantic)]
+#![warn(clippy::all)]
+#![warn(clippy::nursery)]
 use audity::controller;
 use clap::{Arg, ArgAction, Command};
 

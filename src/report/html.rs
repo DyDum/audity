@@ -10,9 +10,9 @@
 //! * **Animated chevrons**: the arrow buttons rotate when sections are
 //!   collapsed / expanded, powered only by a tiny inline script.
 //
-//! The public API of this module is limited to `ReportTemplate`, which
-//! dereferences to the underlying `askama::Template`.  All rendering logic
-//! stays in the HTML; Rust merely passes a strongly-typed `ReportData`.
+//!   The public API of this module is limited to `ReportTemplate`, which
+//!   dereferences to the underlying `askama::Template`.  All rendering logic
+//!   stays in the HTML; Rust merely passes a strongly-typed `ReportData`.
 
 use askama::Template;
 
@@ -22,7 +22,7 @@ use super::data::ReportData;
 ///
 /// The HTML is supplied through the `source` attribute to avoid touching the
 /// filesystem at runtime.  The template language is *Jinja-like* – see
-/// https://docs.rs/askama/ for syntax.
+/// <https://docs.rs/askama> for syntax.
 ///
 /// * `'a` – lifetime of the borrowed `ReportData`.
 #[derive(Template)]

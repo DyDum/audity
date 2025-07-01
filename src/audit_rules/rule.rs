@@ -10,16 +10,17 @@ use serde::{de, Deserialize, Deserializer, Serialize, Serializer};
 /// | `Yes`         | `YES` |
 /// | `No`          | `NO` |
 /// | `NotTested`   | `NOT_TESTED` |
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum CompliantStatus {
     Yes,
     No,
+    #[default]
     NotTested,
 }
 
 impl CompliantStatus {
     #[inline]
-    pub fn as_str(self) -> &'static str {
+    #[must_use] pub fn as_str(self) -> &'static str {
         match self {
             Self::Yes => "YES",
             Self::No => "NO",
@@ -38,11 +39,6 @@ impl CompliantStatus {
     }
 }
 
-impl Default for CompliantStatus {
-    fn default() -> Self {
-        CompliantStatus::NotTested
-    }
-}
 
 /* ---------- manual string (de)serialisation ---------- */
 
@@ -68,7 +64,7 @@ impl<'de> Deserialize<'de> for CompliantStatus {
 
 /// Single CIS `<Rule>` element.
 ///
-/// Field names mirror the XML tag names (PascalCase) except the `id`
+/// Field names mirror the XML tag names (`PascalCase`) except the `id`
 /// attribute, which is mapped with `@id`.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "PascalCase")]

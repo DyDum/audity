@@ -8,6 +8,10 @@ use std::io::{self, Error as IoError};
 /// A `Result` which is either:
 /// - `Ok(())` if the update command is successful.
 /// - An `IoError` if the update command fails.
+/// # Errors
+/// This function returns an error if:
+/// - The command `sudo apt update` cannot be executed (e.g. missing `sudo` or `apt`).
+/// - The command returns a non-zero exit code.
 pub fn update_package_list() -> Result<(), io::Error> {
     let status = Command::new("sudo")
         .arg("apt")
@@ -27,6 +31,12 @@ pub fn update_package_list() -> Result<(), io::Error> {
 /// A `Result` which is either:
 /// - A string listing upgradable packages.
 /// - An `IoError` if the command fails or the output is invalid.
+/// # Errors
+/// This function returns an error if:
+/// - The `apt list --upgradable` command cannot be executed.
+/// - The command returns a non-zero exit code.
+/// - The command output is not valid UTF-8.
+/// - An error message is emitted to stderr.
 pub fn check_upgradable_packages() -> Result<String, IoError> {
     let output = Command::new("apt")
         .arg("list")

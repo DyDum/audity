@@ -129,7 +129,7 @@ impl HostInfo {
     /// No external commands are spawned; everything relies on safe,
     /// cross-platform crates where possible.  Any failure returns the
     /// placeholder string `"N/A"` or `0`.
-    pub fn gather() -> Self {
+    #[must_use] pub fn gather() -> Self {
         let hostname = hostname().unwrap_or_else(|_| "N/A".into());
 
         // Retrieve the first non-loopback IPv4 address found.
@@ -148,7 +148,7 @@ impl HostInfo {
         let kernel = os_release().unwrap_or_else(|_| "N/A".into());
         let architecture = std::env::consts::ARCH.to_string();
         let cpu_cores = cpu_num().unwrap_or(0) as u32;
-        let memory_mb = mem_info().map(|m| m.total as u64 / 1024).unwrap_or(0);
+        let memory_mb = mem_info().map(|m| m.total / 1024).unwrap_or(0);
 
         Self {
             hostname,
@@ -216,7 +216,9 @@ impl ReportData {
 
         // ---------- Compute statistics ----------
         let total = ok.len() + nc.len() + nt.len();
-        let percent = |n| ((n as f32 / total as f32) * 100.0).round() as u8;
+        
+        #[allow(clippy::cast_possible_truncation, clippy::cast_precision_loss, clippy::cast_sign_loss)]
+        let percent = |n: usize| ((n as f64 / total as f64) * 100.0).round() as u8;
 
         let stats = Stats {
             total,
