@@ -3,7 +3,7 @@ use crate::audit_rules::{scanner::ScanError, scanner::pretty_xml};
 use quick_xml::de::from_str;
 
 use crate::audit_rules::{
-    exec_command::execute_command,
+    exec_command::execute_verification_command,
     rule::{CompliantStatus, RulesCis},
 };
 
@@ -23,7 +23,7 @@ pub fn correct_directory(dir: &str) -> anyhow::Result<()> {
         for mut rule in local.rules {
             rule.compliant = match rule.manual.as_deref() {
                 Some("NO") | Some("VERIFICATION") => {
-                    match execute_command(&rule.verification) {
+                    match execute_verification_command(&rule.verification) {
                         Ok(true) => CompliantStatus::Yes,
                         Ok(false) | Err(_) => {
                             // 🚫 Filtrage des règles à haut risque
@@ -36,9 +36,9 @@ pub fn correct_directory(dir: &str) -> anyhow::Result<()> {
                                 println!("Rule {} of file {} skipped: too risky", rule.id, file.file_name().to_string_lossy());
                                 CompliantStatus::NotTested
                             } else {
-                                let _ = execute_command(&rule.correction);
+                                let _ = execute_verification_command(&rule.correction);
                                 // Vérifier à nouveau
-                                match execute_command(&rule.verification) {
+                                match execute_verification_command(&rule.verification) {
                                     Ok(true) => CompliantStatus::Yes,
                                     Ok(false) | Err(_) => CompliantStatus::No,
                                 }
