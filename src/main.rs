@@ -15,7 +15,7 @@ fn main() {
         .arg(Arg::new("update").short('D').long("update").help("Update package list (Must be sudo)").action(ArgAction::SetTrue).requires("package"))
         .arg(Arg::new("upgrade").short('G').long("upgrade").help("Check upgrades").action(ArgAction::SetTrue).requires("package"))
         .arg(Arg::new("cis").short('C').long("cis").help("Check CIS compliances (MUST HAVE PACKAGE LIST)").action(ArgAction::SetTrue).requires("package"))
-        .arg(Arg::new("correction").short('R').long("correction").help("Correct all packages for CIS compliances (MUST HAVE PACKAGE LIST) (Must be sudo)").action(ArgAction::SetTrue).requires("package"))
+        .arg(Arg::new("correction").short('R').long("correction").help("Correct all packages for CIS compliances (MUST HAVE PACKAGE LIST) (Must be sudo)").action(ArgAction::SetTrue))
         .get_matches();
 
     if matches.get_flag("audit") {

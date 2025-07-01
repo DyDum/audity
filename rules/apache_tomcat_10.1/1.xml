@@ -4,8 +4,7 @@
     <Chapter id="1">Remove Extraneous Resources</Chapter>
     <Section id="1.1">Remove extraneous files and directories</Section>
     <Profiles>
-      <Profile level="2" type="Server"/>
-      <Profile level="2" type="Workstation"/>
+      <Profile level="2"/>
     </Profiles>
     <BasePath>$CATALINA_HOME/webapps/</BasePath>
     <FileName>extraneous files and directories</FileName>
@@ -21,8 +20,7 @@
     <Chapter id="1">Remove Extraneous Resources</Chapter>
     <Section id="1.2">Disable Unused Connectors</Section>
     <Profiles>
-      <Profile level="2" type="Server"/>
-      <Profile level="2" type="Workstation"/>
+      <Profile level="2"/>
     </Profiles>
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>server.xml</FileName>

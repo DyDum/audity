@@ -3,6 +3,9 @@
     <Name>Separate Web Content Directory (Manual)</Name>
     <Chapter id="10">Additional Tomcat Hardening</Chapter>
     <Section id="10.1">Separate Web Content Directory</Section>
+    <Profiles>
+      <Profile level="1"/>
+    </Profiles>
     <BasePath>N/A</BasePath>
     <FileName>N/A</FileName>
     <NonCompliantComment>The web content directory is on the same partition as the Tomcat system files, which may lead to security risks.</NonCompliantComment>
@@ -14,6 +17,9 @@
     <Name>Restrict Access to Web Administration Application (Automated)</Name>
     <Chapter id="10">Additional Tomcat Hardening</Chapter>
     <Section id="10.2">Restrict Access to Web Administration Application</Section>
+    <Profiles>
+      <Profile level="1"/>
+    </Profiles>
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>server.xml</FileName>
     <NonCompliantComment>Access to the web administration application is not restricted, which may allow unauthorized access.</NonCompliantComment>
@@ -26,6 +32,9 @@
     <Name>Restrict Access to Manager Application (Manual)</Name>
     <Chapter id="10">Additional Tomcat Hardening</Chapter>
     <Section id="10.3">Restrict Access to Manager Application</Section>
+    <Profiles>
+      <Profile level="2"/>
+    </Profiles>
     <BasePath>$CATALINA_HOME/webapps/manager/</BasePath>
     <FileName>context.xml</FileName>
     <NonCompliantComment>The manager application is accessible without restrictions, which may allow unauthorized access.</NonCompliantComment>
@@ -37,6 +46,9 @@
     <Name>Enforce SSL for Manager Application (Manual)</Name>
     <Chapter id="10">Additional Tomcat Hardening</Chapter>
     <Section id="10.4">Enforce SSL for Manager Application</Section>
+    <Profiles>
+      <Profile level="1"/>
+    </Profiles>
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>server.xml</FileName>
     <NonCompliantComment>The manager application is accessible without SSL, which may expose sensitive data during transmission.</NonCompliantComment>
@@ -48,6 +60,9 @@
     <Name>Rename Manager Application (Manual)</Name>
     <Chapter id="10">Additional Tomcat Hardening</Chapter>
     <Section id="10.5">Rename Manager Application</Section>
+    <Profiles>
+      <Profile level="2"/>
+    </Profiles>
     <BasePath>$CATALINA_HOME/webapps/</BasePath>
     <FileName>manager/</FileName>
     <NonCompliantComment>The manager application is using the default name, which may make it a target for attacks.</NonCompliantComment>
@@ -59,6 +74,9 @@
     <Name>Enable Strict Servlet Compliance (Manual)</Name>
     <Chapter id="10">Additional Tomcat Hardening</Chapter>
     <Section id="10.6">Enable Strict Servlet Compliance</Section>
+    <Profiles>
+      <Profile level="2"/>
+    </Profiles>
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>catalina.properties</FileName>
     <NonCompliantComment>Strict servlet compliance is not enabled, which may allow non-standard servlet behaviors.</NonCompliantComment>
@@ -70,6 +88,9 @@
     <Name>Disable Session Facade Recycling (Manual)</Name>
     <Chapter id="10">Additional Tomcat Hardening</Chapter>
     <Section id="10.7">Disable Session Facade Recycling</Section>
+    <Profiles>
+      <Profile level="1"/>
+    </Profiles>
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>catalina.properties</FileName>
     <NonCompliantComment>Session facade recycling is enabled, which may cause session management issues.</NonCompliantComment>
@@ -81,6 +102,9 @@
     <Name>Disable Additional Path Delimiters (Manual)</Name>
     <Chapter id="10">Additional Tomcat Hardening</Chapter>
     <Section id="10.8">Disable Additional Path Delimiters</Section>
+    <Profiles>
+      <Profile level="2"/>
+    </Profiles>
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>server.xml</FileName>
     <NonCompliantComment>Additional path delimiters are allowed, which may introduce path traversal vulnerabilities.</NonCompliantComment>
@@ -92,6 +116,9 @@
     <Name>Set Connection Timeout (Automated)</Name>
     <Chapter id="10">Additional Tomcat Hardening</Chapter>
     <Section id="10.9">Set Connection Timeout</Section>
+    <Profiles>
+      <Profile level="2"/>
+    </Profiles>
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>server.xml</FileName>
     <NonCompliantComment>The connectionTimeout attribute is not configured, which may cause performance issues or allow unauthorized connections.</NonCompliantComment>
@@ -105,6 +132,9 @@
     <Name>Set Max HTTP Header Size (Automated)</Name>
     <Chapter id="10">Additional Tomcat Hardening</Chapter>
     <Section id="10.10">Set Max HTTP Header Size</Section>
+    <Profiles>
+      <Profile level="2"/>
+    </Profiles>
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>server.xml</FileName>
     <NonCompliantComment>The maxHttpHeaderSize attribute is not configured, which may expose the server to denial of service attacks.</NonCompliantComment>
@@ -118,6 +148,9 @@
     <Name>Enforce SSL for All Applications (Manual)</Name>
     <Chapter id="10">Additional Tomcat Hardening</Chapter>
     <Section id="10.11">Enforce SSL for All Applications</Section>
+    <Profiles>
+      <Profile level="2"/>
+    </Profiles>
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>server.xml</FileName>
     <NonCompliantComment>SSL is not enforced for all applications, which may allow unencrypted communications.</NonCompliantComment>
@@ -129,6 +162,9 @@
     <Name>Disable Symbolic Linking (Automated)</Name>
     <Chapter id="10">Additional Tomcat Hardening</Chapter>
     <Section id="10.12">Disable Symbolic Linking</Section>
+    <Profiles>
+      <Profile level="1"/>
+    </Profiles>
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>server.xml</FileName>
     <NonCompliantComment>Symbolic linking is enabled, which may expose sensitive files through unauthorized links.</NonCompliantComment>
@@ -142,6 +178,9 @@
     <Name>Disable Privileged Applications (Automated)</Name>
     <Chapter id="10">Additional Tomcat Hardening</Chapter>
     <Section id="10.13">Disable Privileged Applications</Section>
+    <Profiles>
+      <Profile level="1"/>
+    </Profiles>
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>context.xml</FileName>
     <NonCompliantComment>Applications are allowed to run as privileged, which may allow them to perform unauthorized actions.</NonCompliantComment>
@@ -155,6 +194,9 @@
     <Name>Disable Cross-Context Requests (Automated)</Name>
     <Chapter id="10">Additional Tomcat Hardening</Chapter>
     <Section id="10.14">Disable Cross-Context Requests</Section>
+    <Profiles>
+      <Profile level="1"/>
+    </Profiles>
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>context.xml</FileName>
     <NonCompliantComment>Cross-context requests are allowed, which may allow unauthorized access between applications.</NonCompliantComment>
@@ -168,6 +210,9 @@
     <Name>Disable Hostname Resolution in Logging Valves (Automated)</Name>
     <Chapter id="10">Additional Tomcat Hardening</Chapter>
     <Section id="10.15">Disable Hostname Resolution in Logging Valves</Section>
+    <Profiles>
+      <Profile level="2"/>
+    </Profiles>
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>server.xml</FileName>
     <NonCompliantComment>The server resolves hostnames on logging valves, which may introduce performance issues.</NonCompliantComment>
@@ -181,6 +226,9 @@
     <Name>Enable Memory Leak Listener (Manual)</Name>
     <Chapter id="10">Additional Tomcat Hardening</Chapter>
     <Section id="10.16">Enable Memory Leak Listener</Section>
+    <Profiles>
+      <Profile level="1"/>
+    </Profiles>
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>server.xml</FileName>
     <NonCompliantComment>Memory leak detection is disabled, which may prevent identification of memory leaks in applications.</NonCompliantComment>
@@ -192,6 +240,9 @@
     <Name>Enable Security Lifecycle Listener (Manual)</Name>
     <Chapter id="10">Additional Tomcat Hardening</Chapter>
     <Section id="10.17">Enable Security Lifecycle Listener</Section>
+    <Profiles>
+      <Profile level="1"/>
+    </Profiles>
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>server.xml</FileName>
     <NonCompliantComment>The Security Lifecycle Listener is not enabled, which may prevent secure initialization of the server.</NonCompliantComment>
@@ -203,6 +254,9 @@
     <Name>Enable logEffectiveWebXml and metadata-complete (Manual)</Name>
     <Chapter id="10">Additional Tomcat Hardening</Chapter>
     <Section id="10.18">Enable logEffectiveWebXml and metadata-complete</Section>
+    <Profiles>
+      <Profile level="1"/>
+    </Profiles>
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>web.xml</FileName>
     <NonCompliantComment>The logEffectiveWebXml and metadata-complete settings are not configured, which may allow incomplete or insecure deployments.</NonCompliantComment>
@@ -214,6 +268,9 @@
     <Name>Encrypt Manager Application Passwords (Manual)</Name>
     <Chapter id="10">Additional Tomcat Hardening</Chapter>
     <Section id="10.19">Encrypt Manager Application Passwords</Section>
+    <Profiles>
+      <Profile level="1"/>
+    </Profiles>
     <BasePath>$CATALINA_HOME/conf/</BasePath>
     <FileName>tomcat-users.xml</FileName>
     <NonCompliantComment>Manager application passwords are stored in plaintext, which may expose sensitive information.</NonCompliantComment>
