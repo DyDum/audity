@@ -14,7 +14,7 @@ use std::fmt::Write;
 /// - The `dpkg -l` command fails to execute (e.g. `dpkg` not found).
 /// - The command executes but returns a non-zero exit code.
 pub fn get_installed_packages_count() -> Result<usize, std::io::Error> {
-    let output = Command::new("dpkg")
+    let output: std::process::Output = Command::new("dpkg")
         .arg("-l")
         .output()?;
 
@@ -39,23 +39,23 @@ pub fn get_installed_packages_count() -> Result<usize, std::io::Error> {
 /// - The command output is not valid UTF-8.
 /// - There is an internal formatting failure when building the result string.
 pub fn list_installed_packages() -> Result<String, IoError> {
-    let output = Command::new("dpkg")
+    let output: std::process::Output = Command::new("dpkg")
         .arg("-l")
         .output()?;
 
     if output.status.success() {
         // Convert bytes to string and handle UTF-8 conversion errors
-        let output_str = str::from_utf8(&output.stdout)
+        let output_str: &str = str::from_utf8(&output.stdout)
             .map_err(|e| IoError::new(io::ErrorKind::InvalidData, e.to_string()))?;
 
         // Parse and collect package details
-        let mut details = String::new();
+        let mut details: String = String::new();
         for line in output_str.lines().skip(5) { // Skipping header lines
             let parts: Vec<&str> = line.split_whitespace().collect();
             if parts.len() > 3 {
-                let package_name = parts[1];
-                let version = parts[2];
-                let architecture = parts[3];
+                let package_name: &str = parts[1];
+                let version: &str = parts[2];
+                let architecture: &str = parts[3];
                 if let Err(e) = writeln!(details, "{package_name} {version} {architecture}") {
                     return Err(IoError::new(io::ErrorKind::Other, e.to_string()));
                 }

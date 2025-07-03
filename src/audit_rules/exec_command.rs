@@ -20,14 +20,14 @@ use std::process::Command;
 /// - If the output is not `"0"`, `"1"`, or empty.
 /// - If the exit code is not `0` or `1` when no output is produced.
 pub fn execute_verification_command(cmd: &str) -> Result<bool, String> {
-    let output = Command::new("sh")
+    let output: std::process::Output = Command::new("sh")
         .arg("-c")
         .arg(cmd)
         .output()
         .map_err(|e| format!("Erreur système : {e}"))?;
 
-    let stdout = String::from_utf8_lossy(&output.stdout).trim().to_string();
-    let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
+    let stdout: String = String::from_utf8_lossy(&output.stdout).trim().to_string();
+    let stderr: String = String::from_utf8_lossy(&output.stderr).trim().to_string();
 
     // Treat any message on stderr as an immediate error.
     if !stderr.is_empty() {

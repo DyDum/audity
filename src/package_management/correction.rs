@@ -14,10 +14,10 @@ pub fn correct_directory(dir: &str) -> anyhow::Result<()> {
         .collect();
     files.sort_by_key(|e| e.file_name());
 
-    let mut global = RulesCis::default();
+    let mut global: RulesCis = RulesCis::default();
 
     for file in files {
-        let raw = fs::read_to_string(file.path())?;
+        let raw: String = fs::read_to_string(file.path())?;
         let local: RulesCis = from_str(&raw)?;
 
         for mut rule in local.rules {
@@ -27,13 +27,13 @@ pub fn correct_directory(dir: &str) -> anyhow::Result<()> {
                         Ok(true) => CompliantStatus::Yes,
                         Ok(false) | Err(_) => {
                             // 🚫 Filtrage des règles à haut risque
-                            let risky = rule.id.starts_with("1.1.")
+                            let risky: bool = rule.id.starts_with("1.1.")
                                 || rule.correction.contains("/usr/lib")
                                 || rule.correction.contains("/usr/bin")
                                 || rule.correction.contains("chmod -R");
 
                             if risky {
-                                println!("Rule {} of file {} skipped: too risky", rule.id, file.file_name().to_string_lossy());
+                                println!("Rule {} of package {} skipped: too risky", rule.id, dir.to_string());
                                 CompliantStatus::NotTested
                             } else {
                                 let _ = execute_verification_command(&rule.correction);
@@ -54,15 +54,15 @@ pub fn correct_directory(dir: &str) -> anyhow::Result<()> {
     }
 
 
-    let xml = pretty_xml(&global)?;
+    let xml: String = pretty_xml(&global)?;
     fs::create_dir_all("reports")?;
 
-    let folder_name = Path::new(dir)
+    let folder_name: &str = Path::new(dir)
         .file_name()
         .and_then(|s| s.to_str())
         .unwrap_or("output");
 
-    let file_path = format!("reports/{}_correction.xml", folder_name);
+    let file_path: String = format!("reports/{}_correction.xml", folder_name);
     fs::write(&file_path, xml)?;
 
     println!("Correction report written to {}", file_path);

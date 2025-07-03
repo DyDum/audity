@@ -14,7 +14,7 @@ use std::fs::File;
 /// - The command `sudo apt update` cannot be executed (e.g. missing `sudo` or `apt`).
 /// - The command returns a non-zero exit code.
 pub fn update_package_list() -> Result<(), io::Error> {
-    let status = Command::new("sudo")
+    let status: std::process::ExitStatus = Command::new("sudo")
         .arg("apt")
         .arg("update")
         .arg("-qq") // Use -qq for quiet mode, suppressing output unless there's an error
@@ -40,8 +40,8 @@ pub fn update_package_list() -> Result<(), io::Error> {
 /// - The command returns a non-zero exit code.
 /// - The command output is not valid UTF-8.
 /// - An error message is emitted to stderr.
-pub fn check_upgradable_packages() -> Result<String, IoError> {
-    let output = Command::new("apt")
+pub fn check_upgradable_packages() -> Result<Vec<String>, IoError> {
+    let output: std::process::Output = Command::new("apt")
         .arg("list")
         .arg("--upgradable")
         .arg("-qq") // Use -qq for quiet mode, suppressing output unless there's an error
@@ -53,12 +53,12 @@ pub fn check_upgradable_packages() -> Result<String, IoError> {
             .map_err(|e| IoError::new(io::ErrorKind::InvalidData, e.to_string()))?;
 
         // Skip the first line of the output, usually a header.
-        let packages_details = upgradable_packages.lines().skip(1).collect::<Vec<_>>().join("\n");
+        let packages_details: Vec<String> = upgradable_packages.lines().skip(1).map(|line| line.to_string()).collect();
 
         Ok(packages_details)
     } else {
         // Decode the error message and return it as an IoError.
-        let error_message = str::from_utf8(&output.stderr)
+        let error_message: String = str::from_utf8(&output.stderr)
             .unwrap_or("Failed to decode error message")  // Provide a fallback error message.
             .to_string();
         
