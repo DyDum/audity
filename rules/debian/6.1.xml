@@ -18,8 +18,8 @@
         <FileName>journald.conf</FileName>
         <NonCompliantComment>Log forwarding is enabled (or not explicitly disabled).</NonCompliantComment>
         <CorrectiveComment>Set ForwardToSyslog=no.</CorrectiveComment>
-        <Correction>sed -i 's/^#\?ForwardToSyslog=.*/ForwardToSyslog=no/' /etc/systemd/journald.conf; systemctl restart systemd-journald</Correction>
-        <Verification>grep '^ForwardToSyslog=no' /etc/systemd/journald.conf &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[sed -i 's/^#\?ForwardToSyslog=.*/ForwardToSyslog=no/' /etc/systemd/journald.conf; systemctl restart systemd-journald]]></Correction>
+        <Verification><![CDATA[grep '^ForwardToSyslog=no' /etc/systemd/journald.conf && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -37,8 +37,8 @@
         <FileName>journald.conf</FileName>
         <NonCompliantComment>Log compression is not enabled.</NonCompliantComment>
         <CorrectiveComment>Set Compress=yes.</CorrectiveComment>
-        <Correction>sed -i 's/^#\?Compress=.*/Compress=yes/' /etc/systemd/journald.conf; systemctl restart systemd-journald</Correction>
-        <Verification>grep '^Compress=yes' /etc/systemd/journald.conf &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[sed -i 's/^#\?Compress=.*/Compress=yes/' /etc/systemd/journald.conf; systemctl restart systemd-journald]]></Correction>
+        <Verification><![CDATA[grep '^Compress=yes' /etc/systemd/journald.conf && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -56,8 +56,8 @@
         <FileName>journald.conf</FileName>
         <NonCompliantComment>The log storage mode is not persistent.</NonCompliantComment>
         <CorrectiveComment>Set Storage=persistent.</CorrectiveComment>
-        <Correction>sed -i 's/^#\?Storage=.*/Storage=persistent/' /etc/systemd/journald.conf; systemctl restart systemd-journald</Correction>
-        <Verification>grep '^Storage=persistent' /etc/systemd/journald.conf &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[sed -i 's/^#\?Storage=.*/Storage=persistent/' /etc/systemd/journald.conf; systemctl restart systemd-journald]]></Correction>
+        <Verification><![CDATA[grep '^Storage=persistent' /etc/systemd/journald.conf && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -74,8 +74,8 @@
         <FileName>journald.conf</FileName>
         <NonCompliantComment>Journald compression is not enabled.</NonCompliantComment>
         <CorrectiveComment>Enable Compress=yes.</CorrectiveComment>
-        <Correction>sed -i 's/^#\?Compress=.*/Compress=yes/' /etc/systemd/journald.conf; systemctl restart systemd-journald</Correction>
-        <Verification>grep '^Compress=yes' /etc/systemd/journald.conf &amp;&amp; systemctl is-active systemd-journald | grep -q "active" &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[sed -i 's/^#\?Compress=.*/Compress=yes/' /etc/systemd/journald.conf; systemctl restart systemd-journald]]></Correction>
+        <Verification><![CDATA[grep '^Compress=yes' /etc/systemd/journald.conf && systemctl is-active systemd-journald | grep -q "active" && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -92,8 +92,8 @@
         <FileName>journald.conf</FileName>
         <NonCompliantComment>The storage setting is not persistent.</NonCompliantComment>
         <CorrectiveComment>Set Storage=persistent.</CorrectiveComment>
-        <Correction>sed -i 's/^#\?Storage=.*/Storage=persistent/' /etc/systemd/journald.conf; systemctl restart systemd-journald</Correction>
-        <Verification>grep '^Storage=persistent' /etc/systemd/journald.conf &amp;&amp; systemctl is-active systemd-journald | grep -q "active" &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[sed -i 's/^#\?Storage=.*/Storage=persistent/' /etc/systemd/journald.conf; systemctl restart systemd-journald]]></Correction>
+        <Verification><![CDATA[grep '^Storage=persistent' /etc/systemd/journald.conf && systemctl is-active systemd-journald | grep -q "active" && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -113,8 +113,8 @@
         <FileName>logfiles</FileName>
         <NonCompliantComment>Critical log files do not have restricted permissions.</NonCompliantComment>
         <CorrectiveComment>Set file mode 640 on all logs under /var/log.</CorrectiveComment>
-        <Correction>find /var/log -type f -exec chmod 640 {} \;</Correction>
-        <Verification>find /var/log -type f | xargs -I {} stat -c "%a" {} | grep -q "^640" &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[find /var/log -type f -exec chmod 640 {} \;]]></Correction>
+        <Verification><![CDATA[find /var/log -type f | xargs -I {} stat -c "%a" {} | grep -q "^640" && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -131,8 +131,8 @@
         <FileName>ownership</FileName>
         <NonCompliantComment>Log files not consistently owned by authorized users.</NonCompliantComment>
         <CorrectiveComment>Ensure root:adm ownership on /var/log/**.</CorrectiveComment>
-        <Correction>chown -R root:adm /var/log</Correction>
-        <Verification>find /var/log -type f -exec stat -c "%U:%G" {} \; | grep -v "root:adm" &amp;&amp; echo 1 || echo 0</Verification>
+        <Correction><![CDATA[chown -R root:adm /var/log]]></Correction>
+        <Verification><![CDATA[find /var/log -type f -exec stat -c "%U:%G" {} \; | grep -v "root:adm" && echo 1 || echo 0]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -149,8 +149,8 @@
         <FileName>rsyslog</FileName>
         <NonCompliantComment>Log rotation is not configured.</NonCompliantComment>
         <CorrectiveComment>Add logrotate policy for /var/log/*.log.</CorrectiveComment>
-        <Correction>echo "/var/log/*.log { daily rotate 7 compress missingok notifempty }" &gt; /etc/logrotate.d/rsyslog</Correction>
-        <Verification>grep -q "/var/log/*.log" /etc/logrotate.d/rsyslog &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "/var/log/*.log { daily rotate 7 compress missingok notifempty }" > /etc/logrotate.d/rsyslog]]></Correction>
+        <Verification><![CDATA[grep -q "/var/log/*.log" /etc/logrotate.d/rsyslog && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -167,8 +167,8 @@
         <FileName>fstab</FileName>
         <NonCompliantComment>Logs stored on root partition.</NonCompliantComment>
         <CorrectiveComment>Create a dedicated /var/log partition.</CorrectiveComment>
-        <Correction>echo "/dev/sdX /var/log ext4 defaults 0 0" &gt;&gt; /etc/fstab; mount -o remount /var/log</Correction>
-        <Verification>grep -q "/var/log" /etc/fstab &amp;&amp; mount | grep -q "/var/log" &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "/dev/sdX /var/log ext4 defaults 0 0" >> /etc/fstab; mount -o remount /var/log]]></Correction>
+        <Verification><![CDATA[grep -q "/var/log" /etc/fstab && mount | grep -q "/var/log" && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -185,8 +185,8 @@
         <FileName>rsyslog.conf</FileName>
         <NonCompliantComment>Remote logging not configured.</NonCompliantComment>
         <CorrectiveComment>Forward logs to remote-log-server:514.</CorrectiveComment>
-        <Correction>echo "*.* @@remote-log-server:514" &gt;&gt; /etc/rsyslog.conf; systemctl restart rsyslog</Correction>
-        <Verification>grep -q "@@remote-log-server:514" /etc/rsyslog.conf &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "*.* @@remote-log-server:514" >> /etc/rsyslog.conf; systemctl restart rsyslog]]></Correction>
+        <Verification><![CDATA[grep -q "@@remote-log-server:514" /etc/rsyslog.conf && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -203,8 +203,8 @@
         <FileName>log_backup.sh</FileName>
         <NonCompliantComment>No scheduled log backups.</NonCompliantComment>
         <CorrectiveComment>Create daily backup of /var/log.</CorrectiveComment>
-        <Correction>echo "tar -czf /var/backups/logs-$(date +%F).tar.gz /var/log" &gt; /var/backups/log_backup.sh; chmod +x /var/backups/log_backup.sh; (crontab -l ; echo "0 2 * * * /var/backups/log_backup.sh") | crontab -</Correction>
-        <Verification>test -f /var/backups/log_backup.sh &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "tar -czf /var/backups/logs-$(date +%F).tar.gz /var/log" > /var/backups/log_backup.sh; chmod +x /var/backups/log_backup.sh; (crontab -l ; echo "0 2 * * * /var/backups/log_backup.sh") | crontab -]]></Correction>
+        <Verification><![CDATA[test -f /var/backups/log_backup.sh && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -221,8 +221,8 @@
         <FileName>aide.conf</FileName>
         <NonCompliantComment>Log integrity not monitored.</NonCompliantComment>
         <CorrectiveComment>Deploy AIDE to monitor /var/log.</CorrectiveComment>
-        <Correction>apt-get install -y aide; aideinit; cp /var/lib/aide/aide.db.new /var/lib/aide/aide.db</Correction>
-        <Verification>test -f /var/lib/aide/aide.db &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[apt-get install -y aide; aideinit; cp /var/lib/aide/aide.db.new /var/lib/aide/aide.db]]></Correction>
+        <Verification><![CDATA[test -f /var/lib/aide/aide.db && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -239,8 +239,8 @@
         <FileName>custom_logrotate.conf</FileName>
         <NonCompliantComment>Critical logs may not be rotated.</NonCompliantComment>
         <CorrectiveComment>Create dedicated logrotate policy.</CorrectiveComment>
-        <Correction>echo "/var/log/*.log { daily rotate 7 compress missingok notifempty }" &gt; /etc/logrotate.d/custom_logrotate.conf</Correction>
-        <Verification>test -f /etc/logrotate.d/custom_logrotate.conf &amp;&amp; grep -q "/var/log/*.log" /etc/logrotate.d/custom_logrotate.conf &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "/var/log/*.log { daily rotate 7 compress missingok notifempty }" > /etc/logrotate.d/custom_logrotate.conf]]></Correction>
+        <Verification><![CDATA[test -f /etc/logrotate.d/custom_logrotate.conf && grep -q "/var/log/*.log" /etc/logrotate.d/custom_logrotate.conf && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -260,8 +260,8 @@
         <FileName>logging_system</FileName>
         <NonCompliantComment>Multiple logging systems are active.</NonCompliantComment>
         <CorrectiveComment>Disable rsyslog so only systemd-journald is active.</CorrectiveComment>
-        <Correction>systemctl disable rsyslog; systemctl stop rsyslog</Correction>
-        <Verification>systemctl is-active rsyslog | grep -q "inactive" &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[systemctl disable rsyslog; systemctl stop rsyslog]]></Correction>
+        <Verification><![CDATA[systemctl is-active rsyslog | grep -q "inactive" && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 

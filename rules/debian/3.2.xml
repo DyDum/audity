@@ -11,8 +11,8 @@
         <FileName>dccp.conf</FileName>
         <NonCompliantComment>The dccp kernel module is available, increasing the attack surface.</NonCompliantComment>
         <CorrectiveComment>Disable the dccp kernel module by blacklisting it and preventing its loading.</CorrectiveComment>
-        <Correction>echo "install dccp /bin/false" &gt;&gt; /etc/modprobe.d/dccp.conf; echo "blacklist dccp" &gt;&gt; /etc/modprobe.d/dccp.conf; modprobe -r dccp</Correction>
-        <Verification>lsmod | grep -q '^dccp' &amp;&amp; echo 1 || echo 0</Verification>
+        <Correction><![CDATA[echo "install dccp /bin/false" >> /etc/modprobe.d/dccp.conf; echo "blacklist dccp" >> /etc/modprobe.d/dccp.conf; modprobe -r dccp 2>/dev/null; rmmod dccp 2>/dev/null]]></Correction>
+        <Verification><![CDATA[! lsmod | grep -q '^dccp' && grep -q 'install dccp /bin/false' /etc/modprobe.d/dccp.conf && grep -q 'blacklist dccp' /etc/modprobe.d/dccp.conf && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -28,8 +28,8 @@
         <FileName>tipc.conf</FileName>
         <NonCompliantComment>The tipc kernel module is available, which may increase the attack surface unnecessarily.</NonCompliantComment>
         <CorrectiveComment>Disable the tipc kernel module by blacklisting it and preventing its loading.</CorrectiveComment>
-        <Correction>echo "install tipc /bin/false" &gt;&gt; /etc/modprobe.d/tipc.conf; echo "blacklist tipc" &gt;&gt; /etc/modprobe.d/tipc.conf; modprobe -r tipc</Correction>
-        <Verification>lsmod | grep -q '^tipc' &amp;&amp; echo 1 || echo 0</Verification>
+        <Correction><![CDATA[echo "install tipc /bin/false" >> /etc/modprobe.d/tipc.conf; echo "blacklist tipc" >> /etc/modprobe.d/tipc.conf; modprobe -r tipc 2>/dev/null; rmmod tipc 2>/dev/null]]></Correction>
+        <Verification><![CDATA[! lsmod | grep -q '^tipc' && grep -q 'install tipc /bin/false' /etc/modprobe.d/tipc.conf && grep -q 'blacklist tipc' /etc/modprobe.d/tipc.conf && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -45,8 +45,8 @@
         <FileName>rds.conf</FileName>
         <NonCompliantComment>The rds kernel module is available, potentially exposing the system to vulnerabilities.</NonCompliantComment>
         <CorrectiveComment>Disable the rds kernel module by blacklisting it and preventing its loading.</CorrectiveComment>
-        <Correction>echo "install rds /bin/false" &gt;&gt; /etc/modprobe.d/rds.conf; echo "blacklist rds" &gt;&gt; /etc/modprobe.d/rds.conf; modprobe -r rds</Correction>
-        <Verification>lsmod | grep -q '^rds' &amp;&amp; echo 1 || echo 0</Verification>
+        <Correction><![CDATA[echo "install rds /bin/false" >> /etc/modprobe.d/rds.conf; echo "blacklist rds" >> /etc/modprobe.d/rds.conf; modprobe -r rds 2>/dev/null; rmmod rds 2>/dev/null]]></Correction>
+        <Verification><![CDATA[! lsmod | grep -q '^rds' && grep -q 'install rds /bin/false' /etc/modprobe.d/rds.conf && grep -q 'blacklist rds' /etc/modprobe.d/rds.conf && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -62,8 +62,8 @@
         <FileName>sctp.conf</FileName>
         <NonCompliantComment>The sctp kernel module is available, which may not be necessary and could increase security risks.</NonCompliantComment>
         <CorrectiveComment>Disable the sctp kernel module by blacklisting it and preventing its loading.</CorrectiveComment>
-        <Correction>echo "install sctp /bin/false" &gt;&gt; /etc/modprobe.d/sctp.conf; echo "blacklist sctp" &gt;&gt; /etc/modprobe.d/sctp.conf; modprobe -r sctp</Correction>
-        <Verification>lsmod | grep -q '^sctp' &amp;&amp; echo 1 || echo 0</Verification>
+        <Correction><![CDATA[echo "install sctp /bin/false" >> /etc/modprobe.d/sctp.conf; echo "blacklist sctp" >> /etc/modprobe.d/sctp.conf; modprobe -r sctp 2>/dev/null; rmmod sctp 2>/dev/null]]></Correction>
+        <Verification><![CDATA[! lsmod | grep -q '^sctp' && grep -q 'install sctp /bin/false' /etc/modprobe.d/sctp.conf && grep -q 'blacklist sctp' /etc/modprobe.d/sctp.conf && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 </RulesCIS>

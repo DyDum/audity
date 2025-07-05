@@ -17,8 +17,8 @@
         <FileName>login.defs</FileName>
         <NonCompliantComment>Password expiration is not configured.</NonCompliantComment>
         <CorrectiveComment>Set PASS_MAX_DAYS to 90.</CorrectiveComment>
-        <Correction>sed -i 's/^PASS_MAX_DAYS.*/PASS_MAX_DAYS 90/' /etc/login.defs</Correction>
-        <Verification>grep '^PASS_MAX_DAYS' /etc/login.defs | grep -q '90' &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[sed -i 's/^PASS_MAX_DAYS.*/PASS_MAX_DAYS 90/' /etc/login.defs]]></Correction>
+        <Verification><![CDATA[grep '^PASS_MAX_DAYS' /etc/login.defs | grep -q '90' && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -35,8 +35,8 @@
         <FileName>login.defs</FileName>
         <NonCompliantComment>PASS_MIN_DAYS is not set.</NonCompliantComment>
         <CorrectiveComment>Set PASS_MIN_DAYS to 7.</CorrectiveComment>
-        <Correction>sed -i 's/^PASS_MIN_DAYS.*/PASS_MIN_DAYS 7/' /etc/login.defs</Correction>
-        <Verification>grep '^PASS_MIN_DAYS' /etc/login.defs | grep -q '7' &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[sed -i 's/^PASS_MIN_DAYS.*/PASS_MIN_DAYS 7/' /etc/login.defs]]></Correction>
+        <Verification><![CDATA[grep '^PASS_MIN_DAYS' /etc/login.defs | grep -q '7' && echo 0 || echo 1]]></Verification>
         <Manual>YES</Manual>
     </Rule>
 
@@ -53,8 +53,8 @@
         <FileName>login.defs</FileName>
         <NonCompliantComment>PASS_WARN_AGE is not set.</NonCompliantComment>
         <CorrectiveComment>Set PASS_WARN_AGE to 7.</CorrectiveComment>
-        <Correction>sed -i 's/^PASS_WARN_AGE.*/PASS_WARN_AGE 7/' /etc/login.defs</Correction>
-        <Verification>grep '^PASS_WARN_AGE' /etc/login.defs | grep -q '7' &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[sed -i 's/^PASS_WARN_AGE.*/PASS_WARN_AGE 7/' /etc/login.defs]]></Correction>
+        <Verification><![CDATA[grep '^PASS_WARN_AGE' /etc/login.defs | grep -q '7' && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -71,8 +71,8 @@
         <FileName>login.defs</FileName>
         <NonCompliantComment>ENCRYPT_METHOD is not set.</NonCompliantComment>
         <CorrectiveComment>Set ENCRYPT_METHOD to SHA512.</CorrectiveComment>
-        <Correction>echo "ENCRYPT_METHOD SHA512" &gt;&gt; /etc/login.defs</Correction>
-        <Verification>grep -q "ENCRYPT_METHOD SHA512" /etc/login.defs &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "ENCRYPT_METHOD SHA512" >> /etc/login.defs]]></Correction>
+        <Verification><![CDATA[grep -q "ENCRYPT_METHOD SHA512" /etc/login.defs && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -89,8 +89,8 @@
         <FileName>useradd</FileName>
         <NonCompliantComment>Inactive password lock is not configured.</NonCompliantComment>
         <CorrectiveComment>Set INACTIVE=30 in /etc/default/useradd.</CorrectiveComment>
-        <Correction>echo "INACTIVE=30" &gt;&gt; /etc/default/useradd</Correction>
-        <Verification>grep -q "INACTIVE=30" /etc/default/useradd &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "INACTIVE=30" >> /etc/default/useradd]]></Correction>
+        <Verification><![CDATA[grep -q "INACTIVE=30" /etc/default/useradd && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -107,8 +107,8 @@
         <FileName>shadow</FileName>
         <NonCompliantComment>Some accounts have no last-change date.</NonCompliantComment>
         <CorrectiveComment>Audit /etc/shadow entries.</CorrectiveComment>
-        <Correction>echo "Manual review required." </Correction>
-        <Verification>echo "Manual verification required"</Verification>
+        <Correction><![CDATA[echo "Manual review required." ]]></Correction>
+        <Verification><![CDATA[echo "Manual verification required"]]></Verification>
         <Manual>YES</Manual>
     </Rule>
 
@@ -128,8 +128,8 @@
         <FileName>passwd</FileName>
         <NonCompliantComment>Extra UID 0 accounts found.</NonCompliantComment>
         <CorrectiveComment>Convert extra UID 0 accounts to non-privileged UIDs.</CorrectiveComment>
-        <Correction>echo "Manual review required."</Correction>
-        <Verification>grep '^[^:]*:[^:]*:0:' /etc/passwd | wc -l | grep -q '^1$' &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "Manual review required."]]></Correction>
+        <Verification><![CDATA[grep '^[^:]*:[^:]*:0:' /etc/passwd | wc -l | grep -q '^1$' && echo 0 || echo 1]]></Verification>
         <Manual>YES</Manual>
     </Rule>
 
@@ -146,8 +146,8 @@
         <FileName>passwd</FileName>
         <NonCompliantComment>Root shell or environment not restricted.</NonCompliantComment>
         <CorrectiveComment>Harden root shell and env.</CorrectiveComment>
-        <Correction>echo "Manual review required."</Correction>
-        <Verification>echo "Manual verification required"</Verification>
+        <Correction><![CDATA[echo "Manual review required."]]></Correction>
+        <Verification><![CDATA[echo "Manual verification required"]]></Verification>
         <Manual>YES</Manual>
     </Rule>
 
@@ -164,8 +164,8 @@
         <FileName>user_account_review</FileName>
         <NonCompliantComment>System accounts have interactive shells.</NonCompliantComment>
         <CorrectiveComment>Assign nologin shells.</CorrectiveComment>
-        <Correction>echo "Manual review required."</Correction>
-        <Verification>echo "Manual verification required"</Verification>
+        <Correction><![CDATA[echo "Manual review required."]]></Correction>
+        <Verification><![CDATA[echo "Manual verification required"]]></Verification>
         <Manual>YES</Manual>
     </Rule>
 
@@ -182,8 +182,8 @@
         <FileName>integrity_monitoring.sh</FileName>
         <NonCompliantComment>No integrity monitoring.</NonCompliantComment>
         <CorrectiveComment>Deploy AIDE.</CorrectiveComment>
-        <Correction>echo "Manual configuration required."</Correction>
-        <Verification>echo "Manual verification required"</Verification>
+        <Correction><![CDATA[echo "Manual configuration required."]]></Correction>
+        <Verification><![CDATA[echo "Manual verification required"]]></Verification>
         <Manual>YES</Manual>
     </Rule>
 
@@ -200,8 +200,8 @@
         <FileName>profile</FileName>
         <NonCompliantComment>Root umask insecure.</NonCompliantComment>
         <CorrectiveComment>Set umask 027.</CorrectiveComment>
-        <Correction>echo "umask 027" &gt;&gt; /etc/profile</Correction>
-        <Verification>grep -q "umask 027" /etc/profile &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "umask 027" >> /etc/profile]]></Correction>
+        <Verification><![CDATA[grep -q "umask 027" /etc/profile && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -212,6 +212,7 @@
         <Name>Ensure nologin is not listed in /etc/shells (Automated)</Name>
         <Chapter id="5">Access Control</Chapter>
         <Section id="5.4">User Accounts and Environment</Section>
+        
         <SubSection id="5.4.3">Configure user default environment</SubSection>
         <Profiles>
             <Profile level="2" type="Server"/>
@@ -221,8 +222,8 @@
         <FileName>shells</FileName>
         <NonCompliantComment>nologin present in /etc/shells.</NonCompliantComment>
         <CorrectiveComment>Remove nologin.</CorrectiveComment>
-        <Correction>sed -i '/nologin/d' /etc/shells</Correction>
-        <Verification>! grep -q "nologin" /etc/shells &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[sed -i '/nologin/d' /etc/shells]]></Correction>
+        <Verification><![CDATA[! grep -q "nologin" /etc/shells && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -239,8 +240,8 @@
         <FileName>profile</FileName>
         <NonCompliantComment>No TMOUT configured.</NonCompliantComment>
         <CorrectiveComment>Set TMOUT=600.</CorrectiveComment>
-        <Correction>echo "TMOUT=600" &gt;&gt; /etc/profile</Correction>
-        <Verification>grep -q "TMOUT=600" /etc/profile &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "TMOUT=600" >> /etc/profile]]></Correction>
+        <Verification><![CDATA[grep -q "TMOUT=600" /etc/profile && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -257,8 +258,8 @@
         <FileName>profile</FileName>
         <NonCompliantComment>Default umask insecure.</NonCompliantComment>
         <CorrectiveComment>Set umask 027.</CorrectiveComment>
-        <Correction>echo "umask 027" &gt;&gt; /etc/profile</Correction>
-        <Verification>grep -q "umask 027" /etc/profile &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "umask 027" >> /etc/profile]]></Correction>
+        <Verification><![CDATA[grep -q "umask 027" /etc/profile && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 

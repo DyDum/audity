@@ -11,8 +11,8 @@
         <FileName>motd</FileName>
         <NonCompliantComment>The system does not display a proper message of the day, leaving users uninformed about authorized usage.</NonCompliantComment>
         <CorrectiveComment>Configure /etc/motd with a standard warning message.</CorrectiveComment>
-        <Correction>echo "Authorized users only. Unauthorized access is prohibited." > /etc/motd</Correction>
-        <Verification>grep -q "Unauthorized access is prohibited" /etc/motd &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "Authorized users only. Unauthorized access is prohibited." | sudo tee /etc/motd >/dev/null]]></Correction>
+        <Verification><![CDATA[grep -q "Unauthorized access is prohibited" /etc/motd && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -28,8 +28,8 @@
         <FileName>issue</FileName>
         <NonCompliantComment>The local login warning banner is missing or misconfigured.</NonCompliantComment>
         <CorrectiveComment>Configure /etc/issue with a proper local login warning message.</CorrectiveComment>
-        <Correction>echo "Unauthorized access to this system is prohibited." > /etc/issue</Correction>
-        <Verification>grep -q "Unauthorized access" /etc/issue &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[printf '%s\n' "Unauthorized access to this system is prohibited." | sudo tee /etc/issue >/dev/null && sudo chown root:root /etc/issue && sudo chmod 644 /etc/issue && echo 0]]></Correction>
+        <Verification><![CDATA[grep -q "Unauthorized access" /etc/issue && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -45,8 +45,8 @@
         <FileName>issue.net</FileName>
         <NonCompliantComment>The remote login warning banner is missing or misconfigured.</NonCompliantComment>
         <CorrectiveComment>Configure /etc/issue.net with an appropriate remote login warning message.</CorrectiveComment>
-        <Correction>echo "Unauthorized access to this network is prohibited." > /etc/issue.net</Correction>
-        <Verification>grep -q "Unauthorized access" /etc/issue.net &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[printf '%s\n' "Unauthorized access to this network is prohibited." | sudo tee /etc/issue.net >/dev/null && sudo chown root:root /etc/issue.net && sudo chmod 644 /etc/issue.net && echo 0]]></Correction>
+        <Verification><![CDATA[grep -q "Unauthorized access" /etc/issue.net && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -62,8 +62,8 @@
         <FileName>motd</FileName>
         <NonCompliantComment>The file permissions on /etc/motd allow unauthorized modifications.</NonCompliantComment>
         <CorrectiveComment>Set the permissions on /etc/motd to 644.</CorrectiveComment>
-        <Correction>chmod 644 /etc/motd</Correction>
-        <Verification>stat -c "%a" /etc/motd | grep -q "^644$" &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[chmod 644 /etc/motd]]></Correction>
+        <Verification><![CDATA[stat -c "%a" /etc/motd | grep -q "^644$" && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -79,8 +79,8 @@
         <FileName>issue</FileName>
         <NonCompliantComment>The file permissions on /etc/issue are too permissive.</NonCompliantComment>
         <CorrectiveComment>Set the permissions on /etc/issue to 644.</CorrectiveComment>
-        <Correction>chmod 644 /etc/issue</Correction>
-        <Verification>stat -c "%a" /etc/issue | grep -q "^644$" &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[sudo chmod 644 /etc/issue]]></Correction>
+        <Verification><![CDATA[stat -c "%a" /etc/issue | grep -q "^644$" && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -96,8 +96,15 @@
         <FileName>issue.net</FileName>
         <NonCompliantComment>The file permissions on /etc/issue.net are too permissive.</NonCompliantComment>
         <CorrectiveComment>Set the permissions on /etc/issue.net to 644.</CorrectiveComment>
-        <Correction>chmod 644 /etc/issue.net</Correction>
-        <Verification>stat -c "%a" /etc/issue.net | grep -q "^644$" &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[sudo chmod 644 /etc/issue.net]]></Correction>
+        <Verification><![CDATA[stat -c "%a" /etc/issue.net | grep -q "^644$" && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 </RulesCIS>
+
+
+user@debianTest:~$ gsettings get org.gnome.login-screen disable-user-list 2>/dev/null | grep -qx true && echo 0 || echo 1
+1
+user@debianTest:~$ sudo -u gdm dbus-launch gsettings set org.gnome.login-screen disable-user-list true && echo 0
+sudo: utilisateur gdm inconnu
+sudo: erreur à l'initialisation du greffon d'audit sudoers_audit

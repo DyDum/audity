@@ -11,8 +11,8 @@
         <FileName>sshd_config</FileName>
         <NonCompliantComment>sshd_config file permissions are not set to 600, risking unauthorized modifications.</NonCompliantComment>
         <CorrectiveComment>Set permissions on /etc/ssh/sshd_config to 600.</CorrectiveComment>
-        <Correction>chmod 600 /etc/ssh/sshd_config</Correction>
-        <Verification>stat -c "%a" /etc/ssh/sshd_config | grep -q "^600$" &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[chmod 600 /etc/ssh/sshd_config]]></Correction>
+        <Verification><![CDATA[stat -c "%a" /etc/ssh/sshd_config | grep -q "^600$" && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -28,8 +28,8 @@
         <FileName>ssh_host_*_key</FileName>
         <NonCompliantComment>SSH private host key file permissions are too permissive.</NonCompliantComment>
         <CorrectiveComment>Set permissions on SSH private host key files to 600.</CorrectiveComment>
-        <Correction>chmod 600 /etc/ssh/ssh_host_*_key</Correction>
-        <Verification>for key in /etc/ssh/ssh_host_*_key; do stat -c "%a" "$key" | grep -q "^600$" || exit 1; done; echo 0</Verification>
+        <Correction><![CDATA[chmod 600 /etc/ssh/ssh_host_*_key]]></Correction>
+        <Verification><![CDATA[for key in /etc/ssh/ssh_host_*_key; do stat -c "%a" "$key" | grep -q "^600$" || exit 1; done; echo 0]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -45,8 +45,8 @@
         <FileName>ssh_host_*_key.pub</FileName>
         <NonCompliantComment>SSH public host key file permissions are too open.</NonCompliantComment>
         <CorrectiveComment>Set permissions on SSH public host key files to 644.</CorrectiveComment>
-        <Correction>chmod 644 /etc/ssh/ssh_host_*_key.pub</Correction>
-        <Verification>for key in /etc/ssh/ssh_host_*_key.pub; do stat -c "%a" "$key" | grep -q "^644$" || exit 1; done; echo 0</Verification>
+        <Correction><![CDATA[chmod 644 /etc/ssh/ssh_host_*_key.pub]]></Correction>
+        <Verification><![CDATA[for key in /etc/ssh/ssh_host_*_key.pub; do stat -c "%a" "$key" | grep -q "^644$" || exit 1; done; echo 0]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -62,8 +62,8 @@
         <FileName>sshd_config</FileName>
         <NonCompliantComment>sshd access is not restricted; insecure defaults may allow unauthorized access.</NonCompliantComment>
         <CorrectiveComment>Restrict sshd access by disabling root login and limiting allowed users.</CorrectiveComment>
-        <Correction>echo "PermitRootLogin no" &gt;&gt; /etc/ssh/sshd_config; echo "AllowUsers user1 user2" &gt;&gt; /etc/ssh/sshd_config; systemctl restart sshd</Correction>
-        <Verification>grep -q "^PermitRootLogin no" /etc/ssh/sshd_config &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "PermitRootLogin no" >> /etc/ssh/sshd_config; echo "AllowUsers user1 user2" >> /etc/ssh/sshd_config; systemctl restart sshd]]></Correction>
+        <Verification><![CDATA[grep -q "^PermitRootLogin no" /etc/ssh/sshd_config && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -79,8 +79,8 @@
         <FileName>sshd_config</FileName>
         <NonCompliantComment>SSH banner is not configured, reducing user awareness of login policies.</NonCompliantComment>
         <CorrectiveComment>Configure a banner in sshd_config to display a warning message.</CorrectiveComment>
-        <Correction>echo "Banner /etc/issue.net" &gt;&gt; /etc/ssh/sshd_config; systemctl restart sshd</Correction>
-        <Verification>grep -q "^Banner /etc/issue.net" /etc/ssh/sshd_config &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "Banner /etc/issue.net" >> /etc/ssh/sshd_config; systemctl restart sshd]]></Correction>
+        <Verification><![CDATA[grep -q "^Banner /etc/issue.net" /etc/ssh/sshd_config && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -96,8 +96,8 @@
         <FileName>sshd_config</FileName>
         <NonCompliantComment>Insecure SSH ciphers may be allowed by default.</NonCompliantComment>
         <CorrectiveComment>Configure secure ciphers in sshd_config.</CorrectiveComment>
-        <Correction>echo "Ciphers aes256-ctr,aes192-ctr,aes128-ctr" &gt;&gt; /etc/ssh/sshd_config; systemctl restart sshd</Correction>
-        <Verification>grep -q "^Ciphers aes256-ctr,aes192-ctr,aes128-ctr" /etc/ssh/sshd_config &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "Ciphers aes256-ctr,aes192-ctr,aes128-ctr" >> /etc/ssh/sshd_config; systemctl restart sshd]]></Correction>
+        <Verification><![CDATA[grep -q "^Ciphers aes256-ctr,aes192-ctr,aes128-ctr" /etc/ssh/sshd_config && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -113,8 +113,8 @@
         <FileName>sshd_config</FileName>
         <NonCompliantComment>ClientAliveInterval and ClientAliveCountMax are not configured, potentially allowing indefinite idle sessions.</NonCompliantComment>
         <CorrectiveComment>Set ClientAliveInterval to 300 and ClientAliveCountMax to 0 to limit idle time.</CorrectiveComment>
-        <Correction>echo "ClientAliveInterval 300" &gt;&gt; /etc/ssh/sshd_config; echo "ClientAliveCountMax 0" &gt;&gt; /etc/ssh/sshd_config; systemctl restart sshd</Correction>
-        <Verification>(grep -q "^ClientAliveInterval 300" /etc/ssh/sshd_config &amp;&amp; grep -q "^ClientAliveCountMax 0" /etc/ssh/sshd_config) &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "ClientAliveInterval 300" >> /etc/ssh/sshd_config; echo "ClientAliveCountMax 0" >> /etc/ssh/sshd_config; systemctl restart sshd]]></Correction>
+        <Verification><![CDATA[(grep -q "^ClientAliveInterval 300" /etc/ssh/sshd_config && grep -q "^ClientAliveCountMax 0" /etc/ssh/sshd_config) && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -130,8 +130,8 @@
         <FileName>sshd_config</FileName>
         <NonCompliantComment>SSH forwarding is enabled, potentially allowing unauthorized tunneling.</NonCompliantComment>
         <CorrectiveComment>Disable TCP forwarding by setting AllowTcpForwarding to no.</CorrectiveComment>
-        <Correction>echo "AllowTcpForwarding no" &gt;&gt; /etc/ssh/sshd_config; systemctl restart sshd</Correction>
-        <Verification>grep -q "^AllowTcpForwarding no" /etc/ssh/sshd_config &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "AllowTcpForwarding no" >> /etc/ssh/sshd_config; systemctl restart sshd]]></Correction>
+        <Verification><![CDATA[grep -q "^AllowTcpForwarding no" /etc/ssh/sshd_config && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -147,8 +147,8 @@
         <FileName>sshd_config</FileName>
         <NonCompliantComment>GSSAPIAuthentication is enabled, which can expose the system to certain attacks.</NonCompliantComment>
         <CorrectiveComment>Disable GSSAPIAuthentication in sshd_config.</CorrectiveComment>
-        <Correction>echo "GSSAPIAuthentication no" &gt;&gt; /etc/ssh/sshd_config; systemctl restart sshd</Correction>
-        <Verification>grep -q "^GSSAPIAuthentication no" /etc/ssh/sshd_config &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "GSSAPIAuthentication no" >> /etc/ssh/sshd_config; systemctl restart sshd]]></Correction>
+        <Verification><![CDATA[grep -q "^GSSAPIAuthentication no" /etc/ssh/sshd_config && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -164,8 +164,8 @@
         <FileName>sshd_config</FileName>
         <NonCompliantComment>HostbasedAuthentication is enabled, which may allow bypassing password authentication.</NonCompliantComment>
         <CorrectiveComment>Disable HostbasedAuthentication in sshd_config.</CorrectiveComment>
-        <Correction>echo "HostbasedAuthentication no" &gt;&gt; /etc/ssh/sshd_config; systemctl restart sshd</Correction>
-        <Verification>grep -q "^HostbasedAuthentication no" /etc/ssh/sshd_config &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "HostbasedAuthentication no" >> /etc/ssh/sshd_config; systemctl restart sshd]]></Correction>
+        <Verification><![CDATA[grep -q "^HostbasedAuthentication no" /etc/ssh/sshd_config && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -181,8 +181,8 @@
         <FileName>sshd_config</FileName>
         <NonCompliantComment>Rhosts-based authentication is not ignored, which is insecure.</NonCompliantComment>
         <CorrectiveComment>Enable IgnoreRhosts in sshd_config.</CorrectiveComment>
-        <Correction>echo "IgnoreRhosts yes" &gt;&gt; /etc/ssh/sshd_config; systemctl restart sshd</Correction>
-        <Verification>grep -q "^IgnoreRhosts yes" /etc/ssh/sshd_config &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "IgnoreRhosts yes" >> /etc/ssh/sshd_config; systemctl restart sshd]]></Correction>
+        <Verification><![CDATA[grep -q "^IgnoreRhosts yes" /etc/ssh/sshd_config && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -198,8 +198,8 @@
         <FileName>sshd_config</FileName>
         <NonCompliantComment>Weak key-exchange algorithms may be permitted by default.</NonCompliantComment>
         <CorrectiveComment>Configure strong KexAlgorithms in sshd_config.</CorrectiveComment>
-        <Correction>echo "KexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org" &gt;&gt; /etc/ssh/sshd_config; systemctl restart sshd</Correction>
-        <Verification>grep -q "^KexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org" /etc/ssh/sshd_config &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "KexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org" >> /etc/ssh/sshd_config; systemctl restart sshd]]></Correction>
+        <Verification><![CDATA[grep -q "^KexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org" /etc/ssh/sshd_config && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -215,8 +215,8 @@
         <FileName>sshd_config</FileName>
         <NonCompliantComment>LoginGraceTime is not set, allowing excessive time for authentication attempts.</NonCompliantComment>
         <CorrectiveComment>Set LoginGraceTime to 60 seconds in sshd_config.</CorrectiveComment>
-        <Correction>echo "LoginGraceTime 60" &gt;&gt; /etc/ssh/sshd_config; systemctl restart sshd</Correction>
-        <Verification>grep -q "^LoginGraceTime 60" /etc/ssh/sshd_config &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "LoginGraceTime 60" >> /etc/ssh/sshd_config; systemctl restart sshd]]></Correction>
+        <Verification><![CDATA[grep -q "^LoginGraceTime 60" /etc/ssh/sshd_config && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -232,8 +232,8 @@
         <FileName>sshd_config</FileName>
         <NonCompliantComment>LogLevel is not explicitly set, reducing the ability to audit SSH sessions.</NonCompliantComment>
         <CorrectiveComment>Set LogLevel to VERBOSE in sshd_config to enhance logging.</CorrectiveComment>
-        <Correction>echo "LogLevel VERBOSE" &gt;&gt; /etc/ssh/sshd_config; systemctl restart sshd</Correction>
-        <Verification>grep -q "^LogLevel VERBOSE" /etc/ssh/sshd_config &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "LogLevel VERBOSE" >> /etc/ssh/sshd_config; systemctl restart sshd]]></Correction>
+        <Verification><![CDATA[grep -q "^LogLevel VERBOSE" /etc/ssh/sshd_config && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -249,8 +249,8 @@
         <FileName>sshd_config</FileName>
         <NonCompliantComment>Weak MAC algorithms may be allowed by default, reducing message integrity.</NonCompliantComment>
         <CorrectiveComment>Configure strong MAC algorithms in sshd_config.</CorrectiveComment>
-        <Correction>echo "MACs hmac-sha2-512,hmac-sha2-256" &gt;&gt; /etc/ssh/sshd_config; systemctl restart sshd</Correction>
-        <Verification>grep -q "^MACs hmac-sha2-512,hmac-sha2-256" /etc/ssh/sshd_config &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "MACs hmac-sha2-512,hmac-sha2-256" >> /etc/ssh/sshd_config; systemctl restart sshd]]></Correction>
+        <Verification><![CDATA[grep -q "^MACs hmac-sha2-512,hmac-sha2-256" /etc/ssh/sshd_config && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -266,8 +266,8 @@
         <FileName>sshd_config</FileName>
         <NonCompliantComment>MaxAuthTries is not limited, increasing the risk of brute-force attacks.</NonCompliantComment>
         <CorrectiveComment>Set MaxAuthTries to 4 in sshd_config.</CorrectiveComment>
-        <Correction>echo "MaxAuthTries 4" &gt;&gt; /etc/ssh/sshd_config; systemctl restart sshd</Correction>
-        <Verification>grep -q "^MaxAuthTries 4" /etc/ssh/sshd_config &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "MaxAuthTries 4" >> /etc/ssh/sshd_config; systemctl restart sshd]]></Correction>
+        <Verification><![CDATA[grep -q "^MaxAuthTries 4" /etc/ssh/sshd_config && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -283,8 +283,8 @@
         <FileName>sshd_config</FileName>
         <NonCompliantComment>MaxSessions is not limited, potentially allowing excessive concurrent SSH sessions.</NonCompliantComment>
         <CorrectiveComment>Set MaxSessions to 10 in sshd_config.</CorrectiveComment>
-        <Correction>echo "MaxSessions 10" &gt;&gt; /etc/ssh/sshd_config; systemctl restart sshd</Correction>
-        <Verification>grep -q "^MaxSessions 10" /etc/ssh/sshd_config &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "MaxSessions 10" >> /etc/ssh/sshd_config; systemctl restart sshd]]></Correction>
+        <Verification><![CDATA[grep -q "^MaxSessions 10" /etc/ssh/sshd_config && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -300,8 +300,8 @@
         <FileName>sshd_config</FileName>
         <NonCompliantComment>MaxStartups is not configured, which may allow excessive connection attempts.</NonCompliantComment>
         <CorrectiveComment>Set MaxStartups to 10:30:60 in sshd_config.</CorrectiveComment>
-        <Correction>echo "MaxStartups 10:30:60" &gt;&gt; /etc/ssh/sshd_config; systemctl restart sshd</Correction>
-        <Verification>grep -q "^MaxStartups 10:30:60" /etc/ssh/sshd_config &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "MaxStartups 10:30:60" >> /etc/ssh/sshd_config; systemctl restart sshd]]></Correction>
+        <Verification><![CDATA[grep -q "^MaxStartups 10:30:60" /etc/ssh/sshd_config && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -317,8 +317,8 @@
         <FileName>sshd_config</FileName>
         <NonCompliantComment>Empty passwords are permitted, which is a severe security risk.</NonCompliantComment>
         <CorrectiveComment>Disable the use of empty passwords in sshd_config.</CorrectiveComment>
-        <Correction>echo "PermitEmptyPasswords no" &gt;&gt; /etc/ssh/sshd_config; systemctl restart sshd</Correction>
-        <Verification>grep -q "^PermitEmptyPasswords no" /etc/ssh/sshd_config &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "PermitEmptyPasswords no" >> /etc/ssh/sshd_config; systemctl restart sshd]]></Correction>
+        <Verification><![CDATA[grep -q "^PermitEmptyPasswords no" /etc/ssh/sshd_config && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -334,8 +334,8 @@
         <FileName>sshd_config</FileName>
         <NonCompliantComment>Root login is permitted via SSH, increasing the risk of unauthorized privileged access.</NonCompliantComment>
         <CorrectiveComment>Disable root login via SSH by setting PermitRootLogin to no.</CorrectiveComment>
-        <Correction>echo "PermitRootLogin no" &gt;&gt; /etc/ssh/sshd_config; systemctl restart sshd</Correction>
-        <Verification>grep -q "^PermitRootLogin no" /etc/ssh/sshd_config &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "PermitRootLogin no" >> /etc/ssh/sshd_config; systemctl restart sshd]]></Correction>
+        <Verification><![CDATA[grep -q "^PermitRootLogin no" /etc/ssh/sshd_config && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -351,8 +351,8 @@
         <FileName>sshd_config</FileName>
         <NonCompliantComment>User environment options are permitted, which may allow users to bypass security restrictions.</NonCompliantComment>
         <CorrectiveComment>Disable PermitUserEnvironment in sshd_config.</CorrectiveComment>
-        <Correction>echo "PermitUserEnvironment no" &gt;&gt; /etc/ssh/sshd_config; systemctl restart sshd</Correction>
-        <Verification>grep -q "^PermitUserEnvironment no" /etc/ssh/sshd_config &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "PermitUserEnvironment no" >> /etc/ssh/sshd_config; systemctl restart sshd]]></Correction>
+        <Verification><![CDATA[grep -q "^PermitUserEnvironment no" /etc/ssh/sshd_config && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -368,8 +368,8 @@
         <FileName>sshd_config</FileName>
         <NonCompliantComment>PAM is not enabled for SSH, limiting centralized authentication enforcement.</NonCompliantComment>
         <CorrectiveComment>Enable PAM by setting UsePAM to yes in sshd_config.</CorrectiveComment>
-        <Correction>echo "UsePAM yes" &gt;&gt; /etc/ssh/sshd_config; systemctl restart sshd</Correction>
-        <Verification>grep -q "^UsePAM yes" /etc/ssh/sshd_config &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "UsePAM yes" >> /etc/ssh/sshd_config; systemctl restart sshd]]></Correction>
+        <Verification><![CDATA[grep -q "^UsePAM yes" /etc/ssh/sshd_config && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 </RulesCIS>

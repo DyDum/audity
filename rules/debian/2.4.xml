@@ -12,8 +12,8 @@
         <FileName>cron</FileName>
         <NonCompliantComment>Cron daemon is not enabled, risking failure of scheduled jobs.</NonCompliantComment>
         <CorrectiveComment>Enable the cron daemon and ensure it is active.</CorrectiveComment>
-        <Correction>systemctl enable cron; systemctl start cron</Correction>
-        <Verification>systemctl is-active cron | grep -q "active" &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[srv=$(systemctl list-unit-files | awk "/^cron(d)?\.service/{print \$1;exit}"); [ -n "$srv" ] && systemctl unmask "$srv"; systemctl --now enable "$srv"]]></Correction>
+        <Verification><![CDATA[srv=$(systemctl list-unit-files | awk '/^cron(d)?\.service/{print $1;exit}'); dpkg -s cron >/dev/null 2>&1 && systemctl is-enabled "$srv" &>/dev/null && systemctl is-active "$srv" &>/dev/null && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -30,8 +30,8 @@
         <FileName>crontab</FileName>
         <NonCompliantComment>File permissions on /etc/crontab are not properly set, which may allow unauthorized modifications.</NonCompliantComment>
         <CorrectiveComment>Set the correct permissions (644) on /etc/crontab.</CorrectiveComment>
-        <Correction>chmod 644 /etc/crontab</Correction>
-        <Verification>stat -c "%a" /etc/crontab | grep -q "^644$" &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[sudo chown root:root /etc/cron.hourly && sudo chmod 700 /etc/cron.hourly]]></Correction>
+        <Verification><![CDATA[stat -Lc '%a %u %g' /etc/cron.hourly | awk '{exit ($1==700 && $2==0 && ($3==0))?0:1}' && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -48,8 +48,8 @@
         <FileName>*</FileName>
         <NonCompliantComment>Permissions on files in /etc/cron.hourly are too permissive.</NonCompliantComment>
         <CorrectiveComment>Set the correct permissions (644) on all files in /etc/cron.hourly.</CorrectiveComment>
-        <Correction>chmod 644 /etc/cron.hourly/*</Correction>
-        <Verification>for file in /etc/cron.hourly/*; do stat -c "%a" "$file" | grep -q "^644$" || exit 1; done; echo 0</Verification>
+        <Correction><![CDATA[sudo chown root:root /etc/cron.hourly && sudo chmod 700 /etc/cron.hourly]]></Correction>
+        <Verification><![CDATA[stat -Lc '%a %u %g' /etc/cron.hourly | awk '{exit ($1==700 && $2==0 && ($3==0))?0:1}' && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -66,8 +66,8 @@
         <FileName>*</FileName>
         <NonCompliantComment>Permissions on files in /etc/cron.daily are too permissive.</NonCompliantComment>
         <CorrectiveComment>Set the correct permissions (644) on all files in /etc/cron.daily.</CorrectiveComment>
-        <Correction>chmod 644 /etc/cron.daily/*</Correction>
-        <Verification>for file in /etc/cron.daily/*; do stat -c "%a" "$file" | grep -q "^644$" || exit 1; done; echo 0</Verification>
+        <Correction><![CDATA[sudo chown root:root /etc/cron.daily && sudo chmod 700 /etc/cron.daily]]></Correction>
+        <Verification><![CDATA[stat -Lc '%a %u %g' /etc/cron.daily | awk '{exit ($1==700 && $2==0 && ($3==0))?0:1}' && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -84,8 +84,8 @@
         <FileName>*</FileName>
         <NonCompliantComment>Permissions on files in /etc/cron.weekly are too permissive.</NonCompliantComment>
         <CorrectiveComment>Set the correct permissions (644) on all files in /etc/cron.weekly.</CorrectiveComment>
-        <Correction>chmod 644 /etc/cron.weekly/*</Correction>
-        <Verification>for file in /etc/cron.weekly/*; do stat -c "%a" "$file" | grep -q "^644$" || exit 1; done; echo 0</Verification>
+        <Correction><![CDATA[sudo chown root:root /etc/cron.weekly && sudo chmod 700 /etc/cron.weekly]]></Correction>
+        <Verification><![CDATA[stat -Lc '%a %u %g' /etc/cron.weekly | awk '{exit ($1==700 && $2==0 && ($3==0))?0:1}' && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -102,8 +102,8 @@
         <FileName>*</FileName>
         <NonCompliantComment>Permissions on files in /etc/cron.monthly are too permissive.</NonCompliantComment>
         <CorrectiveComment>Set the correct permissions (644) on all files in /etc/cron.monthly.</CorrectiveComment>
-        <Correction>chmod 644 /etc/cron.monthly/*</Correction>
-        <Verification>for file in /etc/cron.monthly/*; do stat -c "%a" "$file" | grep -q "^644$" || exit 1; done; echo 0</Verification>
+        <Correction><![CDATA[sudo chown root:root /etc/cron.monthly && sudo chmod 700 /etc/cron.monthly]]></Correction>
+        <Verification><![CDATA[stat -Lc '%a %u %g' /etc/cron.monthly | awk '{exit ($1==700 && $2==0 && ($3==0))?0:1}' && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -120,8 +120,8 @@
         <FileName>*</FileName>
         <NonCompliantComment>Permissions on files in /etc/cron.d are too permissive.</NonCompliantComment>
         <CorrectiveComment>Set the correct permissions (644) on all files in /etc/cron.d.</CorrectiveComment>
-        <Correction>chmod 644 /etc/cron.d/*</Correction>
-        <Verification>for file in /etc/cron.d/*; do stat -c "%a" "$file" | grep -q "^644$" || exit 1; done; echo 0</Verification>
+        <Correction><![CDATA[sudo chown root:root /etc/cron.d && sudo chmod 700 /etc/cron.d]]></Correction>
+        <Verification><![CDATA[stat -Lc '%a %u %g' /etc/cron.d | awk '{exit ($1==700 && $2==0 && ($3==0))?0:1}' && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -138,8 +138,8 @@
         <FileName>cron.allow</FileName>
         <NonCompliantComment>Cron access is not restricted to authorized users.</NonCompliantComment>
         <CorrectiveComment>Create or update the cron.allow file to list only authorized users.</CorrectiveComment>
-        <Correction>echo "authorizeduser" &gt; /etc/cron.allow</Correction>
-        <Verification>grep -q "authorizeduser" /etc/cron.allow &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[sudo bash -c '[ -e /etc/cron.deny ] && chmod 640 /etc/cron.deny && chown root:$(getent group crontab >/dev/null && echo crontab || echo root) /etc/cron.deny; touch /etc/cron.allow && chmod 640 /etc/cron.allow && chown root:$(getent group crontab >/dev/null && echo crontab || echo root) /etc/cron.allow']]></Correction>
+        <Verification><![CDATA[if ! dpkg -s cron >/dev/null 2>&1; then echo 0; else cron_gid=$(getent group crontab | cut -d: -f3 2>/dev/null); ok=0; for f in /etc/cron.allow /etc/cron.deny; do [ -e "$f" ] || continue; read p u g <<<"$(stat -Lc '%a %u %g' "$f")"; ([ "$p" -le 640 ] && [ "$u" -eq 0 ] && { [ "$g" -eq 0 ] || { [ -n "$cron_gid" ] && [ "$g" -eq "$cron_gid" ]; }; }) || ok=1; done; echo "$ok"; fi]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -156,8 +156,8 @@
         <FileName>at.allow</FileName>
         <NonCompliantComment>The at command is not restricted, which may allow unauthorized job scheduling.</NonCompliantComment>
         <CorrectiveComment>Restrict the at command by configuring at.allow (and/or at.deny) appropriately.</CorrectiveComment>
-        <Correction>echo "authorizeduser" &gt; /etc/at.allow</Correction>
-        <Verification>grep -q "authorizeduser" /etc/at.allow &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[grp=$(getent group daemon >/dev/null && echo daemon || echo root); sudo touch /etc/at.allow && sudo chown root:$grp /etc/at.allow && sudo chmod 640 /etc/at.allow; [ -e /etc/at.deny ] && sudo chown root:$grp /etc/at.deny && sudo chmod 640 /etc/at.deny || true]]></Correction>
+        <Verification><![CDATA[dpkg -s at >/dev/null 2>&1 && { g='\(root\|daemon\)'; stat -Lc '%a %U %G' /etc/at.allow 2>/dev/null | grep -Eq '^0?[0-6]40 root '"$g"'$' && { [ ! -e /etc/at.deny ] || stat -Lc '%a %U %G' /etc/at.deny | grep -Eq '^0?[0-6]40 root '"$g"'$'; } && printf '0\n' || printf '1\n'; } || printf '0\n']]></Verification>
         <Manual>NO</Manual>
     </Rule>
 </RulesCIS>

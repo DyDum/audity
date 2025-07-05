@@ -17,8 +17,8 @@
         <FileName>auditd</FileName>
         <NonCompliantComment>Auditd packages are not installed, which prevents audit logging from functioning.</NonCompliantComment>
         <CorrectiveComment>Install auditd and its dependencies to enable auditing.</CorrectiveComment>
-        <Correction>apt-get install -y auditd</Correction>
-        <Verification>dpkg -l | grep -q auditd &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[apt-get install -y auditd]]></Correction>
+        <Verification><![CDATA[dpkg -l | grep -q auditd && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -35,8 +35,8 @@
         <FileName>auditd.service</FileName>
         <NonCompliantComment>The auditd service is not enabled or running, risking loss of critical audit logs.</NonCompliantComment>
         <CorrectiveComment>Enable and start the auditd service.</CorrectiveComment>
-        <Correction>systemctl enable auditd; systemctl start auditd</Correction>
-        <Verification>systemctl is-active auditd | grep -q "active" &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[systemctl enable auditd; systemctl start auditd]]></Correction>
+        <Verification><![CDATA[systemctl is-active auditd | grep -q "active" && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -53,8 +53,8 @@
         <FileName>grub</FileName>
         <NonCompliantComment>Auditing for processes that start before auditd is not enabled.</NonCompliantComment>
         <CorrectiveComment>Add the kernel boot parameter audit=1 in GRUB.</CorrectiveComment>
-        <Correction>sed -i 's/\(GRUB_CMDLINE_LINUX="\(.*\)\)"/\1 audit=1"/' /etc/default/grub; update-grub</Correction>
-        <Verification>grep -q 'audit=1' /proc/cmdline &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[sed -i 's/\(GRUB_CMDLINE_LINUX="\(.*\)\)"/\1 audit=1"/' /etc/default/grub; update-grub]]></Correction>
+        <Verification><![CDATA[grep -q 'audit=1' /proc/cmdline && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -71,8 +71,8 @@
         <FileName>auditd.conf</FileName>
         <NonCompliantComment>The audit backlog limit is set too low.</NonCompliantComment>
         <CorrectiveComment>Set audit_backlog_limit = 8192 in auditd.conf.</CorrectiveComment>
-        <Correction>sed -i 's/^#\?audit_backlog_limit.*/audit_backlog_limit = 8192/' /etc/audit/auditd.conf; systemctl restart auditd</Correction>
-        <Verification>grep '^audit_backlog_limit = 8192' /etc/audit/auditd.conf &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[sed -i 's/^#\?audit_backlog_limit.*/audit_backlog_limit = 8192/' /etc/audit/auditd.conf; systemctl restart auditd]]></Correction>
+        <Verification><![CDATA[grep '^audit_backlog_limit = 8192' /etc/audit/auditd.conf && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -92,8 +92,8 @@
         <FileName>auditd.conf</FileName>
         <NonCompliantComment>Audit log storage size is not configured.</NonCompliantComment>
         <CorrectiveComment>Set max_log_file = 50 MB.</CorrectiveComment>
-        <Correction>sed -i 's/^#\?max_log_file.*/max_log_file = 50/' /etc/audit/auditd.conf; systemctl restart auditd</Correction>
-        <Verification>grep '^max_log_file = 50' /etc/audit/auditd.conf &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[sed -i 's/^#\?max_log_file.*/max_log_file = 50/' /etc/audit/auditd.conf; systemctl restart auditd]]></Correction>
+        <Verification><![CDATA[grep '^max_log_file = 50' /etc/audit/auditd.conf && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -110,8 +110,8 @@
         <FileName>auditd.conf</FileName>
         <NonCompliantComment>Audit logs may be automatically deleted when full.</NonCompliantComment>
         <CorrectiveComment>Disable automatic audit-log deletion.</CorrectiveComment>
-        <Correction>echo "# Automatic log deletion disabled" &gt;&gt; /etc/audit/auditd.conf; systemctl restart auditd</Correction>
-        <Verification>echo "Manual review required"</Verification>
+        <Correction><![CDATA[echo "# Automatic log deletion disabled" >> /etc/audit/auditd.conf; systemctl restart auditd]]></Correction>
+        <Verification><![CDATA[echo "Manual review required"]]></Verification>
         <Manual>VERIFICATION</Manual>
     </Rule>
 
@@ -128,8 +128,8 @@
         <FileName>auditd.conf</FileName>
         <NonCompliantComment>No action configured when audit logs are full.</NonCompliantComment>
         <CorrectiveComment>Set space_left_action = email.</CorrectiveComment>
-        <Correction>sed -i 's/^#\?space_left_action.*/space_left_action = email/' /etc/audit/auditd.conf; systemctl restart auditd</Correction>
-        <Verification>grep '^space_left_action = email' /etc/audit/auditd.conf &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[sed -i 's/^#\?space_left_action.*/space_left_action = email/' /etc/audit/auditd.conf; systemctl restart auditd]]></Correction>
+        <Verification><![CDATA[grep '^space_left_action = email' /etc/audit/auditd.conf && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -146,8 +146,8 @@
         <FileName>auditd.conf</FileName>
         <NonCompliantComment>No warning when audit logs are low on space.</NonCompliantComment>
         <CorrectiveComment>Set admin_space_left_action = exec.</CorrectiveComment>
-        <Correction>sed -i 's/^#\?admin_space_left_action.*/admin_space_left_action = exec/' /etc/audit/auditd.conf; systemctl restart auditd</Correction>
-        <Verification>grep '^admin_space_left_action = exec' /etc/audit/auditd.conf &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[sed -i 's/^#\?admin_space_left_action.*/admin_space_left_action = exec/' /etc/audit/auditd.conf; systemctl restart auditd]]></Correction>
+        <Verification><![CDATA[grep '^admin_space_left_action = exec' /etc/audit/auditd.conf && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -167,8 +167,8 @@
         <FileName>audit.rules</FileName>
         <NonCompliantComment>Changes to /etc/sudoers are not audited.</NonCompliantComment>
         <CorrectiveComment>Add an audit rule for /etc/sudoers.</CorrectiveComment>
-        <Correction>echo "-w /etc/sudoers -p wa -k scope" &gt;&gt; /etc/audit/rules.d/audit.rules; augenrules --load</Correction>
-        <Verification>grep -q "\-w /etc/sudoers" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "-w /etc/sudoers -p wa -k scope" >> /etc/audit/rules.d/audit.rules; augenrules --load]]></Correction>
+        <Verification><![CDATA[grep -q "\-w /etc/sudoers" /etc/audit/rules.d/audit.rules && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -185,8 +185,8 @@
         <FileName>audit.rules</FileName>
         <NonCompliantComment>Modifications to /etc/passwd are not audited.</NonCompliantComment>
         <CorrectiveComment>Add an audit rule for /etc/passwd.</CorrectiveComment>
-        <Correction>echo "-w /etc/passwd -p wa -k user_modifications" &gt;&gt; /etc/audit/rules.d/audit.rules; augenrules --load</Correction>
-        <Verification>grep -q "\-w /etc/passwd" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo "-w /etc/passwd -p wa -k user_modifications" >> /etc/audit/rules.d/audit.rules; augenrules --load]]></Correction>
+        <Verification><![CDATA[grep -q "\-w /etc/passwd" /etc/audit/rules.d/audit.rules && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -205,11 +205,11 @@
         <FileName>audit.rules</FileName>
         <NonCompliantComment>Changes to /var/log/sudo.log are not audited, so tampering with privileged-command history may go unnoticed.</NonCompliantComment>
         <CorrectiveComment>Add a watch rule on /var/log/sudo.log for write/attribute changes.</CorrectiveComment>
-        <Correction>
-echo "-w /var/log/sudo.log -p wa -k sudo_log" &gt;&gt; /etc/audit/rules.d/audit.rules
+        <Correction><![CDATA[
+echo "-w /var/log/sudo.log -p wa -k sudo_log" >> /etc/audit/rules.d/audit.rules
 augenrules --load
-        </Correction>
-        <Verification>grep -q "\-w /var/log/sudo.log" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
+        ]]></Correction>
+        <Verification><![CDATA[grep -q "\-w /var/log/sudo.log" /etc/audit/rules.d/audit.rules && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -227,13 +227,13 @@ augenrules --load
         <FileName>audit.rules</FileName>
         <NonCompliantComment>Modifications to system date/time settings are not audited, risking undetected time-based attacks.</NonCompliantComment>
         <CorrectiveComment>Add watch rules for /etc/localtime and clock-related syscalls.</CorrectiveComment>
-        <Correction>
-echo "-w /etc/localtime -p wa -k time_change" &gt;&gt; /etc/audit/rules.d/audit.rules
-echo "-a always,exit -F arch=b64 -S adjtimex,settimeofday,clock_settime -k time_change" &gt;&gt; /etc/audit/rules.d/audit.rules
-echo "-a always,exit -F arch=b32 -S adjtimex,settimeofday,clock_settime -k time_change" &gt;&gt; /etc/audit/rules.d/audit.rules
+        <Correction><![CDATA[
+echo "-w /etc/localtime -p wa -k time_change" >> /etc/audit/rules.d/audit.rules
+echo "-a always,exit -F arch=b64 -S adjtimex,settimeofday,clock_settime -k time_change" >> /etc/audit/rules.d/audit.rules
+echo "-a always,exit -F arch=b32 -S adjtimex,settimeofday,clock_settime -k time_change" >> /etc/audit/rules.d/audit.rules
 augenrules --load
-        </Correction>
-        <Verification>grep -q "key=time_change" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
+        ]]></Correction>
+        <Verification><![CDATA[grep -q "key=time_change" /etc/audit/rules.d/audit.rules && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -251,13 +251,13 @@ augenrules --load
         <FileName>audit.rules</FileName>
         <NonCompliantComment>Changes to network configuration files are not audited, so rogue interface or route changes may be missed.</NonCompliantComment>
         <CorrectiveComment>Add a recursive watch on /etc/network/ and /etc/hosts.allow|deny.</CorrectiveComment>
-        <Correction>
-echo "-w /etc/network/ -p wa -k network_env" &gt;&gt; /etc/audit/rules.d/audit.rules
-echo "-w /etc/hosts.allow -p wa -k network_env" &gt;&gt; /etc/audit/rules.d/audit.rules
-echo "-w /etc/hosts.deny  -p wa -k network_env" &gt;&gt; /etc/audit/rules.d/audit.rules
+        <Correction><![CDATA[
+echo "-w /etc/network/ -p wa -k network_env" >> /etc/audit/rules.d/audit.rules
+echo "-w /etc/hosts.allow -p wa -k network_env" >> /etc/audit/rules.d/audit.rules
+echo "-w /etc/hosts.deny  -p wa -k network_env" >> /etc/audit/rules.d/audit.rules
 augenrules --load
-        </Correction>
-        <Verification>grep -q "key=network_env" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
+        ]]></Correction>
+        <Verification><![CDATA[grep -q "key=network_env" /etc/audit/rules.d/audit.rules && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -275,12 +275,12 @@ augenrules --load
         <FileName>audit.rules</FileName>
         <NonCompliantComment>Execution of set-UID or set-GID binaries is not audited, limiting forensic visibility.</NonCompliantComment>
         <CorrectiveComment>Generate rules for every SUID/SGID file found under the filesystem.</CorrectiveComment>
-        <Correction>
+        <Correction><![CDATA[
 find / -xdev \( -perm -4000 -o -perm -2000 \) -type f 2>/dev/null | \
-while read f; do echo "-a always,exit -F path=$f -F perm=x -F auid>=1000 -F auid!=-1 -k privileged_cmd"; done &gt;&gt; /etc/audit/rules.d/privileged.rules
+while read f; do echo "-a always,exit -F path=$f -F perm=x -F auid>=1000 -F auid!=-1 -k privileged_cmd"; done >> /etc/audit/rules.d/privileged.rules
 augenrules --load
-        </Correction>
-        <Verification>grep -q "key=privileged_cmd" /etc/audit/rules.d/privileged.rules &amp;&amp; echo 0 || echo 1</Verification>
+        ]]></Correction>
+        <Verification><![CDATA[grep -q "key=privileged_cmd" /etc/audit/rules.d/privileged.rules && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -298,14 +298,14 @@ augenrules --load
         <FileName>audit.rules</FileName>
         <NonCompliantComment>Failed open(2) calls are not audited, hindering detection of reconnaissance activity.</NonCompliantComment>
         <CorrectiveComment>Add a syscall rule to capture open/openat failures (exit codes -EPERM/-EACCES).</CorrectiveComment>
-        <Correction>
-echo "-a always,exit -F arch=b64 -S open,openat,open_by_handle_at -F exit=-EACCES -F key=access_denied" &gt;&gt; /etc/audit/rules.d/audit.rules
-echo "-a always,exit -F arch=b64 -S open,openat,open_by_handle_at -F exit=-EPERM  -F key=access_denied" &gt;&gt; /etc/audit/rules.d/audit.rules
-echo "-a always,exit -F arch=b32 -S open,openat            -F exit=-EACCES -F key=access_denied" &gt;&gt; /etc/audit/rules.d/audit.rules
-echo "-a always,exit -F arch=b32 -S open,openat            -F exit=-EPERM  -F key=access_denied" &gt;&gt; /etc/audit/rules.d/audit.rules
+        <Correction><![CDATA[
+echo "-a always,exit -F arch=b64 -S open,openat,open_by_handle_at -F exit=-EACCES -F key=access_denied" >> /etc/audit/rules.d/audit.rules
+echo "-a always,exit -F arch=b64 -S open,openat,open_by_handle_at -F exit=-EPERM  -F key=access_denied" >> /etc/audit/rules.d/audit.rules
+echo "-a always,exit -F arch=b32 -S open,openat            -F exit=-EACCES -F key=access_denied" >> /etc/audit/rules.d/audit.rules
+echo "-a always,exit -F arch=b32 -S open,openat            -F exit=-EPERM  -F key=access_denied" >> /etc/audit/rules.d/audit.rules
 augenrules --load
-        </Correction>
-        <Verification>grep -q "key=access_denied" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
+        ]]></Correction>
+        <Verification><![CDATA[grep -q "key=access_denied" /etc/audit/rules.d/audit.rules && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -323,13 +323,13 @@ augenrules --load
         <FileName>audit.rules</FileName>
         <NonCompliantComment>User and group databases are modified without audit coverage.</NonCompliantComment>
         <CorrectiveComment>Watch /etc/passwd, /etc/group, /etc/shadow and /etc/gshadow.</CorrectiveComment>
-        <Correction>
+        <Correction><![CDATA[
 for f in /etc/passwd /etc/group /etc/shadow /etc/gshadow; do
-    echo "-w $f -p wa -k identity_change" &gt;&gt; /etc/audit/rules.d/audit.rules
+    echo "-w $f -p wa -k identity_change" >> /etc/audit/rules.d/audit.rules
 done
 augenrules --load
-        </Correction>
-        <Verification>grep -q "key=identity_change" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
+        ]]></Correction>
+        <Verification><![CDATA[grep -q "key=identity_change" /etc/audit/rules.d/audit.rules && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -347,12 +347,12 @@ augenrules --load
         <FileName>audit.rules</FileName>
         <NonCompliantComment>Changes to file permissions and ownership are not audited.</NonCompliantComment>
         <CorrectiveComment>Add syscall rules for chmod/chown family.</CorrectiveComment>
-        <Correction>
-echo "-a always,exit -F arch=b64 -S chmod,fchmod,fchmodat,chown,fchown,fchownat,lchown -F key=dac_modification" &gt;&gt; /etc/audit/rules.d/audit.rules
-echo "-a always,exit -F arch=b32 -S chmod,fchmod,fchmodat,chown,fchown,fchownat,lchown -F key=dac_modification" &gt;&gt; /etc/audit/rules.d/audit.rules
+        <Correction><![CDATA[
+echo "-a always,exit -F arch=b64 -S chmod,fchmod,fchmodat,chown,fchown,fchownat,lchown -F key=dac_modification" >> /etc/audit/rules.d/audit.rules
+echo "-a always,exit -F arch=b32 -S chmod,fchmod,fchmodat,chown,fchown,fchownat,lchown -F key=dac_modification" >> /etc/audit/rules.d/audit.rules
 augenrules --load
-        </Correction>
-        <Verification>grep -q "key=dac_modification" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
+        ]]></Correction>
+        <Verification><![CDATA[grep -q "key=dac_modification" /etc/audit/rules.d/audit.rules && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -370,12 +370,12 @@ augenrules --load
         <FileName>audit.rules</FileName>
         <NonCompliantComment>Mount and umount operations are not audited.</NonCompliantComment>
         <CorrectiveComment>Add rules for mount/umount2 syscalls.</CorrectiveComment>
-        <Correction>
-echo "-a always,exit -F arch=b64 -S mount,umount2 -F key=mounts" &gt;&gt; /etc/audit/rules.d/audit.rules
-echo "-a always,exit -F arch=b32 -S mount,umount2 -F key=mounts" &gt;&gt; /etc/audit/rules.d/audit.rules
+        <Correction><![CDATA[
+echo "-a always,exit -F arch=b64 -S mount,umount2 -F key=mounts" >> /etc/audit/rules.d/audit.rules
+echo "-a always,exit -F arch=b32 -S mount,umount2 -F key=mounts" >> /etc/audit/rules.d/audit.rules
 augenrules --load
-        </Correction>
-        <Verification>grep -q "key=mounts" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
+        ]]></Correction>
+        <Verification><![CDATA[grep -q "key=mounts" /etc/audit/rules.d/audit.rules && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -393,11 +393,11 @@ augenrules --load
         <FileName>audit.rules</FileName>
         <NonCompliantComment>Session start records (wtmp/btmp) are not audited.</NonCompliantComment>
         <CorrectiveComment>Add watch rules on /var/log/wtmp.</CorrectiveComment>
-        <Correction>
-echo "-w /var/log/wtmp -p wa -k session" &gt;&gt; /etc/audit/rules.d/audit.rules
+        <Correction><![CDATA[
+echo "-w /var/log/wtmp -p wa -k session" >> /etc/audit/rules.d/audit.rules
 augenrules --load
-        </Correction>
-        <Verification>grep -q "\-w /var/log/wtmp" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
+        ]]></Correction>
+        <Verification><![CDATA[grep -q "\-w /var/log/wtmp" /etc/audit/rules.d/audit.rules && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -415,11 +415,11 @@ augenrules --load
         <FileName>audit.rules</FileName>
         <NonCompliantComment>utmp updates (logins/logouts) are not audited.</NonCompliantComment>
         <CorrectiveComment>Add watch rule on /var/run/utmp.</CorrectiveComment>
-        <Correction>
-echo "-w /var/run/utmp -p wa -k session" &gt;&gt; /etc/audit/rules.d/audit.rules
+        <Correction><![CDATA[
+echo "-w /var/run/utmp -p wa -k session" >> /etc/audit/rules.d/audit.rules
 augenrules --load
-        </Correction>
-        <Verification>grep -q "\-w /var/run/utmp" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
+        ]]></Correction>
+        <Verification><![CDATA[grep -q "\-w /var/run/utmp" /etc/audit/rules.d/audit.rules && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -437,12 +437,12 @@ augenrules --load
         <FileName>audit.rules</FileName>
         <NonCompliantComment>User-initiated file deletions are not audited.</NonCompliantComment>
         <CorrectiveComment>Add rules for unlink/unlinkat/rename syscalls.</CorrectiveComment>
-        <Correction>
-echo "-a always,exit -F arch=b64 -S unlink,unlinkat,rename,renameat -F auid>=1000 -F auid!=-1 -k file_deletion" &gt;&gt; /etc/audit/rules.d/audit.rules
-echo "-a always,exit -F arch=b32 -S unlink,unlinkat,rename,renameat -F auid>=1000 -F auid!=-1 -k file_deletion" &gt;&gt; /etc/audit/rules.d/audit.rules
+        <Correction><![CDATA[
+echo "-a always,exit -F arch=b64 -S unlink,unlinkat,rename,renameat -F auid>=1000 -F auid!=-1 -k file_deletion" >> /etc/audit/rules.d/audit.rules
+echo "-a always,exit -F arch=b32 -S unlink,unlinkat,rename,renameat -F auid>=1000 -F auid!=-1 -k file_deletion" >> /etc/audit/rules.d/audit.rules
 augenrules --load
-        </Correction>
-        <Verification>grep -q "key=file_deletion" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
+        ]]></Correction>
+        <Verification><![CDATA[grep -q "key=file_deletion" /etc/audit/rules.d/audit.rules && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -460,12 +460,12 @@ augenrules --load
         <FileName>audit.rules</FileName>
         <NonCompliantComment>SELinux/AppArmor policy files are modified without audit coverage.</NonCompliantComment>
         <CorrectiveComment>Watch /etc/selinux/ and /etc/apparmor/ for changes.</CorrectiveComment>
-        <Correction>
-echo "-w /etc/selinux/ -p wa -k mac_modification" &gt;&gt; /etc/audit/rules.d/audit.rules
-echo "-w /etc/apparmor/ -p wa -k mac_modification" &gt;&gt; /etc/audit/rules.d/audit.rules
+        <Correction><![CDATA[
+echo "-w /etc/selinux/ -p wa -k mac_modification" >> /etc/audit/rules.d/audit.rules
+echo "-w /etc/apparmor/ -p wa -k mac_modification" >> /etc/audit/rules.d/audit.rules
 augenrules --load
-        </Correction>
-        <Verification>grep -q "key=mac_modification" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
+        ]]></Correction>
+        <Verification><![CDATA[grep -q "key=mac_modification" /etc/audit/rules.d/audit.rules && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -483,12 +483,12 @@ augenrules --load
         <FileName>audit.rules</FileName>
         <NonCompliantComment>Use of chcon is not audited, risking silent context changes.</NonCompliantComment>
         <CorrectiveComment>Add syscall rules for chcon.</CorrectiveComment>
-        <Correction>
-echo "-a always,exit -F arch=b64 -S chcon -F key=chcon_usage" &gt;&gt; /etc/audit/rules.d/audit.rules
-echo "-a always,exit -F arch=b32 -S chcon -F key=chcon_usage" &gt;&gt; /etc/audit/rules.d/audit.rules
+        <Correction><![CDATA[
+echo "-a always,exit -F arch=b64 -S chcon -F key=chcon_usage" >> /etc/audit/rules.d/audit.rules
+echo "-a always,exit -F arch=b32 -S chcon -F key=chcon_usage" >> /etc/audit/rules.d/audit.rules
 augenrules --load
-        </Correction>
-        <Verification>grep -q "key=chcon_usage" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
+        ]]></Correction>
+        <Verification><![CDATA[grep -q "key=chcon_usage" /etc/audit/rules.d/audit.rules && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -506,12 +506,12 @@ augenrules --load
         <FileName>audit.rules</FileName>
         <NonCompliantComment>setfacl modifications are not audited.</NonCompliantComment>
         <CorrectiveComment>Add rules to audit setfacl usage.</CorrectiveComment>
-        <Correction>
-echo "-a always,exit -F arch=b64 -S setfacl -F key=setfacl_usage" &gt;&gt; /etc/audit/rules.d/audit.rules
-echo "-a always,exit -F arch=b32 -S setfacl -F key=setfacl_usage" &gt;&gt; /etc/audit/rules.d/audit.rules
+        <Correction><![CDATA[
+echo "-a always,exit -F arch=b64 -S setfacl -F key=setfacl_usage" >> /etc/audit/rules.d/audit.rules
+echo "-a always,exit -F arch=b32 -S setfacl -F key=setfacl_usage" >> /etc/audit/rules.d/audit.rules
 augenrules --load
-        </Correction>
-        <Verification>grep -q "key=setfacl_usage" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
+        ]]></Correction>
+        <Verification><![CDATA[grep -q "key=setfacl_usage" /etc/audit/rules.d/audit.rules && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -529,12 +529,12 @@ augenrules --load
         <FileName>audit.rules</FileName>
         <NonCompliantComment>chacl changes are not audited.</NonCompliantComment>
         <CorrectiveComment>Add rules for chacl usage.</CorrectiveComment>
-        <Correction>
-echo "-a always,exit -F arch=b64 -S chacl -F key=chacl_usage" &gt;&gt; /etc/audit/rules.d/audit.rules
-echo "-a always,exit -F arch=b32 -S chacl -F key=chacl_usage" &gt;&gt; /etc/audit/rules.d/audit.rules
+        <Correction><![CDATA[
+echo "-a always,exit -F arch=b64 -S chacl -F key=chacl_usage" >> /etc/audit/rules.d/audit.rules
+echo "-a always,exit -F arch=b32 -S chacl -F key=chacl_usage" >> /etc/audit/rules.d/audit.rules
 augenrules --load
-        </Correction>
-        <Verification>grep -q "key=chacl_usage" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
+        ]]></Correction>
+        <Verification><![CDATA[grep -q "key=chacl_usage" /etc/audit/rules.d/audit.rules && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -552,11 +552,11 @@ augenrules --load
         <FileName>audit.rules</FileName>
         <NonCompliantComment>usermod executions are not audited, so account changes might be undetected.</NonCompliantComment>
         <CorrectiveComment>Add rules for usermod.</CorrectiveComment>
-        <Correction>
-echo "-w /usr/sbin/usermod -p x -k usermod_usage" &gt;&gt; /etc/audit/rules.d/audit.rules
+        <Correction><![CDATA[
+echo "-w /usr/sbin/usermod -p x -k usermod_usage" >> /etc/audit/rules.d/audit.rules
 augenrules --load
-        </Correction>
-        <Verification>grep -q "key=usermod_usage" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
+        ]]></Correction>
+        <Verification><![CDATA[grep -q "key=usermod_usage" /etc/audit/rules.d/audit.rules && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -574,12 +574,12 @@ augenrules --load
         <FileName>audit.rules</FileName>
         <NonCompliantComment>Kernel module operations are not audited.</NonCompliantComment>
         <CorrectiveComment>Audit init_module/delete_module syscalls.</CorrectiveComment>
-        <Correction>
-echo "-a always,exit -F arch=b64 -S init_module,delete_module -k kernel_module" &gt;&gt; /etc/audit/rules.d/audit.rules
-echo "-a always,exit -F arch=b32 -S init_module,delete_module -k kernel_module" &gt;&gt; /etc/audit/rules.d/audit.rules
+        <Correction><![CDATA[
+echo "-a always,exit -F arch=b64 -S init_module,delete_module -k kernel_module" >> /etc/audit/rules.d/audit.rules
+echo "-a always,exit -F arch=b32 -S init_module,delete_module -k kernel_module" >> /etc/audit/rules.d/audit.rules
 augenrules --load
-        </Correction>
-        <Verification>grep -q "key=kernel_module" /etc/audit/rules.d/audit.rules &amp;&amp; echo 0 || echo 1</Verification>
+        ]]></Correction>
+        <Verification><![CDATA[grep -q "key=kernel_module" /etc/audit/rules.d/audit.rules && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -597,11 +597,11 @@ augenrules --load
         <FileName>immutable.rules</FileName>
         <NonCompliantComment>The audit configuration can still be modified at runtime, allowing attackers to disable auditing.</NonCompliantComment>
         <CorrectiveComment>Add "-e 2" to set the kernel to immutable audit mode.</CorrectiveComment>
-        <Correction>
-echo "-e 2" &gt;&gt; /etc/audit/rules.d/immutable.rules
+        <Correction><![CDATA[
+echo "-e 2" >> /etc/audit/rules.d/immutable.rules
 augenrules --load
-        </Correction>
-        <Verification>grep -q "\-e 2" /etc/audit/rules.d/immutable.rules &amp;&amp; echo 0 || echo 1</Verification>
+        ]]></Correction>
+        <Verification><![CDATA[grep -q "\-e 2" /etc/audit/rules.d/immutable.rules && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -619,8 +619,8 @@ augenrules --load
         <FileName>audit.rules</FileName>
         <NonCompliantComment>The in-memory audit rules may differ from those stored on disk.</NonCompliantComment>
         <CorrectiveComment>Compare auditctl -l output with /etc/audit/rules.d/* and reconcile any differences.</CorrectiveComment>
-        <Correction>echo "Manual step: run 'diff &lt;(auditctl -l) &lt;(cat /etc/audit/rules.d/*)'"</Correction>
-        <Verification>echo "Manual verification required"</Verification>
+        <Correction><![CDATA[echo "Manual step: run 'diff <(auditctl -l) <(cat /etc/audit/rules.d/*)'"]]></Correction>
+        <Verification><![CDATA[echo "Manual verification required"]]></Verification>
         <Manual>YES</Manual>
     </Rule>
 
@@ -639,8 +639,8 @@ augenrules --load
         <FileName>audit_logs</FileName>
         <NonCompliantComment>Audit log files do not have secure modes.</NonCompliantComment>
         <CorrectiveComment>Set mode 0600 on all audit logs.</CorrectiveComment>
-        <Correction>find /var/log/audit -type f -exec chmod 600 {} \;</Correction>
-        <Verification>for file in $(find /var/log/audit -type f); do stat -c "%a" "$file" | grep -q "^600$" || exit 1; done; echo 0</Verification>
+        <Correction><![CDATA[find /var/log/audit -type f -exec chmod 600 {} \;]]></Correction>
+        <Verification><![CDATA[for file in $(find /var/log/audit -type f); do stat -c "%a" "$file" | grep -q "^600$" || exit 1; done; echo 0]]></Verification>
         <Manual>NO</Manual>
     </Rule>
     <Rule id="6.2.4.2">
@@ -656,8 +656,8 @@ augenrules --load
         <FileName>audit_logs</FileName>
         <NonCompliantComment>Audit log files are not owned by root, allowing unauthorized alteration.</NonCompliantComment>
         <CorrectiveComment>Set ownership of all audit log files to root.</CorrectiveComment>
-        <Correction>chown -R root:root /var/log/audit</Correction>
-        <Verification>find /var/log/audit -type f | xargs stat -c "%U" | grep -v '^root$' &amp;&amp; echo 1 || echo 0</Verification>
+        <Correction><![CDATA[chown -R root:root /var/log/audit]]></Correction>
+        <Verification><![CDATA[find /var/log/audit -type f | xargs stat -c "%U" | grep -v '^root$' && echo 1 || echo 0]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -675,8 +675,8 @@ augenrules --load
         <FileName>audit_logs</FileName>
         <NonCompliantComment>Audit logs are not group-owned by root.</NonCompliantComment>
         <CorrectiveComment>Set group ownership of audit logs to root.</CorrectiveComment>
-        <Correction>chgrp -R root /var/log/audit</Correction>
-        <Verification>find /var/log/audit -type f | xargs stat -c "%G" | grep -v '^root$' &amp;&amp; echo 1 || echo 0</Verification>
+        <Correction><![CDATA[chgrp -R root /var/log/audit]]></Correction>
+        <Verification><![CDATA[find /var/log/audit -type f | xargs stat -c "%G" | grep -v '^root$' && echo 1 || echo 0]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -694,8 +694,8 @@ augenrules --load
         <FileName>audit</FileName>
         <NonCompliantComment>The /var/log/audit directory is too permissive.</NonCompliantComment>
         <CorrectiveComment>Set directory permissions to 0700.</CorrectiveComment>
-        <Correction>chmod 700 /var/log/audit</Correction>
-        <Verification>stat -c "%a" /var/log/audit | grep -q "^700$" &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[chmod 700 /var/log/audit]]></Correction>
+        <Verification><![CDATA[stat -c "%a" /var/log/audit | grep -q "^700$" && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -713,8 +713,8 @@ augenrules --load
         <FileName>auditd.conf audit.rules</FileName>
         <NonCompliantComment>Audit configuration files have overly permissive modes.</NonCompliantComment>
         <CorrectiveComment>Set file mode to 0600.</CorrectiveComment>
-        <Correction>chmod 600 /etc/audit/auditd.conf /etc/audit/audit.rules</Correction>
-        <Verification>(stat -c "%a" /etc/audit/auditd.conf | grep -q 600) &amp;&amp; (stat -c "%a" /etc/audit/audit.rules | grep -q 600) &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[chmod 600 /etc/audit/auditd.conf /etc/audit/audit.rules]]></Correction>
+        <Verification><![CDATA[(stat -c "%a" /etc/audit/auditd.conf | grep -q 600) && (stat -c "%a" /etc/audit/audit.rules | grep -q 600) && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -732,8 +732,8 @@ augenrules --load
         <FileName>auditd.conf audit.rules</FileName>
         <NonCompliantComment>Audit config files are not owned by root.</NonCompliantComment>
         <CorrectiveComment>Change owner to root.</CorrectiveComment>
-        <Correction>chown root:root /etc/audit/auditd.conf /etc/audit/audit.rules</Correction>
-        <Verification>(stat -c "%U" /etc/audit/auditd.conf | grep -q root) &amp;&amp; (stat -c "%U" /etc/audit/audit.rules | grep -q root) &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[chown root:root /etc/audit/auditd.conf /etc/audit/audit.rules]]></Correction>
+        <Verification><![CDATA[(stat -c "%U" /etc/audit/auditd.conf | grep -q root) && (stat -c "%U" /etc/audit/audit.rules | grep -q root) && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -751,8 +751,8 @@ augenrules --load
         <FileName>auditd.conf audit.rules</FileName>
         <NonCompliantComment>Audit configuration files are not group-owned by root.</NonCompliantComment>
         <CorrectiveComment>Set group ownership to root.</CorrectiveComment>
-        <Correction>chgrp root /etc/audit/auditd.conf /etc/audit/audit.rules</Correction>
-        <Verification>(stat -c "%G" /etc/audit/auditd.conf | grep -q root) &amp;&amp; (stat -c "%G" /etc/audit/audit.rules | grep -q root) &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[chgrp root /etc/audit/auditd.conf /etc/audit/audit.rules]]></Correction>
+        <Verification><![CDATA[(stat -c "%G" /etc/audit/auditd.conf | grep -q root) && (stat -c "%G" /etc/audit/audit.rules | grep -q root) && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -770,8 +770,8 @@ augenrules --load
         <FileName>auditctl ausearch</FileName>
         <NonCompliantComment>Audit utilities have permissive modes.</NonCompliantComment>
         <CorrectiveComment>Set permissions to 0755 or stricter (0600).</CorrectiveComment>
-        <Correction>chmod 600 /usr/sbin/auditctl /usr/sbin/ausearch</Correction>
-        <Verification>(stat -c "%a" /usr/sbin/auditctl | grep -q 600) &amp;&amp; (stat -c "%a" /usr/sbin/ausearch | grep -q 600) &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[chmod 600 /usr/sbin/auditctl /usr/sbin/ausearch]]></Correction>
+        <Verification><![CDATA[(stat -c "%a" /usr/sbin/auditctl | grep -q 600) && (stat -c "%a" /usr/sbin/ausearch | grep -q 600) && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -789,8 +789,8 @@ augenrules --load
         <FileName>auditctl ausearch</FileName>
         <NonCompliantComment>Audit tools are not owned by root.</NonCompliantComment>
         <CorrectiveComment>Change ownership to root.</CorrectiveComment>
-        <Correction>chown root:root /usr/sbin/auditctl /usr/sbin/ausearch</Correction>
-        <Verification>(stat -c "%U" /usr/sbin/auditctl | grep -q root) &amp;&amp; (stat -c "%U" /usr/sbin/ausearch | grep -q root) &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[chown root:root /usr/sbin/auditctl /usr/sbin/ausearch]]></Correction>
+        <Verification><![CDATA[(stat -c "%U" /usr/sbin/auditctl | grep -q root) && (stat -c "%U" /usr/sbin/ausearch | grep -q root) && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -808,8 +808,8 @@ augenrules --load
         <FileName>auditctl ausearch</FileName>
         <NonCompliantComment>Audit tools are not group-owned by root.</NonCompliantComment>
         <CorrectiveComment>Set group ownership to root.</CorrectiveComment>
-        <Correction>chgrp root /usr/sbin/auditctl /usr/sbin/ausearch</Correction>
-        <Verification>(stat -c "%G" /usr/sbin/auditctl | grep -q root) &amp;&amp; (stat -c "%G" /usr/sbin/ausearch | grep -q root) &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[chgrp root /usr/sbin/auditctl /usr/sbin/ausearch]]></Correction>
+        <Verification><![CDATA[(stat -c "%G" /usr/sbin/auditctl | grep -q root) && (stat -c "%G" /usr/sbin/ausearch | grep -q root) && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
     <!-- (Les règles 6.2.4.2 à 6.2.4.10 suivent le même modèle, toutes complétées des

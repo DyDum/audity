@@ -14,8 +14,8 @@
     <FileName>passwd</FileName>
     <NonCompliantComment>/etc/passwd permissions are not 644, risking unauthorized access.</NonCompliantComment>
     <CorrectiveComment>Set file mode to 644.</CorrectiveComment>
-    <Correction>chmod 644 /etc/passwd</Correction>
-    <Verification>stat -c "%a" /etc/passwd | grep -q "^644$" &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[chmod 644 /etc/passwd]]></Correction>
+    <Verification><![CDATA[stat -c "%a" /etc/passwd | grep -q "^644$" && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -31,8 +31,8 @@
     <FileName>passwd-</FileName>
     <NonCompliantComment>/etc/passwd- permissions are too permissive.</NonCompliantComment>
     <CorrectiveComment>Set file mode to 640.</CorrectiveComment>
-    <Correction>chmod 640 /etc/passwd-</Correction>
-    <Verification>stat -c "%a" /etc/passwd- | grep -q "^640$" &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[chmod 640 /etc/passwd-]]></Correction>
+    <Verification><![CDATA[stat -c "%a" /etc/passwd- | grep -q "^640$" && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -48,8 +48,8 @@
     <FileName>group</FileName>
     <NonCompliantComment>/etc/group permissions are not 644.</NonCompliantComment>
     <CorrectiveComment>Set file mode to 644.</CorrectiveComment>
-    <Correction>chmod 644 /etc/group</Correction>
-    <Verification>stat -c "%a" /etc/group | grep -q "^644$" &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[chmod 644 /etc/group]]></Correction>
+    <Verification><![CDATA[stat -c "%a" /etc/group | grep -q "^644$" && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -65,8 +65,8 @@
     <FileName>group-</FileName>
     <NonCompliantComment>/etc/group- permissions are too permissive.</NonCompliantComment>
     <CorrectiveComment>Set file mode to 640.</CorrectiveComment>
-    <Correction>chmod 640 /etc/group-</Correction>
-    <Verification>stat -c "%a" /etc/group- | grep -q "^640$" &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[chmod 640 /etc/group-]]></Correction>
+    <Verification><![CDATA[stat -c "%a" /etc/group- | grep -q "^640$" && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -82,8 +82,8 @@
     <FileName>shadow</FileName>
     <NonCompliantComment>/etc/shadow permissions are not 600, exposing password hashes.</NonCompliantComment>
     <CorrectiveComment>Set file mode to 600.</CorrectiveComment>
-    <Correction>chmod 600 /etc/shadow</Correction>
-    <Verification>stat -c "%a" /etc/shadow | grep -q "^600$" &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[chmod 600 /etc/shadow]]></Correction>
+    <Verification><![CDATA[stat -c "%a" /etc/shadow | grep -q "^600$" && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -99,8 +99,8 @@
     <FileName>shadow-</FileName>
     <NonCompliantComment>/etc/shadow- permissions are too permissive.</NonCompliantComment>
     <CorrectiveComment>Set file mode to 640.</CorrectiveComment>
-    <Correction>chmod 640 /etc/shadow-</Correction>
-    <Verification>stat -c "%a" /etc/shadow- | grep -q "^640$" &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[chmod 640 /etc/shadow-]]></Correction>
+    <Verification><![CDATA[stat -c "%a" /etc/shadow- | grep -q "^640$" && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -116,8 +116,8 @@
     <FileName>gshadow</FileName>
     <NonCompliantComment>/etc/gshadow permissions are not 600.</NonCompliantComment>
     <CorrectiveComment>Set file mode to 600.</CorrectiveComment>
-    <Correction>chmod 600 /etc/gshadow</Correction>
-    <Verification>stat -c "%a" /etc/gshadow | grep -q "^600$" &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[chmod 600 /etc/gshadow]]></Correction>
+    <Verification><![CDATA[stat -c "%a" /etc/gshadow | grep -q "^600$" && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -133,8 +133,8 @@
     <FileName>gshadow-</FileName>
     <NonCompliantComment>/etc/gshadow- permissions are too permissive.</NonCompliantComment>
     <CorrectiveComment>Set file mode to 640.</CorrectiveComment>
-    <Correction>chmod 640 /etc/gshadow-</Correction>
-    <Verification>stat -c "%a" /etc/gshadow- | grep -q "^640$" &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[chmod 640 /etc/gshadow-]]></Correction>
+    <Verification><![CDATA[stat -c "%a" /etc/gshadow- | grep -q "^640$" && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -150,8 +150,8 @@
     <FileName>shells</FileName>
     <NonCompliantComment>/etc/shells permissions are too permissive.</NonCompliantComment>
     <CorrectiveComment>Set file mode to 644.</CorrectiveComment>
-    <Correction>chmod 644 /etc/shells</Correction>
-    <Verification>stat -c "%a" /etc/shells | grep -q "^644$" &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[chmod 644 /etc/shells]]></Correction>
+    <Verification><![CDATA[stat -c "%a" /etc/shells | grep -q "^644$" && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -167,8 +167,8 @@
     <FileName>opasswd</FileName>
     <NonCompliantComment>/etc/security/opasswd permissions are not 600.</NonCompliantComment>
     <CorrectiveComment>Set file mode to 600.</CorrectiveComment>
-    <Correction>chmod 600 /etc/security/opasswd</Correction>
-    <Verification>stat -c "%a" /etc/security/opasswd | grep -q "^600$" &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[chmod 600 /etc/security/opasswd]]></Correction>
+    <Verification><![CDATA[stat -c "%a" /etc/security/opasswd | grep -q "^600$" && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -184,8 +184,8 @@
     <FileName>world_writable</FileName>
     <NonCompliantComment>World-writable objects can be modified by any user.</NonCompliantComment>
     <CorrectiveComment>Identify and remediate world-writable files/directories.</CorrectiveComment>
-    <Correction>echo "Manual review: find / -xdev -type f -perm -0002"</Correction>
-    <Verification>echo "Manual verification required"</Verification>
+    <Correction><![CDATA[echo "Manual review: find / -xdev -type f -perm -0002"]]></Correction>
+    <Verification><![CDATA[echo "Manual verification required"]]></Verification>
     <Manual>YES</Manual>
   </Rule>
 
@@ -201,8 +201,8 @@
     <FileName>orphan_files</FileName>
     <NonCompliantComment>Unowned files may be appropriated by attackers.</NonCompliantComment>
     <CorrectiveComment>Find and re-assign or remove orphan files.</CorrectiveComment>
-    <Correction>echo "Manual review: find / -xdev \\( -nouser -o -nogroup \\)"</Correction>
-    <Verification>echo "Manual verification required"</Verification>
+    <Correction><![CDATA[echo "Manual review: find / -xdev \\( -nouser -o -nogroup \\)"]]></Correction>
+    <Verification><![CDATA[echo "Manual verification required"]]></Verification>
     <Manual>YES</Manual>
   </Rule>
 
@@ -218,8 +218,8 @@
     <FileName>suid_sgid_review</FileName>
     <NonCompliantComment>Unreviewed SUID/SGID files can enable privilege escalation.</NonCompliantComment>
     <CorrectiveComment>Regularly audit all SUID/SGID binaries.</CorrectiveComment>
-    <Correction>echo "Manual review: find / -xdev -perm /6000 -type f -exec ls -la {} \\;"</Correction>
-    <Verification>echo "Manual verification required"</Verification>
+    <Correction><![CDATA[echo "Manual review: find / -xdev -perm /6000 -type f -exec ls -la {} \\;"]]></Correction>
+    <Verification><![CDATA[echo "Manual verification required"]]></Verification>
     <Manual>YES</Manual>
   </Rule>
 

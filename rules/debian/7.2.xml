@@ -14,8 +14,8 @@
     <FileName>passwd</FileName>
     <NonCompliantComment>Some accounts are not shadowed.</NonCompliantComment>
     <CorrectiveComment>Move all password hashes to /etc/shadow and ensure the shadow entry is not empty.</CorrectiveComment>
-    <Correction>echo "Manual review required: awk -F: '($2!=\"x\") {print $1}' /etc/passwd"</Correction>
-    <Verification>echo "Manual verification required"</Verification>
+    <Correction><![CDATA[echo "Manual review required: awk -F: '($2!=\"x\") {print $1}' /etc/passwd"]]></Correction>
+    <Verification><![CDATA[echo "Manual verification required"]]></Verification>
     <Manual>YES</Manual>
   </Rule>
 
@@ -31,8 +31,8 @@
     <FileName>shadow</FileName>
     <NonCompliantComment>Empty or placeholder password hashes found.</NonCompliantComment>
     <CorrectiveComment>Assign strong passwords or lock accounts with empty hashes.</CorrectiveComment>
-    <Correction>echo "Manual review required: awk -F: '($2==\"\" || $2==\"!\") {print $1}' /etc/shadow"</Correction>
-    <Verification>echo "Manual verification required"</Verification>
+    <Correction><![CDATA[echo "Manual review required: awk -F: '($2==\"\" || $2==\"!\") {print $1}' /etc/shadow"]]></Correction>
+    <Verification><![CDATA[echo "Manual verification required"]]></Verification>
     <Manual>YES</Manual>
   </Rule>
 
@@ -48,8 +48,8 @@
     <FileName>group</FileName>
     <NonCompliantComment>Missing group definitions for some GIDs.</NonCompliantComment>
     <CorrectiveComment>Create the missing groups or correct the user record.</CorrectiveComment>
-    <Correction>echo "Manual review required: awk -F: '{print $4}' /etc/passwd | sort -u | while read gid; do getent group $gid || echo $gid; done"</Correction>
-    <Verification>echo "Manual verification required"</Verification>
+    <Correction><![CDATA[echo "Manual review required: awk -F: '{print $4}' /etc/passwd | sort -u | while read gid; do getent group $gid || echo $gid; done"]]></Correction>
+    <Verification><![CDATA[echo "Manual verification required"]]></Verification>
     <Manual>YES</Manual>
   </Rule>
 
@@ -65,8 +65,8 @@
     <FileName>group</FileName>
     <NonCompliantComment>The "shadow" group contains user entries.</NonCompliantComment>
     <CorrectiveComment>Remove all members from the shadow group.</CorrectiveComment>
-    <Correction>echo "Manual review required: edit /etc/group and clear members of shadow:x"</Correction>
-    <Verification>grep '^shadow:' /etc/group | cut -d: -f4 | tr ',' '\n' | wc -l | grep -q '^0$' &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[echo "Manual review required: edit /etc/group and clear members of shadow:x"]]></Correction>
+    <Verification><![CDATA[grep '^shadow:' /etc/group | cut -d: -f4 | tr ',' '\n' | wc -l | grep -q '^0$' && echo 0 || echo 1]]></Verification>
     <Manual>YES</Manual>
   </Rule>
 
@@ -82,8 +82,8 @@
     <FileName>passwd</FileName>
     <NonCompliantComment>Duplicate UIDs detected.</NonCompliantComment>
     <CorrectiveComment>Assign unique UIDs to each account.</CorrectiveComment>
-    <Correction>echo "Manual review required: awk -F: '{print $3}' /etc/passwd | sort | uniq -c | awk '$1>1'"</Correction>
-    <Verification>awk -F: '{print $3}' /etc/passwd | sort | uniq -c | awk '$1>1' | wc -l | grep -q '^0$' &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[echo "Manual review required: awk -F: '{print $3}' /etc/passwd | sort | uniq -c | awk '$1>1'"]]></Correction>
+    <Verification><![CDATA[awk -F: '{print $3}' /etc/passwd | sort | uniq -c | awk '$1>1' | wc -l | grep -q '^0$' && echo 0 || echo 1]]></Verification>
     <Manual>YES</Manual>
   </Rule>
 
@@ -99,8 +99,8 @@
     <FileName>passwd</FileName>
     <NonCompliantComment>Duplicate GIDs detected.</NonCompliantComment>
     <CorrectiveComment>Assign unique primary GIDs to each account.</CorrectiveComment>
-    <Correction>echo "Manual review required: awk -F: '{print $4}' /etc/passwd | sort | uniq -c | awk '$1>1'"</Correction>
-    <Verification>awk -F: '{print $4}' /etc/passwd | sort | uniq -c | awk '$1>1' | wc -l | grep -q '^0$' &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[echo "Manual review required: awk -F: '{print $4}' /etc/passwd | sort | uniq -c | awk '$1>1'"]]></Correction>
+    <Verification><![CDATA[awk -F: '{print $4}' /etc/passwd | sort | uniq -c | awk '$1>1' | wc -l | grep -q '^0$' && echo 0 || echo 1]]></Verification>
     <Manual>YES</Manual>
   </Rule>
 
@@ -116,8 +116,8 @@
     <FileName>passwd</FileName>
     <NonCompliantComment>Duplicate login names detected.</NonCompliantComment>
     <CorrectiveComment>Ensure all usernames are unique.</CorrectiveComment>
-    <Correction>echo "Manual review required: awk -F: '{print $1}' /etc/passwd | sort | uniq -d"</Correction>
-    <Verification>awk -F: '{print $1}' /etc/passwd | sort | uniq -d | wc -l | grep -q '^0$' &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[echo "Manual review required: awk -F: '{print $1}' /etc/passwd | sort | uniq -d"]]></Correction>
+    <Verification><![CDATA[awk -F: '{print $1}' /etc/passwd | sort | uniq -d | wc -l | grep -q '^0$' && echo 0 || echo 1]]></Verification>
     <Manual>YES</Manual>
   </Rule>
 
@@ -133,8 +133,8 @@
     <FileName>group</FileName>
     <NonCompliantComment>Duplicate group names detected.</NonCompliantComment>
     <CorrectiveComment>Ensure all group names are unique.</CorrectiveComment>
-    <Correction>echo "Manual review required: awk -F: '{print $1}' /etc/group | sort | uniq -d"</Correction>
-    <Verification>awk -F: '{print $1}' /etc/group | sort | uniq -d | wc -l | grep -q '^0$' &amp;&amp; echo 0 || echo 1</Verification>
+    <Correction><![CDATA[echo "Manual review required: awk -F: '{print $1}' /etc/group | sort | uniq -d"]]></Correction>
+    <Verification><![CDATA[awk -F: '{print $1}' /etc/group | sort | uniq -d | wc -l | grep -q '^0$' && echo 0 || echo 1]]></Verification>
     <Manual>YES</Manual>
   </Rule>
 
@@ -150,8 +150,8 @@
     <FileName>passwd</FileName>
     <NonCompliantComment>Some users lack a valid home directory.</NonCompliantComment>
     <CorrectiveComment>Create or assign correct home directories for all local interactive users (UID ≥ 1000).</CorrectiveComment>
-    <Correction>echo "Manual review required: awk -F: '($3 >= 1000 &amp;&amp; $7 !~ /nologin/) {print $1,$6}' /etc/passwd"</Correction>
-    <Verification>echo "Manual verification required"</Verification>
+    <Correction><![CDATA[echo "Manual review required: awk -F: '($3 >= 1000 && $7 !~ /nologin/) {print $1,$6}' /etc/passwd"]]></Correction>
+    <Verification><![CDATA[echo "Manual verification required"]]></Verification>
     <Manual>YES</Manual>
   </Rule>
 
@@ -167,8 +167,8 @@
     <FileName>dotfiles</FileName>
     <NonCompliantComment>User "dot" files may have insecure permissions.</NonCompliantComment>
     <CorrectiveComment>Set secure permissions (&lt;= 644) on dot files for all interactive users.</CorrectiveComment>
-    <Correction>echo "Manual review required: find /home -maxdepth 2 -name \".*\" -type f -exec chmod go-w {} +"</Correction>
-    <Verification>echo "Manual verification required"</Verification>
+    <Correction><![CDATA[echo "Manual review required: find /home -maxdepth 2 -name \".*\" -type f -exec chmod go-w {} +"]]></Correction>
+    <Verification><![CDATA[echo "Manual verification required"]]></Verification>
     <Manual>YES</Manual>
   </Rule>
 
