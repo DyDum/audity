@@ -1,7 +1,4 @@
 <RulesCIS>
-    <!-- 4 Host Based Firewall / 4.4 Configure iptables -->
-
-    <!-- 4.4.1 Configure iptables software -->
     <Rule id="4.4.1.1">
         <Name>Ensure iptables packages are installed (Automated)</Name>
         <Chapter id="4">Host Based Firewall</Chapter>
@@ -15,8 +12,8 @@
         <FileName>iptables</FileName>
         <NonCompliantComment>The iptables package is not installed, leaving the system without proper IPv4 firewall management.</NonCompliantComment>
         <CorrectiveComment>Install the iptables package to manage IPv4 firewall rules.</CorrectiveComment>
-        <Correction><![CDATA[apt-get install -y iptables]]></Correction>
-        <Verification><![CDATA[dpkg -l | grep -q '\<iptables\>' && echo 0 || echo 1]]></Verification>
+        <Correction><![CDATA[apt install -y iptables iptables-persistent]]></Correction>
+        <Verification><![CDATA[dpkg-query -s iptables &>/dev/null && dpkg-query -s iptables-persistent &>/dev/null && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -34,7 +31,7 @@
         <NonCompliantComment>nftables is installed and active, which may conflict with iptables.</NonCompliantComment>
         <CorrectiveComment>Remove or disable nftables to ensure iptables is solely in use.</CorrectiveComment>
         <Correction><![CDATA[apt-get purge -y nftables]]></Correction>
-        <Verification><![CDATA[dpkg -l | grep -q '\<nftables\>' && echo 1 || echo 0]]></Verification>
+        <Verification><![CDATA[! dpkg-query -s nftables &>/dev/null && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -52,11 +49,10 @@
         <NonCompliantComment>UFW is installed and may conflict with iptables management.</NonCompliantComment>
         <CorrectiveComment>Uninstall UFW when using iptables exclusively.</CorrectiveComment>
         <Correction><![CDATA[apt-get purge -y ufw]]></Correction>
-        <Verification><![CDATA[dpkg -l | grep -q '\<ufw\>' && echo 1 || echo 0]]></Verification>
+        <Verification><![CDATA[! dpkg-query -s ufw &>/dev/null && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
-    <!-- 4.4.2 Configure IPv4 iptables -->
     <Rule id="4.4.2.1">
         <Name>Ensure iptables default deny firewall policy (Automated)</Name>
         <Chapter id="4">Host Based Firewall</Chapter>
@@ -70,10 +66,8 @@
         <FileName>iptables_rules.sh</FileName>
         <NonCompliantComment>The default policy for iptables is not set to deny, which may allow unauthorized access.</NonCompliantComment>
         <CorrectiveComment>Set the default iptables policy for INPUT and FORWARD chains to DROP, and OUTPUT to ACCEPT.</CorrectiveComment>
-        <Correction><![CDATA[iptables -P INPUT DROP; iptables -P FORWARD DROP; iptables -P OUTPUT ACCEPT]]></Correction>
-        <Verification><![CDATA[iptables -L INPUT | grep -q "policy DROP" && \
-iptables -L FORWARD | grep -q "policy DROP" && \
-iptables -L OUTPUT | grep -q "policy ACCEPT" && echo 0 || echo 1]]></Verification>
+        <Correction><![CDATA[iptables -P INPUT DROP && iptables -P FORWARD DROP && iptables -P OUTPUT DROP]]></Correction>
+        <Verification><![CDATA[iptables -S | grep -qE '^-A INPUT -i lo -j ACCEPT' && iptables -S | grep -qE '^-A OUTPUT -o lo -j ACCEPT' && iptables -S | grep -qE '^-A INPUT ! -i lo -s 127.0.0.0/8 -j DROP' && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -90,8 +84,8 @@ iptables -L OUTPUT | grep -q "policy ACCEPT" && echo 0 || echo 1]]></Verificatio
         <FileName>iptables_rules.sh</FileName>
         <NonCompliantComment>Loopback traffic is not explicitly allowed in iptables.</NonCompliantComment>
         <CorrectiveComment>Add a rule to allow all traffic on the loopback interface.</CorrectiveComment>
-        <Correction><![CDATA[iptables -A INPUT -i lo -j ACCEPT]]></Correction>
-        <Verification><![CDATA[iptables -L INPUT | grep -q "lo" && echo 0 || echo 1]]></Verification>
+        <Correction><![CDATA[iptables -C INPUT -i lo -j ACCEPT 2>/dev/null || iptables -A INPUT -i lo -j ACCEPT; iptables -C OUTPUT -o lo -j ACCEPT 2>/dev/null || iptables -A OUTPUT -o lo -j ACCEPT; iptables -C INPUT ! -i lo -s 127.0.0.0/8 -j DROP 2>/dev/null || iptables -A INPUT ! -i lo -s 127.0.0.0/8 -j DROP]]></Correction>
+        <Verification><![CDATA[iptables -S | grep -qE '^-A INPUT -i lo -j ACCEPT' && iptables -S | grep -qE '^-A OUTPUT -o lo -j ACCEPT' && iptables -S | grep -qE '^-A INPUT ! -i lo -s 127.0.0.0/8 -j DROP' && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -131,7 +125,6 @@ iptables -L OUTPUT | grep -q "policy ACCEPT" && echo 0 || echo 1]]></Verificatio
         <Manual>YES</Manual>
     </Rule>
 
-    <!-- 4.4.3 Configure IPv6 ip6tables -->
     <Rule id="4.4.3.1">
         <Name>Ensure ip6tables default deny firewall policy (Automated)</Name>
         <Chapter id="4">Host Based Firewall</Chapter>
@@ -145,10 +138,8 @@ iptables -L OUTPUT | grep -q "policy ACCEPT" && echo 0 || echo 1]]></Verificatio
         <FileName>ip6tables_rules.sh</FileName>
         <NonCompliantComment>The default policy for ip6tables is not set to deny, which may allow unauthorized IPv6 traffic.</NonCompliantComment>
         <CorrectiveComment>Set the default ip6tables policy for INPUT and FORWARD chains to DROP, and OUTPUT to ACCEPT.</CorrectiveComment>
-        <Correction><![CDATA[ip6tables -P INPUT DROP; ip6tables -P FORWARD DROP; ip6tables -P OUTPUT ACCEPT]]></Correction>
-        <Verification><![CDATA[ip6tables -L INPUT | grep -q "policy DROP" && \
-ip6tables -L FORWARD | grep -q "policy DROP" && \
-ip6tables -L OUTPUT | grep -q "policy ACCEPT" && echo 0 || echo 1]]></Verification>
+        <Correction><![CDATA[iptables -P INPUT DROP; iptables -P FORWARD DROP; iptables -P OUTPUT DROP]]></Correction>
+        <Verification><![CDATA[iptables -P INPUT DROP && iptables -P FORWARD DROP && iptables -P OUTPUT DROP && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -165,8 +156,8 @@ ip6tables -L OUTPUT | grep -q "policy ACCEPT" && echo 0 || echo 1]]></Verificati
         <FileName>ip6tables_rules.sh</FileName>
         <NonCompliantComment>Loopback traffic is not properly configured in ip6tables.</NonCompliantComment>
         <CorrectiveComment>Add a rule to allow all traffic on the IPv6 loopback interface.</CorrectiveComment>
-        <Correction><![CDATA[ip6tables -A INPUT -i lo -j ACCEPT]]></Correction>
-        <Verification><![CDATA[ip6tables -L INPUT | grep -q "lo" && echo 0 || echo 1]]></Verification>
+        <Correction><![CDATA[ip6tables -C INPUT -i lo -j ACCEPT 2>/dev/null || ip6tables -A INPUT -i lo -j ACCEPT; ip6tables -C OUTPUT -o lo -j ACCEPT 2>/dev/null || ip6tables -A OUTPUT -o lo -j ACCEPT; ip6tables -C INPUT -s ::1 -j DROP 2>/dev/null || ip6tables -A INPUT -s ::1 -j DROP]]></Correction>
+        <Verification><![CDATA[ip6tables -C INPUT -i lo -j ACCEPT 2>/dev/null && ip6tables -C OUTPUT -o lo -j ACCEPT 2>/dev/null && ip6tables -C INPUT -s ::1 -j DROP 2>/dev/null && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 

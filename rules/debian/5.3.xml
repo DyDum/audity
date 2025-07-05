@@ -1,9 +1,4 @@
 <RulesCIS>
-
-    <!-- ═════════ 5  Access Control  →  5.3 Pluggable Authentication Modules ═════════ -->
-
-    <!-- ───────────── 5.3.1  Configure PAM software packages ───────────── -->
-
     <Rule id="5.3.1.1">
         <Name>Ensure latest version of pam is installed (Automated)</Name>
         <Chapter id="5">Access Control</Chapter>
@@ -17,8 +12,8 @@
         <FileName>pam</FileName>
         <NonCompliantComment>The PAM package is missing or outdated.</NonCompliantComment>
         <CorrectiveComment>Install or update libpam0g and libpam-modules.</CorrectiveComment>
-        <Correction><![CDATA[apt-get update && apt-get install -y libpam0g libpam-modules]]></Correction>
-        <Verification><![CDATA[dpkg -l | grep -q libpam0g && dpkg -l | grep -q libpam-modules && echo 0 || echo 1]]></Verification>
+        <Correction><![CDATA[apt upgrade libpam-runtime]]></Correction>
+        <Verification><![CDATA[dpkg -s libpam-runtime >/dev/null 2>&1 && v=$(dpkg-query -W -f='${Version}' libpam-runtime) && dpkg --compare-versions "$v" ge 1.5.2-6 && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -35,8 +30,8 @@
         <FileName>libpam-modules</FileName>
         <NonCompliantComment>libpam-modules is not installed.</NonCompliantComment>
         <CorrectiveComment>Install libpam-modules for full PAM functionality.</CorrectiveComment>
-        <Correction><![CDATA[apt-get install -y libpam-modules]]></Correction>
-        <Verification><![CDATA[dpkg -l | grep -q libpam-modules && echo 0 || echo 1]]></Verification>
+        <Correction><![CDATA[apt-get update -qq && apt-get install --only-upgrade -y libpam-modules]]></Correction>
+        <Verification><![CDATA[dpkg -s libpam-modules >/dev/null 2>&1 && v=$(dpkg-query -W -f='${Version}' libpam-modules) && dpkg --compare-versions "$v" ge 1.5.2-6 && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -53,13 +48,10 @@
         <FileName>libpam-pwquality</FileName>
         <NonCompliantComment>libpam-pwquality is not installed.</NonCompliantComment>
         <CorrectiveComment>Install libpam-pwquality to enforce password complexity.</CorrectiveComment>
-        <Correction><![CDATA[apt-get install -y libpam-pwquality]]></Correction>
-        <Verification><![CDATA[dpkg -l | grep -q libpam-pwquality && echo 0 || echo 1]]></Verification>
+        <Correction><![CDATA[apt-get update -qq && apt-get install -y libpam-pwquality]]></Correction>
+        <Verification><![CDATA[dpkg -s libpam-pwquality >/dev/null 2>&1 && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
-
-
-    <!-- ───────────── 5.3.2  Configure pam-auth-update profiles ───────────── -->
 
     <Rule id="5.3.2.1">
         <Name>Ensure pam_unix module is enabled (Automated)</Name>
@@ -74,8 +66,8 @@
         <FileName>common-auth</FileName>
         <NonCompliantComment>pam_unix is not present in common-auth.</NonCompliantComment>
         <CorrectiveComment>Add "pam_unix.so" to /etc/pam.d/common-auth.</CorrectiveComment>
-        <Correction><![CDATA[echo "auth required pam_unix.so" >> /etc/pam.d/common-auth]]></Correction>
-        <Verification><![CDATA[grep -q "pam_unix.so" /etc/pam.d/common-auth && echo 0 || echo 1]]></Verification>
+        <Correction><![CDATA[pam-auth-update --enable unix]]></Correction>
+        <Verification><![CDATA[for f in account auth password session session-noninteractive; do grep -qP '\bpam_unix\.so\b' "/etc/pam.d/common-$f" || { echo 1; exit; }; done; echo 0]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -92,8 +84,8 @@
         <FileName>common-auth</FileName>
         <NonCompliantComment>pam_faillock is not configured.</NonCompliantComment>
         <CorrectiveComment>Add pam_faillock with deny=5 unlock_time=900.</CorrectiveComment>
-        <Correction><![CDATA[echo "auth required pam_faillock.so preauth silent deny=5 unlock_time=900" >> /etc/pam.d/common-auth]]></Correction>
-        <Verification><![CDATA[grep -q "pam_faillock.so" /etc/pam.d/common-auth && echo 0 || echo 1]]></Verification>
+        <Correction><![CDATA[printf '%s\n' 'Name: Enable pam_faillock to deny access' 'Default: yes' 'Priority: 0' 'Auth-Type: Primary' 'Auth:' ' [default=die] pam_faillock.so authfail' > /usr/share/pam-configs/faillock && printf '%s\n' 'Name: Notify of failed login attempts and reset count upon success' 'Default: yes' 'Priority: 1024' 'Auth-Type: Primary' 'Auth:' ' requisite pam_faillock.so preauth' 'Account-Type: Primary' 'Account:' ' required pam_faillock.so' > /usr/share/pam-configs/faillock_notify && pam-auth-update --enable faillock --enable faillock_notify]]></Correction>
+        <Verification><![CDATA[grep -Pq '\bauth\s+requisite\s+pam_faillock\.so\s+preauth\b' /etc/pam.d/common-auth && grep -Pq '\bauth\s+\[default=die\]\s+pam_faillock\.so\s+authfail\b' /etc/pam.d/common-auth && grep -Pq '\baccount\s+required\s+pam_faillock\.so\b' /etc/pam.d/common-account && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -110,8 +102,8 @@
         <FileName>common-password</FileName>
         <NonCompliantComment>pam_pwquality is not enabled.</NonCompliantComment>
         <CorrectiveComment>Add "pam_pwquality.so retry=3".</CorrectiveComment>
-        <Correction><![CDATA[echo "password requisite pam_pwquality.so retry=3" >> /etc/pam.d/common-password]]></Correction>
-        <Verification><![CDATA[grep -q "pam_pwquality.so" /etc/pam.d/common-password && echo 0 || echo 1]]></Verification>
+        <Correction><![CDATA[printf '%s\n' 'Name: Pwquality password strength checking' 'Default: yes' 'Priority: 1024' 'Conflicts: cracklib' 'Password-Type: Primary' 'Password:' ' requisite pam_pwquality.so retry=3' > /usr/share/pam-configs/pwquality && pam-auth-update --enable pwquality]]></Correction>
+        <Verification><![CDATA[grep -Pq '\bpam_pwquality\.so\b' /etc/pam.d/common-password && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -128,15 +120,10 @@
         <FileName>common-password</FileName>
         <NonCompliantComment>pam_pwhistory is not enabled.</NonCompliantComment>
         <CorrectiveComment>Add "pam_pwhistory.so remember=5 use_authtok".</CorrectiveComment>
-        <Correction><![CDATA[echo "password required pam_pwhistory.so remember=5 use_authtok" >> /etc/pam.d/common-password]]></Correction>
-        <Verification><![CDATA[grep -q "pam_pwhistory.so" /etc/pam.d/common-password && echo 0 || echo 1]]></Verification>
+        <Correction><![CDATA[printf '%s\n' 'Name: pwhistory password history checking' 'Default: yes' 'Priority: 1024' 'Password-Type: Primary' 'Password:' ' requisite pam_pwhistory.so remember=24 enforce_for_root try_first_pass use_authtok' > /usr/share/pam-configs/pwhistory && pam-auth-update --enable pwhistory]]></Correction>
+        <Verification><![CDATA[grep -Pq '\bpam_pwhistory\.so\b' /etc/pam.d/common-password && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
-
-
-    <!-- ───────────── 5.3.3  Configure PAM Arguments ───────────── -->
-
-    <!-- 5.3.3.1  Configure pam_faillock module -->
 
     <Rule id="5.3.3.1.1">
         <Name>Ensure password failed attempts lockout is configured (Automated)</Name>
@@ -152,8 +139,8 @@
         <FileName>common-auth</FileName>
         <NonCompliantComment>No account lockout configured.</NonCompliantComment>
         <CorrectiveComment>Use pam_faillock deny=5 unlock_time=900.</CorrectiveComment>
-        <Correction><![CDATA[echo "auth required pam_faillock.so preauth silent deny=5 unlock_time=900" >> /etc/pam.d/common-auth]]></Correction>
-        <Verification><![CDATA[grep -q "pam_faillock.so.*deny=5" /etc/pam.d/common-auth && echo 0 || echo 1]]></Verification>
+        <Correction><![CDATA[if grep -Pq '^\s*deny\s*=' /etc/security/faillock.conf; then   sed -i 's/^\s*deny\s*=.*/deny = 5/' /etc/security/faillock.conf; else   echo 'deny = 5' >> /etc/security/faillock.conf; fi && grep -Pl -- '\bpam_faillock\.so\s+([^#\n\r]+\s+)?deny\b' /usr/share/pam-configs/* | xargs -r sed -i 's/\s\+deny=\S\+\b//g']]></Correction>
+        <Verification><![CDATA[grep -Pq '^\s*deny\s*=\s*[1-5]\b' /etc/security/faillock.conf && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -171,8 +158,8 @@
         <FileName>common-auth</FileName>
         <NonCompliantComment>Unlock time not set for pam_faillock.</NonCompliantComment>
         <CorrectiveComment>Add "unlock_time=900".</CorrectiveComment>
-        <Correction><![CDATA[sed -i '/pam_faillock.so/ s/\(unlock_time=\)[0-9]*/unlock_time=900/; /pam_faillock.so/!{s/pam_faillock.so/pam_faillock.so unlock_time=900/}' /etc/pam.d/common-auth]]></Correction>
-        <Verification><![CDATA[grep -E "pam_faillock\.so.*unlock_time=900" /etc/pam.d/common-auth && echo 0 || echo 1]]></Verification>
+        <Correction><![CDATA[if grep -Pq '^\s*unlock_time\s*=' /etc/security/faillock.conf; then   sed -i 's/^\s*unlock_time\s*=.*/unlock_time = 900/' /etc/security/faillock.conf; else   echo 'unlock_time = 900' >> /etc/security/faillock.conf; fi && grep -Pl -- '\bpam_faillock\.so\s+([^#\n\r]+\s+)?unlock_time\b' /usr/share/pam-configs/* | xargs -r sed -i 's/\s\+unlock_time=\S\+\b//g']]></Correction>
+        <Verification><![CDATA[grep -Pq '^\s*unlock_time\s*=\s*(0|9[0-9][0-9]|[1-9][0-9]{3,})\b' /etc/security/faillock.conf && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -190,13 +177,10 @@
         <FileName>common-auth</FileName>
         <NonCompliantComment>Root account is exempt from faillock.</NonCompliantComment>
         <CorrectiveComment>Add "even_deny_root".</CorrectiveComment>
-        <Correction><![CDATA[sed -i '/pam_faillock.so/ s/$/ even_deny_root/' /etc/pam.d/common-auth]]></Correction>
-        <Verification><![CDATA[grep -E "pam_faillock\.so.*even_deny_root" /etc/pam.d/common-auth && echo 0 || echo 1]]></Verification>
+        <Correction><![CDATA[grep -q '^\s*even_deny_root\b' /etc/security/faillock.conf || echo 'even_deny_root' >> /etc/security/faillock.conf && if grep -q '^\s*root_unlock_time\s*=' /etc/security/faillock.conf; then   sed -i 's/^\s*root_unlock_time\s*=.*/root_unlock_time = 60/' /etc/security/faillock.conf; else   echo 'root_unlock_time = 60' >> /etc/security/faillock.conf; fi && grep -Pl -- '\bpam_faillock\.so\s+[^#\n\r]*root_unlock_time=([0-9]|[1-5][0-9])\b' /usr/share/pam-configs/* | xargs -r sed -i 's/\s*root_unlock_time=\S\+\b//g' && pam-auth-update --force]]></Correction>
+        <Verification><![CDATA[grep -Pq '^\s*(even_deny_root|root_unlock_time\s*=\s*[6-9][0-9]+|[1-9][0-9]{2,})\b' /etc/security/faillock.conf && ! grep -Pq '^\s*root_unlock_time\s*=\s*([1-9]|[1-5][0-9])\b' /etc/security/faillock.conf && ! grep -Pq '^\s*auth\s+[^#\n\r]+\s+pam_faillock\.so\s+[^#\n\r]*\s*root_unlock_time\s*=\s*([1-9]|[1-5][0-9])\b' /etc/pam.d/common-auth && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
-
-
-    <!-- 5.3.3.2  Configure pam_pwquality module -->
 
     <Rule id="5.3.3.2.1">
         <Name>Ensure password number of changed characters is configured (Automated)</Name>
@@ -212,8 +196,8 @@
         <FileName>common-password</FileName>
         <NonCompliantComment>difok (number of changed characters) is not enforced.</NonCompliantComment>
         <CorrectiveComment>Set "difok=4".</CorrectiveComment>
-        <Correction><![CDATA[sed -i '/pam_pwquality.so/ s/\(difok=\)[0-9]*/difok=4/; /pam_pwquality.so/!{s/pam_pwquality.so/pam_pwquality.so difok=4/}' /etc/pam.d/common-password]]></Correction>
-        <Verification><![CDATA[grep -E "pam_pwquality\.so.*difok=4" /etc/pam.d/common-password && echo 0 || echo 1]]></Verification>
+        <Correction><![CDATA[sed -ri 's/^\s*difok\s*=.*/# &/' /etc/security/pwquality.conf 2>/dev/null || true && mkdir -p /etc/security/pwquality.conf.d && echo 'difok = 2' > /etc/security/pwquality.conf.d/50-pwdifok.conf && grep -Pl '\bpam_pwquality\.so\s+[^#\n\r]*\bdifok=' /usr/share/pam-configs/* | xargs -r sed -i 's/\s*difok=\S\+\b//g']]></Correction>
+        <Verification><![CDATA[grep -Psiq '^\s*difok\s*=\s*([2-9]|[1-9][0-9]+)\b' /etc/security/pwquality.conf /etc/security/pwquality.conf.d/*.conf && ! grep -Psiq '^\s*password\s+(requisite|required|sufficient)\s+pam_pwquality\.so\s+[^#\n\r]*\bdifok\s*=\s*([0-1])\b' /etc/pam.d/common-password && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -231,8 +215,8 @@
         <FileName>common-password</FileName>
         <NonCompliantComment>Minimum password length not enforced.</NonCompliantComment>
         <CorrectiveComment>Set "minlen=12".</CorrectiveComment>
-        <Correction><![CDATA[sed -i '/pam_pwquality.so/ s/\(minlen=\)[0-9]*/minlen=12/; /pam_pwquality.so/!{s/pam_pwquality.so/pam_pwquality.so minlen=12/}' /etc/pam.d/common-password]]></Correction>
-        <Verification><![CDATA[grep -E "pam_pwquality\.so.*minlen=12" /etc/pam.d/common-password && echo 0 || echo 1]]></Verification>
+        <Correction><![CDATA[sed -ri 's/^\s*minlen\s*=.*/# &/' /etc/security/pwquality.conf 2>/dev/null || true && mkdir -p /etc/security/pwquality.conf.d && echo 'minlen = 14' > /etc/security/pwquality.conf.d/50-pwlength.conf && grep -Pl '\bpam_pwquality\.so\s+[^#\n\r]*\bminlen=' /usr/share/pam-configs/* | xargs -r sed -i 's/\s*minlen=\S\+\b//g']]></Correction>
+        <Verification><![CDATA[grep -Psiq '^\s*minlen\s*=\s*(1[4-9]|[2-9][0-9]|[1-9][0-9]{2,})\b' /etc/security/pwquality.conf /etc/security/pwquality.conf.d/*.conf && ! grep -Psiq '^\s*password\s+(requisite|required|sufficient)\s+pam_pwquality\.so\s+[^#\n\r]*\bminlen\s*=\s*(?:[0-9]|1[0-3])\b' /etc/pam.d/common-password && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -269,8 +253,8 @@
         <FileName>common-password</FileName>
         <NonCompliantComment>No limit on repeating characters.</NonCompliantComment>
         <CorrectiveComment>Set "maxrepeat=3".</CorrectiveComment>
-        <Correction><![CDATA[sed -i '/pam_pwquality.so/ s/\(maxrepeat=\)[0-9]*/maxrepeat=3/; /pam_pwquality.so/!{s/pam_pwquality.so/pam_pwquality.so maxrepeat=3/}' /etc/pam.d/common-password]]></Correction>
-        <Verification><![CDATA[grep -E "pam_pwquality\.so.*maxrepeat=3" /etc/pam.d/common-password && echo 0 || echo 1]]></Verification>
+        <Correction><![CDATA[sed -ri 's/^\s*maxrepeat\s*=.*/# &/' /etc/security/pwquality.conf 2>/dev/null || true && mkdir -p /etc/security/pwquality.conf.d && echo 'maxrepeat = 3' > /etc/security/pwquality.conf.d/50-pwrepeat.conf && grep -Pl '\bpam_pwquality\.so\s+[^#\n\r]*\bmaxrepeat=' /usr/share/pam-configs/* | xargs -r sed -i 's/\s*maxrepeat=\S\+\b//g']]></Correction>
+        <Verification><![CDATA[grep -Psiq '^\s*maxrepeat\s*=\s*[1-3]\b' /etc/security/pwquality.conf /etc/security/pwquality.conf.d/*.conf && ! grep -Psiq '^\s*password\s+(requisite|required|sufficient)\s+pam_pwquality\.so\s+[^#\n\r]*\bmaxrepeat\s*=\s*(0|[4-9]|[1-9][0-9]+)\b' /etc/pam.d/common-password && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -288,8 +272,8 @@
         <FileName>common-password</FileName>
         <NonCompliantComment>No limit on sequential characters.</NonCompliantComment>
         <CorrectiveComment>Set "maxsequence=3".</CorrectiveComment>
-        <Correction><![CDATA[sed -i '/pam_pwquality.so/ s/\(maxsequence=\)[0-9]*/maxsequence=3/; /pam_pwquality.so/!{s/pam_pwquality.so/pam_pwquality.so maxsequence=3/}' /etc/pam.d/common-password]]></Correction>
-        <Verification><![CDATA[grep -E "pam_pwquality\.so.*maxsequence=3" /etc/pam.d/common-password && echo 0 || echo 1]]></Verification>
+        <Correction><![CDATA[sed -ri 's/^\s*maxsequence\s*=.*/# &/' /etc/security/pwquality.conf 2>/dev/null || true && mkdir -p /etc/security/pwquality.conf.d && echo 'maxsequence = 3' > /etc/security/pwquality.conf.d/50-pwmaxsequence.conf && grep -Pl '\bpam_pwquality\.so\s+[^#\n\r]*\bmaxsequence=' /usr/share/pam-configs/* | xargs -r sed -i 's/\s*maxsequence=\S\+\b//g']]></Correction>
+        <Verification><![CDATA[grep -Psiq '^\s*maxsequence\s*=\s*[1-3]\b' /etc/security/pwquality.conf /etc/security/pwquality.conf.d/*.conf && ! grep -Psiq '^\s*password\s+(requisite|required|sufficient)\s+pam_pwquality\.so\s+[^#\n\r]*\bmaxsequence\s*=\s*(0|[4-9]|[1-9][0-9]+)\b' /etc/pam.d/common-password && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -307,8 +291,8 @@
         <FileName>common-password</FileName>
         <NonCompliantComment>Dictionary checking disabled.</NonCompliantComment>
         <CorrectiveComment>Set "dictcheck=1".</CorrectiveComment>
-        <Correction><![CDATA[sed -i '/pam_pwquality.so/ s/\(dictcheck=\)[0-9]*/dictcheck=1/; /pam_pwquality.so/!{s/pam_pwquality.so/pam_pwquality.so dictcheck=1/}' /etc/pam.d/common-password]]></Correction>
-        <Verification><![CDATA[grep -E "pam_pwquality\.so.*dictcheck=1" /etc/pam.d/common-password && echo 0 || echo 1]]></Verification>
+        <Correction><![CDATA[sed -ri 's/^\s*dictcheck\s*=.*/# &/' /etc/security/pwquality.conf 2>/dev/null || true && find /etc/security/pwquality.conf.d/ -type f -name '*.conf' -exec sed -ri 's/^\s*dictcheck\s*=.*/# &/' {} \; && grep -Pl '\bpam_pwquality\.so\s+[^#\n\r]*\bdictcheck=' /usr/share/pam-configs/* | xargs -r sed -i 's/\s*dictcheck=\S\+\b//g']]></Correction>
+        <Verification><![CDATA[! grep -Psiq '^\s*dictcheck\s*=\s*0\b' /etc/security/pwquality.conf /etc/security/pwquality.conf.d/*.conf && ! grep -Psiq '^\s*password\s+(requisite|required|sufficient)\s+pam_pwquality\.so\s+[^#\n\r]*\bdictcheck\s*=\s*0\b' /etc/pam.d/common-password && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -326,13 +310,29 @@
         <FileName>common-password</FileName>
         <NonCompliantComment>Root password exempt from quality checks.</NonCompliantComment>
         <CorrectiveComment>Add "enforce_for_root".</CorrectiveComment>
-        <Correction><![CDATA[sed -i '/pam_pwquality.so/ s/$/ enforce_for_root/' /etc/pam.d/common-password]]></Correction>
-        <Verification><![CDATA[grep -E "pam_pwquality\.so.*enforce_for_root" /etc/pam.d/common-password && echo 0 || echo 1]]></Verification>
+        <Correction><![CDATA[sed -ri 's/^\s*enforcing\s*=\s*0/# &/' /etc/security/pwquality.conf 2>/dev/null || true && find /etc/security/pwquality.conf.d/ -type f -name '*.conf' -exec sed -ri 's/^\s*enforcing\s*=\s*0/# &/' {} \; && grep -Pl '\bpam_pwquality\.so\s+[^#\n\r]*enforcing=0\b' /usr/share/pam-configs/* | xargs -r sed -i 's/\s*enforcing=0\b//g']]></Correction>
+        <Verification><![CDATA[! grep -PHsi '^\s*enforcing\s*=\s*0\b' /etc/security/pwquality.conf /etc/security/pwquality.conf.d/*.conf && ! grep -PHsi '^\s*password\s+[^#\n\r]+\s+pam_pwquality\.so\s+[^#\n\r]*enforcing=0\b' /etc/pam.d/common-password && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
-
-    <!-- 5.3.3.3  Configure pam_pwhistory module -->
+    <Rule id="5.3.3.2.8">
+        <Name>Ensure password quality is enforced for the root user (Automated)</Name>
+        <Chapter id="5">Access Control</Chapter>
+        <Section id="5.3">Pluggable Authentication Modules</Section>
+        <SubSection id="5.3.3">Configure PAM Arguments</SubSection>
+        <SubSubSection id="5.3.3.2">Configure pam_pwquality module</SubSubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/security/pwquality.conf.d/</BasePath>
+        <FileName>50-pwroot.conf</FileName>
+        <NonCompliantComment>pam_pwquality does not enforce password quality for the root user.</NonCompliantComment>
+        <CorrectiveComment>Add "enforce_for_root" directive to pwquality configuration.</CorrectiveComment>
+        <Correction><![CDATA[[ ! -d /etc/security/pwquality.conf.d/ ] && mkdir -p /etc/security/pwquality.conf.d/; echo "enforce_for_root" > /etc/security/pwquality.conf.d/50-pwroot.conf]]></Correction>
+        <Verification><![CDATA[grep -Psiq '^\s*enforce_for_root\b' /etc/security/pwquality.conf /etc/security/pwquality.conf.d/*.conf && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
 
     <Rule id="5.3.3.3.1">
         <Name>Ensure password history remember is configured (Automated)</Name>
@@ -348,8 +348,8 @@
         <FileName>common-password</FileName>
         <NonCompliantComment>Password reuse not restricted.</NonCompliantComment>
         <CorrectiveComment>Set "remember=5".</CorrectiveComment>
-        <Correction><![CDATA[sed -i '/pam_pwhistory.so/ s/remember=[0-9]*/remember=5/; /pam_pwhistory.so/!{s/pam_pwhistory.so/pam_pwhistory.so remember=5/}' /etc/pam.d/common-password]]></Correction>
-        <Verification><![CDATA[grep -E "pam_pwhistory\.so.*remember=5" /etc/pam.d/common-password && echo 0 || echo 1]]></Verification>
+        <Correction><![CDATA[( grep -Pq 'pam_pwhistory\.so' /etc/pam.d/common-password   && sed -ri '/pam_pwhistory\.so/ { s/remember=[0-9]+/remember=24/; t; s/$/ remember=24/ }' /etc/pam.d/common-password )   || echo 'password requisite pam_pwhistory.so remember=24 enforce_for_root try_first_pass use_authtok' >> /etc/pam.d/common-password]]></Correction>
+        <Verification><![CDATA[grep -Pqs '^\s*password\s+.*pam_pwhistory\.so.*\bremember=(2[4-9]|[3-9][0-9]|[1-9][0-9]{2,})\b' /etc/pam.d/common-password && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -367,8 +367,8 @@
         <FileName>common-password</FileName>
         <NonCompliantComment>Root can reuse old passwords.</NonCompliantComment>
         <CorrectiveComment>Add "enforce_for_root".</CorrectiveComment>
-        <Correction><![CDATA[sed -i '/pam_pwhistory.so/ s/$/ enforce_for_root/' /etc/pam.d/common-password]]></Correction>
-        <Verification><![CDATA[grep -E "pam_pwhistory\.so.*enforce_for_root" /etc/pam.d/common-password && echo 0 || echo 1]]></Verification>
+        <Correction><![CDATA[sed -ri '/pam_pwhistory\.so/ { /enforce_for_root/! s/$/ enforce_for_root/ }' /etc/pam.d/common-password]]></Correction>
+        <Verification><![CDATA[grep -Pqs '^\s*password\s+.*pam_pwhistory\.so.*\benforce_for_root\b' /etc/pam.d/common-password && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -386,13 +386,10 @@
         <FileName>common-password</FileName>
         <NonCompliantComment>use_authtok missing.</NonCompliantComment>
         <CorrectiveComment>Add "use_authtok".</CorrectiveComment>
-        <Correction><![CDATA[sed -i '/pam_pwhistory.so/ s/$/ use_authtok/' /etc/pam.d/common-password]]></Correction>
-        <Verification><![CDATA[grep -E "pam_pwhistory\.so.*use_authtok" /etc/pam.d/common-password && echo 0 || echo 1]]></Verification>
+        <Correction><![CDATA[( grep -q 'pam_pwhistory\.so' /etc/pam.d/common-password   && sed -ri '/pam_pwhistory\.so/ { /use_authtok/! s/$/ use_authtok/ }' /etc/pam.d/common-password )   || echo 'password requisite pam_pwhistory.so remember=24 enforce_for_root try_first_pass use_authtok' >> /etc/pam.d/common-password]]></Correction>
+        <Verification><![CDATA[grep -Pqs '^\s*password\s+.*pam_pwhistory\.so.*\buse_authtok\b' /etc/pam.d/common-password && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
-
-
-    <!-- 5.3.3.4  Configure pam_unix module (règles déjà fournies) -->
 
     <Rule id="5.3.3.4.1">
         <Name>Ensure pam_unix does not include nullok (Automated)</Name>
@@ -408,8 +405,8 @@
         <FileName>common-password</FileName>
         <NonCompliantComment>"nullok" allows empty passwords.</NonCompliantComment>
         <CorrectiveComment>Remove "nullok".</CorrectiveComment>
-        <Correction><![CDATA[sed -i '/pam_unix.so/ s/nullok//' /etc/pam.d/common-password]]></Correction>
-        <Verification><![CDATA[grep "pam_unix.so" /etc/pam.d/common-password | grep -q nullok && echo 1 || echo 0]]></Verification>
+        <Correction><![CDATA[sed -ri '/pam_unix\.so/ s/\bnullok\b//g' /etc/pam.d/common-{password,auth,account,session,session-noninteractive}]]></Correction>
+        <Verification><![CDATA[grep -PHqs '^\s*[^#]*pam_unix\.so.*\bnullok\b' /etc/pam.d/common-{password,auth,account,session,session-noninteractive} && echo 1 || echo 0]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -427,8 +424,8 @@
         <FileName>common-password</FileName>
         <NonCompliantComment>"remember=" handled by pam_pwhistory.</NonCompliantComment>
         <CorrectiveComment>Remove "remember=".</CorrectiveComment>
-        <Correction><![CDATA[sed -i '/pam_unix.so/ s/remember=[0-9]*//' /etc/pam.d/common-password]]></Correction>
-        <Verification><![CDATA[grep "pam_unix.so" /etc/pam.d/common-password | grep -q "remember=" && echo 1 || echo 0]]></Verification>
+        <Correction><![CDATA[sed -ri '/pam_unix\.so/ s/\bremember=[0-9]+\b//g' /etc/pam.d/common-{password,auth,account,session,session-noninteractive}]]></Correction>
+        <Verification><![CDATA[grep -PHqs '^\s*[^#]*pam_unix\.so.*\bremember=[0-9]+\b' /etc/pam.d/common-{password,auth,account,session,session-noninteractive} && echo 1 || echo 0]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -465,9 +462,8 @@
         <FileName>common-password</FileName>
         <NonCompliantComment>use_authtok missing.</NonCompliantComment>
         <CorrectiveComment>Add "use_authtok".</CorrectiveComment>
-        <Correction><![CDATA[sed -i '/pam_unix.so/ s/$/ use_authtok/' /etc/pam.d/common-password]]></Correction>
-        <Verification><![CDATA[grep "pam_unix.so" /etc/pam.d/common-password | grep -q use_authtok && echo 0 || echo 1]]></Verification>
+        <Correction><![CDATA[( grep -q 'pam_unix\.so' /etc/pam.d/common-password   && sed -ri '/pam_unix\.so/ { s/\b(md5|bigcrypt|sha256|blowfish|gost_yescrypt)\b/yescrypt/g; /sha512|yescrypt/! s/$/ yescrypt/ }' /etc/pam.d/common-password )   || echo 'password requisite pam_unix.so obscure use_authtok try_first_pass yescrypt' >> /etc/pam.d/common-password]]></Correction>
+        <Verification><![CDATA[grep -Pqs '^\s*password\s+.*pam_unix\.so.*\b(sha512|yescrypt)\b' /etc/pam.d/common-password && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
-
 </RulesCIS>

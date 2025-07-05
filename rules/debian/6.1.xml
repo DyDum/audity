@@ -1,9 +1,4 @@
 <RulesCIS>
-
-    <!-- ═════════ 6  Logging and Auditing  →  6.1 System Logging ═════════ -->
-
-    <!-- ───────────── 6.1.2  Configure journald ───────────── -->
-
     <Rule id="6.1.2.1.1">
         <Name>Ensure journald ForwardToSyslog is disabled (Automated)</Name>
         <Chapter id="6">Logging and Auditing</Chapter>
@@ -18,8 +13,8 @@
         <FileName>journald.conf</FileName>
         <NonCompliantComment>Log forwarding is enabled (or not explicitly disabled).</NonCompliantComment>
         <CorrectiveComment>Set ForwardToSyslog=no.</CorrectiveComment>
-        <Correction><![CDATA[sed -i 's/^#\?ForwardToSyslog=.*/ForwardToSyslog=no/' /etc/systemd/journald.conf; systemctl restart systemd-journald]]></Correction>
-        <Verification><![CDATA[grep '^ForwardToSyslog=no' /etc/systemd/journald.conf && echo 0 || echo 1]]></Verification>
+        <Correction><![CDATA[systemctl unmask systemd-journald.service && systemctl start systemd-journald.service]]></Correction>
+        <Verification><![CDATA[s=$(systemctl is-enabled systemd-journald.service 2>/dev/null); a=$(systemctl is-active systemd-journald.service 2>/dev/null); { [ "$s" = "static" ] || [ "$s" = "enabled" ]; } && [ "$a" = "active" ] && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -37,8 +32,8 @@
         <FileName>journald.conf</FileName>
         <NonCompliantComment>Log compression is not enabled.</NonCompliantComment>
         <CorrectiveComment>Set Compress=yes.</CorrectiveComment>
-        <Correction><![CDATA[sed -i 's/^#\?Compress=.*/Compress=yes/' /etc/systemd/journald.conf; systemctl restart systemd-journald]]></Correction>
-        <Verification><![CDATA[grep '^Compress=yes' /etc/systemd/journald.conf && echo 0 || echo 1]]></Verification>
+        <Correction><![CDATA[find /var/log/journal /run/log/journal -type f -exec chmod 0640 {} + && find /var/log/journal /run/log/journal -type d -exec chmod 0755 {} +]]></Correction>
+        <Verification><![CDATA[bad=0; for f in $(find /var/log/journal /run/log/journal -type f 2>/dev/null); do [ "$(stat -c '%a' "$f")" -le 640 ] || { echo "Bad file: $f"; bad=1; }; done; for d in $(find /var/log/journal /run/log/journal -type d 2>/dev/null); do mode=$(stat -c '%a' "$d"); [[ "$mode" == 755 || "$mode" == 2755 ]] || { echo "Bad dir: $d ($mode)"; bad=1; }; done; [ "$bad" -eq 0 ] && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -56,9 +51,63 @@
         <FileName>journald.conf</FileName>
         <NonCompliantComment>The log storage mode is not persistent.</NonCompliantComment>
         <CorrectiveComment>Set Storage=persistent.</CorrectiveComment>
-        <Correction><![CDATA[sed -i 's/^#\?Storage=.*/Storage=persistent/' /etc/systemd/journald.conf; systemctl restart systemd-journald]]></Correction>
-        <Verification><![CDATA[grep '^Storage=persistent' /etc/systemd/journald.conf && echo 0 || echo 1]]></Verification>
+        <Correction><![CDATA[mkdir -p /etc/systemd/journald.conf.d && printf '[Journal]\nSystemMaxUse=1G\nSystemKeepFree=500M\nRuntimeMaxUse=200M\nRuntimeKeepFree=50M\nMaxFileSec=1month\n' > /etc/systemd/journald.conf.d/60-journald.conf && systemctl restart systemd-journald]]></Correction>
+        <Verification><![CDATA[conf_files=$(find /etc/systemd/journald.conf /etc/systemd/journald.conf.d -type f -name '*.conf' 2>/dev/null); grep -Eq '^\s*(SystemMaxUse|SystemKeepFree|RuntimeMaxUse|RuntimeKeepFree|MaxFileSec)\s*=' $conf_files && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="6.1.1.4">
+        <Name>Ensure only one logging system is in use (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.1">System Logging</Section>
+        <SubSection id="6.1.1">Configure journald service</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/systemd/</BasePath>
+        <FileName>journald.conf</FileName>
+        <NonCompliantComment>Multiple logging systems (rsyslog and journald) are active simultaneously.</NonCompliantComment>
+        <CorrectiveComment>Ensure only one logging system is active (either journald or rsyslog).</CorrectiveComment>
+        <Correction><![CDATA[systemctl stop rsyslog && systemctl disable rsyslog && systemctl restart systemd-journald]]></Correction>
+        <Verification><![CDATA[(systemctl is-active --quiet rsyslog && ! systemctl is-active --quiet systemd-journald) || (! systemctl is-active --quiet rsyslog && systemctl is-active --quiet systemd-journald) && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="6.1.2.1.1">
+        <Name>Ensure systemd-journal-remote is installed (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.1">System Logging</Section>
+        <SubSection id="6.1.2">Configure journald</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/usr/bin</BasePath>
+        <FileName>systemd-journal-remote</FileName>
+        <NonCompliantComment>systemd-journal-remote is not installed.</NonCompliantComment>
+        <CorrectiveComment>Install systemd-journal-remote using apt.</CorrectiveComment>
+        <Correction><![CDATA[apt install -y systemd-journal-remote]]></Correction>
+        <Verification><![CDATA[dpkg-query -s systemd-journal-remote &>/dev/null && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="6.1.2.1.2">
+        <Name>Ensure systemd-journal-upload authentication is configured (Manual)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.1">System Logging</Section>
+        <SubSection id="6.1.2">Configure journald</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/systemd/journal-upload.conf.d</BasePath>
+        <FileName>60-journald_upload.conf</FileName>
+        <NonCompliantComment>Missing or incomplete authentication parameters for journal upload.</NonCompliantComment>
+        <CorrectiveComment>Set URL, ServerKeyFile, ServerCertificateFile and TrustedCertificateFile in the [Upload] section.</CorrectiveComment>
+        <Correction><![CDATA[grep -q '^URL=' /etc/systemd/journal-upload.conf.d/60-journald_upload.conf && grep -q '^ServerKeyFile=' /etc/systemd/journal-upload.conf.d/60-journald_upload.conf && grep -q '^ServerCertificateFile=' /etc/systemd/journal-upload.conf.d/60-journald_upload.conf && grep -q '^TrustedCertificateFile=' /etc/systemd/journal-upload.conf.d/60-journald_upload.conf && echo 0 || echo 1]]></Correction>
+        <Verification><![CDATA[grep -q '^URL=' /etc/systemd/journal-upload.conf.d/60-journald_upload.conf && grep -q '^ServerKeyFile=' /etc/systemd/journal-upload.conf.d/60-journald_upload.conf && grep -q '^ServerCertificateFile=' /etc/systemd/journal-upload.conf.d/60-journald_upload.conf && grep -q '^TrustedCertificateFile=' /etc/systemd/journal-upload.conf.d/60-journald_upload.conf && echo 0 || echo 1]]></Verification>
+        <Manual>YES</Manual>
     </Rule>
 
     <Rule id="6.1.2.2">

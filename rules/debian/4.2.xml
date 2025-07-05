@@ -1,5 +1,4 @@
 <RulesCIS>
-    <!-- 4 Host Based Firewall  →  4.2 Configure UncomplicatedFirewall -->
     <Rule id="4.2.1">
         <Name>Ensure ufw is installed (Automated)</Name>
         <Chapter id="4">Host Based Firewall</Chapter>
@@ -12,7 +11,7 @@
         <FileName>ufw</FileName>
         <NonCompliantComment>UFW is not installed, leaving the system without a basic firewall solution.</NonCompliantComment>
         <CorrectiveComment>Install UFW to provide host-based firewall functionality.</CorrectiveComment>
-        <Correction><![CDATA[apt-get install -y ufw]]></Correction>
+        <Correction><![CDATA[apt install -y ufw]]></Correction>
         <Verification><![CDATA[dpkg -l | grep -q '^ii\s*ufw\s' && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
@@ -46,8 +45,8 @@
         <FileName>ufw.service</FileName>
         <NonCompliantComment>The UFW service is not enabled or running; firewall rules may not be enforced.</NonCompliantComment>
         <CorrectiveComment>Enable and start the UFW service.</CorrectiveComment>
-        <Correction><![CDATA[systemctl enable ufw; systemctl start ufw]]></Correction>
-        <Verification><![CDATA[systemctl is-active ufw | grep -q '^active$' && echo 0 || echo 1]]></Verification>
+        <Correction><![CDATA[ufw allow proto tcp from any to any port 22; systemctl unmask ufw.service; systemctl enable --now ufw.service; ufw --force enable]]></Correction>
+        <Verification><![CDATA[systemctl is-enabled ufw.service | grep -q '^enabled$' && systemctl is-active ufw.service | grep -q '^active$' && ufw status | grep -q '^Status: active' && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -63,8 +62,8 @@
         <FileName>rules</FileName>
         <NonCompliantComment>Loopback traffic is not explicitly allowed, potentially blocking local inter-process communication.</NonCompliantComment>
         <CorrectiveComment>Allow all incoming and outgoing traffic on the loopback interface.</CorrectiveComment>
-        <Correction><![CDATA[ufw allow in on lo comment 'allow loopback in'; ufw allow out on lo comment 'allow loopback out']]></Correction>
-        <Verification><![CDATA[ufw status verbose | grep -q 'ALLOW.*LOOPBACK' && echo 0 || echo 1]]></Verification>
+        <Correction><![CDATA[sed -i 's/^ allow all on loopback$/# allow all on loopback/' /etc/ufw/before.rules && grep -q '^-A ufw-before-input -i lo -j ACCEPT' /etc/ufw/before.rules || echo '-A ufw-before-input -i lo -j ACCEPT' >> /etc/ufw/before.rules && grep -q '^-A ufw-before-output -o lo -j ACCEPT' /etc/ufw/before.rules || echo '-A ufw-before-output -o lo -j ACCEPT' >> /etc/ufw/before.rules && ufw allow in on lo && ufw allow out on lo && ufw deny in from 127.0.0.0/8 && ufw deny in from ::1 && ufw reload]]></Correction>
+        <Verification><![CDATA[ufw status verbose | grep '127.0.0.0/8' | grep -q 'DENY IN' && ufw status verbose | grep '::1' | grep -q 'DENY IN' && grep -qP '^-A ufw-before-input -i lo -j ACCEPT' /etc/ufw/before.rules && grep -qP '^-A ufw-before-output -o lo -j ACCEPT' /etc/ufw/before.rules && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -97,9 +96,9 @@
         <FileName>rules</FileName>
         <NonCompliantComment>Some listening ports lack corresponding UFW rules, exposing services unintentionally.</NonCompliantComment>
         <CorrectiveComment>Add UFW rules for every TCP/UDP port reported by ss -tuln (or netstat -tuln).</CorrectiveComment>
-        <Correction><![CDATA[for p in $(ss -H -tuln | awk '{print $5}' | grep -oE '[0-9]+$' | sort -u); do ufw status numbered | grep -q ":.*ALLOW.*$p" || ufw allow "$p"; done]]></Correction>
+        <Correction><![CDATA[echo "Manual configuration required: define UFW outbound rules"]]></Correction>
         <Verification><![CDATA[missing=$(ss -H -tuln | awk '{print $5}' | grep -oE '[0-9]+$' | sort -u | while read p; do ufw status numbered | grep -q ":.*ALLOW.*$p" || echo $p; done); [ -z "$missing" ] && echo 0 || echo 1]]></Verification>
-        <Manual>NO</Manual>
+        <Manual>CORRECTION</Manual>
     </Rule>
 
     <Rule id="4.2.7">
@@ -115,7 +114,7 @@
         <NonCompliantComment>The default incoming policy is not set to deny, exposing the system to unsolicited connections.</NonCompliantComment>
         <CorrectiveComment>Set UFW default policies to deny incoming and allow outgoing traffic.</CorrectiveComment>
         <Correction><![CDATA[ufw default deny incoming; ufw default allow outgoing; ufw reload]]></Correction>
-        <Verification><![CDATA[ufw status | grep -q 'Default: deny (incoming)' && echo 0 || echo 1]]></Verification>
-        <Manual>NO</Manual>
+        <Verification><![CDATA[ufw status verbose | grep -q 'Default: deny (incoming), deny (outgoing), disabled (routed)' && echo 0 || echo 1]]></Verification>
+        <Manual>CORRECTION</Manual>
     </Rule>
 </RulesCIS>
