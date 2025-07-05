@@ -37,8 +37,8 @@ pub enum ScanError {
 /// Convert any serialisable value to a pretty-printed XML string
 /// using four spaces per indentation level.
 pub fn pretty_xml<T: Serialize>(value: &T) -> Result<String, ScanError> {
-    let mut buf = String::new();
-    let mut ser = Serializer::new(&mut buf);
+    let mut buf: String = String::new();
+    let mut ser: Serializer<'_, '_, String> = Serializer::new(&mut buf);
     ser.indent(' ', 4);
     value.serialize(ser)?;
     Ok(buf)
@@ -60,12 +60,12 @@ pub fn scan_directory(dir: &str) -> Result<(), ScanError> {
         .collect();
     files.sort_by_key(DirEntry::file_name);
 
-    let mut global = RulesCis::default();
+    let mut global: RulesCis = RulesCis::default();
 
     for file in files {
-        let raw = fs::read_to_string(file.path())?;
+        let raw: String = fs::read_to_string(file.path())?;
 
-        let local = match from_str::<RulesCis>(&raw) {
+        let local: RulesCis = match from_str::<RulesCis>(&raw) {
             Ok(r) => r,
             Err(e) => {
                 eprintln!("Erreur XML dans «{}» : {}", file.path().display(), e);
@@ -87,16 +87,16 @@ pub fn scan_directory(dir: &str) -> Result<(), ScanError> {
         }
     }
 
-    let xml = pretty_xml(&global)?;
+    let xml: String = pretty_xml(&global)?;
 
     fs::create_dir_all("reports")?;
   
-    let folder_name = Path::new(dir)
+    let folder_name: &str = Path::new(dir)
         .file_name()
         .and_then(|s| s.to_str())
         .unwrap_or("output");
 
-    let file_path = format!("reports/{folder_name}_cis_result.xml");
+    let file_path: String = format!("reports/{folder_name}_cis_result.xml");
     fs::write(&file_path, xml)?;
 
     println!("Report written to {file_path}");
@@ -112,15 +112,15 @@ pub fn scan_directory(dir: &str) -> Result<(), ScanError> {
 /// # Returns
 /// A list of rule names for which a corresponding package was found.
 pub fn load_installed_packages(packages_path: &str) -> anyhow::Result<Vec<String>> {
-    let rules_dir = fs::read_dir("rules")?;
-    let file = File::open(packages_path)?;
-    let reader = BufReader::new(file);
+    let rules_dir: fs::ReadDir = fs::read_dir("rules")?;
+    let file: File = File::open(packages_path)?;
+    let reader: BufReader<File> = BufReader::new(file);
 
-    let mut installed = Vec::new();
+    let mut installed: Vec<String> = Vec::new();
     let lines: Vec<_> = reader.lines().flatten().collect();
 
     for entry in rules_dir.flatten() {
-        let rule_dir = entry.path();
+        let rule_dir: std::path::PathBuf = entry.path();
         if !rule_dir.is_dir() {
             continue;
         }

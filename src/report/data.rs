@@ -160,8 +160,8 @@ fn extract_manual(text: &str) -> Option<String> {
 
 /// Read the text content of the current XML element (handles `<![CDATA[…]]>`).
 fn read_text<R: BufRead>(reader: &mut Reader<R>, end: &[u8]) -> Result<String> {
-    let mut buf = Vec::new();
-    let mut out = String::new();
+    let mut buf: Vec<u8> = Vec::new();
+    let mut out: String = String::new();
     loop {
         match reader.read_event_into(&mut buf)? {
             Event::Text(t) => out.push_str(&t.unescape()?),
@@ -177,7 +177,7 @@ fn read_text<R: BufRead>(reader: &mut Reader<R>, end: &[u8]) -> Result<String> {
 
 /// Parse an XML heading (`<Chapter>`, `<Section>`, …) and return `(id, name)`.
 fn read_heading<R: BufRead>(reader: &mut Reader<R>, start: &BytesStart) -> Result<(String, String)> {
-    let id = start
+    let id: String = start
         .attributes()
         .flatten()
         .find(|a| a.key.as_ref() == b"id")
@@ -188,8 +188,8 @@ fn read_heading<R: BufRead>(reader: &mut Reader<R>, start: &BytesStart) -> Resul
 
 /// Collect all `<Profile>` sub-elements into a `Vec<Profile>`.
 fn collect_profiles<R: BufRead>(reader: &mut Reader<R>) -> Result<Vec<Profile>> {
-    let mut out = Vec::new();
-    let mut buf = Vec::new();
+    let mut out: Vec<Profile> = Vec::new();
+    let mut buf: Vec<u8> = Vec::new();
     loop {
         match reader.read_event_into(&mut buf)? {
             Event::Start(t) if t.name().as_ref() == b"Profile" => {
@@ -216,18 +216,18 @@ fn collect_profiles<R: BufRead>(reader: &mut Reader<R>) -> Result<Vec<Profile>> 
 
 /// Fully parse all `<Rule>` elements from a CIS XML file.
 fn parse_rules<P: AsRef<Path>>(path: P) -> Result<Vec<Rule>> {
-    let mut reader = Reader::from_reader(BufReader::new(File::open(path)?));
+    let mut reader: Reader<BufReader<File>> = Reader::from_reader(BufReader::new(File::open(path)?));
     reader.trim_text(true);
 
-    let mut rules = Vec::new();
-    let mut buf = Vec::new();
+    let mut rules: Vec<Rule> = Vec::new();
+    let mut buf: Vec<u8> = Vec::new();
     let mut cur: Option<Rule> = None;
 
     loop {
         match reader.read_event_into(&mut buf)? {
             // ───── rule start ─────
             Event::Start(t) if t.name().as_ref() == b"Rule" => {
-                let id = t
+                let id: std::borrow::Cow<'_, str> = t
                     .attributes()
                     .flatten()
                     .find(|a| a.key.as_ref() == b"id")
@@ -280,7 +280,7 @@ fn parse_rules<P: AsRef<Path>>(path: P) -> Result<Vec<Rule>> {
                         r.corrective = read_text(&mut reader, b"CorrectiveComment")?;
                     }
                     b"Correction" => {
-                        let txt = read_text(&mut reader, b"Correction")?;
+                        let txt: String = read_text(&mut reader, b"Correction")?;
                         if let Some(m) = extract_manual(&txt) {
                             r.manual_review = m;
                         } else {
@@ -288,7 +288,7 @@ fn parse_rules<P: AsRef<Path>>(path: P) -> Result<Vec<Rule>> {
                         }
                     }
                     b"Verification" => {
-                        let txt = read_text(&mut reader, b"Verification")?;
+                        let txt: String = read_text(&mut reader, b"Verification")?;
                         // If no manual review yet, maybe it is stated here.
                         if r.manual_review.is_empty() {
                             if let Some(m) = extract_manual(&txt) {
@@ -326,13 +326,13 @@ impl HostInfo {
     /// | `cpu_cores`   | `sys_info::cpu_num()`                          |
     /// | `memory_mb`   | `sys_info::mem_info().total / 1024`            |
         #[must_use] pub fn gather() -> Self {
-        let hostname = hostname().unwrap_or_else(|_| "N/A".into());
+        let hostname: String = hostname().unwrap_or_else(|_| "N/A".into());
         let (primary_ip, mac_addr) = get_if_addrs()
             .ok()
             .and_then(|ifs| {
                 ifs.into_iter().find_map(|ifa| match ifa.addr {
                     IfAddr::V4(v4) if !v4.ip.is_loopback() => {
-                        let mac = fs::read_to_string(format!("/sys/class/net/{}/address", ifa.name))
+                        let mac: String = fs::read_to_string(format!("/sys/class/net/{}/address", ifa.name))
                             .map(|s| s.trim().into())
                             .unwrap_or_else(|_| "N/A".into());
                         Some((v4.ip.to_string(), mac))
@@ -341,12 +341,12 @@ impl HostInfo {
                 })
             })
             .unwrap_or_else(|| ("N/A".into(), "N/A".into()));
-        let distro = os_info::get();
-        let os = format!("{} {}", distro.os_type(), distro.version());
-        let kernel = os_release().unwrap_or_else(|_| "N/A".into());
-        let architecture = std::env::consts::ARCH.to_string();
-        let cpu_cores = cpu_num().unwrap_or(0) as u32;
-        let memory_mb = mem_info().map(|m| m.total / 1024).unwrap_or(0);
+        let distro: os_info::Info = os_info::get();
+        let os: String = format!("{} {}", distro.os_type(), distro.version());
+        let kernel: String = os_release().unwrap_or_else(|_| "N/A".into());
+        let architecture: String = std::env::consts::ARCH.to_string();
+        let cpu_cores: u32 = cpu_num().unwrap_or(0) as u32;
+        let memory_mb: u64 = mem_info().map(|m| m.total / 1024).unwrap_or(0);
 
         Self {
             hostname,
@@ -378,11 +378,11 @@ impl ReportData {
     /// # Errors
     /// Any I/O or XML parse error is propagated wrapped in `anyhow::Result`.
     pub fn from_xml(path: &Path) -> Result<Self> {
-        let rules = parse_rules(path)?;
+        let rules: Vec<Rule> = parse_rules(path)?;
         let RulesCIS { rules: raw } = from_reader::<_, RulesCIS>(BufReader::new(File::open(path)?))?;
 
         // Map rule-id → (compliance string, manual flag)
-        let mut compliance = HashMap::<String, (&str, bool)>::new();
+        let mut compliance: HashMap<String, (&str, bool)> = HashMap::<String, (&str, bool)>::new();
         for r in &raw {
             compliance.insert(
                 r.id.clone(),
@@ -394,9 +394,9 @@ impl ReportData {
         }
 
         // Buckets
-        let mut compliant = Vec::new();
-        let mut non_compliant = Vec::new();
-        let mut not_tested = Vec::new();
+        let mut compliant: Vec<Rule> = Vec::new();
+        let mut non_compliant: Vec<Rule> = Vec::new();
+        let mut not_tested: Vec<Rule> = Vec::new();
 
         for r in rules {
             let (cmp, manual) = compliance.get(&r.id).copied().unwrap_or(("NA", false));
@@ -414,17 +414,17 @@ impl ReportData {
         /* ---- build summary table ---- */
 
         // Flatten all rules with their UI status/class.
-        let mut combined = Vec::new();
+        let mut combined: Vec<(&Rule, &'static str, &'static str)> = Vec::new();
         combined.extend(compliant.iter().map(|r| (r, "Compliant", "success")));
         combined.extend(non_compliant.iter().map(|r| (r, "Non-compliant", "danger")));
         combined.extend(not_tested.iter().map(|r| (r, "Not tested", "warning")));
         combined.sort_by(|(a, ..), (b, ..)| a.id.cmp(&b.id));
 
-        let mut summary = Vec::<SummaryRow>::new();
-        let mut last_chap = String::new();
-        let mut last_sec = String::new();
-        let mut last_sub = String::new();
-        let mut last_subsub = String::new();
+        let mut summary: Vec<SummaryRow> = Vec::<SummaryRow>::new();
+        let mut last_chap: String = String::new();
+        let mut last_sec: String = String::new();
+        let mut last_sub: String = String::new();
+        let mut last_subsub: String = String::new();
 
         for (r, status, class) in &combined {
             // Hierarchical headings (avoid duplicates).
@@ -489,12 +489,12 @@ impl ReportData {
         }
 
         // ---------- Compute statistics ----------
-        let total = compliant.len() + non_compliant.len() + not_tested.len();
+        let total: usize = compliant.len() + non_compliant.len() + not_tested.len();
         
         #[allow(clippy::cast_possible_truncation, clippy::cast_precision_loss, clippy::cast_sign_loss)]
         let percent = |n: usize| ((n as f64 / total as f64) * 100.0).round() as u8;
 
-        let stats = Stats {
+        let stats: Stats = Stats {
             total,
             pass: compliant.len(),
             fail: non_compliant.len(),
@@ -505,7 +505,7 @@ impl ReportData {
         };
 
         Ok(Self {
-            profile_name: "Debian".into(), // TODO: read from XML once available.
+            profile_name: "Debian".into(),
             audit_time: Local::now(),
             host_info: HostInfo::gather(),
             stats,

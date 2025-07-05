@@ -31,7 +31,7 @@ pub fn run_full_audit() {
         println!("Failed to update package list: {e}");
     }
     run_package_audit(false, false);
-    run_audit_rules();
+    run_audit_rules(None);
 }
 
 /// Executes the package audit workflow:
@@ -60,19 +60,22 @@ pub fn run_package_audit(update: bool, upgrade: bool) {
     }
 
     package_management::sources::read_sources_list().unwrap_or_default();
-    let total_installed = package_management::list::get_installed_packages_count().unwrap_or(0);
-    let installed_packages =
-        package_management::list::list_installed_packages().unwrap_or_default();
-    let upgradable_packages = if upgrade {
-        package_management::update::check_upgradable_packages().unwrap_or_default()
-    } else {
-        String::new()
-    };
+    let total_installed: usize = package_management::list::get_installed_packages_count().unwrap_or(0);
+    let installed_packages: String = package_management::list::list_installed_packages().unwrap_or_default();
+
+    let upgradable_vec: Vec<String> = package_management::update::check_upgradable_packages().unwrap_or_default();
+    let upgradable_packages: Vec<&str> = upgradable_vec.iter().map(|s| s.as_str()).collect();
+    println!("📦 {} package(s) upgradable", upgradable_packages.len());
+    for pkg in &upgradable_packages {
+        println!("   - {}", pkg);
+    }
+
+    let upgradable_string = upgradable_packages.join("\n");
 
     match package_management::xml_report::generate_xml_report(
         total_installed,
         &installed_packages,
-        &upgradable_packages,
+        &upgradable_string,
     ) {
         Ok(xml_data) => {
             std::fs::write("./reports/packages.xml", xml_data).expect("Failed to write XML report");
@@ -96,22 +99,36 @@ pub fn run_package_audit(update: bool, upgrade: bool) {
 /// # Errors
 /// Errors during directory scanning are not returned but printed to stderr
 /// before terminating the process.
-pub fn run_audit_rules() {
-    let package_file = "reports/packages.xml";
+pub fn run_audit_rules(filter: Option<&str>) {
+    let package_file: &'static str = "reports/packages.xml";
+
+    // Transformation du filtre si présent ("Apache Http" -> "apache_http")
+    let normalized_filter: Option<String> = filter.map(|f| {
+        f.to_lowercase()
+            .split_whitespace()
+            .collect::<Vec<&str>>()
+            .join("_")
+    });
 
     match audit_rules::scanner::load_installed_packages(package_file) {
         Ok(installed_rules) => {
             for rule in installed_rules {
-                let dir = format!("rules/{}", rule);
+                if let Some(ref filter_name) = normalized_filter {
+                    if &rule != filter_name {
+                        continue;
+                    }
+                }
+
+                let dir: String = format!("rules/{}", rule);
                 if let Err(e) = scan_directory(&dir) {
                     eprintln!("Error scanning {dir}: {e}");
-                    std::process::exit(1);
+                    process::exit(1);
                 }
             }
         }
         Err(e) => {
             eprintln!("Failed to load installed packages: {e}");
-            std::process::exit(1);
+            process::exit(1);
         }
     }
 }
@@ -123,12 +140,12 @@ pub fn run_audit_rules() {
 /// and runs the correction logic only on those.
 pub fn run_correction() {
     run_package_audit(false, false);
-    let package_file = "reports/packages.xml";
+    let package_file: &'static str = "reports/packages.xml";
 
     match audit_rules::scanner::load_installed_packages(package_file) {
         Ok(installed_rules) => {
             for rule in installed_rules {
-                let dir = format!("rules/{}", rule);
+                let dir: String = format!("rules/{}", rule);
                 if let Err(e) = package_management::correction::correct_directory(&dir) {
                     eprintln!("Error correcting {dir}: {e}");
                     std::process::exit(1);
@@ -203,10 +220,10 @@ const SUFFIX_OUT: &str = "_cis_report.html";
 ///
 /// Returns the full path of the created HTML report.
 pub fn generate_report<P: AsRef<Path>>(src: P) -> Result<PathBuf> {
-    let src = src.as_ref();
+    let src: &Path = src.as_ref();
 
     // --- derive output file name ---
-    let file_str = src
+    let file_str: &str = src
         .file_name()
         .and_then(|n| n.to_str())
         .context("input path is not valid UTF-8")?;
@@ -214,12 +231,12 @@ pub fn generate_report<P: AsRef<Path>>(src: P) -> Result<PathBuf> {
     if !file_str.ends_with(SUFFIX_IN) {
         bail!("input file name must end with {SUFFIX_IN}");
     }
-    let base = &file_str[..file_str.len() - SUFFIX_IN.len()];
-    let dst = src.with_file_name(format!("Benchmark_reports/{base}{SUFFIX_OUT}"));
+    let base: &str = &file_str[..file_str.len() - SUFFIX_IN.len()];
+    let dst: PathBuf = src.with_file_name(format!("Benchmark_reports/{base}{SUFFIX_OUT}"));
 
     // --- parse XML & render HTML ---
-    let data = report::data::ReportData::from_xml(src)?;
-    let html = report::html::ReportTemplate::from(&data).render()?;
+    let data: report::ReportData = report::data::ReportData::from_xml(src)?;
+    let html: String = report::html::ReportTemplate::from(&data).render()?;
 
     // --- write output file ---
     if let Some(dir) = dst.parent() {
@@ -228,4 +245,41 @@ pub fn generate_report<P: AsRef<Path>>(src: P) -> Result<PathBuf> {
     fs::write(&dst, html)?;
 
     Ok(dst)
+}
+
+
+pub fn list_cis() {
+    let directory: &'static str = "./rules";
+
+    match fs::read_dir(directory) {
+        Ok(entries) => {
+            println!("List of CIS available:");
+            for entry in entries.flatten() {
+                let path: PathBuf = entry.path();
+                if path.is_dir() {
+                    if let Some(folder_name_os) = path.file_name() {
+                        let folder_name: std::borrow::Cow<'_, str> = folder_name_os.to_string_lossy();
+
+                        // Transforme "apache_http" en "Apache Http"
+                        let readable_name: String = folder_name
+                            .split('_')
+                            .map(|s| {
+                                let mut chars = s.chars();
+                                match chars.next() {
+                                    Some(first) => first.to_uppercase().collect::<String>() + chars.as_str(),
+                                    None => String::new(),
+                                }
+                            })
+                            .collect::<Vec<String>>()
+                            .join(" ");
+
+                        println!("- {}", readable_name);
+                    }
+                }
+            }
+        }
+        Err(e) => {
+            eprintln!("Error reading directory {}: {}", directory, e);
+        }
+    }
 }

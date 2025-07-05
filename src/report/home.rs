@@ -51,16 +51,16 @@ pub struct PackagesData {
 /// # Errors
 /// Relays any I/O failure originating from the filesystem API.
 pub fn collect_reports<P: AsRef<Path>>(dir: P) -> io::Result<Vec<ReportEntry>> {
-    let mut entries = Vec::new();
+    let mut entries: Vec<ReportEntry> = Vec::new();
 
     for entry in fs::read_dir(dir)? {
-        let entry = entry?;
-        let path = entry.path();
+        let entry: fs::DirEntry = entry?;
+        let path: std::path::PathBuf = entry.path();
 
         if path.extension().map_or(false, |ext| ext == "html") {
-            let meta = entry.metadata()?;
+            let meta: fs::Metadata = entry.metadata()?;
             let modified: DateTime<Local> = meta.modified()?.into();
-            let file_name = path
+            let file_name: String = path
                 .file_name()
                 .unwrap_or_default()
                 .to_string_lossy()
@@ -83,25 +83,25 @@ pub fn collect_reports<P: AsRef<Path>>(dir: P) -> io::Result<Vec<ReportEntry>> {
 /// On any error (file absent, malformed XML, …) this function returns a
 /// default/empty structure so that HTML rendering never panics.
 pub fn parse_packages_xml<P: AsRef<Path>>(path: P) -> PackagesData {
-    let text = match fs::read_to_string(path) {
+    let text: String = match fs::read_to_string(path) {
         Ok(t) => t,
         Err(_) => return PackagesData::default(),
     };
 
-    let doc = match Document::parse(&text) {
+    let doc: Document<'_> = match Document::parse(&text) {
         Ok(d) => d,
         Err(_) => return PackagesData::default(),
     };
 
     // <installed> and <upgradable>
-    let installed = doc
+    let installed: u32 = doc
         .descendants()
         .find(|n| n.has_tag_name("installed"))
         .and_then(|n| n.text())
         .and_then(|t| t.parse::<u32>().ok())
         .unwrap_or(0);
 
-    let upgradable = doc
+    let upgradable: u32 = doc
         .descendants()
         .find(|n| n.has_tag_name("upgradable"))
         .and_then(|n| n.text())
@@ -109,7 +109,7 @@ pub fn parse_packages_xml<P: AsRef<Path>>(path: P) -> PackagesData {
         .unwrap_or(0);
 
     // Each <package …/>
-    let list = doc
+    let list: Vec<PackageEntry> = doc
         .descendants()
         .filter(|n| n.has_tag_name("package"))
         .filter_map(|n| {

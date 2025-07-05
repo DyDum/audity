@@ -56,7 +56,7 @@ impl<'de> Deserialize<'de> for CompliantStatus {
     where
         D: Deserializer<'de>,
     {
-        let s = String::deserialize(de)?;
+        let s: String = String::deserialize(de)?;
         CompliantStatus::from_str(&s)
             .ok_or_else(|| de::Error::custom(format!("invalid compliance value: {s}")))
     }
@@ -84,6 +84,7 @@ pub struct Profile {
     #[serde(rename = "@level")]
     pub level: String,
     #[serde(rename = "@type")]
+    #[serde(default)]
     pub r#type: String,
 }
 

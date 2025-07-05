@@ -24,7 +24,7 @@ pub fn generate_xml_report(
     upgradable_packages: &str,
 ) -> Result<String> {
     // Initialize the writer with 4-space indentation, writing to memory buffer.
-    let mut writer = Writer::new_with_indent(Cursor::new(Vec::new()), b' ', 4);
+    let mut writer: Writer<Cursor<Vec<u8>>> = Writer::new_with_indent(Cursor::new(Vec::new()), b' ', 4);
 
     // Closure to convert quick_xml errors into IoError.
     let map_err = |e: quick_xml::Error| IoError::new(ErrorKind::Other, e.to_string());
@@ -50,7 +50,7 @@ pub fn generate_xml_report(
         let details: Vec<&str> = line.split_whitespace().collect(); // Expect: name + version
         if details.len() > 1 {
             // Write <package name="..." version="..." />.
-            let mut pkg = BytesStart::new("package");
+            let mut pkg: BytesStart<'_> = BytesStart::new("package");
             pkg.push_attribute(("name", details[0]));
             pkg.push_attribute(("version", details[1]));
             writer.write_event(Event::Empty(pkg)).map_err(map_err)?;
@@ -64,7 +64,7 @@ pub fn generate_xml_report(
         let details: Vec<&str> = line.split_whitespace().collect(); // Expect: name only
         if !details.is_empty() {
             // Write <package name="..." />.
-            let mut pkg = BytesStart::new("package");
+            let mut pkg: BytesStart<'_> = BytesStart::new("package");
             pkg.push_attribute(("name", details[0]));
             writer.write_event(Event::Empty(pkg)).map_err(map_err)?;
         }
@@ -75,6 +75,6 @@ pub fn generate_xml_report(
     writer.write_event(Event::End(BytesEnd::new("packages"))).map_err(map_err)?;
 
     // Convert the memory buffer (Vec<u8>) into UTF-8 string and return.
-    let output = writer.into_inner().into_inner();
+    let output: Vec<u8> = writer.into_inner().into_inner();
     String::from_utf8(output).map_err(|e| IoError::new(ErrorKind::InvalidData, e))
 }
