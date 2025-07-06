@@ -11,10 +11,11 @@
         <FileName>40_custom</FileName>
         <NonCompliantComment>The bootloader does not have a password set, leaving it vulnerable to unauthorized modifications.</NonCompliantComment>
         <CorrectiveComment>Configure a bootloader password to secure the boot process.</CorrectiveComment>
-        <Correction>echo "set superusers=&quot;admin&quot;" &gt;&gt; /etc/grub.d/40_custom; echo "password_pbkdf2 admin &lt;hashed_password&gt;" &gt;&gt; /etc/grub.d/40_custom; update-grub</Correction>
-        <Verification>grep -q "password_pbkdf2" /etc/grub.d/40_custom &amp;&amp; echo 0 || echo 1</Verification>
-        <Manual>NO</Manual>
+        <Correction><![CDATA[echo "Generate a PBKDF2 hash (grub-mkpasswd-pbkdf2) and add set superusers / password_pbkdf2 lines in a custom /etc/grub.d file; then run update-grub"]]></Correction>
+        <Verification><![CDATA[st=0; sudo grep -q "^set[[:space:]]\+superusers=" /boot/grub/grub.cfg || st=1; sudo grep -q "password_pbkdf2" /boot/grub/grub.cfg || st=1; echo $st]]></Verification>
+        <Manual>CORRECTION</Manual>
     </Rule>
+    
 
     <Rule id="1.4.2">
         <Name>Ensure access to bootloader config is configured (Automated)</Name>
@@ -28,8 +29,8 @@
         <FileName>grub.cfg</FileName>
         <NonCompliantComment>The bootloader configuration file has insecure permissions, potentially allowing unauthorized modifications.</NonCompliantComment>
         <CorrectiveComment>Restrict the permissions on the bootloader configuration file.</CorrectiveComment>
-        <Correction>chmod 600 /boot/grub/grub.cfg</Correction>
-        <Verification>stat -c "%a" /boot/grub/grub.cfg | grep -q "^600$" &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[sudo chown root:root /boot/grub/grub.cfg && sudo chmod 600 /boot/grub/grub.cfg && echo 0]]></Correction>
+        <Verification><![CDATA[st=0; read p u g <<<"$(stat -Lc '%a %u %g' /boot/grub/grub.cfg)"; [ "$p" -le 600 ] || st=1; [ "$u" -eq 0 -a "$g" -eq 0 ] || st=1; echo $st]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 

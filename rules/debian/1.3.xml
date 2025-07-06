@@ -13,8 +13,8 @@
         <FileName>apparmor</FileName>
         <NonCompliantComment>AppArmor is not installed, leaving the system without mandatory access control for applications.</NonCompliantComment>
         <CorrectiveComment>Install the AppArmor packages and utilities to enable mandatory access control.</CorrectiveComment>
-        <Correction>apt-get install apparmor apparmor-utils</Correction>
-        <Verification>dpkg -l | grep -q apparmor &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[sudo apt-get install -y apparmor apparmor-utils]]></Correction>
+        <Verification><![CDATA[dpkg -s apparmor apparmor-utils &>/dev/null && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -31,8 +31,8 @@
         <FileName>grub</FileName>
         <NonCompliantComment>AppArmor is not enabled in the bootloader configuration, which may prevent it from starting at boot.</NonCompliantComment>
         <CorrectiveComment>Edit /etc/default/grub to include "apparmor=1 security=apparmor" in GRUB_CMDLINE_LINUX and update the bootloader.</CorrectiveComment>
-        <Correction>sed -i 's/GRUB_CMDLINE_LINUX="/GRUB_CMDLINE_LINUX="apparmor=1 security=apparmor /' /etc/default/grub; update-grub</Correction>
-        <Verification>grep -q 'apparmor=1' /proc/cmdline &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[sudo sed -i 's/^GRUB_CMDLINE_LINUX="/&apparmor=1 security=apparmor /' /etc/default/grub; sudo update-grub; echo 0]]></Correction>
+        <Verification><![CDATA[st=0; sudo grep -E "^\s*linux" /boot/grub/grub.cfg | grep -qv "apparmor=1" && st=1; sudo grep -E "^\s*linux" /boot/grub/grub.cfg | grep -qv "security=apparmor" && st=1; echo $st]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -49,8 +49,8 @@
         <FileName>*</FileName>
         <NonCompliantComment>Some AppArmor profiles are not set to enforce or complain mode, reducing the effectiveness of mandatory access control.</NonCompliantComment>
         <CorrectiveComment>Set all AppArmor profiles to either enforce or complain mode according to your security policy.</CorrectiveComment>
-        <Correction>aa-enforce /etc/apparmor.d/*</Correction>
-        <Verification>(aa-status | grep -q 'enforce mode\|complain mode') &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[sudo aa-enforce /etc/apparmor.d/* && echo 0]]></Correction>
+        <Verification><![CDATA[sudo apparmor_status | grep -q "0 processes are unconfined" && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -67,8 +67,8 @@
         <FileName>*</FileName>
         <NonCompliantComment>Not all AppArmor profiles are set to enforce mode, potentially leaving the system vulnerable.</NonCompliantComment>
         <CorrectiveComment>Ensure all AppArmor profiles are set to enforce mode.</CorrectiveComment>
-        <Correction>aa-enforce /etc/apparmor.d/*</Correction>
-        <Verification>(aa-status | grep -q 'enforce mode') &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[sudo aa-enforce /etc/apparmor.d/*]]></Correction>
+        <Verification><![CDATA[st=0; sudo apparmor_status | grep -q "0 profiles are in complain mode" || st=1; sudo apparmor_status | grep -q "0 processes are unconfined" || st=1; echo $st]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 

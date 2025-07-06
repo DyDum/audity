@@ -1,19 +1,18 @@
 <RulesCIS>
-    <!-- 3.1 ── Disable unused network protocols and devices ───────────── -->
     <Rule id="3.1.1">
         <Name>Disable IPv6 (Manual)</Name>
         <Chapter id="3">Network</Chapter>
         <Section id="3.1">Disable unused network protocols and devices</Section>
         <Profiles>
-            <Profile level="2" type="Server"/>
-            <Profile level="2" type="Workstation"/>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
         </Profiles>
         <BasePath>/usr/bin/</BasePath>
         <FileName>ip</FileName>
         <NonCompliantComment>The IPv6 configuration has not been reviewed, potentially leaving unmanaged exposure.</NonCompliantComment>
         <CorrectiveComment>Identify and document IPv6 status with ip -6 addr show. This is a manual audit step.</CorrectiveComment>
-        <Correction>ip -6 addr show</Correction>
-        <Verification>echo "Manual review required"</Verification>
+        <Correction><![CDATA[ip -6 addr show]]></Correction>
+        <Verification><![CDATA[echo "Manual review required"]]></Verification>
         <Manual>YES</Manual>
     </Rule>
 
@@ -28,8 +27,8 @@
         <FileName>rfkill</FileName>
         <NonCompliantComment>Wireless interfaces are enabled, increasing the risk of unauthorized wireless access.</NonCompliantComment>
         <CorrectiveComment>Disable wireless interfaces with rfkill block all or by unloading wireless drivers.</CorrectiveComment>
-        <Correction>rfkill block all</Correction>
-        <Verification>rfkill list | grep -E "Wireless" | grep -q "Soft blocked: yes" &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[mod=$(find /sys/class/net/*/wireless -type d 2>/dev/null | xargs -I{} basename $(readlink -f {}/../device/driver/module)); for m in $mod; do echo "install $m /bin/false" >> /etc/modprobe.d/$m.conf; echo "blacklist $m" >> /etc/modprobe.d/$m.conf; modprobe -r $m; done]]></Correction>
+        <Verification><![CDATA[find /sys/class/net/*/wireless -type d &>/dev/null && echo 1 || echo 0]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -44,8 +43,8 @@
         <FileName>bluetooth.service</FileName>
         <NonCompliantComment>The Bluetooth service is enabled, which may expose the system to unauthorized wireless connections.</NonCompliantComment>
         <CorrectiveComment>Disable and stop the Bluetooth service if it is not required.</CorrectiveComment>
-        <Correction>systemctl disable bluetooth; systemctl stop bluetooth</Correction>
-        <Verification>systemctl is-active bluetooth | grep -q "inactive" &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[systemctl disable bluetooth; systemctl stop bluetooth]]></Correction>
+        <Verification><![CDATA[systemctl is-active bluetooth | grep -q "inactive" && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 </RulesCIS>

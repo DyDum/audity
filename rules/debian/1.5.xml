@@ -11,8 +11,8 @@
         <FileName>sysctl.conf</FileName>
         <NonCompliantComment>Address Space Layout Randomization (ASLR) is not enabled, leaving system processes vulnerable to memory exploitation.</NonCompliantComment>
         <CorrectiveComment>Enable ASLR by setting kernel.randomize_va_space to 2.</CorrectiveComment>
-        <Correction>echo 'kernel.randomize_va_space = 2' &gt;&gt; /etc/sysctl.conf; sysctl -p</Correction>
-        <Verification>grep -q '^2$' /proc/sys/kernel/randomize_va_space &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[printf "kernel.randomize_va_space = 2\n" | sudo tee /etc/sysctl.d/60-aslr.conf >/dev/null; sudo sysctl -q -w kernel.randomize_va_space=2]]></Correction>
+        <Verification><![CDATA[[ "$(sudo sysctl -n kernel.randomize_va_space 2>/dev/null)" = "2" ] && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -28,8 +28,8 @@
         <FileName>sysctl.conf</FileName>
         <NonCompliantComment>The ptrace_scope setting is not restricted, potentially allowing unauthorized process memory inspection.</NonCompliantComment>
         <CorrectiveComment>Restrict ptrace by setting kernel.yama.ptrace_scope to 1.</CorrectiveComment>
-        <Correction>echo 'kernel.yama.ptrace_scope = 1' &gt;&gt; /etc/sysctl.conf; sysctl -p</Correction>
-        <Verification>grep -q '^1$' /proc/sys/kernel/yama/ptrace_scope &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[printf "kernel.yama.ptrace_scope = 1\n" | sudo tee /etc/sysctl.d/60-ptrace.conf >/dev/null; sudo sysctl -q -w kernel.yama.ptrace_scope=1; echo 0]]></Correction>
+        <Verification><![CDATA[v=$(sudo sysctl -n kernel.yama.ptrace_scope 2>/dev/null); ([ "$v" -ge 1 ] && [ "$v" -le 3 ]) && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -45,8 +45,8 @@
         <FileName>sysctl.conf</FileName>
         <NonCompliantComment>Core dumps are not restricted, which may expose sensitive memory contents during crashes.</NonCompliantComment>
         <CorrectiveComment>Restrict core dumps by setting fs.suid_dumpable to 0 and limiting the core file size.</CorrectiveComment>
-        <Correction>echo 'fs.suid_dumpable = 0' &gt;&gt; /etc/sysctl.conf; sysctl -p; ulimit -c 0</Correction>
-        <Verification>grep -q '^0$' /proc/sys/fs/suid_dumpable &amp;&amp; ulimit -c | grep -q '^0$' &amp;&amp; echo 0 || echo 1</Verification>
+        <Correction><![CDATA[echo '* hard core 0' | sudo tee /etc/security/limits.d/99-core.conf >/dev/null; printf "fs.suid_dumpable = 0\n" | sudo tee /etc/sysctl.d/60-coredump.conf >/dev/null; sudo sysctl -q -w fs.suid_dumpable=0]]></Correction>
+        <Verification><![CDATA[st=0; grep -Psq '^\s*\*\s+hard\s+core\s+0\b' /etc/security/limits.conf /etc/security/limits.d/* || st=1; [ "$(sudo sysctl -n fs.suid_dumpable 2>/dev/null)" = "0" ] || st=1; echo $st]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 </RulesCIS>
