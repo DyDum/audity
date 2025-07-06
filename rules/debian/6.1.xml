@@ -1,59 +1,56 @@
 <RulesCIS>
-    <Rule id="6.1.2.1.1">
-        <Name>Ensure journald ForwardToSyslog is disabled (Automated)</Name>
+    <Rule id="6.1.1.1">
+        <Name>Ensure journald service is enabled and active (Automated)</Name>
         <Chapter id="6">Logging and Auditing</Chapter>
         <Section id="6.1">System Logging</Section>
-        <SubSection id="6.1.2">Configure journald</SubSection>
-        <SubSubSection id="6.1.2.1">Configure systemd-journal-remote</SubSubSection>
+        <SubSection id="6.1.1">Configure systemd-journald service</SubSection>
         <Profiles>
             <Profile level="1" type="Server"/>
             <Profile level="1" type="Workstation"/>
         </Profiles>
-        <BasePath>/etc/systemd/journald.conf</BasePath>
+        <BasePath>/etc/systemd/</BasePath>
         <FileName>journald.conf</FileName>
-        <NonCompliantComment>Log forwarding is enabled (or not explicitly disabled).</NonCompliantComment>
-        <CorrectiveComment>Set ForwardToSyslog=no.</CorrectiveComment>
-        <Correction><![CDATA[systemctl unmask systemd-journald.service && systemctl start systemd-journald.service]]></Correction>
-        <Verification><![CDATA[s=$(systemctl is-enabled systemd-journald.service 2>/dev/null); a=$(systemctl is-active systemd-journald.service 2>/dev/null); { [ "$s" = "static" ] || [ "$s" = "enabled" ]; } && [ "$a" = "active" ] && echo 0 || echo 1]]></Verification>
+        <NonCompliantComment>The journald service is either masked or not running, preventing proper log collection.</NonCompliantComment>
+        <CorrectiveComment>Unmask and start the systemd-journald service to enable system logging.</CorrectiveComment>
+        <Correction><![CDATA[systemctl unmask systemd-journald.service; systemctl start systemd-journald.service]]></Correction>
+        <Verification><![CDATA[systemctl is-active systemd-journald.service | grep -q active && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
-    <Rule id="6.1.2.1.2">
-        <Name>Ensure journald Compress is enabled (Automated)</Name>
+    <Rule id="6.1.1.2">
+        <Name>Ensure journald log file access is configured (Manual)</Name>
         <Chapter id="6">Logging and Auditing</Chapter>
         <Section id="6.1">System Logging</Section>
-        <SubSection id="6.1.2">Configure journald</SubSection>
-        <SubSubSection id="6.1.2.1">Configure systemd-journal-remote</SubSubSection>
+        <SubSection id="6.1.1">Configure systemd-journald service</SubSection>
         <Profiles>
             <Profile level="1" type="Server"/>
             <Profile level="1" type="Workstation"/>
         </Profiles>
-        <BasePath>/etc/systemd/journald.conf</BasePath>
-        <FileName>journald.conf</FileName>
-        <NonCompliantComment>Log compression is not enabled.</NonCompliantComment>
-        <CorrectiveComment>Set Compress=yes.</CorrectiveComment>
-        <Correction><![CDATA[find /var/log/journal /run/log/journal -type f -exec chmod 0640 {} + && find /var/log/journal /run/log/journal -type d -exec chmod 0755 {} +]]></Correction>
-        <Verification><![CDATA[bad=0; for f in $(find /var/log/journal /run/log/journal -type f 2>/dev/null); do [ "$(stat -c '%a' "$f")" -le 640 ] || { echo "Bad file: $f"; bad=1; }; done; for d in $(find /var/log/journal /run/log/journal -type d 2>/dev/null); do mode=$(stat -c '%a' "$d"); [[ "$mode" == 755 || "$mode" == 2755 ]] || { echo "Bad dir: $d ($mode)"; bad=1; }; done; [ "$bad" -eq 0 ] && echo 0 || echo 1]]></Verification>
-        <Manual>NO</Manual>
+        <BasePath>/etc/tmpfiles.d/</BasePath>
+        <FileName>systemd.conf</FileName>
+        <NonCompliantComment>Log file or directory permissions are too permissive, exposing sensitive data.</NonCompliantComment>
+        <CorrectiveComment>Ensure journald log files and directories have permissions aligned with security policy (0640 for files, 0755/0750/2755 for directories).</CorrectiveComment>
+        <Correction><![CDATA[echo "Manual review required." ]]></Correction>
+        <Verification><![CDATA[echo "Manual verification required"]]></Verification>
+        <Manual>YES</Manual>
     </Rule>
 
-    <Rule id="6.1.2.1.3">
-        <Name>Ensure journald Storage is persistent (Automated)</Name>
+    <Rule id="6.1.1.3">
+        <Name>Ensure journald log file rotation is configured (Manual)</Name>
         <Chapter id="6">Logging and Auditing</Chapter>
         <Section id="6.1">System Logging</Section>
-        <SubSection id="6.1.2">Configure journald</SubSection>
-        <SubSubSection id="6.1.2.1">Configure systemd-journal-remote</SubSubSection>
+        <SubSection id="6.1.1">Configure systemd-journald service</SubSection>
         <Profiles>
             <Profile level="1" type="Server"/>
             <Profile level="1" type="Workstation"/>
         </Profiles>
-        <BasePath>/etc/systemd/journald.conf</BasePath>
-        <FileName>journald.conf</FileName>
-        <NonCompliantComment>The log storage mode is not persistent.</NonCompliantComment>
-        <CorrectiveComment>Set Storage=persistent.</CorrectiveComment>
-        <Correction><![CDATA[mkdir -p /etc/systemd/journald.conf.d && printf '[Journal]\nSystemMaxUse=1G\nSystemKeepFree=500M\nRuntimeMaxUse=200M\nRuntimeKeepFree=50M\nMaxFileSec=1month\n' > /etc/systemd/journald.conf.d/60-journald.conf && systemctl restart systemd-journald]]></Correction>
-        <Verification><![CDATA[conf_files=$(find /etc/systemd/journald.conf /etc/systemd/journald.conf.d -type f -name '*.conf' 2>/dev/null); grep -Eq '^\s*(SystemMaxUse|SystemKeepFree|RuntimeMaxUse|RuntimeKeepFree|MaxFileSec)\s*=' $conf_files && echo 0 || echo 1]]></Verification>
-        <Manual>NO</Manual>
+        <BasePath>/etc/systemd/journald.conf.d/</BasePath>
+        <FileName>60-journald.conf</FileName>
+        <NonCompliantComment>Log file rotation is not configured, which may lead to disk space exhaustion or unmanageable log sizes.</NonCompliantComment>
+        <CorrectiveComment>Configure journald to rotate logs using appropriate parameters in a drop-in file under journald.conf.d/.</CorrectiveComment>
+        <Correction><![CDATA[echo "Manual review required." ]]></Correction>
+        <Verification><![CDATA[echo "Manual verification required"]]></Verification>
+        <Manual>YES</Manual>
     </Rule>
 
     <Rule id="6.1.1.4">
@@ -79,6 +76,7 @@
         <Chapter id="6">Logging and Auditing</Chapter>
         <Section id="6.1">System Logging</Section>
         <SubSection id="6.1.2">Configure journald</SubSection>
+        <SubSubSection id="6.1.2.1">Configure systemd-journal-remote</SubSubSection>
         <Profiles>
             <Profile level="1" type="Server"/>
             <Profile level="1" type="Workstation"/>
@@ -97,6 +95,7 @@
         <Chapter id="6">Logging and Auditing</Chapter>
         <Section id="6.1">System Logging</Section>
         <SubSection id="6.1.2">Configure journald</SubSection>
+        <SubSubSection id="6.1.2.1">Configure systemd-journal-remote</SubSubSection>
         <Profiles>
             <Profile level="1" type="Server"/>
             <Profile level="1" type="Workstation"/>
@@ -110,11 +109,12 @@
         <Manual>YES</Manual>
     </Rule>
 
-    <Rule id="6.1.2.1.3">
+   <Rule id="6.1.2.1.3">
         <Name>Ensure systemd-journal-upload is enabled and active (Automated)</Name>
         <Chapter id="6">Logging and Auditing</Chapter>
         <Section id="6.1">System Logging</Section>
         <SubSection id="6.1.2">Configure journald</SubSection>
+        <SubSubSection id="6.1.2.1">Configure systemd-journal-remote</SubSubSection>
         <Profiles>
             <Profile level="1" type="Server"/>
             <Profile level="1" type="Workstation"/>
