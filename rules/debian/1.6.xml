@@ -101,10 +101,3 @@
         <Manual>NO</Manual>
     </Rule>
 </RulesCIS>
-
-
-user@debianTest:~$ gsettings get org.gnome.login-screen disable-user-list 2>/dev/null | grep -qx true && echo 0 || echo 1
-1
-user@debianTest:~$ sudo -u gdm dbus-launch gsettings set org.gnome.login-screen disable-user-list true && echo 0
-sudo: utilisateur gdm inconnu
-sudo: erreur à l'initialisation du greffon d'audit sudoers_audit
