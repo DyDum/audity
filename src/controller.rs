@@ -33,7 +33,6 @@ pub fn run_full_audit() {
     }
     run_package_audit(false, false);
     run_audit_rules(None);
-    generate_all_reports_from_results()
 }
 
 /// Executes the package audit workflow:
