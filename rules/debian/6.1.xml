@@ -110,8 +110,44 @@
         <Manual>YES</Manual>
     </Rule>
 
+    <Rule id="6.1.2.1.3">
+        <Name>Ensure systemd-journal-upload is enabled and active (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.1">System Logging</Section>
+        <SubSection id="6.1.2">Configure journald</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/systemd/system</BasePath>
+        <FileName>systemd-journal-upload.service</FileName>
+        <NonCompliantComment>The systemd-journal-upload service is not enabled and/or not running.</NonCompliantComment>
+        <CorrectiveComment>Enable and start the systemd-journal-upload service.</CorrectiveComment>
+        <Correction><![CDATA[systemctl unmask systemd-journal-upload.service && systemctl --now enable systemd-journal-upload.service]]></Correction>
+        <Verification><![CDATA[systemctl is-enabled systemd-journal-upload.service | grep -q enabled && systemctl is-active systemd-journal-upload.service | grep -q active && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="6.1.2.1.4">
+        <Name>Ensure systemd-journal-remote service is not in use (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.1">System Logging</Section>
+        <SubSection id="6.1.2">Configure journald</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/systemd/system</BasePath>
+        <FileName>systemd-journal-remote.service</FileName>
+        <NonCompliantComment>The system is configured to receive remote logs via systemd-journal-remote.</NonCompliantComment>
+        <CorrectiveComment>Ensure the system does not act as a log server by masking and stopping the journal-remote services.</CorrectiveComment>
+        <Correction><![CDATA[systemctl stop systemd-journal-remote.socket systemd-journal-remote.service && systemctl mask systemd-journal-remote.socket systemd-journal-remote.service]]></Correction>
+        <Verification><![CDATA[systemctl is-enabled systemd-journal-remote.socket systemd-journal-remote.service | grep -q '^enabled' && echo 1 && exit 1; systemctl is-active systemd-journal-remote.socket systemd-journal-remote.service | grep -q '^active' && echo 1 || echo 0]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
     <Rule id="6.1.2.2">
-        <Name>Ensure journald Compress is enabled (Automated)</Name>
+        <Name>Ensure journald ForwardToSyslog is disabled (Automated)</Name>
         <Chapter id="6">Logging and Auditing</Chapter>
         <Section id="6.1">System Logging</Section>
         <SubSection id="6.1.2">Configure journald</SubSection>
@@ -121,15 +157,15 @@
         </Profiles>
         <BasePath>/etc/systemd/journald.conf</BasePath>
         <FileName>journald.conf</FileName>
-        <NonCompliantComment>Journald compression is not enabled.</NonCompliantComment>
-        <CorrectiveComment>Enable Compress=yes.</CorrectiveComment>
-        <Correction><![CDATA[sed -i 's/^#\?Compress=.*/Compress=yes/' /etc/systemd/journald.conf; systemctl restart systemd-journald]]></Correction>
-        <Verification><![CDATA[grep '^Compress=yes' /etc/systemd/journald.conf && systemctl is-active systemd-journald | grep -q "active" && echo 0 || echo 1]]></Verification>
+        <NonCompliantComment>ForwardToSyslog is not disabled in journald configuration.</NonCompliantComment>
+        <CorrectiveComment>Set ForwardToSyslog=no to prevent duplication of logs.</CorrectiveComment>
+        <Correction><![CDATA[mkdir -p /etc/systemd/journald.conf.d && echo -e "[Journal]\nForwardToSyslog=no" > /etc/systemd/journald.conf.d/60-journald.conf && systemctl restart systemd-journald]]></Correction>
+        <Verification><![CDATA[grep -Eqs '^\s*ForwardToSyslog=no' /etc/systemd/journald.conf /etc/systemd/journald.conf.d/*.conf && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
-
+    
     <Rule id="6.1.2.3">
-        <Name>Ensure journald Storage is persistent (Automated)</Name>
+        <Name>Ensure journald Compress is configured (Automated)</Name>
         <Chapter id="6">Logging and Auditing</Chapter>
         <Section id="6.1">System Logging</Section>
         <SubSection id="6.1.2">Configure journald</SubSection>
@@ -139,18 +175,33 @@
         </Profiles>
         <BasePath>/etc/systemd/journald.conf</BasePath>
         <FileName>journald.conf</FileName>
-        <NonCompliantComment>The storage setting is not persistent.</NonCompliantComment>
-        <CorrectiveComment>Set Storage=persistent.</CorrectiveComment>
+        <NonCompliantComment>The Compress setting is not enabled in journald configuration.</NonCompliantComment>
+        <CorrectiveComment>Set Compress=yes to reduce disk usage from logs.</CorrectiveComment>
         <Correction><![CDATA[sed -i 's/^#\?Storage=.*/Storage=persistent/' /etc/systemd/journald.conf; systemctl restart systemd-journald]]></Correction>
-        <Verification><![CDATA[grep '^Storage=persistent' /etc/systemd/journald.conf && systemctl is-active systemd-journald | grep -q "active" && echo 0 || echo 1]]></Verification>
+        <Verification><![CDATA[grep -Eqs '^\s*Compress=yes' /etc/systemd/journald.conf /etc/systemd/journald.conf.d/*.conf && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
-
-    <!-- ───────────── 6.1.3  Configure rsyslog ───────────── -->
+    <Rule id="6.1.2.4">
+        <Name>Ensure journald Storage is configured (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.1">System Logging</Section>
+        <SubSection id="6.1.2">Configure journald</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/systemd/journald.conf</BasePath>
+        <FileName>journald.conf</FileName>
+        <NonCompliantComment>Storage is not configured to be persistent.</NonCompliantComment>
+        <CorrectiveComment>Set Storage=persistent to ensure logs are not lost on reboot.</CorrectiveComment>
+        <Correction><![CDATA[mkdir -p /etc/systemd/journald.conf.d && echo -e "[Journal]\nStorage=persistent" > /etc/systemd/journald.conf.d/60-journald.conf && systemctl restart systemd-journald]]></Correction>
+        <Verification><![CDATA[grep -Eqs '^\s*Storage=persistent' /etc/systemd/journald.conf /etc/systemd/journald.conf.d/*.conf && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
 
     <Rule id="6.1.3.1">
-        <Name>Ensure permissions on /var/log are configured (Automated)</Name>
+        <Name>Ensure rsyslog is installed (Automated)</Name>
         <Chapter id="6">Logging and Auditing</Chapter>
         <Section id="6.1">System Logging</Section>
         <SubSection id="6.1.3">Configure rsyslog</SubSection>
@@ -158,17 +209,18 @@
             <Profile level="1" type="Server"/>
             <Profile level="1" type="Workstation"/>
         </Profiles>
-        <BasePath>/var/log</BasePath>
-        <FileName>logfiles</FileName>
-        <NonCompliantComment>Critical log files do not have restricted permissions.</NonCompliantComment>
-        <CorrectiveComment>Set file mode 640 on all logs under /var/log.</CorrectiveComment>
-        <Correction><![CDATA[find /var/log -type f -exec chmod 640 {} \;]]></Correction>
-        <Verification><![CDATA[find /var/log -type f | xargs -I {} stat -c "%a" {} | grep -q "^640" && echo 0 || echo 1]]></Verification>
+        <BasePath>/usr/sbin/rsyslogd</BasePath>
+        <FileName>rsyslog</FileName>
+        <NonCompliantComment>rsyslog is not installed.</NonCompliantComment>
+        <CorrectiveComment>Install rsyslog using your package manager.</CorrectiveComment>
+        <Correction><![CDATA[apt install -y rsyslog]]></Correction>
+        <Verification><![CDATA[dpkg-query -s rsyslog &>/dev/null && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
+
     <Rule id="6.1.3.2">
-        <Name>Ensure log file ownership is configured (Automated)</Name>
+        <Name>Ensure rsyslog service is enabled and active (Automated)</Name>
         <Chapter id="6">Logging and Auditing</Chapter>
         <Section id="6.1">System Logging</Section>
         <SubSection id="6.1.3">Configure rsyslog</SubSection>
@@ -176,17 +228,107 @@
             <Profile level="1" type="Server"/>
             <Profile level="1" type="Workstation"/>
         </Profiles>
-        <BasePath>/var/log</BasePath>
-        <FileName>ownership</FileName>
-        <NonCompliantComment>Log files not consistently owned by authorized users.</NonCompliantComment>
-        <CorrectiveComment>Ensure root:adm ownership on /var/log/**.</CorrectiveComment>
-        <Correction><![CDATA[chown -R root:adm /var/log]]></Correction>
-        <Verification><![CDATA[find /var/log -type f -exec stat -c "%U:%G" {} \; | grep -v "root:adm" && echo 1 || echo 0]]></Verification>
+        <BasePath>/lib/systemd/system/rsyslog.service</BasePath>
+        <FileName>rsyslog.service</FileName>
+        <NonCompliantComment>rsyslog service is not enabled and active.</NonCompliantComment>
+        <CorrectiveComment>Enable and start rsyslog service.</CorrectiveComment>
+        <Correction><![CDATA[systemctl unmask rsyslog.service; systemctl enable --now rsyslog.service]]></Correction>
+        <Verification><![CDATA[systemctl is-enabled rsyslog.service | grep -q enabled && systemctl is-active rsyslog.service | grep -q active && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
     <Rule id="6.1.3.3">
-        <Name>Ensure log rotation is configured (Automated)</Name>
+        <Name>Ensure journald is configured to send logs to rsyslog (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.1">System Logging</Section>
+        <SubSection id="6.1.3">Configure rsyslog</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/systemd/journald.conf</BasePath>
+        <FileName>journald.conf</FileName>
+        <NonCompliantComment>journald does not forward logs to rsyslog.</NonCompliantComment>
+        <CorrectiveComment>Set ForwardToSyslog=yes in journald configuration.</CorrectiveComment>
+        <Correction><![CDATA[sed -i 's/^#\?ForwardToSyslog=.*/ForwardToSyslog=yes/' /etc/systemd/journald.conf; systemctl restart systemd-journald]]></Correction>
+        <Verification><![CDATA[grep -Eq '^ForwardToSyslog=yes' /etc/systemd/journald.conf && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="6.1.3.4">
+        <Name>Ensure rsyslog log file creation mode is configured (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.1">System Logging</Section>
+        <SubSection id="6.1.3">Configure rsyslog</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/rsyslog.d/</BasePath>
+        <FileName>60-rsyslog.conf</FileName>
+        <NonCompliantComment>$FileCreateMode is not set or too permissive (greater than 0640).</NonCompliantComment>
+        <CorrectiveComment>Set $FileCreateMode to 0640 or more restrictive in rsyslog configuration.</CorrectiveComment>
+        <Correction><![CDATA[mkdir -p /etc/rsyslog.d && echo '$FileCreateMode 0640' > /etc/rsyslog.d/60-rsyslog.conf && systemctl reload-or-restart rsyslog]]></Correction>
+        <Verification><![CDATA[grep -s '^\$FileCreateMode' /etc/rsyslog.conf /etc/rsyslog.d/*.conf | awk '{exit !($2 <= 0640)}'; echo $?]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="6.1.3.5">
+        <Name>Ensure rsyslog logging is configured (Manual)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.1">System Logging</Section>
+        <SubSection id="6.1.3">Configure rsyslog</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/rsyslog.d/</BasePath>
+        <FileName>60-rsyslog.conf</FileName>
+        <NonCompliantComment>Logging rules are not configured to capture system events.</NonCompliantComment>
+        <CorrectiveComment>Configure rules in rsyslog to log relevant system events to /var/log/*.log files.</CorrectiveComment>
+        <Correction><![CDATA[echo "Manual review required." ]]></Correction>
+        <Verification><![CDATA[echo "Manual verification required"]]></Verification>
+        <Manual>YES</Manual>
+    </Rule>
+
+    <Rule id="6.1.3.6">
+        <Name>Ensure rsyslog is configured to send logs to a remote log host (Manual)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.1">System Logging</Section>
+        <SubSection id="6.1.3">Configure rsyslog</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/rsyslog.d/</BasePath>
+        <FileName>60-rsyslog.conf</FileName>
+        <NonCompliantComment>Logs are not forwarded to a remote log host.</NonCompliantComment>
+        <CorrectiveComment>Configure rsyslog to send logs to a remote server (e.g. loghost.example.com).</CorrectiveComment>
+        <Correction><![CDATA[echo "Manual review required." ]]></Correction>
+        <Verification><![CDATA[echo "Manual verification required"]]></Verification>
+        <Manual>YES</Manual>
+    </Rule>
+
+    <Rule id="6.1.3.7">
+        <Name>Ensure rsyslog is not configured to receive logs from a remote client (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.1">System Logging</Section>
+        <SubSection id="6.1.3">Configure rsyslog</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/rsyslog.d/</BasePath>
+        <FileName>60-rsyslog.conf</FileName>
+        <NonCompliantComment>System is accepting logs from remote clients.</NonCompliantComment>
+        <CorrectiveComment>Remove directives that enable remote log reception in rsyslog.</CorrectiveComment>
+        <Correction><![CDATA[sed -i '/imtcp/d' /etc/rsyslog.d/*.conf && systemctl reload-or-restart rsyslog]]></Correction>
+        <Verification><![CDATA[! grep -q 'imtcp' /etc/rsyslog.d/*.conf && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="6.1.3.8">
+        <Name>Ensure logrotate is configured (Manual)</Name>
         <Chapter id="6">Logging and Auditing</Chapter>
         <Section id="6.1">System Logging</Section>
         <SubSection id="6.1.3">Configure rsyslog</SubSection>
@@ -196,122 +338,37 @@
         </Profiles>
         <BasePath>/etc/logrotate.d/</BasePath>
         <FileName>rsyslog</FileName>
-        <NonCompliantComment>Log rotation is not configured.</NonCompliantComment>
-        <CorrectiveComment>Add logrotate policy for /var/log/*.log.</CorrectiveComment>
-        <Correction><![CDATA[echo "/var/log/*.log { daily rotate 7 compress missingok notifempty }" > /etc/logrotate.d/rsyslog]]></Correction>
-        <Verification><![CDATA[grep -q "/var/log/*.log" /etc/logrotate.d/rsyslog && echo 0 || echo 1]]></Verification>
-        <Manual>NO</Manual>
+        <NonCompliantComment>Logrotate not configured for rsyslog logs.</NonCompliantComment>
+        <CorrectiveComment>Ensure logrotate is set up to rotate rsyslog logs properly.</CorrectiveComment>
+        <Correction><![CDATA[cat <<EOF > /etc/logrotate.d/rsyslog
+    /var/log/*.log {
+        daily
+        rotate 7
+        compress
+        missingok
+        notifempty
+        create 0640 root utmp
+    }
+    EOF]]></Correction>
+        <Verification><![CDATA[test -f /etc/logrotate.d/rsyslog && grep -q '/var/log/.*\.log' /etc/logrotate.d/rsyslog && echo 0 || echo 1]]></Verification>
+        <Manual>YES</Manual>
     </Rule>
 
-    <Rule id="6.1.3.4">
-        <Name>Ensure separate partition exists for /var/log (Automated)</Name>
+   <Rule id="6.1.4.1">
+        <Name>Ensure access to all logfiles has been configured (Automated)</Name>
         <Chapter id="6">Logging and Auditing</Chapter>
         <Section id="6.1">System Logging</Section>
-        <SubSection id="6.1.3">Configure rsyslog</SubSection>
-        <Profiles>
-            <Profile level="2" type="Server"/>
-            <Profile level="2" type="Workstation"/>
-        </Profiles>
-        <BasePath>/etc/fstab</BasePath>
-        <FileName>fstab</FileName>
-        <NonCompliantComment>Logs stored on root partition.</NonCompliantComment>
-        <CorrectiveComment>Create a dedicated /var/log partition.</CorrectiveComment>
-        <Correction><![CDATA[echo "/dev/sdX /var/log ext4 defaults 0 0" >> /etc/fstab; mount -o remount /var/log]]></Correction>
-        <Verification><![CDATA[grep -q "/var/log" /etc/fstab && mount | grep -q "/var/log" && echo 0 || echo 1]]></Verification>
-        <Manual>NO</Manual>
-    </Rule>
-
-    <Rule id="6.1.3.5">
-        <Name>Ensure remote logging is configured (Automated)</Name>
-        <Chapter id="6">Logging and Auditing</Chapter>
-        <Section id="6.1">System Logging</Section>
-        <SubSection id="6.1.3">Configure rsyslog</SubSection>
+        <SubSection id="6.1.4">Configure Log File Permissions</SubSection>
         <Profiles>
             <Profile level="1" type="Server"/>
             <Profile level="1" type="Workstation"/>
         </Profiles>
-        <BasePath>/etc/rsyslog.conf</BasePath>
-        <FileName>rsyslog.conf</FileName>
-        <NonCompliantComment>Remote logging not configured.</NonCompliantComment>
-        <CorrectiveComment>Forward logs to remote-log-server:514.</CorrectiveComment>
-        <Correction><![CDATA[echo "*.* @@remote-log-server:514" >> /etc/rsyslog.conf; systemctl restart rsyslog]]></Correction>
-        <Verification><![CDATA[grep -q "@@remote-log-server:514" /etc/rsyslog.conf && echo 0 || echo 1]]></Verification>
+        <BasePath>/var/log</BasePath>
+        <FileName>*</FileName>
+        <NonCompliantComment>Some log files in /var/log have incorrect ownership or permissions.</NonCompliantComment>
+        <CorrectiveComment>Set appropriate permissions and ownership for all log files under /var/log.</CorrectiveComment>
+        <Correction><![CDATA[find /var/log -type f \( -perm /0137 -o ! -user root -o ! -group adm \) -exec chmod u-x,g-wx,o-rwx {} \; -exec chown root:adm {} \;]]></Correction>
+        <Verification><![CDATA[find /var/log -type f \( -perm /0137 -o ! -user root -o ! -group adm \) | grep -q . && echo 1 || echo 0]]></Verification>
         <Manual>NO</Manual>
     </Rule>
-
-    <Rule id="6.1.3.6">
-        <Name>Ensure log backups are performed (Automated)</Name>
-        <Chapter id="6">Logging and Auditing</Chapter>
-        <Section id="6.1">System Logging</Section>
-        <SubSection id="6.1.3">Configure rsyslog</SubSection>
-        <Profiles>
-            <Profile level="1" type="Server"/>
-            <Profile level="1" type="Workstation"/>
-        </Profiles>
-        <BasePath>/var/backups/</BasePath>
-        <FileName>log_backup.sh</FileName>
-        <NonCompliantComment>No scheduled log backups.</NonCompliantComment>
-        <CorrectiveComment>Create daily backup of /var/log.</CorrectiveComment>
-        <Correction><![CDATA[echo "tar -czf /var/backups/logs-$(date +%F).tar.gz /var/log" > /var/backups/log_backup.sh; chmod +x /var/backups/log_backup.sh; (crontab -l ; echo "0 2 * * * /var/backups/log_backup.sh") | crontab -]]></Correction>
-        <Verification><![CDATA[test -f /var/backups/log_backup.sh && echo 0 || echo 1]]></Verification>
-        <Manual>NO</Manual>
-    </Rule>
-
-    <Rule id="6.1.3.7">
-        <Name>Ensure log file integrity is monitored (Automated)</Name>
-        <Chapter id="6">Logging and Auditing</Chapter>
-        <Section id="6.1">System Logging</Section>
-        <SubSection id="6.1.3">Configure rsyslog</SubSection>
-        <Profiles>
-            <Profile level="2" type="Server"/>
-            <Profile level="2" type="Workstation"/>
-        </Profiles>
-        <BasePath>/etc/aide.conf</BasePath>
-        <FileName>aide.conf</FileName>
-        <NonCompliantComment>Log integrity not monitored.</NonCompliantComment>
-        <CorrectiveComment>Deploy AIDE to monitor /var/log.</CorrectiveComment>
-        <Correction><![CDATA[apt-get install -y aide; aideinit; cp /var/lib/aide/aide.db.new /var/lib/aide/aide.db]]></Correction>
-        <Verification><![CDATA[test -f /var/lib/aide/aide.db && echo 0 || echo 1]]></Verification>
-        <Manual>NO</Manual>
-    </Rule>
-
-    <Rule id="6.1.3.8">
-        <Name>Ensure custom log rotation configuration exists (Automated)</Name>
-        <Chapter id="6">Logging and Auditing</Chapter>
-        <Section id="6.1">System Logging</Section>
-        <SubSection id="6.1.3">Configure rsyslog</SubSection>
-        <Profiles>
-            <Profile level="1" type="Server"/>
-            <Profile level="1" type="Workstation"/>
-        </Profiles>
-        <BasePath>/etc/logrotate.d/</BasePath>
-        <FileName>custom_logrotate.conf</FileName>
-        <NonCompliantComment>Critical logs may not be rotated.</NonCompliantComment>
-        <CorrectiveComment>Create dedicated logrotate policy.</CorrectiveComment>
-        <Correction><![CDATA[echo "/var/log/*.log { daily rotate 7 compress missingok notifempty }" > /etc/logrotate.d/custom_logrotate.conf]]></Correction>
-        <Verification><![CDATA[test -f /etc/logrotate.d/custom_logrotate.conf && grep -q "/var/log/*.log" /etc/logrotate.d/custom_logrotate.conf && echo 0 || echo 1]]></Verification>
-        <Manual>NO</Manual>
-    </Rule>
-
-
-    <!-- ───────────── 6.1.4  Configure Logfiles ───────────── -->
-
-    <Rule id="6.1.4.1">
-        <Name>Ensure only one logging system is in use (Automated)</Name>
-        <Chapter id="6">Logging and Auditing</Chapter>
-        <Section id="6.1">System Logging</Section>
-        <SubSection id="6.1.4">Configure Logfiles</SubSection>
-        <Profiles>
-            <Profile level="1" type="Server"/>
-            <Profile level="1" type="Workstation"/>
-        </Profiles>
-        <BasePath>/</BasePath>
-        <FileName>logging_system</FileName>
-        <NonCompliantComment>Multiple logging systems are active.</NonCompliantComment>
-        <CorrectiveComment>Disable rsyslog so only systemd-journald is active.</CorrectiveComment>
-        <Correction><![CDATA[systemctl disable rsyslog; systemctl stop rsyslog]]></Correction>
-        <Verification><![CDATA[systemctl is-active rsyslog | grep -q "inactive" && echo 0 || echo 1]]></Verification>
-        <Manual>NO</Manual>
-    </Rule>
-
-</RulesCIS>
+<RulesCIS>

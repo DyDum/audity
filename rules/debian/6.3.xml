@@ -1,7 +1,4 @@
 <RulesCIS>
-
-    <!-- ═════════ 6  Logging and Auditing  →  6.3 Configure Integrity Checking ═════════ -->
-
     <Rule id="6.3.1">
         <Name>Ensure AIDE is installed (Automated)</Name>
         <Chapter id="6">Logging and Auditing</Chapter>
@@ -14,8 +11,8 @@
         <FileName>aide</FileName>
         <NonCompliantComment>AIDE (Advanced Intrusion Detection Environment) is not installed, leaving the system without automated file-integrity checks.</NonCompliantComment>
         <CorrectiveComment>Install AIDE to enable regular integrity checking of critical files and directories.</CorrectiveComment>
-        <Correction><![CDATA[apt-get install -y aide; aideinit]]></Correction>
-        <Verification><![CDATA[dpkg -l | grep -q aide && echo 0 || echo 1]]></Verification>
+        <Correction><![CDATA[apt update && apt install -y aide aide-common && aideinit && mv /var/lib/aide/aide.db.new /var/lib/aide/aide.db]]></Correction>
+        <Verification><![CDATA[dpkg -s aide aide-common &>/dev/null && echo 0 || echo 1]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 
@@ -31,9 +28,9 @@
         <FileName>aide.conf</FileName>
         <NonCompliantComment>The AIDE configuration is not properly set up, risking incomplete integrity monitoring.</NonCompliantComment>
         <CorrectiveComment>Configure /etc/aide/aide.conf according to policy and initialize the AIDE database.</CorrectiveComment>
-        <Correction><![CDATA[echo "Manual configuration required: edit /etc/aide/aide.conf as per security requirements; then run aideinit" ; aideinit]]></Correction>
-        <Verification><![CDATA[test -f /var/lib/aide/aide.db && echo 0 || echo 1]]></Verification>
-        <Manual>CORRECTION</Manual>
+        <Correction><![CDATA[systemctl unmask dailyaidecheck.timer dailyaidecheck.service && systemctl --now enable dailyaidecheck.timer]]></Correction>
+        <Verification><![CDATA[systemctl list-unit-files | grep -Pq '^dailyaidecheck\.service\s+(enabled|static)' && systemctl list-unit-files | grep -Pq '^dailyaidecheck\.timer\s+enabled' && systemctl is-active --quiet dailyaidecheck.timer && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
     </Rule>
 
     <Rule id="6.3.3">
