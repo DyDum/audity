@@ -133,8 +133,8 @@ pub fn run_audit_rules(filter: Option<&str>) {
             process::exit(1);
         }
     }
+    generate_all_reports_from_results();
 }
-
 
 /// Run automatic corrections for applicable rule sets based on packages found in packages.xml.
 ///
@@ -159,6 +159,7 @@ pub fn run_correction() {
             std::process::exit(1);
         }
     }
+    generate_all_reports_from_results();
 }
 
 /// Updates the APT package list if the program is run as root.
