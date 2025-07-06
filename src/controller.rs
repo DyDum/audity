@@ -6,6 +6,7 @@ use audit_rules::scanner::scan_directory;
 use std::{
     process,
     fs,
+    ffi::OsStr,
     path::{Path, PathBuf},
 };
 
@@ -131,8 +132,8 @@ pub fn run_audit_rules(filter: Option<&str>) {
             process::exit(1);
         }
     }
+    generate_all_reports_from_results();
 }
-
 
 /// Run automatic corrections for applicable rule sets based on packages found in packages.xml.
 ///
@@ -157,6 +158,7 @@ pub fn run_correction() {
             std::process::exit(1);
         }
     }
+    generate_all_reports_from_results();
 }
 
 /// Updates the APT package list if the program is run as root.
@@ -281,5 +283,44 @@ pub fn list_cis() {
         Err(e) => {
             eprintln!("Error reading directory {}: {}", directory, e);
         }
+    }
+}
+
+/// Scan the `reports/` directory and generate an HTML report for each `_cis_result.xml` file.
+///
+/// This function iterates over the contents of the `reports/` folder, checks for files
+/// that end with `_cis_result.xml`, and invokes the `generate_report()` function for each.
+/// Errors are logged but do not stop the iteration.
+pub fn generate_all_reports_from_results() {
+    let reports_dir = Path::new("reports");
+
+    // Try to read the directory content; skip entirely if failed
+    let Ok(entries) = fs::read_dir(reports_dir) else {
+        eprintln!("Error: Could not open directory `reports/`.");
+        return;
+    };
+
+    for entry in entries.flatten() {
+        let path = entry.path();
+
+        // Ensure file has a `.xml` extension and ends with `_cis_result.xml`
+        if path
+            .extension()
+            .and_then(OsStr::to_str)
+            == Some("xml")
+            && path
+                .file_name()
+                .and_then(OsStr::to_str)
+                .map(|name| name.ends_with(SUFFIX_IN))
+                .unwrap_or(false)
+        {
+            match generate_report(&path) {
+                Ok(out) => println!("HTML report generated successfully and saved to {}", out.display()),
+                Err(e) => eprintln!("Failed to generate HTML report for {}: {}", path.display(), e),
+            }
+        }
+    }
+    if let Err(e) = crate::report::home::build_homepage() {
+        eprintln!("Failed to build homepage: {}", e);
     }
 }

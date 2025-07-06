@@ -64,7 +64,7 @@
         <CorrectiveComment>Restrict sshd access by disabling root login and limiting allowed users.</CorrectiveComment>
         <Correction><![CDATA[echo "AllowUsers admin" >> /etc/ssh/sshd_config && systemctl reload sshd]]></Correction>
         <Verification><![CDATA[sshd -T | grep -Piq '^\s*(allow|deny)(users|groups)\s+\S+' && echo 0 || echo 1]]></Verification>
-        <Manual>NO</Manual>
+        <Manual>CORRECTION</Manual>
     </Rule>
 
     <Rule id="5.1.5">
@@ -198,8 +198,8 @@
         <FileName>sshd_config</FileName>
         <NonCompliantComment>Weak key-exchange algorithms may be permitted by default.</NonCompliantComment>
         <CorrectiveComment>Configure strong KexAlgorithms in sshd_config.</CorrectiveComment>
-        <Correction><![CDATA[sshd -T | grep -Pqi 'kexalgorithms\s+([^#\n\r]+,)?(diffie-hellman-group1-sha1|diffie-hellman-group14-sha1|diffie-hellman-group-exchange-sha1)\b' && echo 1 || echo 0]]></Correction>
-        <Verification><![CDATA[echo -e "\nKexAlgorithms -diffie-hellman-group1-sha1,diffie-hellman-group14-sha1,diffie-hellman-group-exchange-sha1" >> /etc/ssh/sshd_config && systemctl reload sshd]]></Verification>
+        <Correction><![CDATA[echo -e "\nKexAlgorithms -diffie-hellman-group1-sha1,diffie-hellman-group14-sha1,diffie-hellman-group-exchange-sha1" >> /etc/ssh/sshd_config && systemctl reload sshd]]></Correction>
+        <Verification><![CDATA[sshd -T | grep -Pqi 'kexalgorithms\s+([^#\n\r]+,)?(diffie-hellman-group1-sha1|diffie-hellman-group14-sha1|diffie-hellman-group-exchange-sha1)\b' && echo 1 || echo 0]]></Verification>
         <Manual>NO</Manual>
     </Rule>
 

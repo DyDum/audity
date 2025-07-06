@@ -27,9 +27,11 @@ pub fn correct_directory(dir: &str) -> anyhow::Result<()> {
                         Ok(true) => CompliantStatus::Yes,
                         Ok(false) | Err(_) => {
                             // 🚫 Filtrage des règles à haut risque
-                            let risky: bool = rule.id.starts_with("1.1.")
-                                || rule.correction.contains("/usr/lib")
-                                || rule.correction.contains("/usr/bin")
+                            let risky: bool = (file.path().to_string_lossy().contains("debian") && (rule.id.starts_with("1.1.") 
+                                || rule.id.starts_with("4.") 
+                                || rule.id.contains("5.1.4")))
+                                || rule.correction.contains("/usr/lib") 
+                                || rule.correction.contains("/usr/bin") 
                                 || rule.correction.contains("chmod -R");
 
                             if risky {
