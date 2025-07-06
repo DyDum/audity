@@ -371,4 +371,4 @@
         <Verification><![CDATA[find /var/log -type f \( -perm /0137 -o ! -user root -o ! -group adm \) | grep -q . && echo 1 || echo 0]]></Verification>
         <Manual>NO</Manual>
     </Rule>
-<RulesCIS>
+</RulesCIS>
