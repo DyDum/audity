@@ -169,7 +169,7 @@ function toggleSection(id){
 
   <!-- brand block (logo + title) -->
   <div class='brand'>
-    <img src='logo/audity.png' alt='Audity logo' class='logo'>
+    <img src='https://i.ibb.co/1Gvvhdkj/audity.png' alt='Audity logo' class='logo'>
     <h1>Audity</h1>
   </div>
 

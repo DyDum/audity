@@ -32,7 +32,7 @@ pub fn correct_directory(dir: &str) -> anyhow::Result<()> {
                                 || rule.id.contains("5.1.4")))
                                 || rule.correction.contains("/usr/lib") 
                                 || rule.correction.contains("/usr/bin") 
-                                || rule.correction.contains("chmod -R");
+                                || (rule.correction.contains("chmod -R") && !rule.correction.contains("/usr/local"));
 
                             if risky {
                                 println!("Rule {} of package {} skipped: too risky", rule.id, dir.to_string());
