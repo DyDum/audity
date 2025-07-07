@@ -1,0 +1,77 @@
+<RulesCIS>
+  <Rule id="8.1">
+    <Name>Ensure ServerTokens is Set to 'Prod' or 'ProductOnly' (Automated)</Name>
+    <Chapter id="8">Information Leakage</Chapter>
+    <Section id="8.1">ServerTokens</Section>
+    <SubSection id="8.1.1">Minimize Information Disclosure</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>ServerTokens is not set to 'Prod' or 'ProductOnly', which may reveal sensitive server information.</NonCompliantComment>
+    <CorrectiveComment>Set ServerTokens to 'Prod' or 'ProductOnly' to minimize information disclosure.</CorrectiveComment>
+    <Correction><![CDATA[grep -q "^ServerTokens" /usr/local/apache2/conf/httpd.conf && sed -i 's|^ServerTokens.*|ServerTokens Prod|' /usr/local/apache2/conf/httpd.conf || echo 'ServerTokens Prod' >> /usr/local/apache2/conf/httpd.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
+    <Verification><![CDATA[grep -q "^ServerTokens Prod" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="8.2">
+    <Name>Ensure ServerSignature is Disabled (Automated)</Name>
+    <Chapter id="8">Information Leakage</Chapter>
+    <Section id="8.2">ServerSignature</Section>
+    <SubSection id="8.2.1">Disable ServerSignature</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>ServerSignature is enabled, potentially revealing sensitive server information.</NonCompliantComment>
+    <CorrectiveComment>Disable ServerSignature to prevent information disclosure on error pages.</CorrectiveComment>
+    <Correction><![CDATA[grep -q "^ServerSignature" /usr/local/apache2/conf/httpd.conf && sed -i 's|^ServerSignature.*|ServerSignature Off|' /usr/local/apache2/conf/httpd.conf || echo 'ServerSignature Off' >> /usr/local/apache2/conf/httpd.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
+    <Verification><![CDATA[grep -q "^ServerSignature Off" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="8.3">
+    <Name>Ensure Default Apache Content is Removed (Automated)</Name>
+    <Chapter id="8">Information Leakage</Chapter>
+    <Section id="8.3">Default Content</Section>
+    <SubSection id="8.3.1">Remove Default Content</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+
+    <BasePath>/var/www/html</BasePath>
+    <FileName>default_content</FileName>
+    <NonCompliantComment>Default Apache content is present, which may reveal server details.</NonCompliantComment>
+    <CorrectiveComment>Remove all default Apache content from the DocumentRoot.</CorrectiveComment>
+    <Correction><![CDATA[rm -rf /var/www/html/*]]></Correction>
+    <Verification><![CDATA[test -z "$(ls -A /var/www/html)" && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="8.4">
+    <Name>Ensure ETag Response Header Fields Do Not Include Inodes (Automated)</Name>
+    <Chapter id="8">Information Leakage</Chapter>
+    <Section id="8.4">ETag Configuration</Section>
+    <SubSection id="8.4.1">Exclude Inodes from ETag</SubSection>
+
+    <Profiles>
+      <Profile level="2" type="Server"/>
+    </Profiles>
+
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>ETag response headers include inode information, potentially leaking filesystem details.</NonCompliantComment>
+    <CorrectiveComment>Configure Apache to exclude inode numbers from the ETag header by using only modification time and size.</CorrectiveComment>
+    <Correction><![CDATA[grep -q "^FileETag" /usr/local/apache2/conf/httpd.conf && sed -i 's|^FileETag.*|FileETag MTime Size|' /usr/local/apache2/conf/httpd.conf || echo 'FileETag MTime Size' >> /usr/local/apache2/conf/httpd.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
+    <Verification><![CDATA[grep -q "^FileETag MTime Size" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+</RulesCIS>

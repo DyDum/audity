@@ -1,0 +1,69 @@
+<RulesCIS>
+    <Rule id="3.2.1">
+        <Name>Ensure dccp kernel module is not available (Automated)</Name>
+        <Chapter id="3">Network</Chapter>
+        <Section id="3.2">Configure Network Kernel Modules</Section>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/modprobe.d/</BasePath>
+        <FileName>dccp.conf</FileName>
+        <NonCompliantComment>The dccp kernel module is available, increasing the attack surface.</NonCompliantComment>
+        <CorrectiveComment>Disable the dccp kernel module by blacklisting it and preventing its loading.</CorrectiveComment>
+        <Correction><![CDATA[echo "install dccp /bin/false" >> /etc/modprobe.d/dccp.conf; echo "blacklist dccp" >> /etc/modprobe.d/dccp.conf; modprobe -r dccp 2>/dev/null; rmmod dccp 2>/dev/null]]></Correction>
+        <Verification><![CDATA[! lsmod | grep -q '^dccp' && grep -q 'install dccp /bin/false' /etc/modprobe.d/dccp.conf && grep -q 'blacklist dccp' /etc/modprobe.d/dccp.conf && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="3.2.2">
+        <Name>Ensure tipc kernel module is not available (Automated)</Name>
+        <Chapter id="3">Network</Chapter>
+        <Section id="3.2">Configure Network Kernel Modules</Section>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/modprobe.d/</BasePath>
+        <FileName>tipc.conf</FileName>
+        <NonCompliantComment>The tipc kernel module is available, which may increase the attack surface unnecessarily.</NonCompliantComment>
+        <CorrectiveComment>Disable the tipc kernel module by blacklisting it and preventing its loading.</CorrectiveComment>
+        <Correction><![CDATA[echo "install tipc /bin/false" >> /etc/modprobe.d/tipc.conf; echo "blacklist tipc" >> /etc/modprobe.d/tipc.conf; modprobe -r tipc 2>/dev/null; rmmod tipc 2>/dev/null]]></Correction>
+        <Verification><![CDATA[! lsmod | grep -q '^tipc' && grep -q 'install tipc /bin/false' /etc/modprobe.d/tipc.conf && grep -q 'blacklist tipc' /etc/modprobe.d/tipc.conf && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="3.2.3">
+        <Name>Ensure rds kernel module is not available (Automated)</Name>
+        <Chapter id="3">Network</Chapter>
+        <Section id="3.2">Configure Network Kernel Modules</Section>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/modprobe.d/</BasePath>
+        <FileName>rds.conf</FileName>
+        <NonCompliantComment>The rds kernel module is available, potentially exposing the system to vulnerabilities.</NonCompliantComment>
+        <CorrectiveComment>Disable the rds kernel module by blacklisting it and preventing its loading.</CorrectiveComment>
+        <Correction><![CDATA[echo "install rds /bin/false" >> /etc/modprobe.d/rds.conf; echo "blacklist rds" >> /etc/modprobe.d/rds.conf; modprobe -r rds 2>/dev/null; rmmod rds 2>/dev/null]]></Correction>
+        <Verification><![CDATA[! lsmod | grep -q '^rds' && grep -q 'install rds /bin/false' /etc/modprobe.d/rds.conf && grep -q 'blacklist rds' /etc/modprobe.d/rds.conf && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="3.2.4">
+        <Name>Ensure sctp kernel module is not available (Automated)</Name>
+        <Chapter id="3">Network</Chapter>
+        <Section id="3.2">Configure Network Kernel Modules</Section>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/modprobe.d/</BasePath>
+        <FileName>sctp.conf</FileName>
+        <NonCompliantComment>The sctp kernel module is available, which may not be necessary and could increase security risks.</NonCompliantComment>
+        <CorrectiveComment>Disable the sctp kernel module by blacklisting it and preventing its loading.</CorrectiveComment>
+        <Correction><![CDATA[echo "install sctp /bin/false" >> /etc/modprobe.d/sctp.conf; echo "blacklist sctp" >> /etc/modprobe.d/sctp.conf; modprobe -r sctp 2>/dev/null; rmmod sctp 2>/dev/null]]></Correction>
+        <Verification><![CDATA[! lsmod | grep -q '^sctp' && grep -q 'install sctp /bin/false' /etc/modprobe.d/sctp.conf && grep -q 'blacklist sctp' /etc/modprobe.d/sctp.conf && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+</RulesCIS>

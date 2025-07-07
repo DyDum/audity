@@ -1,0 +1,19 @@
+<RulesCIS>
+  <Rule id="6.1">
+    <BasePath>N/A</BasePath>
+    <FileName>N/A</FileName>
+    <NonCompliantComment>Database and application user input is not properly sanitized, which may lead to SQL injection vulnerabilities.</NonCompliantComment>
+    <CorrectiveComment>Ensure all database and application user input is properly sanitized. Manually review and implement input validation in all queries. Use parameterized queries or stored procedures to prevent SQL injection. Example: Parameterized Query: SqlCommand cmd = new SqlCommand("SELECT * FROM Users WHERE Username = @username", conn); cmd.Parameters.AddWithValue("@username", username);</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="6.2">
+    <BasePath>N/A</BasePath>
+    <FileName>N/A</FileName>
+    <NonCompliantComment>The 'CLR Assembly Permission Set' is not set to 'SAFE_ACCESS' for all CLR assemblies, which may allow unsafe code execution.</NonCompliantComment>
+    <CorrectiveComment>Set the 'CLR Assembly Permission Set' to 'SAFE_ACCESS' for all CLR assemblies. Command: ALTER ASSEMBLY [AssemblyName] WITH PERMISSION_SET = SAFE;</CorrectiveComment>
+    <Correction>ALTER ASSEMBLY [AssemblyName] WITH PERMISSION_SET = SAFE;</Correction>
+    <Verification>SELECT name, permission_set_desc FROM sys.assemblies WHERE permission_set_desc <> 'SAFE_ACCESS';</Verification>
+    <Manual>CORRECTION</Manual>
+  </Rule>
+</RulesCIS>

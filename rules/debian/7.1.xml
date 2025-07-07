@@ -1,0 +1,222 @@
+<RulesCIS>
+  <Rule id="7.1.1">
+    <Name>Ensure permissions on /etc/passwd are configured (Automated)</Name>
+    <Chapter id="7">System Maintenance</Chapter>
+    <Section id="7.1">System File Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="Server"/>
+      <Profile level="1" type="Workstation"/>
+    </Profiles>
+    <BasePath>/etc/</BasePath>
+    <FileName>passwd</FileName>
+    <NonCompliantComment>/etc/passwd permissions are not 644, risking unauthorized access.</NonCompliantComment>
+    <CorrectiveComment>Set file mode to 644.</CorrectiveComment>
+    <Correction><![CDATA[chmod 644 /etc/passwd && chown root:root /etc/passwd]]></Correction>
+    <Verification><![CDATA[stat -c "%a" /etc/passwd | grep -q "^644$" && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="7.1.2">
+    <Name>Ensure permissions on /etc/passwd- are configured (Automated)</Name>
+    <Chapter id="7">System Maintenance</Chapter>
+    <Section id="7.1">System File Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="Server"/>
+      <Profile level="1" type="Workstation"/>
+    </Profiles>
+    <BasePath>/etc/</BasePath>
+    <FileName>passwd-</FileName>
+    <NonCompliantComment>/etc/passwd- permissions are too permissive.</NonCompliantComment>
+    <CorrectiveComment>Set file mode to 640.</CorrectiveComment>
+    <Correction><![CDATA[chmod 644 /etc/passwd- && chown root:root /etc/passwd-]]></Correction>
+    <Verification><![CDATA[[ "$(stat -Lc '%a %u %g' /etc/passwd- 2>/dev/null)" = "644 0 0" ] && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="7.1.3">
+    <Name>Ensure permissions on /etc/group are configured (Automated)</Name>
+    <Chapter id="7">System Maintenance</Chapter>
+    <Section id="7.1">System File Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="Server"/>
+      <Profile level="1" type="Workstation"/>
+    </Profiles>
+    <BasePath>/etc/</BasePath>
+    <FileName>group</FileName>
+    <NonCompliantComment>/etc/group permissions are not 644.</NonCompliantComment>
+    <CorrectiveComment>Set file mode to 644.</CorrectiveComment>
+    <Correction><![CDATA[chmod 644 /etc/group && chown root:root /etc/group]]></Correction>
+    <Verification><![CDATA[stat -c "%a" /etc/group | grep -q "^644$" && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="7.1.4">
+    <Name>Ensure permissions on /etc/group- are configured (Automated)</Name>
+    <Chapter id="7">System Maintenance</Chapter>
+    <Section id="7.1">System File Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="Server"/>
+      <Profile level="1" type="Workstation"/>
+    </Profiles>
+    <BasePath>/etc/</BasePath>
+    <FileName>group-</FileName>
+    <NonCompliantComment>/etc/group- permissions are too permissive.</NonCompliantComment>
+    <CorrectiveComment>Set file mode to 640.</CorrectiveComment>
+    <Correction><![CDATA[chmod 644 /etc/group- && chown root:root /etc/group-]]></Correction>
+    <Verification><![CDATA[[ "$(stat -Lc '%a %u %g' /etc/group- 2>/dev/null)" = "644 0 0" ] && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="7.1.5">
+    <Name>Ensure permissions on /etc/shadow are configured (Automated)</Name>
+    <Chapter id="7">System Maintenance</Chapter>
+    <Section id="7.1">System File Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="Server"/>
+      <Profile level="1" type="Workstation"/>
+    </Profiles>
+    <BasePath>/etc/</BasePath>
+    <FileName>shadow</FileName>
+    <NonCompliantComment>/etc/shadow permissions are not 600, exposing password hashes.</NonCompliantComment>
+    <CorrectiveComment>Set file mode to 600.</CorrectiveComment>
+    <Correction><![CDATA[chmod 640 /etc/shadow && chown root:shadow /etc/shadow]]></Correction>
+    <Verification><![CDATA[perm=$(stat -Lc '%a' /etc/shadow); uid=$(stat -Lc '%u' /etc/shadow); gid=$(stat -Lc '%g' /etc/shadow); [ $((8#$perm)) -le 0640 ] && [ "$uid" -eq 0 ] && { [ "$gid" -eq 0 ] || [ "$gid" -eq 42 ]; } && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="7.1.6">
+    <Name>Ensure permissions on /etc/shadow- are configured (Automated)</Name>
+    <Chapter id="7">System Maintenance</Chapter>
+    <Section id="7.1">System File Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="Server"/>
+      <Profile level="1" type="Workstation"/>
+    </Profiles>
+    <BasePath>/etc/</BasePath>
+    <FileName>shadow-</FileName>
+    <NonCompliantComment>/etc/shadow- permissions are too permissive.</NonCompliantComment>
+    <CorrectiveComment>Set file mode to 640.</CorrectiveComment>
+    <Correction><![CDATA[chown root:shadow /etc/shadow- && chmod 640 /etc/shadow-]]></Correction>
+    <Verification><![CDATA[stat -c "%a" /etc/shadow- | grep -q "^640$" && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="7.1.7">
+    <Name>Ensure permissions on /etc/gshadow are configured (Automated)</Name>
+    <Chapter id="7">System Maintenance</Chapter>
+    <Section id="7.1">System File Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="Server"/>
+      <Profile level="1" type="Workstation"/>
+    </Profiles>
+    <BasePath>/etc/</BasePath>
+    <FileName>gshadow</FileName>
+    <NonCompliantComment>/etc/gshadow permissions are not 600.</NonCompliantComment>
+    <CorrectiveComment>Set file mode to 600.</CorrectiveComment>
+    <Correction><![CDATA[chown root:shadow /etc/gshadow && chmod 640 /etc/gshadow]]></Correction>
+    <Verification><![CDATA[perm=$(stat -Lc '%a' /etc/gshadow); uid=$(stat -Lc '%u' /etc/gshadow); gid=$(stat -Lc '%g' /etc/gshadow); [ $((8#$perm)) -le 640 ] && [ "$uid" -eq 0 ] && { [ "$gid" -eq 0 ] || [ "$gid" -eq 42 ]; } && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="7.1.8">
+    <Name>Ensure permissions on /etc/gshadow- are configured (Automated)</Name>
+    <Chapter id="7">System Maintenance</Chapter>
+    <Section id="7.1">System File Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="Server"/>
+      <Profile level="1" type="Workstation"/>
+    </Profiles>
+    <BasePath>/etc/</BasePath>
+    <FileName>gshadow-</FileName>
+    <NonCompliantComment>/etc/gshadow- permissions are too permissive.</NonCompliantComment>
+    <CorrectiveComment>Set file mode to 640.</CorrectiveComment>
+    <Correction><![CDATA[chown root:shadow /etc/gshadow- && chmod 640 /etc/gshadow-]]></Correction>
+    <Verification><![CDATA[chown root:shadow /etc/gshadow- && chmod 640 /etc/gshadow-]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="7.1.9">
+    <Name>Ensure permissions on /etc/shells are configured (Automated)</Name>
+    <Chapter id="7">System Maintenance</Chapter>
+    <Section id="7.1">System File Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="Server"/>
+      <Profile level="1" type="Workstation"/>
+    </Profiles>
+    <BasePath>/etc/</BasePath>
+    <FileName>shells</FileName>
+    <NonCompliantComment>/etc/shells permissions are too permissive.</NonCompliantComment>
+    <CorrectiveComment>Set file mode to 644.</CorrectiveComment>
+    <Correction><![CDATA[chown root:root /etc/shells && chmod 644 /etc/shells]]></Correction>
+    <Verification><![CDATA[perm=$(stat -Lc '%a' /etc/shells); uid=$(stat -Lc '%u' /etc/shells); gid=$(stat -Lc '%g' /etc/shells); [ $((8#$perm)) -le 644 ] && [ "$uid" -eq 0 ] && [ "$gid" -eq 0 ] && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="7.1.10">
+    <Name>Ensure permissions on /etc/security/opasswd are configured (Automated)</Name>
+    <Chapter id="7">System Maintenance</Chapter>
+    <Section id="7.1">System File Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="Server"/>
+      <Profile level="1" type="Workstation"/>
+    </Profiles>
+    <BasePath>/etc/security/</BasePath>
+    <FileName>opasswd</FileName>
+    <NonCompliantComment>/etc/security/opasswd permissions are not 600.</NonCompliantComment>
+    <CorrectiveComment>Set file mode to 600.</CorrectiveComment>
+    <Correction><![CDATA[c[ -e /etc/security/opasswd ] && chown root:root /etc/security/opasswd && chmod 600 /etc/security/opasswd; [ -e /etc/security/opasswd.old ] && chown root:root /etc/security/opasswd.old && chmod 600 /etc/security/opasswd.old]]></Correction>
+    <Verification><![CDATA[ok=0; for f in /etc/security/opasswd /etc/security/opasswd.old; do [ -e "$f" ] && stat -Lc '%a %u %g' "$f" | awk '$1 <= 600 && $2 == 0 && $3 == 0 {exit 0} END {exit 1}' || continue; [ $? -ne 0 ] && ok=1; done; echo $ok]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="7.1.11">
+    <Name>Ensure world writable files and directories are secured (Manual)</Name>
+    <Chapter id="7">System Maintenance</Chapter>
+    <Section id="7.1">System File Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="Server"/>
+      <Profile level="1" type="Workstation"/>
+    </Profiles>
+    <BasePath>/</BasePath>
+    <FileName>world_writable</FileName>
+    <NonCompliantComment>World-writable objects can be modified by any user.</NonCompliantComment>
+    <CorrectiveComment>Identify and remediate world-writable files/directories.</CorrectiveComment>
+    <Correction><![CDATA[find / -xdev \( -type f -o -type d \) -perm -0002 ! -path "/proc/*" ! -path "/sys/*" ! -path "/run/user/*" ! -path "/snap/*" -print0 2>/dev/null | while IFS= read -r -d '' f; do [ -f "$f" ] && chmod o-w "$f"; [ -d "$f" ] && chmod a+t "$f"; done]]></Correction>
+    <Verification><![CDATA[find / -xdev -type f -perm -0002 ! -path "/proc/*" ! -path "/sys/*" ! -path "/run/user/*" ! -path "/snap/*" -print -quit | grep -q . && echo 1 && exit; find / -xdev -type d -perm -0002 ! -path "/proc/*" ! -path "/sys/*" ! -path "/run/user/*" ! -path "/snap/*" ! -perm -1000 -print -quit | grep -q . && echo 1 || echo 0]]></Verification>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="7.1.12">
+    <Name>Ensure no files or directories without an owner and a group exist (Manual)</Name>
+    <Chapter id="7">System Maintenance</Chapter>
+    <Section id="7.1">System File Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="Server"/>
+      <Profile level="1" type="Workstation"/>
+    </Profiles>
+    <BasePath>/</BasePath>
+    <FileName>orphan_files</FileName>
+    <NonCompliantComment>Unowned files may be appropriated by attackers.</NonCompliantComment>
+    <CorrectiveComment>Find and re-assign or remove orphan files.</CorrectiveComment>
+    <Correction><![CDATA[echo "Manual review required"]]></Correction>
+    <Verification><![CDATA[find / -xdev \( -nouser -o -nogroup \) ! -path "/proc/*" ! -path "/sys/*" ! -path "/run/user/*" ! -path "/var/*/private/*" ! -path "*/containerd/*" ! -path "*/kubelet/*" -print -quit 2>/dev/null | grep -q . && echo 1 || echo 0]]></Verification>
+    <Manual>CORRECTION</Manual>
+  </Rule>
+
+  <Rule id="7.1.13">
+    <Name>Ensure SUID and SGID files are reviewed (Manual)</Name>
+    <Chapter id="7">System Maintenance</Chapter>
+    <Section id="7.1">System File Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="Server"/>
+      <Profile level="1" type="Workstation"/>
+    </Profiles>
+    <BasePath>/</BasePath>
+    <FileName>suid_sgid_review</FileName>
+    <NonCompliantComment>Unreviewed SUID/SGID files can enable privilege escalation.</NonCompliantComment>
+    <CorrectiveComment>Regularly audit all SUID/SGID binaries.</CorrectiveComment>
+    <Correction><![CDATA[echo "Manual review: find / -xdev -perm /6000 -type f -exec ls -la {} \\;"]]></Correction>
+    <Verification><![CDATA[echo "Manual verification required"]]></Verification>
+    <Manual>YES</Manual>
+  </Rule>
+</RulesCIS>

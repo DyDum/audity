@@ -1,0 +1,147 @@
+<RulesCIS>
+  <Rule id="4.1">
+    <Name>Apply Latest Security Patches (Automated)</Name>
+    <Chapter id="4">MariaDB Security Configuration</Chapter>
+    <Section id="4.1">Apply Latest Security Patches</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>my.cnf</FileName>
+    <NonCompliantComment>MariaDB is not running the latest security patches, which may expose it to vulnerabilities.</NonCompliantComment>
+    <CorrectiveComment>Regularly update MariaDB to the latest security-patched version.</CorrectiveComment>
+    <Correction>apt update &amp;&amp; apt upgrade -y mariadb-server</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'version';"</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.2">
+    <Name>Remove Test Databases (Automated)</Name>
+    <Chapter id="4">MariaDB Security Configuration</Chapter>
+    <Section id="4.2">Remove Test Databases</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
+    <BasePath>/var/lib/mysql/</BasePath>
+    <FileName>test/</FileName>
+    <NonCompliantComment>Example or test databases are installed on the production server, increasing security risks.</NonCompliantComment>
+    <CorrectiveComment>Remove all example or test databases from the production server.</CorrectiveComment>
+    <Correction>mysql -u root -p -e "DROP DATABASE IF EXISTS test;"</Correction>
+    <Verification>mysql -u root -p -e "SHOW DATABASES;" | grep -q 'test' &amp;&amp; echo 1 || echo 0</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.3">
+    <Name>Disable Suspicious UDFs (Automated)</Name>
+    <Chapter id="4">MariaDB Security Configuration</Chapter>
+    <Section id="4.3">Disable Suspicious UDFs</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>my.cnf</FileName>
+    <NonCompliantComment>The 'allow-suspicious-udfs' parameter is enabled, which may allow unsafe user-defined functions (UDFs).</NonCompliantComment>
+    <CorrectiveComment>Set 'allow-suspicious-udfs' to 'OFF' to prevent unsafe UDFs.</CorrectiveComment>
+    <Correction>sed -i '/\[mysqld\]/a allow-suspicious-udfs=OFF' /etc/mysql/my.cnf</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'allow_suspicious_udfs';" | grep -q 'OFF' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.4">
+    <Name>Disable Local Infile (Automated)</Name>
+    <Chapter id="4">MariaDB Security Configuration</Chapter>
+    <Section id="4.4">Disable Local Infile</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>my.cnf</FileName>
+    <NonCompliantComment>The 'local_infile' parameter is enabled, which may allow unauthorized file imports.</NonCompliantComment>
+    <CorrectiveComment>Disable 'local_infile' to prevent unauthorized file imports.</CorrectiveComment>
+    <Correction>sed -i '/\[mysqld\]/a local_infile=OFF' /etc/mysql/my.cnf</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'local_infile';" | grep -q 'OFF' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.5">
+    <Name>Remove Skip Grant Tables (Automated)</Name>
+    <Chapter id="4">MariaDB Security Configuration</Chapter>
+    <Section id="4.5">Remove Skip Grant Tables</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>my.cnf</FileName>
+    <NonCompliantComment>MariaDB is started with 'skip-grant-tables', which disables access control and authentication.</NonCompliantComment>
+    <CorrectiveComment>Ensure 'skip-grant-tables' is not used during startup.</CorrectiveComment>
+    <Correction>sed -i '/skip-grant-tables/d' /etc/mysql/my.cnf</Correction>
+    <Verification>grep -q 'skip-grant-tables' /etc/mysql/my.cnf &amp;&amp; echo 1 || echo 0</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.6">
+    <Name>Disable Symbolic Links (Automated)</Name>
+    <Chapter id="4">MariaDB Security Configuration</Chapter>
+    <Section id="4.6">Disable Symbolic Links</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>my.cnf</FileName>
+    <NonCompliantComment>Symbolic links are enabled, which may allow unauthorized file access.</NonCompliantComment>
+    <CorrectiveComment>Disable symbolic links by setting 'symbolic-links=0'.</CorrectiveComment>
+    <Correction>sed -i '/\[mysqld\]/a symbolic-links=0' /etc/mysql/my.cnf</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'have_symlink';" | grep -q 'DISABLED' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.7">
+    <Name>Set Secure File Priv Directory (Automated)</Name>
+    <Chapter id="4">MariaDB Security Configuration</Chapter>
+    <Section id="4.7">Set Secure File Priv Directory</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>my.cnf</FileName>
+    <NonCompliantComment>The 'secure_file_priv' parameter is not set, which may allow unrestricted file access.</NonCompliantComment>
+    <CorrectiveComment>Restrict file access using 'secure_file_priv'.</CorrectiveComment>
+    <Correction>sed -i '/\[mysqld\]/a secure_file_priv="/var/lib/mysql-files"' /etc/mysql/my.cnf</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'secure_file_priv';" | grep -q '/var/lib/mysql-files' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.8">
+    <Name>Set Strict SQL Mode (Automated)</Name>
+    <Chapter id="4">MariaDB Security Configuration</Chapter>
+    <Section id="4.8">Set Strict SQL Mode</Section>
+    <Profiles>
+      <Profile level="2" type="MariaDB RDBMS"/>
+      <Profile level="2" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>my.cnf</FileName>
+    <NonCompliantComment>The 'sql_mode' parameter does not contain 'STRICT_ALL_TABLES', which may allow invalid data entries.</NonCompliantComment>
+    <CorrectiveComment>Ensure 'sql_mode' includes 'STRICT_ALL_TABLES' for strict data integrity.</CorrectiveComment>
+    <Correction>sed -i '/\[mysqld\]/a sql_mode="STRICT_ALL_TABLES"' /etc/mysql/my.cnf</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'sql_mode';" | grep -q 'STRICT_ALL_TABLES' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.9">
+    <Name>Enable Data-at-Rest Encryption (Automated)</Name>
+    <Chapter id="4">MariaDB Security Configuration</Chapter>
+    <Section id="4.9">Enable Data-at-Rest Encryption</Section>
+    <Profiles>
+      <Profile level="2" type="MariaDB RDBMS"/>
+      <Profile level="2" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>my.cnf</FileName>
+    <NonCompliantComment>Data-at-rest encryption is not enabled, which may expose sensitive data.</NonCompliantComment>
+    <CorrectiveComment>Enable data-at-rest encryption for sensitive data.</CorrectiveComment>
+    <Correction>sed -i '/\[mysqld\]/a innodb_encrypt_tables=ON; innodb_encrypt_log=ON; encrypt_binlog=ON' /etc/mysql/my.cnf</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'innodb_encrypt_tables';" | grep -q 'ON' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+</RulesCIS>

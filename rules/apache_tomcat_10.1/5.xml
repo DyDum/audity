@@ -1,0 +1,33 @@
+<RulesCIS>
+  <Rule id="5.1">
+    <Name>Use Secure Realms (Automated)</Name>
+    <Chapter id="5">Configure Tomcat Logging</Chapter>
+    <Section id="5.1">Use Secure Realms</Section>
+    <Profiles>
+      <Profile level="1"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>server.xml</FileName>
+    <NonCompliantComment>Tomcat is not using secure Realms, which may expose the server to unauthorized access.</NonCompliantComment>
+    <CorrectiveComment>Ensure that Tomcat is configured to use secure Realms (JDBCRealm, LockOutRealm, or DataSourceRealm).</CorrectiveComment>
+    <Correction><![CDATA[sed -i '/<Realm /s/className=".*"/className="org.apache.catalina.realm.LockOutRealm"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat10]]></Correction>
+    <Verification><![CDATA[grep -qE '<Realm.*className="org.apache.catalina.realm.LockOutRealm"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="5.2">
+    <Name>Use LockOut Realm (Automated)</Name>
+    <Chapter id="5">Configure Tomcat Logging</Chapter>
+    <Section id="5.2">Use LockOut Realm</Section>
+    <Profiles>
+      <Profile level="1"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>server.xml</FileName>
+    <NonCompliantComment>Tomcat is not using LockOut Realms, which may allow brute-force login attempts.</NonCompliantComment>
+    <CorrectiveComment>Ensure Tomcat is configured to use LockOut Realms with a failure count and lockout time.</CorrectiveComment>
+    <Correction><![CDATA[sed -i '/<Realm /s/className=".*"/className="org.apache.catalina.realm.LockOutRealm" failureCount="5" lockOutTime="300"/' $CATALINA_HOME/conf/server.xml; systemctl restart tomcat10]]></Correction>
+    <Verification><![CDATA[grep -E '<Realm.*className="org.apache.catalina.realm.LockOutRealm" failureCount="5" lockOutTime="300"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+</RulesCIS>

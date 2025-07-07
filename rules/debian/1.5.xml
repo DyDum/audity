@@ -1,0 +1,52 @@
+<RulesCIS>
+    <Rule id="1.5.1">
+        <Name>Ensure address space layout randomization is enabled (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.5">Configure Additional Process Hardening</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/sysctl.conf</BasePath>
+        <FileName>sysctl.conf</FileName>
+        <NonCompliantComment>Address Space Layout Randomization (ASLR) is not enabled, leaving system processes vulnerable to memory exploitation.</NonCompliantComment>
+        <CorrectiveComment>Enable ASLR by setting kernel.randomize_va_space to 2.</CorrectiveComment>
+        <Correction><![CDATA[printf "kernel.randomize_va_space = 2\n" | sudo tee /etc/sysctl.d/60-aslr.conf >/dev/null; sudo sysctl -q -w kernel.randomize_va_space=2]]></Correction>
+        <Verification><![CDATA[[ "$(sudo sysctl -n kernel.randomize_va_space 2>/dev/null)" = "2" ] && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.5.2">
+        <Name>Ensure ptrace_scope is restricted (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.5">Configure Additional Process Hardening</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/sysctl.conf</BasePath>
+        <FileName>sysctl.conf</FileName>
+        <NonCompliantComment>The ptrace_scope setting is not restricted, potentially allowing unauthorized process memory inspection.</NonCompliantComment>
+        <CorrectiveComment>Restrict ptrace by setting kernel.yama.ptrace_scope to 1.</CorrectiveComment>
+        <Correction><![CDATA[printf "kernel.yama.ptrace_scope = 1\n" | sudo tee /etc/sysctl.d/60-ptrace.conf >/dev/null; sudo sysctl -q -w kernel.yama.ptrace_scope=1; echo 0]]></Correction>
+        <Verification><![CDATA[v=$(sudo sysctl -n kernel.yama.ptrace_scope 2>/dev/null); ([ "$v" -ge 1 ] && [ "$v" -le 3 ]) && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.5.3">
+        <Name>Ensure core dumps are restricted (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.5">Configure Additional Process Hardening</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/sysctl.conf</BasePath>
+        <FileName>sysctl.conf</FileName>
+        <NonCompliantComment>Core dumps are not restricted, which may expose sensitive memory contents during crashes.</NonCompliantComment>
+        <CorrectiveComment>Restrict core dumps by setting fs.suid_dumpable to 0 and limiting the core file size.</CorrectiveComment>
+        <Correction><![CDATA[echo '* hard core 0' | sudo tee /etc/security/limits.d/99-core.conf >/dev/null; printf "fs.suid_dumpable = 0\n" | sudo tee /etc/sysctl.d/60-coredump.conf >/dev/null; sudo sysctl -q -w fs.suid_dumpable=0]]></Correction>
+        <Verification><![CDATA[st=0; grep -Psq '^\s*\*\s+hard\s+core\s+0\b' /etc/security/limits.conf /etc/security/limits.d/* || st=1; [ "$(sudo sysctl -n fs.suid_dumpable 2>/dev/null)" = "0" ] || st=1; echo $st]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+</RulesCIS>

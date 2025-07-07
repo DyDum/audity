@@ -1,0 +1,53 @@
+<RulesCIS>
+    <Rule id="6.3.1">
+        <Name>Ensure AIDE is installed (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.3">Configure Integrity Checking</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/usr/bin/</BasePath>
+        <FileName>aide</FileName>
+        <NonCompliantComment>AIDE (Advanced Intrusion Detection Environment) is not installed, leaving the system without automated file-integrity checks.</NonCompliantComment>
+        <CorrectiveComment>Install AIDE to enable regular integrity checking of critical files and directories.</CorrectiveComment>
+        <Correction><![CDATA[apt update && apt install -y aide aide-common && aideinit && mv /var/lib/aide/aide.db.new /var/lib/aide/aide.db]]></Correction>
+        <Verification><![CDATA[dpkg -s aide aide-common &>/dev/null && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="6.3.2">
+        <Name>Ensure filesystem integrity is regularly checked (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.3">Configure Integrity Checking</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/aide/</BasePath>
+        <FileName>aide.conf</FileName>
+        <NonCompliantComment>The AIDE configuration is not properly set up, risking incomplete integrity monitoring.</NonCompliantComment>
+        <CorrectiveComment>Configure /etc/aide/aide.conf according to policy and initialize the AIDE database.</CorrectiveComment>
+        <Correction><![CDATA[systemctl unmask dailyaidecheck.timer dailyaidecheck.service && systemctl --now enable dailyaidecheck.timer]]></Correction>
+        <Verification><![CDATA[systemctl list-unit-files | grep -Pq '^dailyaidecheck\.service\s+(enabled|static)' && systemctl list-unit-files | grep -Pq '^dailyaidecheck\.timer\s+enabled' && systemctl is-active --quiet dailyaidecheck.timer && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="6.3.3">
+        <Name>Ensure cryptographic mechanisms protect audit-tool integrity (Automated)</Name>
+        <Chapter id="6">Logging and Auditing</Chapter>
+        <Section id="6.3">Configure Integrity Checking</Section>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/audit/</BasePath>
+        <FileName>auditd.conf</FileName>
+        <NonCompliantComment>Cryptographic mechanisms are not implemented to protect the integrity of audit tools and configurations.</NonCompliantComment>
+        <CorrectiveComment>Implement cryptographic signing or other integrity measures for audit tools and configuration files as supported by your environment.</CorrectiveComment>
+        <Correction><![CDATA[echo "Manual configuration required: implement cryptographic integrity measures for audit tools per policy"]]></Correction>
+        <Verification><![CDATA[echo "Manual verification required"]]></Verification>
+        <Manual>YES</Manual>
+    </Rule>
+
+</RulesCIS>

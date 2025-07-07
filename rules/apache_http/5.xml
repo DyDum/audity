@@ -1,0 +1,324 @@
+<RulesCIS>
+  <Rule id="5.1">
+    <Name>Ensure Options is set to None for OS root directory (Automated)</Name>
+    <Chapter id="5">Request and Response Configuration</Chapter>
+    <Section id="5.1">Directory Options</Section>
+    <SubSection id="5.1.1">OS Root Directory Options</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>Options for the OS root directory are not restricted.</NonCompliantComment>
+    <CorrectiveComment>Set the Options directive to "None" for the root directory.</CorrectiveComment>
+    <Correction><![CDATA[echo "<Directory />" >> /usr/local/apache2/conf/httpd.conf; echo "  Options None" >> /usr/local/apache2/conf/httpd.conf; echo "</Directory>" >> /usr/local/apache2/conf/httpd.conf]]></Correction>
+    <Verification><![CDATA[grep -q "<Directory />" /usr/local/apache2/conf/httpd.conf && grep -q "Options None" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="5.2">
+    <Name>Ensure Options is set appropriately for DocumentRoot (Automated)</Name>
+    <Chapter id="5">Request and Response Configuration</Chapter>
+    <Section id="5.1">Directory Options</Section>
+    <SubSection id="5.1.2">DocumentRoot Options</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+    <BasePath>/var/www/html</BasePath>
+    <FileName>DocumentRoot configuration</FileName>
+    <NonCompliantComment>Web root directory options are not restricted.</NonCompliantComment>
+    <CorrectiveComment>Set the Options directive to "None" or "Multiviews" as appropriate for the DocumentRoot.</CorrectiveComment>
+    <Correction><![CDATA[sed -i 's/Options .*/Options None/' /usr/local/apache2/conf/httpd.conf]]></Correction>
+    <Verification><![CDATA[grep -q "Options None" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="5.3">
+    <Name>Ensure Options is minimized for non-critical directories (Manual)</Name>
+    <Chapter id="5">Request and Response Configuration</Chapter>
+    <Section id="5.1">Directory Options</Section>
+    <SubSection id="5.1.3">Other Directories Options</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>Options for non-critical directories are not minimized.</NonCompliantComment>
+    <CorrectiveComment>Review and reduce the Options directives for directories that do not require extended functionality.</CorrectiveComment>
+    <Correction><![CDATA[Manual review required; update Options directives to minimal values.]]></Correction>
+    <Verification><![CDATA[Manual verification required]]></Verification>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="5.4">
+    <Name>Ensure default index.html content is removed (Automated)</Name>
+    <Chapter id="5">Request and Response Configuration</Chapter>
+    <Section id="5.2">Default Content Removal</Section>
+    <SubSection id="5.2.1">Default DocumentRoot Files</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+    <BasePath>/var/www/html</BasePath>
+    <FileName>index.html</FileName>
+    <NonCompliantComment>Default HTML content is present.</NonCompliantComment>
+    <CorrectiveComment>Remove default index.html content from the DocumentRoot.</CorrectiveComment>
+    <Correction><![CDATA[rm -f /var/www/html/index.html]]></Correction>
+    <Verification><![CDATA[[ ! -f /var/www/html/index.html ] && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="5.5">
+    <Name>Ensure default CGI printenv script is removed (Automated)</Name>
+    <Chapter id="5">Request and Response Configuration</Chapter>
+    <Section id="5.2">Default Content Removal</Section>
+    <SubSection id="5.2.2">CGI Printenv Removal</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+    <BasePath>/usr/local/apache2/cgi-bin</BasePath>
+    <FileName>printenv</FileName>
+    <NonCompliantComment>Default CGI printenv script is present.</NonCompliantComment>
+    <CorrectiveComment>Remove the default printenv script from the CGI directory.</CorrectiveComment>
+    <Correction><![CDATA[rm -f /usr/local/apache2/cgi-bin/printenv]]></Correction>
+    <Verification><![CDATA[[ ! -f /usr/local/apache2/cgi-bin/printenv ] && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="5.6">
+    <Name>Ensure default CGI test-cgi script is removed (Automated)</Name>
+    <Chapter id="5">Request and Response Configuration</Chapter>
+    <Section id="5.2">Default Content Removal</Section>
+    <SubSection id="5.2.3">CGI Test-cgi Removal</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+    <BasePath>/usr/local/apache2/cgi-bin</BasePath>
+    <FileName>test-cgi</FileName>
+    <NonCompliantComment>Default CGI test-cgi script is present.</NonCompliantComment>
+    <CorrectiveComment>Remove the default test-cgi script from the CGI directory.</CorrectiveComment>
+    <Correction><![CDATA[rm -f /usr/local/apache2/cgi-bin/test-cgi]]></Correction>
+    <Verification><![CDATA[[ ! -f /usr/local/apache2/cgi-bin/test-cgi ] && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="5.7">
+    <Name>Ensure HTTP methods are restricted via LimitExcept (Automated)</Name>
+    <Chapter id="5">Request and Response Configuration</Chapter>
+    <Section id="5.3">HTTP Methods Restrictions</Section>
+    <SubSection id="5.3.1">Allowed HTTP Methods</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+      <Profile level="2" type="Server"/>
+    </Profiles>
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>HTTP request methods are not restricted.</NonCompliantComment>
+    <CorrectiveComment>Add a LimitExcept directive to allow only GET, HEAD, POST, and OPTIONS. Command: <![CDATA[echo "<LimitExcept GET HEAD POST OPTIONS>" >> /usr/local/apache2/conf/httpd.conf; echo "  Require all denied" >> /usr/local/apache2/conf/httpd.conf; echo "</LimitExcept>" >> /usr/local/apache2/conf/httpd.conf]]></CorrectiveComment>
+    <Verification><![CDATA[grep -q "<LimitExcept GET HEAD POST OPTIONS>" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Manual>CORRECTION</Manual>
+  </Rule>
+
+  <Rule id="5.8">
+    <Name>Ensure HTTP TRACE method is disabled (Automated)</Name>
+    <Chapter id="5">Request and Response Configuration</Chapter>
+    <Section id="5.3">HTTP Methods Restrictions</Section>
+    <SubSection id="5.3.2">HTTP TRACE Method</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>HTTP TRACE method is enabled.</NonCompliantComment>
+    <CorrectiveComment>Disable the HTTP TRACE method by setting TraceEnable to Off.</CorrectiveComment>
+    <Correction><![CDATA[echo "TraceEnable Off" >> /usr/local/apache2/conf/httpd.conf]]></Correction>
+    <Verification><![CDATA[grep -q "^TraceEnable Off" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="5.9">
+    <Name>Ensure only HTTP/1.1 or HTTP/2 protocols are allowed (Automated)</Name>
+    <Chapter id="5">Request and Response Configuration</Chapter>
+    <Section id="5.4">Protocol Restrictions</Section>
+    <SubSection id="5.4.1">HTTP Protocol Version</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>Old HTTP protocol versions are allowed.</NonCompliantComment>
+    <CorrectiveComment>Implement rewrite rules to block requests not using HTTP/1.1 or HTTP/2.</CorrectiveComment>
+    <Correction><![CDATA[echo "RewriteEngine On" >> /usr/local/apache2/conf/httpd.conf; echo "RewriteCond %{THE_REQUEST} !HTTP/1\\.1$" >> /usr/local/apache2/conf/httpd.conf; echo "RewriteRule .* - [F]" >> /usr/local/apache2/conf/httpd.conf]]></Correction>
+    <Verification><![CDATA[grep -q "RewriteEngine On" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="5.10">
+    <Name>Ensure access to .ht* files is restricted (Automated)</Name>
+    <Chapter id="5">Request and Response Configuration</Chapter>
+    <Section id="5.5">Sensitive Files Restrictions</Section>
+    <SubSection id="5.5.1">.ht Files Protection</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>Access to .ht* files is not restricted.</NonCompliantComment>
+    <CorrectiveComment>Add a FilesMatch directive to deny access to files beginning with .ht.</CorrectiveComment>
+    <Correction><![CDATA[echo "<FilesMatch \"^\\.ht\">" >> /usr/local/apache2/conf/httpd.conf; echo "  Require all denied" >> /usr/local/apache2/conf/httpd.conf; echo "</FilesMatch>" >> /usr/local/apache2/conf/httpd.conf]]></Correction>
+    <Verification><![CDATA[grep -q '<FilesMatch "^\\.ht">' /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="5.11">
+    <Name>Ensure access to .git directories is restricted (Automated)</Name>
+    <Chapter id="5">Request and Response Configuration</Chapter>
+    <Section id="5.5">Sensitive Files Restrictions</Section>
+    <SubSection id="5.5.2">.git Directories Protection</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>Access to .git files is not restricted.</NonCompliantComment>
+    <CorrectiveComment>Add a DirectoryMatch directive to deny access to .git directories.</CorrectiveComment>
+    <Correction><![CDATA[echo "<DirectoryMatch \"/\\.git\">" >> /usr/local/apache2/conf/httpd.conf; echo "  Require all denied" >> /usr/local/apache2/conf/httpd.conf; echo "</DirectoryMatch>" >> /usr/local/apache2/conf/httpd.conf]]></Correction>
+    <Verification><![CDATA[grep -q '<DirectoryMatch "/\\.git">' /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="5.12">
+    <Name>Ensure access to .svn directories is restricted (Automated)</Name>
+    <Chapter id="5">Request and Response Configuration</Chapter>
+    <Section id="5.5">Sensitive Files Restrictions</Section>
+    <SubSection id="5.5.3">.svn Directories Protection</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>Access to .svn files is not restricted.</NonCompliantComment>
+    <CorrectiveComment>Add a DirectoryMatch directive to deny access to .svn directories.</CorrectiveComment>
+    <Correction><![CDATA[echo "<DirectoryMatch \"/\\.svn\">" >> /usr/local/apache2/conf/httpd.conf; echo "  Require all denied" >> /usr/local/apache2/conf/httpd.conf; echo "</DirectoryMatch>" >> /usr/local/apache2/conf/httpd.conf]]></Correction>
+    <Verification><![CDATA[grep -q '<DirectoryMatch "/\\.svn">' /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="5.13">
+    <Name>Ensure only allowed file extensions are accessible (Automated)</Name>
+    <Chapter id="5">Request and Response Configuration</Chapter>
+    <Section id="5.6">File Extension Restrictions</Section>
+    <SubSection id="5.6.1">Allowed File Extensions</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>allowed_extensions.conf</FileName>
+    <NonCompliantComment>Inappropriate file extensions may be accessible.</NonCompliantComment>
+    <CorrectiveComment>Create a FilesMatch directive that allows only approved file extensions.</CorrectiveComment>
+    <Correction><![CDATA[echo '<FilesMatch "^.*\.(css|html?|js|pdf|txt|xml|xsl|gif|ico|jpe?g|png)$">' > /usr/local/apache2/conf/allowed_extensions.conf; echo '  Require all granted' >> /usr/local/apache2/conf/allowed_extensions.conf; echo '</FilesMatch>' >> /usr/local/apache2/conf/allowed_extensions.conf]]></Correction>
+    <Verification><![CDATA[test -f /usr/local/apache2/conf/allowed_extensions.conf && grep -q "Require all granted" /usr/local/apache2/conf/allowed_extensions.conf && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="5.14">
+    <Name>Ensure IP address-based requests are blocked (Automated)</Name>
+    <Chapter id="5">Request and Response Configuration</Chapter>
+    <Section id="5.7">Host Header Restrictions</Section>
+    <SubSection id="5.7.1">Numeric Host Header Protection</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>IP address based requests are allowed.</NonCompliantComment>
+    <CorrectiveComment>Add rewrite rules to block requests with a numeric Host header.</CorrectiveComment>
+    <Correction><![CDATA[echo "RewriteEngine On" >> /usr/local/apache2/conf/httpd.conf; echo "RewriteCond %{HTTP_HOST} ^[0-9\\.]+$ [NC]" >> /usr/local/apache2/conf/httpd.conf; echo "RewriteRule .* - [F]" >> /usr/local/apache2/conf/httpd.conf]]></Correction>
+    <Verification><![CDATA[grep -Fq 'RewriteCond %{HTTP_HOST} ^[0-9\.]+$ [NC]' /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="5.15">
+    <Name>Ensure Listen directives specify IP addresses (Automated)</Name>
+    <Chapter id="5">Request and Response Configuration</Chapter>
+    <Section id="5.8">Listen Directive Configuration</Section>
+    <SubSection id="5.8.1">Listen Address Specification</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>Listen directives do not specify an IP address.</NonCompliantComment>
+    <CorrectiveComment>Update the Listen directives to include the specific IP address. Command : <![CDATA[sed -i 's/^Listen [0-9]*/Listen <IP>:80/' /usr/local/apache2/conf/httpd.conf]]></CorrectiveComment>
+    <Verification><![CDATA[grep -q "^Listen [0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Manual>CORRECTION</Manual>
+  </Rule>
+
+  <Rule id="5.16">
+    <Name>Ensure Content-Security-Policy header restricts framing (Automated)</Name>
+    <Chapter id="5">Request and Response Configuration</Chapter>
+    <Section id="5.9">HTTP Response Headers</Section>
+    <SubSection id="5.9.1">Frame-Ancestors Protection</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>No header is configured to restrict browser framing.</NonCompliantComment>
+    <CorrectiveComment>Add a Header directive to restrict framing via Content-Security-Policy.</CorrectiveComment>
+    <Correction><![CDATA[echo "Header always append Content-Security-Policy \"frame-ancestors 'self'\"" >> /usr/local/apache2/conf/httpd.conf]]></Correction>
+    <Verification><![CDATA[grep -q "Header always append Content-Security-Policy" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="5.17">
+    <Name>Ensure Referrer-Policy header is set appropriately (Automated)</Name>
+    <Chapter id="5">Request and Response Configuration</Chapter>
+    <Section id="5.9">HTTP Response Headers</Section>
+    <SubSection id="5.9.2">Referrer-Policy Header</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>Referrer-Policy header is not set.</NonCompliantComment>
+    <CorrectiveComment>Add a Header directive to set the Referrer-Policy header appropriately.</CorrectiveComment>
+    <Correction><![CDATA[echo "Header set Referrer-Policy \"no-referrer-when-downgrade\"" >> /usr/local/apache2/conf/httpd.conf]]></Correction>
+    <Verification><![CDATA[grep -q "Header set Referrer-Policy" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="5.18">
+    <Name>Ensure Permissions-Policy header is set appropriately (Automated)</Name>
+    <Chapter id="5">Request and Response Configuration</Chapter>
+    <Section id="5.9">HTTP Response Headers</Section>
+    <SubSection id="5.9.3">Permissions-Policy Header</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>Permissions-Policy header is not set.</NonCompliantComment>
+    <CorrectiveComment>Add a Header directive to set the Permissions-Policy header with an appropriate allowlist.</CorrectiveComment>
+    <Correction><![CDATA[echo "Header set Permissions-Policy \"geolocation=(), microphone=()\"" >> /usr/local/apache2/conf/httpd.conf]]></Correction>
+    <Verification><![CDATA[grep -q "Header set Permissions-Policy" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+</RulesCIS>

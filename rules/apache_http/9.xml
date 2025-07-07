@@ -1,0 +1,115 @@
+<RulesCIS>
+  <Rule id="9.1">
+    <Name>Ensure the TimeOut Is Set to 10 or Less (Automated)</Name>
+    <Chapter id="9">Denial of Service Mitigations</Chapter>
+    <Section id="9.1">Timeout Configuration</Section>
+    <SubSection id="9.1.1">TimeOut Directive</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>TimeOut directive is set higher than 10 seconds.</NonCompliantComment>
+    <CorrectiveComment>Set TimeOut to 10 or less.</CorrectiveComment>
+    <Correction><![CDATA[grep -q "^TimeOut" /usr/local/apache2/conf/httpd.conf && sed -i 's|^TimeOut.*|TimeOut 10|' /usr/local/apache2/conf/httpd.conf || echo 'TimeOut 10' >> /usr/local/apache2/conf/httpd.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
+    <Verification><![CDATA[grep -q "^TimeOut 10" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="9.2">
+    <Name>Ensure KeepAlive Is Enabled (Automated)</Name>
+    <Chapter id="9">Denial of Service Mitigations</Chapter>
+    <Section id="9.2">KeepAlive Configuration</Section>
+    <SubSection id="9.2.1">KeepAlive Directive</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>KeepAlive is not enabled.</NonCompliantComment>
+    <CorrectiveComment>Enable KeepAlive in the Apache configuration.</CorrectiveComment>
+    <Correction><![CDATA[grep -q "^#\?KeepAlive" /usr/local/apache2/conf/httpd.conf && sed -i 's|^#\?KeepAlive.*|KeepAlive On|' /usr/local/apache2/conf/httpd.conf || echo 'KeepAlive On' >> /usr/local/apache2/conf/httpd.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
+    <Verification><![CDATA[grep -q "^KeepAlive On" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="9.3">
+    <Name>Ensure MaxKeepAliveRequests is Set to 100 or Greater (Automated)</Name>
+    <Chapter id="9">Denial of Service Mitigations</Chapter>
+    <Section id="9.3">MaxKeepAliveRequests</Section>
+    <SubSection id="9.3.1">MaxKeepAliveRequests Directive</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>MaxKeepAliveRequests is set lower than 100.</NonCompliantComment>
+    <CorrectiveComment>Set MaxKeepAliveRequests to 100 or greater.</CorrectiveComment>
+    <Correction><![CDATA[grep -q "^MaxKeepAliveRequests" /usr/local/apache2/conf/httpd.conf && sed -i 's|^MaxKeepAliveRequests.*|MaxKeepAliveRequests 100|' /usr/local/apache2/conf/httpd.conf || echo 'MaxKeepAliveRequests 100' >> /usr/local/apache2/conf/httpd.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
+    <Verification><![CDATA[grep -q "^MaxKeepAliveRequests 100" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="9.4">
+    <Name>Ensure KeepAliveTimeout is Set to 15 or Less (Automated)</Name>
+    <Chapter id="9">Denial of Service Mitigations</Chapter>
+    <Section id="9.4">KeepAliveTimeout</Section>
+    <SubSection id="9.4.1">KeepAliveTimeout Directive</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>KeepAliveTimeout is set higher than 15 seconds.</NonCompliantComment>
+    <CorrectiveComment>Set KeepAliveTimeout to 15 or less.</CorrectiveComment>
+    <Correction><![CDATA[grep -q "^KeepAliveTimeout" /usr/local/apache2/conf/httpd.conf && sed -i 's|^KeepAliveTimeout.*|KeepAliveTimeout 15|' /usr/local/apache2/conf/httpd.conf || echo 'KeepAliveTimeout 15' >> /usr/local/apache2/conf/httpd.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
+    <Verification><![CDATA[grep -q "^KeepAliveTimeout 15" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="9.5">
+    <Name>Ensure Request Headers Timeout is Set to 40 or Less (Automated)</Name>
+    <Chapter id="9">Denial of Service Mitigations</Chapter>
+    <Section id="9.5">RequestReadTimeout Header</Section>
+    <SubSection id="9.5.1">Header Timeout Directive</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>Timeout limits for request headers are set higher than 40 seconds.</NonCompliantComment>
+    <CorrectiveComment>Set request header timeout to 40 seconds or less using mod_reqtimeout.</CorrectiveComment>
+    <Correction><![CDATA[grep -q "^RequestReadTimeout" /usr/local/apache2/conf/httpd.conf && sed -i 's|^RequestReadTimeout.*|RequestReadTimeout header=40|' /usr/local/apache2/conf/httpd.conf || echo 'RequestReadTimeout header=40' >> /usr/local/apache2/conf/httpd.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
+    <Verification><![CDATA[grep -q "RequestReadTimeout header=40" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="9.6">
+    <Name>Ensure Request Body Timeout is Set to 20 or Less (Automated)</Name>
+    <Chapter id="9">Denial of Service Mitigations</Chapter>
+    <Section id="9.6">RequestReadTimeout Body</Section>
+    <SubSection id="9.6.1">Body Timeout Directive</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>Timeout limits for the request body are set higher than 20 seconds.</NonCompliantComment>
+    <CorrectiveComment>Set request body timeout to 20 seconds or less using mod_reqtimeout.</CorrectiveComment>
+    <Correction><![CDATA[grep -q "^RequestReadTimeout body=" /usr/local/apache2/conf/httpd.conf && sed -i 's|^RequestReadTimeout body=.*|RequestReadTimeout body=20|' /usr/local/apache2/conf/httpd.conf || echo 'RequestReadTimeout body=20' >> /usr/local/apache2/conf/httpd.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
+    <Verification><![CDATA[grep -q "RequestReadTimeout body=20" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+</RulesCIS>

@@ -1,0 +1,79 @@
+<RulesCIS>
+  <Rule id="4.1">
+    <Name>Ensure Legacy TLS Protocols are Disabled (Automated)</Name>
+    <Chapter id="4">MongoDB Data Encryption</Chapter>
+    <Section id="4.1">Ensure Legacy TLS Protocols are Disabled</Section>
+    <Profiles>
+      <Profile level="2" type="MongoDB"/>
+    </Profiles>
+    <BasePath>/etc/mongod.conf</BasePath>
+    <FileName>mongod.conf</FileName>
+    <NonCompliantComment>Legacy TLS protocols are enabled, which may expose MongoDB to security vulnerabilities.</NonCompliantComment>
+    <CorrectiveComment>Ensure that legacy TLS protocols are disabled.</CorrectiveComment>
+    <Correction>sed -i '/tls:/a\  disabledProtocols: ["TLS1_0", "TLS1_1"]' /etc/mongod.conf; systemctl restart mongod</Correction>
+    <Verification>mongo --eval "db.runCommand({getParameter: 1, 'net.tls.disabledProtocols': 1})"</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.2">
+    <Name>Ensure Weak Protocols are Disabled (Automated)</Name>
+    <Chapter id="4">MongoDB Data Encryption</Chapter>
+    <Section id="4.2">Ensure Weak Protocols are Disabled</Section>
+    <Profiles>
+      <Profile level="1" type="MongoDB"/>
+    </Profiles>
+    <BasePath>/etc/mongod.conf</BasePath>
+    <FileName>mongod.conf</FileName>
+    <NonCompliantComment>Weak protocols (e.g., SSLv3, TLS1.0, TLS1.1) are enabled, which may expose MongoDB to security vulnerabilities.</NonCompliantComment>
+    <CorrectiveComment>Ensure weak protocols are disabled.</CorrectiveComment>
+    <Correction>sed -i '/tls:/a\  disabledProtocols: ["TLS1_0", "TLS1_1", "SSLv3"]' /etc/mongod.conf; systemctl restart mongod</Correction>
+    <Verification>mongo --eval "db.runCommand({getParameter: 1, 'net.tls.disabledProtocols': 1})"</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.3">
+    <Name>Encrypt Data-in-Transit Using TLS or SSL (Automated)</Name>
+    <Chapter id="4">MongoDB Data Encryption</Chapter>
+    <Section id="4.3">Encrypt Data-in-Transit Using TLS or SSL</Section>
+    <Profiles>
+      <Profile level="1" type="MongoDB"/>
+    </Profiles>
+    <BasePath>/etc/mongod.conf</BasePath>
+    <FileName>mongod.conf</FileName>
+    <NonCompliantComment>Data in transit is not encrypted using TLS or SSL, which may expose sensitive data.</NonCompliantComment>
+    <CorrectiveComment>Ensure that data in transit is encrypted using TLS or SSL.</CorrectiveComment>
+    <Correction>sed -i '/tls:/a\  mode: "requireTLS"\n  certificateKeyFile: /etc/ssl/mongodb.pem\n  CAFile: /etc/ssl/ca.pem' /etc/mongod.conf; systemctl restart mongod</Correction>
+    <Verification>mongo --tls --tlsCertificateKeyFile /etc/ssl/mongodb.pem --tlsCAFile /etc/ssl/ca.pem --eval "db.runCommand({ping: 1})"</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.4">
+    <Name>Enable FIPS Mode (Automated)</Name>
+    <Chapter id="4">MongoDB Data Encryption</Chapter>
+    <Section id="4.4">Enable FIPS Mode</Section>
+    <Profiles>
+      <Profile level="2" type="MongoDB"/>
+    </Profiles>
+    <BasePath>/etc/mongod.conf</BasePath>
+    <FileName>mongod.conf</FileName>
+    <NonCompliantComment>Federal Information Processing Standard (FIPS) is not enabled, which may not meet security compliance requirements.</NonCompliantComment>
+    <CorrectiveComment>Ensure FIPS is enabled.</CorrectiveComment>
+    <Correction>sed -i '/ssl:/a\  FIPSMode: true' /etc/mongod.conf; systemctl restart mongod</Correction>
+    <Verification>mongo --eval "db.runCommand({getParameter: 1, 'net.ssl.FIPSMode': 1})"</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.5">
+    <Name>Encrypt Data-at-Rest (Manual)</Name>
+    <Chapter id="4">MongoDB Data Encryption</Chapter>
+    <Section id="4.5">Encrypt Data-at-Rest</Section>
+    <Profiles>
+      <Profile level="2" type="MongoDB"/>
+    </Profiles>
+    <BasePath>/etc/mongod.conf</BasePath>
+    <FileName>mongod.conf</FileName>
+    <NonCompliantComment>Data at rest is not encrypted, which may expose sensitive data to unauthorized access.</NonCompliantComment>
+    <CorrectiveComment>Ensure data at rest is encrypted.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+</RulesCIS>

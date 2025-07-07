@@ -1,0 +1,37 @@
+<RulesCIS>
+    <Rule id="1.4.1">
+        <Name>Ensure bootloader password is set (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.4">Configure Bootloader</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/grub.d/</BasePath>
+        <FileName>40_custom</FileName>
+        <NonCompliantComment>The bootloader does not have a password set, leaving it vulnerable to unauthorized modifications.</NonCompliantComment>
+        <CorrectiveComment>Configure a bootloader password to secure the boot process.</CorrectiveComment>
+        <Correction><![CDATA[echo "Generate a PBKDF2 hash (grub-mkpasswd-pbkdf2) and add set superusers / password_pbkdf2 lines in a custom /etc/grub.d file; then run update-grub"]]></Correction>
+        <Verification><![CDATA[st=0; sudo grep -q "^set[[:space:]]\+superusers=" /boot/grub/grub.cfg || st=1; sudo grep -q "password_pbkdf2" /boot/grub/grub.cfg || st=1; echo $st]]></Verification>
+        <Manual>CORRECTION</Manual>
+    </Rule>
+    
+
+    <Rule id="1.4.2">
+        <Name>Ensure access to bootloader config is configured (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.4">Configure Bootloader</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/boot/grub/</BasePath>
+        <FileName>grub.cfg</FileName>
+        <NonCompliantComment>The bootloader configuration file has insecure permissions, potentially allowing unauthorized modifications.</NonCompliantComment>
+        <CorrectiveComment>Restrict the permissions on the bootloader configuration file.</CorrectiveComment>
+        <Correction><![CDATA[sudo chown root:root /boot/grub/grub.cfg && sudo chmod 600 /boot/grub/grub.cfg && echo 0]]></Correction>
+        <Verification><![CDATA[st=0; read p u g <<<"$(stat -Lc '%a %u %g' /boot/grub/grub.cfg)"; [ "$p" -le 600 ] || st=1; [ "$u" -eq 0 -a "$g" -eq 0 ] || st=1; echo $st]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+</RulesCIS>

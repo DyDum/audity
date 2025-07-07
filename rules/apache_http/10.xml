@@ -1,0 +1,77 @@
+<RulesCIS>
+  <Rule id="10.1">
+    <Name>Ensure LimitRequestLine is Set to 8190 or Less (Automated)</Name>
+    <Chapter id="10">Request Limits</Chapter>
+    <Section id="10.1">LimitRequestLine</Section>
+    <SubSection id="10.1.1">LimitRequestLine Directive</SubSection>
+
+    <Profiles>
+      <Profile level="2" type="Server"/>
+    </Profiles>
+
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>LimitRequestLine is set to a value greater than 8190, increasing the risk of buffer overflow attacks.</NonCompliantComment>
+    <CorrectiveComment>Set the LimitRequestLine directive to 8190 or less.</CorrectiveComment>
+    <Correction><![CDATA[grep -q "^LimitRequestLine" /usr/local/apache2/conf/httpd.conf && sed -i 's/^LimitRequestLine .*/LimitRequestLine 8190/' /usr/local/apache2/conf/httpd.conf || echo "LimitRequestLine 8190" >> /usr/local/apache2/conf/httpd.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
+    <Verification><![CDATA[grep -q "^LimitRequestLine 8190" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="10.2">
+    <Name>Ensure LimitRequestFields is Set to 100 or Less (Automated)</Name>
+    <Chapter id="10">Request Limits</Chapter>
+    <Section id="10.2">LimitRequestFields</Section>
+    <SubSection id="10.2.1">LimitRequestFields Directive</SubSection>
+
+    <Profiles>
+      <Profile level="2" type="Server"/>
+    </Profiles>
+
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>LimitRequestFields is set to a value greater than 100, which may allow excessive header fields.</NonCompliantComment>
+    <CorrectiveComment>Set the LimitRequestFields directive to 100 or less.</CorrectiveComment>
+    <Correction><![CDATA[grep -q "^LimitRequestFields" /usr/local/apache2/conf/httpd.conf && sed -i 's/^LimitRequestFields .*/LimitRequestFields 100/' /usr/local/apache2/conf/httpd.conf || echo "LimitRequestFields 100" >> /usr/local/apache2/conf/httpd.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
+    <Verification><![CDATA[grep "^LimitRequestFields 100" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="10.3">
+    <Name>Ensure LimitRequestFieldsize is Set to 1024 or Less (Automated)</Name>
+    <Chapter id="10">Request Limits</Chapter>
+    <Section id="10.3">LimitRequestFieldsize</Section>
+    <SubSection id="10.3.1">LimitRequestFieldsize Directive</SubSection>
+
+    <Profiles>
+      <Profile level="2" type="Server"/>
+    </Profiles>
+
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>LimitRequestFieldsize is set to a value greater than 1024, potentially exposing the server to large header attacks.</NonCompliantComment>
+    <CorrectiveComment>Set the LimitRequestFieldsize directive to 1024 or less.</CorrectiveComment>
+    <Correction><![CDATA[grep -q "^LimitRequestFieldsize" /usr/local/apache2/conf/httpd.conf && sed -i 's/^LimitRequestFieldsize .*/LimitRequestFieldsize 1024/' /usr/local/apache2/conf/httpd.conf || echo "LimitRequestFieldsize 1024" >> /usr/local/apache2/conf/httpd.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
+    <Verification><![CDATA[grep "^LimitRequestFieldsize 1024" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="10.4">
+    <Name>Ensure LimitRequestBody is Set to 102400 or Less (Automated)</Name>
+    <Chapter id="10">Request Limits</Chapter>
+    <Section id="10.4">LimitRequestBody</Section>
+    <SubSection id="10.4.1">LimitRequestBody Directive</SubSection>
+
+    <Profiles>
+      <Profile level="2" type="Server"/>
+    </Profiles>
+
+    <BasePath>/etc/httpd/conf</BasePath>
+    <FileName>httpd.conf</FileName>
+    <NonCompliantComment>LimitRequestBody is set to a value greater than 102400, which may allow oversized requests.</NonCompliantComment>
+    <CorrectiveComment>Set the LimitRequestBody directive to 102400 or less.</CorrectiveComment>
+    <Correction><![CDATA[grep -q "^LimitRequestBody" /usr/local/apache2/conf/httpd.conf && sed -i 's/^LimitRequestBody .*/LimitRequestBody 102400/' /usr/local/apache2/conf/httpd.conf || echo "LimitRequestBody 102400" >> /usr/local/apache2/conf/httpd.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
+    <Verification><![CDATA[grep "^LimitRequestBody 102400" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+</RulesCIS>

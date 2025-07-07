@@ -1,0 +1,82 @@
+<RulesCIS>
+  <Rule id="9.1">
+    <Name>Encrypt Replication Traffic (Automated)</Name>
+    <Chapter id="9">MariaDB Replication Security</Chapter>
+    <Section id="9.1">Encrypt Replication Traffic</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>my.cnf</FileName>
+    <NonCompliantComment>Replication traffic is not encrypted, which may expose sensitive data to interception.</NonCompliantComment>
+    <CorrectiveComment>Ensure replication traffic is encrypted using SSL/TLS.</CorrectiveComment>
+    <Correction>sed -i '/\[mysqld\]/a master_ssl=ON; master_ssl_cert=/etc/mysql/ssl/ca-cert.pem; master_ssl_key=/etc/mysql/ssl/ca-key.pem' /etc/mysql/my.cnf; systemctl restart mariadb</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'master_ssl';" | grep -q 'ON' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="9.2">
+    <Name>Verify SSL Server Certificate (Automated)</Name>
+    <Chapter id="9">MariaDB Replication Security</Chapter>
+    <Section id="9.2">Verify SSL Server Certificate</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>my.cnf</FileName>
+    <NonCompliantComment>The 'MASTER_SSL_VERIFY_SERVER_CERT' setting is disabled, which may allow untrusted SSL certificates.</NonCompliantComment>
+    <CorrectiveComment>Ensure 'MASTER_SSL_VERIFY_SERVER_CERT' is enabled for SSL certificate verification.</CorrectiveComment>
+    <Correction>sed -i '/\[mysqld\]/a master_ssl_verify_server_cert=1' /etc/mysql/my.cnf; systemctl restart mariadb</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'master_ssl_verify_server_cert';" | grep -q '1' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="9.3">
+    <Name>Restrict SUPER Privilege for Replication Users (Automated)</Name>
+    <Chapter id="9">MariaDB Replication Security</Chapter>
+    <Section id="9.3">Restrict SUPER Privilege for Replication Users</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>mysql.user</FileName>
+    <NonCompliantComment>Replication users have 'SUPER' privileges, which may allow them to perform unauthorized actions.</NonCompliantComment>
+    <CorrectiveComment>Ensure 'SUPER' privilege is not assigned to replication users.</CorrectiveComment>
+    <Correction>mysql -u root -p -e "REVOKE SUPER ON *.* FROM 'replication_user'@'%';"</Correction>
+    <Verification>mysql -u root -p -e "SELECT user,host,super_priv FROM mysql.user WHERE user='replication_user';" | grep -q 'N' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="9.4">
+    <Name>Use Approved Ciphers for Replication (Automated)</Name>
+    <Chapter id="9">MariaDB Replication Security</Chapter>
+    <Section id="9.4">Use Approved Ciphers for Replication</Section>
+    <Profiles>
+      <Profile level="2" type="MariaDB RDBMS"/>
+      <Profile level="2" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>my.cnf</FileName>
+    <NonCompliantComment>Weak or unapproved ciphers are used for replication, reducing the security of the connection.</NonCompliantComment>
+    <CorrectiveComment>Ensure only strong and approved ciphers are used for replication (e.g., ECDHE-RSA-AES128-GCM-SHA256).</CorrectiveComment>
+    <Correction>sed -i '/\[mysqld\]/a master_tls_ciphers=ECDHE-RSA-AES128-GCM-SHA256' /etc/mysql/my.cnf; systemctl restart mariadb</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'master_tls_ciphers';" | grep -q 'ECDHE-RSA-AES128-GCM-SHA256' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="9.5">
+    <Name>Enable Mutual TLS for Replication (Automated)</Name>
+    <Chapter id="9">MariaDB Replication Security</Chapter>
+    <Section id="9.5">Enable Mutual TLS for Replication</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS"/>
+    </Profiles>
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>my.cnf</FileName>
+    <NonCompliantComment>Mutual TLS is not enabled for replication, which may allow unauthenticated connections.</NonCompliantComment>
+    <CorrectiveComment>Enable mutual TLS for replication by configuring client and server certificates.</CorrectiveComment>
+    <Correction>sed -i '/\[mysqld\]/a master_ssl_cert=/etc/mysql/ssl/server-cert.pem; master_ssl_key=/etc/mysql/ssl/server-key.pem; master_ssl_ca=/etc/mysql/ssl/ca-cert.pem' /etc/mysql/my.cnf; systemctl restart mariadb</Correction>
+    <Verification>mysql -u root -p -e "SHOW VARIABLES LIKE 'master_ssl_cert';" | grep -q '/etc/mysql/ssl/server-cert.pem' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+</RulesCIS>

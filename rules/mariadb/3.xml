@@ -1,0 +1,161 @@
+<RulesCIS>
+  <Rule id="3.1">
+    <Name>Secure datadir Permissions (Automated)</Name>
+    <Chapter id="3">MariaDB Database Configuration</Chapter>
+    <Section id="3.1">Secure datadir Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
+    <BasePath>/var/lib/mysql/</BasePath>
+    <FileName>datadir</FileName>
+    <NonCompliantComment>The 'datadir' directory does not have appropriate permissions, increasing the risk of unauthorized access.</NonCompliantComment>
+    <CorrectiveComment>Ensure the 'datadir' directory is owned by the mysql user and has 700 permissions.</CorrectiveComment>
+    <Correction>chown -R mysql:mysql /var/lib/mysql; chmod -R 700 /var/lib/mysql</Correction>
+    <Verification>stat -c "%a %U:%G" /var/lib/mysql | grep -q '700 mysql:mysql' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.2">
+    <Name>Secure Binary Log File Permissions (Automated)</Name>
+    <Chapter id="3">MariaDB Database Configuration</Chapter>
+    <Section id="3.2">Secure Binary Log File Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
+    <BasePath>/var/log/mysql/</BasePath>
+    <FileName>log_bin_basename</FileName>
+    <NonCompliantComment>The 'log_bin_basename' files do not have appropriate permissions, which may expose log data to unauthorized users.</NonCompliantComment>
+    <CorrectiveComment>Ensure 'log_bin_basename' files are owned by the mysql user and have 640 permissions.</CorrectiveComment>
+    <Correction>chown mysql:mysql /var/log/mysql/log_bin*; chmod 640 /var/log/mysql/log_bin*</Correction>
+    <Verification>stat -c "%a %U:%G" /var/log/mysql/log_bin* | grep -q '640 mysql:mysql' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.3">
+    <Name>Secure Error Log File Permissions (Automated)</Name>
+    <Chapter id="3">MariaDB Database Configuration</Chapter>
+    <Section id="3.3">Secure Error Log File Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
+    <BasePath>/var/log/mysql/</BasePath>
+    <FileName>log_error</FileName>
+    <NonCompliantComment>The 'log_error' file does not have appropriate permissions, which may expose error logs to unauthorized users.</NonCompliantComment>
+    <CorrectiveComment>Ensure the 'log_error' file is owned by the mysql user and has 640 permissions.</CorrectiveComment>
+    <Correction>chown mysql:mysql /var/log/mysql/error.log; chmod 640 /var/log/mysql/error.log</Correction>
+    <Verification>stat -c "%a %U:%G" /var/log/mysql/error.log | grep -q '640 mysql:mysql' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.4">
+    <Name>Secure Slow Query Log File Permissions (Automated)</Name>
+    <Chapter id="3">MariaDB Database Configuration</Chapter>
+    <Section id="3.4">Secure Slow Query Log File Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
+    <BasePath>/var/log/mysql/</BasePath>
+    <FileName>slow_query_log</FileName>
+    <NonCompliantComment>The 'slow_query_log' file does not have appropriate permissions, which may expose slow query data.</NonCompliantComment>
+    <CorrectiveComment>Ensure the 'slow_query_log' file is owned by the mysql user and has 640 permissions.</CorrectiveComment>
+    <Correction>chown mysql:mysql /var/log/mysql/slow.log; chmod 640 /var/log/mysql/slow.log</Correction>
+    <Verification>stat -c "%a %U:%G" /var/log/mysql/slow.log | grep -q '640 mysql:mysql' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.5">
+    <Name>Secure Relay Log File Permissions (Automated)</Name>
+    <Chapter id="3">MariaDB Database Configuration</Chapter>
+    <Section id="3.5">Secure Relay Log File Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
+    <BasePath>/var/log/mysql/</BasePath>
+    <FileName>relay_log_basename</FileName>
+    <NonCompliantComment>The 'relay_log_basename' files do not have appropriate permissions, which may expose relay log data.</NonCompliantComment>
+    <CorrectiveComment>Ensure 'relay_log_basename' files are owned by the mysql user and have 640 permissions.</CorrectiveComment>
+    <Correction>chown mysql:mysql /var/log/mysql/relay_log*; chmod 640 /var/log/mysql/relay_log*</Correction>
+    <Verification>stat -c "%a %U:%G" /var/log/mysql/relay_log* | grep -q '640 mysql:mysql' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.6">
+    <Name>Secure General Log File Permissions (Automated)</Name>
+    <Chapter id="3">MariaDB Database Configuration</Chapter>
+    <Section id="3.6">Secure General Log File Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
+    <BasePath>/var/log/mysql/</BasePath>
+    <FileName>general_log_file</FileName>
+    <NonCompliantComment>The 'general_log_file' does not have appropriate permissions, which may expose log data to unauthorized users.</NonCompliantComment>
+    <CorrectiveComment>Ensure the 'general_log_file' is owned by the mysql user and has 640 permissions.</CorrectiveComment>
+    <Correction>chown mysql:mysql /var/log/mysql/general.log; chmod 640 /var/log/mysql/general.log</Correction>
+    <Verification>stat -c "%a %U:%G" /var/log/mysql/general.log | grep -q '640 mysql:mysql' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.7">
+    <Name>Secure SSL Private Key Permissions (Automated)</Name>
+    <Chapter id="3">MariaDB Database Configuration</Chapter>
+    <Section id="3.7">Secure SSL Private Key Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
+    <BasePath>/etc/mysql/ssl/</BasePath>
+    <FileName>private-key.pem</FileName>
+    <NonCompliantComment>SSL key files do not have appropriate permissions, which may expose them to unauthorized access.</NonCompliantComment>
+    <CorrectiveComment>Ensure SSL key files are owned by mysql and have 600 permissions.</CorrectiveComment>
+    <Correction>chown mysql:mysql /etc/mysql/ssl/private-key.pem; chmod 600 /etc/mysql/ssl/private-key.pem</Correction>
+    <Verification>stat -c "%a %U:%G" /etc/mysql/ssl/private-key.pem | grep -q '600 mysql:mysql' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.8">
+    <Name>Secure Plugin Directory Permissions (Automated)</Name>
+    <Chapter id="3">MariaDB Database Configuration</Chapter>
+    <Section id="3.8">Secure Plugin Directory Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
+    <BasePath>/usr/lib/mysql/plugin/</BasePath>
+    <FileName>N/A</FileName>
+    <NonCompliantComment>The plugin directory does not have appropriate permissions, increasing the risk of unauthorized changes.</NonCompliantComment>
+    <CorrectiveComment>Ensure the plugin directory is owned by mysql and has 750 permissions.</CorrectiveComment>
+    <Correction>chown -R mysql:mysql /usr/lib/mysql/plugin; chmod -R 750 /usr/lib/mysql/plugin</Correction>
+    <Verification>stat -c "%a %U:%G" /usr/lib/mysql/plugin | grep -q '750 mysql:mysql' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.9">
+    <Name>Secure Audit Log File Permissions (Automated)</Name>
+    <Chapter id="3">MariaDB Database Configuration</Chapter>
+    <Section id="3.9">Secure Audit Log File Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
+    <BasePath>/var/log/mysql/</BasePath>
+    <FileName>server_audit_file_path</FileName>
+    <NonCompliantComment>The server audit log does not have appropriate permissions, exposing audit data to unauthorized users.</NonCompliantComment>
+    <CorrectiveComment>Ensure the server audit log is owned by mysql and has 640 permissions.</CorrectiveComment>
+    <Correction>chown mysql:mysql /var/log/mysql/audit.log; chmod 640 /var/log/mysql/audit.log</Correction>
+    <Verification>stat -c "%a %U:%G" /var/log/mysql/audit.log | grep -q '640 mysql:mysql' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="3.10">
+    <Name>Secure Encryption Key File Permissions (Automated)</Name>
+    <Chapter id="3">MariaDB Database Configuration</Chapter>
+    <Section id="3.10">Secure Encryption Key File Permissions</Section>
+    <Profiles>
+      <Profile level="1" type="MariaDB RDBMS on Linux"/>
+    </Profiles>
+    <BasePath>/etc/mysql/</BasePath>
+    <FileName>encryption.cnf</FileName>
+    <NonCompliantComment>Encryption key files do not have appropriate permissions, increasing security risks.</NonCompliantComment>
+    <CorrectiveComment>Ensure encryption key files are owned by mysql and have 600 permissions.</CorrectiveComment>
+    <Correction>chown mysql:mysql /etc/mysql/encryption.cnf; chmod 600 /etc/mysql/encryption.cnf</Correction>
+    <Verification>stat -c "%a %U:%G" /etc/mysql/encryption.cnf | grep -q '600 mysql:mysql' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+</RulesCIS>
