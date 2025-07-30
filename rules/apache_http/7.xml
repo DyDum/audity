@@ -69,8 +69,8 @@
     <FileName>ssl.conf</FileName>
     <NonCompliantComment>TLSv1.0 and TLSv1.1 protocols are enabled.</NonCompliantComment>
     <CorrectiveComment>Disable TLSv1.0 and TLSv1.1, enabling only TLSv1.2 and TLSv1.3.</CorrectiveComment>
-    <Correction><![CDATA[sed -i 's|^SSLProtocol .*|SSLProtocol all -SSLv3 -TLSv1 -TLSv1.1|' /etc/apache2/mods-available/ssl.conf; service apache2 restart]]></Correction>
-    <Verification><![CDATA[grep '^SSLProtocol' /etc/apache2/mods-available/ssl.conf | grep -q 'TLSv1.2' && echo 0 || echo 1]]></Verification>
+    <Correction><![CDATA[sed -i 's|^SSLProtocol .*|SSLProtocol TLSv1.2 TLSv1.3|' /etc/apache2/mods-available/ssl.conf; service apache2 restart]]></Correction>
+    <Verification><![CDATA[grep -q '^SSLProtocol TLSv1.2 TLSv1.3' /etc/apache2/mods-available/ssl.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -127,7 +127,7 @@
     <NonCompliantComment>SSL compression is enabled.</NonCompliantComment>
     <CorrectiveComment>Disable SSL compression.</CorrectiveComment>
     <Correction><![CDATA[grep -q "^SSLCompression" /etc/apache2/mods-available/ssl.conf && sed -i 's|^SSLCompression.*|SSLCompression off|' /etc/apache2/mods-available/ssl.conf || echo 'SSLCompression off' >> /etc/apache2/mods-available/ssl.conf; service apache2 restart]]></Correction>
-    <Verification><![CDATA[grep '^SSLCompression off' /etc/apache2/mods-available/ssl.conf && echo 0 || echo 1]]></Verification>
+    <Verification><![CDATA[grep -q '^SSLCompression off' /etc/apache2/mods-available/ssl.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -184,7 +184,7 @@
     <NonCompliantComment>OCSP Stapling is not enabled.</NonCompliantComment>
     <CorrectiveComment>Enable OCSP Stapling in the SSL configuration.</CorrectiveComment>
     <Correction><![CDATA[grep -q "^SSLOCSPStapling" /etc/apache2/mods-available/ssl.conf && sed -i 's|^#\?SSLOCSPStapling.*|SSLOCSPStapling On|' /etc/apache2/mods-available/ssl.conf || echo 'SSLOCSPStapling On' >> /etc/apache2/mods-available/ssl.conf; service apache2 restart]]></Correction>
-    <Verification><![CDATA[grep '^SSLOCSPStapling On' /etc/apache2/mods-available/ssl.conf && echo 0 || echo 1]]></Verification>
+    <Verification><![CDATA[grep -q '^SSLOCSPStapling On' /etc/apache2/mods-available/ssl.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
