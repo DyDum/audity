@@ -26,12 +26,12 @@
     <Profiles>
       <Profile level="1" type="Server"/>
     </Profiles>
-    <BasePath>/var/www/html</BasePath>
-    <FileName>DocumentRoot configuration</FileName>
+    <BasePath>/etc/apache2/sites-available</BasePath>
+    <FileName>*.conf</FileName>
     <NonCompliantComment>Web root directory options are not restricted.</NonCompliantComment>
-    <CorrectiveComment>Set the Options directive to "None" or "Multiviews" as appropriate for the DocumentRoot.</CorrectiveComment>
-    <Correction><![CDATA[sed -i '/<Directory \/var\/www\/html>/,/<\/Directory>/ s/Options .*/Options None/' /etc/apache2/apache2.conf; service apache2 reload]]></Correction>
-    <Verification><![CDATA[grep -A2 "<Directory /var/www/html>" /etc/apache2/apache2.conf | grep -q "Options None" && echo 0 || echo 1]]></Verification>
+    <CorrectiveComment>Set the Options directive to "None" for the DocumentRoot in all active VirtualHost configurations.</CorrectiveComment>
+    <Correction><![CDATA[for file in /etc/apache2/sites-available/*.conf; do sed -i '/<Directory \/var\/www\/html>/,/<\/Directory>/ s/^\s*Options .*/        Options None/' "$file"; done; service apache2 reload]]></Correction>
+    <Verification><![CDATA[grep -R "<Directory /var/www/html>" /etc/apache2/sites-available/*.conf | grep -q "Options None" && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -121,20 +121,8 @@
     <FileName>*.conf</FileName>
     <NonCompliantComment>HTTP request methods are not restricted.</NonCompliantComment>
     <CorrectiveComment>Add a LimitExcept directive inside each VirtualHost to allow only GET, HEAD, POST, and OPTIONS.</CorrectiveComment>
-    <Correction><![CDATA[
-      for site in /etc/apache2/sites-available/*.conf; do
-        if ! grep -q "<LimitExcept GET HEAD POST OPTIONS>" "$site"; then
-          sed -i '/<\/VirtualHost>/i \
-    <Directory /var/www/html>\
-      <LimitExcept GET HEAD POST OPTIONS>\
-        Require all denied\
-      </LimitExcept>\
-    </Directory>' "$site"
-        fi
-      done
-      service apache2 reload
-    ]]></Correction>
-    <Verification><![CDATA[grep -R "<LimitExcept GET HEAD POST OPTIONS>" /etc/apache2/sites-available/*.conf && echo 0 || echo 1]]></Verification>
+    <Correction><![CDATA[for site in /etc/apache2/sites-available/*.conf; do if ! grep -q "<LimitExcept GET HEAD POST OPTIONS>" "$site"; then sed -i '/<\/VirtualHost>/i \    <Directory /var/www/html>\      <LimitExcept GET HEAD POST OPTIONS>\        Require all denied\      </LimitExcept>\    </Directory>' "$site"; fi; done; service apache2 reload]]></Correction>
+    <Verification><![CDATA[grep -Rq "<LimitExcept GET HEAD POST OPTIONS>" /etc/apache2/sites-available/*.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -277,7 +265,7 @@
     <FileName>ports.conf</FileName>
     <NonCompliantComment>Listen directives do not specify an IP address.</NonCompliantComment>
     <CorrectiveComment>Update the Listen directives to include the specific IP address.</CorrectiveComment>
-    <Correction><![CDATA[sed -i 's/^Listen [0-9]*/Listen <IP>:80/' /etc/apache2/ports.conf; service apache2 reload]]></Correction>
+    <Correction><![CDATA[sed -i 's/^Listen [0-9]*/Listen 127.0.0.1:80/' /etc/apache2/ports.conf; service apache2 reload]]></Correction>
     <Verification><![CDATA[grep -q "^Listen [0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}" /etc/apache2/ports.conf && echo 0 || echo 1]]></Verification>
     <Manual>CORRECTION</Manual>
   </Rule>
