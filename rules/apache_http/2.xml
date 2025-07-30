@@ -84,7 +84,7 @@
     <FileName>autoindex.load</FileName>
     <NonCompliantComment>The autoindex module is enabled, which may expose directory listings.</NonCompliantComment>
     <CorrectiveComment>Disable mod_autoindex using a2dismod.</CorrectiveComment>
-    <Correction><![CDATA[a2dismod autoindex && systemctl reload apache2]]></Correction>
+    <Correction><![CDATA[a2dismod autoindex -f && systemctl reload apache2]]></Correction>
     <Verification><![CDATA[apache2ctl -M | grep -q autoindex_module && echo 1 || echo 0]]></Verification>
     <Manual>NO</Manual>
   </Rule>
@@ -102,7 +102,7 @@
     <FileName>proxy.load</FileName>
     <NonCompliantComment>Unnecessary proxy modules are enabled, increasing the attack surface.</NonCompliantComment>
     <CorrectiveComment>Disable proxy modules using a2dismod.</CorrectiveComment>
-    <Correction><![CDATA[a2dismod proxy && systemctl reload apache2]]></Correction>
+    <Correction><![CDATA[a2dismod proxy -f && systemctl reload apache2]]></Correction>
     <Verification><![CDATA[apache2ctl -M | grep -q proxy_module && echo 1 || echo 0]]></Verification>
     <Manual>NO</Manual>
   </Rule>
@@ -120,7 +120,7 @@
     <FileName>userdir.load</FileName>
     <NonCompliantComment>The user directories module is enabled, which may allow access to user home directories.</NonCompliantComment>
     <CorrectiveComment>Disable mod_userdir using a2dismod.</CorrectiveComment>
-    <Correction><![CDATA[a2dismod userdir && systemctl reload apache2]]></Correction>
+    <Correction><![CDATA[a2dismod userdir -f && systemctl reload apache2]]></Correction>
     <Verification><![CDATA[apache2ctl -M | grep -q userdir_module && echo 1 || echo 0]]></Verification>
     <Manual>NO</Manual>
   </Rule>
@@ -138,7 +138,7 @@
     <FileName>info.load</FileName>
     <NonCompliantComment>The info module is enabled, which can expose sensitive server configuration details.</NonCompliantComment>
     <CorrectiveComment>Disable mod_info using a2dismod.</CorrectiveComment>
-    <Correction><![CDATA[a2dismod info && systemctl reload apache2]]></Correction>
+    <Correction><![CDATA[a2dismod info -f && systemctl reload apache2]]></Correction>
     <Verification><![CDATA[apache2ctl -M | grep -q info_module && echo 1 || echo 0]]></Verification>
     <Manual>NO</Manual>
   </Rule>
@@ -156,7 +156,7 @@
     <FileName>auth_basic.load</FileName>
     <NonCompliantComment>The basic and digest authentication modules are enabled, which are considered insecure.</NonCompliantComment>
     <CorrectiveComment>Disable mod_auth_basic and mod_auth_digest using a2dismod.</CorrectiveComment>
-    <Correction><![CDATA[a2dismod auth_basic auth_digest && systemctl reload apache2]]></Correction>
+    <Correction><![CDATA[a2dismod auth_basic auth_digest -f && systemctl reload apache2]]></Correction>
     <Verification><![CDATA[apache2ctl -M | grep -E 'auth_basic_module|auth_digest_module' && echo 1 || echo 0]]></Verification>
     <Manual>NO</Manual>
   </Rule>
