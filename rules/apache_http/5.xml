@@ -121,7 +121,7 @@
     <FileName>*.conf</FileName>
     <NonCompliantComment>HTTP request methods are not restricted.</NonCompliantComment>
     <CorrectiveComment>Add a LimitExcept directive inside each VirtualHost to allow only GET, HEAD, POST, and OPTIONS.</CorrectiveComment>
-    <Correction><![CDATA[for site in /etc/apache2/sites-available/*.conf; do if ! grep -q "<LimitExcept GET HEAD POST OPTIONS>" "$site"; then sed -i '/<\/VirtualHost>/i \    <Directory /var/www/html>\      <LimitExcept GET HEAD POST OPTIONS>\        Require all denied\      </LimitExcept>\    </Directory>' "$site"; fi; done; service apache2 reload]]></Correction>
+    <Correction><![CDATA[for site in /etc/apache2/sites-available/*.conf; do if ! grep -q "<LimitExcept GET HEAD POST OPTIONS>" "$site"; then sed -i '/<\/VirtualHost>/i \ \ \ \ <Directory /var/www/html>\n\ \ \ \ \ \ <LimitExcept GET HEAD POST OPTIONS>\n\ \ \ \ \ \ \ \ Require all denied\n\ \ \ \ \ \ </LimitExcept>\n\ \ \ \ </Directory>' "$site"; fi; done; service apache2 reload]]></Correction>
     <Verification><![CDATA[grep -Rq "<LimitExcept GET HEAD POST OPTIONS>" /etc/apache2/sites-available/*.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
