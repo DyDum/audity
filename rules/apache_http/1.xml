@@ -8,7 +8,7 @@
     <Profiles>
       <Profile level="1" type="Server"/>
     </Profiles>
-    <BasePath>/etc/apache_planning</BasePath>
+    <BasePath>/etc/apache2/planning</BasePath>
     <FileName>Pre-Installation_Checklist.txt</FileName>
     <NonCompliantComment>The pre-installation planning checklist has not been implemented, which may lead to overlooked security controls and configuration gaps.</NonCompliantComment>
     <CorrectiveComment>Review and implement all items on the pre-installation planning checklist as defined by organizational security policies.</CorrectiveComment>
@@ -44,11 +44,11 @@
     <Profiles>
       <Profile level="1" type="Server"/>
     </Profiles>
-    <BasePath>/opt/apache</BasePath>
-    <FileName>apache_installation</FileName>
+    <BasePath>/etc/apache2</BasePath>
+    <FileName>apache_installation_source.txt</FileName>
     <NonCompliantComment>Apache is not installed using the vendor-recommended binaries, which may result in using unpatched or insecure software.</NonCompliantComment>
-    <CorrectiveComment>Install Apache from the approved vendor binaries or packages to ensure that security patches and updates are provided.</CorrectiveComment>
-    <Correction><![CDATA[Manual review required; reinstall Apache using vendor-provided packages per official documentation.]]></Correction>
+    <CorrectiveComment>Install Apache using the vendor-provided Debian packages to ensure that security patches and updates are applied.</CorrectiveComment>
+    <Correction><![CDATA[Manual review required; reinstall Apache using apt packages (e.g., apt install apache2) per Debian guidelines.]]></Correction>
     <Verification><![CDATA[Manual verification required to ensure Apache version and installation source meet vendor recommendations.]]></Verification>
     <Manual>YES</Manual>
   </Rule>
