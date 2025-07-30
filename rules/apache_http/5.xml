@@ -117,12 +117,24 @@
       <Profile level="1" type="Server"/>
       <Profile level="2" type="Server"/>
     </Profiles>
-    <BasePath>/etc/apache2</BasePath>
-    <FileName>apache2.conf</FileName>
+    <BasePath>/etc/apache2/sites-available</BasePath>
+    <FileName>*.conf</FileName>
     <NonCompliantComment>HTTP request methods are not restricted.</NonCompliantComment>
-    <CorrectiveComment>Add a LimitExcept directive to allow only GET, HEAD, POST, and OPTIONS.</CorrectiveComment>
-    <Correction><![CDATA[echo "<LimitExcept GET HEAD POST OPTIONS>" >> /etc/apache2/apache2.conf; echo "  Require all denied" >> /etc/apache2/apache2.conf; echo "</LimitExcept>" >> /etc/apache2/apache2.conf; service apache2 reload]]></Correction>
-    <Verification><![CDATA[grep -q "<LimitExcept GET HEAD POST OPTIONS>" /etc/apache2/apache2.conf && echo 0 || echo 1]]></Verification>
+    <CorrectiveComment>Add a LimitExcept directive inside each VirtualHost to allow only GET, HEAD, POST, and OPTIONS.</CorrectiveComment>
+    <Correction><![CDATA[
+      for site in /etc/apache2/sites-available/*.conf; do
+        if ! grep -q "<LimitExcept GET HEAD POST OPTIONS>" "$site"; then
+          sed -i '/<\/VirtualHost>/i \
+    <Directory /var/www/html>\
+      <LimitExcept GET HEAD POST OPTIONS>\
+        Require all denied\
+      </LimitExcept>\
+    </Directory>' "$site"
+        fi
+      done
+      service apache2 reload
+    ]]></Correction>
+    <Verification><![CDATA[grep -R "<LimitExcept GET HEAD POST OPTIONS>" /etc/apache2/sites-available/*.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
