@@ -8,17 +8,17 @@
     <Profiles>
       <Profile level="1" type="Server"/>
     </Profiles>
-    <BasePath>/etc/httpd/conf</BasePath>
-    <FileName>httpd.conf</FileName>
+    <BasePath>/etc/apache2/</BasePath>
+    <FileName>apache2.conf</FileName>
     <NonCompliantComment>Apache is running as root.</NonCompliantComment>
-    <CorrectiveComment>Set the User and Group directives to a non-root user.</CorrectiveComment>
-    <Correction><![CDATA[sed -i 's/^User .*/User apache/' /usr/local/apache2/conf/httpd.conf; sed -i 's/^Group .*/Group apache/' /usr/local/apache2/conf/httpd.conf; useradd --system --no-create-home --shell /usr/sbin/nologin apache]]></Correction>
-    <Verification><![CDATA[grep '^User apache' /usr/local/apache2/conf/httpd.conf && grep '^Group apache' /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <CorrectiveComment>Set the User and Group directives to the default 'www-data' user and group.</CorrectiveComment>
+    <Correction><![CDATA[sed -i 's/^User .*/User www-data/' /etc/apache2/apache2.conf; sed -i 's/^Group .*/Group www-data/' /etc/apache2/apache2.conf; usermod -s /usr/sbin/nologin www-data]]></Correction>
+    <Verification><![CDATA[grep -q '^User www-data' /etc/apache2/apache2.conf && grep -q '^Group www-data' /etc/apache2/apache2.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
   <Rule id="3.2">
-    <Name>Ensure Apache user shell is set to /sbin/nologin (Automated)</Name>
+    <Name>Ensure Apache user shell is set to /usr/sbin/nologin (Automated)</Name>
     <Chapter id="3">Permissions and Ownership</Chapter>
     <Section id="3.1">User and Group Settings</Section>
     <SubSection id="3.1.2">Apache User Shell</SubSection>
@@ -29,9 +29,9 @@
     <BasePath>/etc</BasePath>
     <FileName>passwd</FileName>
     <NonCompliantComment>The Apache user has a valid login shell.</NonCompliantComment>
-    <CorrectiveComment>Change the Apache user shell to /sbin/nologin.</CorrectiveComment>
-    <Correction><![CDATA[chsh -s /sbin/nologin apache]]></Correction>
-    <Verification><![CDATA[grep '^apache:' /etc/passwd | grep -q '/sbin/nologin' && echo 0 || echo 1]]></Verification>
+    <CorrectiveComment>Change the Apache user shell to /usr/sbin/nologin.</CorrectiveComment>
+    <Correction><![CDATA[chsh -s /usr/sbin/nologin www-data]]></Correction>
+    <Verification><![CDATA[grep '^www-data:' /etc/passwd | grep -q '/usr/sbin/nologin' && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -48,8 +48,8 @@
     <FileName>passwd</FileName>
     <NonCompliantComment>The Apache user account is not locked.</NonCompliantComment>
     <CorrectiveComment>Lock the Apache user account.</CorrectiveComment>
-    <Correction><![CDATA[passwd -l apache]]></Correction>
-    <Verification><![CDATA[getent shadow apache | cut -d: -f2 | grep -q '^!' && echo 0 || echo 1]]></Verification>
+    <Correction><![CDATA[passwd -l www-data]]></Correction>
+    <Verification><![CDATA[getent shadow www-data | cut -d: -f2 | grep -q '^!' && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -62,12 +62,12 @@
     <Profiles>
       <Profile level="1" type="Server"/>
     </Profiles>
-    <BasePath>/usr/local/apache2</BasePath>
+    <BasePath>/etc/apache2</BasePath>
     <FileName>ApacheDirectories</FileName>
     <NonCompliantComment>Some Apache directories and files are not owned by root.</NonCompliantComment>
     <CorrectiveComment>Change ownership of all Apache directories and files to root.</CorrectiveComment>
-    <Correction><![CDATA[chown -R root:root /usr/local/apache2]]></Correction>
-    <Verification><![CDATA[find /usr/local/apache2 ! -user root -print | grep -q . && echo 1 || echo 0]]></Verification>
+    <Correction><![CDATA[chown -R root:root /etc/apache2]]></Correction>
+    <Verification><![CDATA[find /etc/apache2 ! -user root -print | grep -q . && echo 1 || echo 0]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -80,12 +80,12 @@
     <Profiles>
       <Profile level="1" type="Server"/>
     </Profiles>
-    <BasePath>/usr/local/apache2</BasePath>
+    <BasePath>/etc/apache2</BasePath>
     <FileName>ApacheDirectories</FileName>
     <NonCompliantComment>Apache directories and files do not have group ownership set to root.</NonCompliantComment>
     <CorrectiveComment>Set group ownership of Apache directories and files to root.</CorrectiveComment>
-    <Correction><![CDATA[chgrp -R root /usr/local/apache2]]></Correction>
-    <Verification><![CDATA[find /usr/local/apache2 ! -group root -print | grep -q . && echo 1 || echo 0]]></Verification>
+    <Correction><![CDATA[chgrp -R root /etc/apache2]]></Correction>
+    <Verification><![CDATA[find /etc/apache2 ! -group root -print | grep -q . && echo 1 || echo 0]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -98,12 +98,12 @@
     <Profiles>
       <Profile level="1" type="Server"/>
     </Profiles>
-    <BasePath>/usr/local/apache2</BasePath>
+    <BasePath>/etc/apache2</BasePath>
     <FileName>ApacheDirectories</FileName>
     <NonCompliantComment>Other write access is enabled on Apache directories and files.</NonCompliantComment>
     <CorrectiveComment>Remove write permissions for others from Apache directories and files.</CorrectiveComment>
-    <Correction><![CDATA[chmod -R o-w /usr/local/apache2]]></Correction>
-    <Verification><![CDATA[find /usr/local/apache2 -perm /o=w | grep -q . && echo 1 || echo 0]]></Verification>
+    <Correction><![CDATA[chmod -R o-w /etc/apache2]]></Correction>
+    <Verification><![CDATA[find /etc/apache2 -perm /o=w | grep -q . && echo 1 || echo 0]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -116,12 +116,12 @@
     <Profiles>
       <Profile level="1" type="Server"/>
     </Profiles>
-    <BasePath>/etc/httpd/conf</BasePath>
-    <FileName>httpd.conf</FileName>
+    <BasePath>/etc/apache2</BasePath>
+    <FileName>apache2.conf</FileName>
     <NonCompliantComment>The CoreDumpDirectory is not set to a secure directory.</NonCompliantComment>
     <CorrectiveComment>Configure CoreDumpDirectory to a secure directory owned by root with 700 permissions.</CorrectiveComment>
-    <Correction><![CDATA[grep -q "^CoreDumpDirectory" /usr/local/apache2/conf/httpd.conf && sed -i 's|^CoreDumpDirectory.*|CoreDumpDirectory "/var/log/apache_coredumps"|' /usr/local/apache2/conf/httpd.conf || echo 'CoreDumpDirectory "/var/log/apache_coredumps"' >> /usr/local/apache2/conf/httpd.conf; mkdir -p /var/log/apache_coredumps; chown root:root /var/log/apache_coredumps; chmod 700 /var/log/apache_coredumps; /usr/local/apache2/bin/apachectl restart]]></Correction>
-    <Verification><![CDATA[grep '^CoreDumpDirectory "/var/log/apache_coredumps"' /usr/local/apache2/conf/httpd.conf && stat -c '%a' /var/log/apache_coredumps | grep -q '^700$' && echo 0 || echo 1]]></Verification>
+    <Correction><![CDATA[grep -q "^CoreDumpDirectory" /etc/apache2/apache2.conf && sed -i 's|^CoreDumpDirectory.*|CoreDumpDirectory "/var/log/apache_coredumps"|' /etc/apache2/apache2.conf || echo 'CoreDumpDirectory "/var/log/apache_coredumps"' >> /etc/apache2/apache2.conf; mkdir -p /var/log/apache_coredumps; chown root:root /var/log/apache_coredumps; chmod 700 /var/log/apache_coredumps; service apache2 restart]]></Correction>
+    <Verification><![CDATA[grep '^CoreDumpDirectory "/var/log/apache_coredumps"' /etc/apache2/apache2.conf && stat -c '%a' /var/log/apache_coredumps | grep -q '^700$' && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -134,12 +134,12 @@
     <Profiles>
       <Profile level="1" type="Server"/>
     </Profiles>
-    <BasePath>/var/log</BasePath>
+    <BasePath>/var/lock/apache2</BasePath>
     <FileName>apache_lock</FileName>
     <NonCompliantComment>The lock file directory is not secure.</NonCompliantComment>
     <CorrectiveComment>Ensure the lock file directory is owned by root and set to 700 permissions.</CorrectiveComment>
-    <Correction><![CDATA[chown root:root /var/log/apache2; chmod 700 /var/log/apache2]]></Correction>
-    <Verification><![CDATA[stat -c '%a' /var/log/apache2 | grep -q '^700$' && echo 0 || echo 1]]></Verification>
+    <Correction><![CDATA[chown root:root /var/lock/apache2; chmod 700 /var/lock/apache2]]></Correction>
+    <Verification><![CDATA[stat -c '%a' /var/lock/apache2 | grep -q '^700$' && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -152,12 +152,12 @@
     <Profiles>
       <Profile level="1" type="Server"/>
     </Profiles>
-    <BasePath>/var/run</BasePath>
-    <FileName>httpd.pid</FileName>
+    <BasePath>/var/run/apache2</BasePath>
+    <FileName>apache2.pid</FileName>
     <NonCompliantComment>The directory for the PID file is not secure.</NonCompliantComment>
     <CorrectiveComment>Ensure the directory containing the PID file is owned by root and set to 700 permissions.</CorrectiveComment>
-    <Correction><![CDATA[chown root:root /usr/local/apache2/logs/httpd.pid; chmod 700 /usr/local/apache2/logs/httpd.pid]]></Correction>
-    <Verification><![CDATA[stat -c '%a' /usr/local/apache2/logs/httpd.pid | grep -q '^700$' && echo 0 || echo 1]]></Verification>
+    <Correction><![CDATA[chown root:root /var/run/apache2/apache2.pid; chmod 700 /var/run/apache2/apache2.pid]]></Correction>
+    <Verification><![CDATA[stat -c '%a' /var/run/apache2/apache2.pid | grep -q '^700$' && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -170,12 +170,12 @@
     <Profiles>
       <Profile level="1" type="Server"/>
     </Profiles>
-    <BasePath>/etc/httpd/conf</BasePath>
-    <FileName>httpd.conf</FileName>
+    <BasePath>/etc/apache2</BasePath>
+    <FileName>apache2.conf</FileName>
     <NonCompliantComment>The ScoreBoard file is located in an insecure directory.</NonCompliantComment>
     <CorrectiveComment>Configure the ScoreBoard file to reside in a secure directory owned by root with 700 permissions.</CorrectiveComment>
-    <Correction><![CDATA[grep -q "^ScoreBoardFile" /usr/local/apache2/conf/httpd.conf && sed -i 's|^ScoreBoardFile .*|ScoreBoardFile "/var/log/apache_scoreboard"|' /usr/local/apache2/conf/httpd.conf || echo 'ScoreBoardFile "/var/log/apache_scoreboard"' >> /usr/local/apache2/conf/httpd.conf; touch /var/log/apache_scoreboard; chown root:root /var/log/apache_scoreboard; chmod 700 /var/log/apache_scoreboard; /usr/local/apache2/bin/apachectl restart]]></Correction>
-    <Verification><![CDATA[grep -q '^ScoreBoardFile "/var/log/apache_scoreboard"' /usr/local/apache2/conf/httpd.conf && stat -c '%a' /var/log/apache_scoreboard | grep -q '^700$' && echo 0 || echo 1]]></Verification>
+    <Correction><![CDATA[grep -q "^ScoreBoardFile" /etc/apache2/apache2.conf && sed -i 's|^ScoreBoardFile .*|ScoreBoardFile "/var/log/apache_scoreboard"|' /etc/apache2/apache2.conf || echo 'ScoreBoardFile "/var/log/apache_scoreboard"' >> /etc/apache2/apache2.conf; touch /var/log/apache_scoreboard; chown root:root /var/log/apache_scoreboard; chmod 700 /var/log/apache_scoreboard; service apache2 restart]]></Correction>
+    <Verification><![CDATA[grep -q '^ScoreBoardFile "/var/log/apache_scoreboard"' /etc/apache2/apache2.conf && stat -c '%a' /var/log/apache_scoreboard | grep -q '^700$' && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -188,12 +188,12 @@
     <Profiles>
       <Profile level="1" type="Server"/>
     </Profiles>
-    <BasePath>/usr/local/apache2</BasePath>
+    <BasePath>/etc/apache2</BasePath>
     <FileName>ApacheDirectories</FileName>
     <NonCompliantComment>Apache directories and files have group write permissions.</NonCompliantComment>
     <CorrectiveComment>Remove group write permissions from Apache directories and files.</CorrectiveComment>
-    <Correction><![CDATA[find /usr/local/apache2 -type d -perm /g=w -exec chmod g-w {} \; ; find /usr/local/apache2 -type f -perm /g=w -exec chmod g-w {} \;]]></Correction>
-    <Verification><![CDATA[find /usr/local/apache2 -perm /g=w | grep -q . && echo 1 || echo 0]]></Verification>
+    <Correction><![CDATA[find /etc/apache2 -type d -perm /g=w -exec chmod g-w {} \; ; find /etc/apache2 -type f -perm /g=w -exec chmod g-w {} \;]]></Correction>
+    <Verification><![CDATA[find /etc/apache2 -perm /g=w | grep -q . && echo 1 || echo 0]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -228,8 +228,8 @@
     <FileName>WritableDirectories</FileName>
     <NonCompliantComment>Application writable directories are not properly restricted.</NonCompliantComment>
     <CorrectiveComment>Ensure that writable directories for applications are located outside the DocumentRoot, owned by root, and set with 750 permissions.</CorrectiveComment>
-    <Correction><![CDATA[grep -qr '/var/app_data' /usr/local/apache2/conf/ && mkdir -p /var/app_data && chown root:root /var/app_data && chmod 750 /var/app_data]]></Correction>
-    <Verification><![CDATA[grep -qr '/var/app_data' /usr/local/apache2/conf/ && [ "$(stat -c '%a' /var/app_data 2>/dev/null)" = "750" ] && echo 0 || echo 1]]></Verification>
+    <Correction><![CDATA[grep -qr '/var/app_data' /etc/apache2/ && mkdir -p /var/app_data && chown root:root /var/app_data && chmod 750 /var/app_data]]></Correction>
+    <Verification><![CDATA[grep -qr '/var/app_data' /etc/apache2/ && [ "$(stat -c '%a' /var/app_data 2>/dev/null)" = "750" ] && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 </RulesCIS>
