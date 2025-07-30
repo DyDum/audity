@@ -9,12 +9,12 @@
       <Profile level="1" type="Server"/>
     </Profiles>
 
-    <BasePath>/etc/httpd/conf</BasePath>
-    <FileName>httpd.conf</FileName>
+    <BasePath>/etc/apache2</BasePath>
+    <FileName>apache2.conf</FileName>
     <NonCompliantComment>TimeOut directive is set higher than 10 seconds.</NonCompliantComment>
     <CorrectiveComment>Set TimeOut to 10 or less.</CorrectiveComment>
-    <Correction><![CDATA[grep -q "^TimeOut" /usr/local/apache2/conf/httpd.conf && sed -i 's|^TimeOut.*|TimeOut 10|' /usr/local/apache2/conf/httpd.conf || echo 'TimeOut 10' >> /usr/local/apache2/conf/httpd.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
-    <Verification><![CDATA[grep -q "^TimeOut 10" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Correction><![CDATA[grep -q "^TimeOut" /etc/apache2/apache2.conf && sed -i 's|^TimeOut.*|TimeOut 10|' /etc/apache2/apache2.conf || echo 'TimeOut 10' >> /etc/apache2/apache2.conf; service apache2 restart]]></Correction>
+    <Verification><![CDATA[grep -q "^TimeOut 10" /etc/apache2/apache2.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -28,12 +28,12 @@
       <Profile level="1" type="Server"/>
     </Profiles>
 
-    <BasePath>/etc/httpd/conf</BasePath>
-    <FileName>httpd.conf</FileName>
+    <BasePath>/etc/apache2</BasePath>
+    <FileName>apache2.conf</FileName>
     <NonCompliantComment>KeepAlive is not enabled.</NonCompliantComment>
     <CorrectiveComment>Enable KeepAlive in the Apache configuration.</CorrectiveComment>
-    <Correction><![CDATA[grep -q "^#\?KeepAlive" /usr/local/apache2/conf/httpd.conf && sed -i 's|^#\?KeepAlive.*|KeepAlive On|' /usr/local/apache2/conf/httpd.conf || echo 'KeepAlive On' >> /usr/local/apache2/conf/httpd.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
-    <Verification><![CDATA[grep -q "^KeepAlive On" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Correction><![CDATA[grep -q "^#\?KeepAlive" /etc/apache2/apache2.conf && sed -i 's|^#\?KeepAlive.*|KeepAlive On|' /etc/apache2/apache2.conf || echo 'KeepAlive On' >> /etc/apache2/apache2.conf; service apache2 restart]]></Correction>
+    <Verification><![CDATA[grep -q "^KeepAlive On" /etc/apache2/apache2.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -47,12 +47,12 @@
       <Profile level="1" type="Server"/>
     </Profiles>
 
-    <BasePath>/etc/httpd/conf</BasePath>
-    <FileName>httpd.conf</FileName>
+    <BasePath>/etc/apache2</BasePath>
+    <FileName>apache2.conf</FileName>
     <NonCompliantComment>MaxKeepAliveRequests is set lower than 100.</NonCompliantComment>
     <CorrectiveComment>Set MaxKeepAliveRequests to 100 or greater.</CorrectiveComment>
-    <Correction><![CDATA[grep -q "^MaxKeepAliveRequests" /usr/local/apache2/conf/httpd.conf && sed -i 's|^MaxKeepAliveRequests.*|MaxKeepAliveRequests 100|' /usr/local/apache2/conf/httpd.conf || echo 'MaxKeepAliveRequests 100' >> /usr/local/apache2/conf/httpd.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
-    <Verification><![CDATA[grep -q "^MaxKeepAliveRequests 100" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Correction><![CDATA[grep -q "^MaxKeepAliveRequests" /etc/apache2/apache2.conf && sed -i 's|^MaxKeepAliveRequests.*|MaxKeepAliveRequests 100|' /etc/apache2/apache2.conf || echo 'MaxKeepAliveRequests 100' >> /etc/apache2/apache2.conf; service apache2 restart]]></Correction>
+    <Verification><![CDATA[grep -q "^MaxKeepAliveRequests 100" /etc/apache2/apache2.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -66,12 +66,12 @@
       <Profile level="1" type="Server"/>
     </Profiles>
 
-    <BasePath>/etc/httpd/conf</BasePath>
-    <FileName>httpd.conf</FileName>
+    <BasePath>/etc/apache2</BasePath>
+    <FileName>apache2.conf</FileName>
     <NonCompliantComment>KeepAliveTimeout is set higher than 15 seconds.</NonCompliantComment>
     <CorrectiveComment>Set KeepAliveTimeout to 15 or less.</CorrectiveComment>
-    <Correction><![CDATA[grep -q "^KeepAliveTimeout" /usr/local/apache2/conf/httpd.conf && sed -i 's|^KeepAliveTimeout.*|KeepAliveTimeout 15|' /usr/local/apache2/conf/httpd.conf || echo 'KeepAliveTimeout 15' >> /usr/local/apache2/conf/httpd.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
-    <Verification><![CDATA[grep -q "^KeepAliveTimeout 15" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Correction><![CDATA[grep -q "^KeepAliveTimeout" /etc/apache2/apache2.conf && sed -i 's|^KeepAliveTimeout.*|KeepAliveTimeout 15|' /etc/apache2/apache2.conf || echo 'KeepAliveTimeout 15' >> /etc/apache2/apache2.conf; service apache2 restart]]></Correction>
+    <Verification><![CDATA[grep -q "^KeepAliveTimeout 15" /etc/apache2/apache2.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -85,12 +85,12 @@
       <Profile level="1" type="Server"/>
     </Profiles>
 
-    <BasePath>/etc/httpd/conf</BasePath>
-    <FileName>httpd.conf</FileName>
+    <BasePath>/etc/apache2</BasePath>
+    <FileName>apache2.conf</FileName>
     <NonCompliantComment>Timeout limits for request headers are set higher than 40 seconds.</NonCompliantComment>
     <CorrectiveComment>Set request header timeout to 40 seconds or less using mod_reqtimeout.</CorrectiveComment>
-    <Correction><![CDATA[grep -q "^RequestReadTimeout" /usr/local/apache2/conf/httpd.conf && sed -i 's|^RequestReadTimeout.*|RequestReadTimeout header=40|' /usr/local/apache2/conf/httpd.conf || echo 'RequestReadTimeout header=40' >> /usr/local/apache2/conf/httpd.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
-    <Verification><![CDATA[grep -q "RequestReadTimeout header=40" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Correction><![CDATA[grep -q "^RequestReadTimeout" /etc/apache2/apache2.conf && sed -i 's|^RequestReadTimeout.*|RequestReadTimeout header=40|' /etc/apache2/apache2.conf || echo 'RequestReadTimeout header=40' >> /etc/apache2/apache2.conf; service apache2 restart]]></Correction>
+    <Verification><![CDATA[grep -q "RequestReadTimeout header=40" /etc/apache2/apache2.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -104,12 +104,12 @@
       <Profile level="1" type="Server"/>
     </Profiles>
 
-    <BasePath>/etc/httpd/conf</BasePath>
-    <FileName>httpd.conf</FileName>
+    <BasePath>/etc/apache2</BasePath>
+    <FileName>apache2.conf</FileName>
     <NonCompliantComment>Timeout limits for the request body are set higher than 20 seconds.</NonCompliantComment>
     <CorrectiveComment>Set request body timeout to 20 seconds or less using mod_reqtimeout.</CorrectiveComment>
-    <Correction><![CDATA[grep -q "^RequestReadTimeout body=" /usr/local/apache2/conf/httpd.conf && sed -i 's|^RequestReadTimeout body=.*|RequestReadTimeout body=20|' /usr/local/apache2/conf/httpd.conf || echo 'RequestReadTimeout body=20' >> /usr/local/apache2/conf/httpd.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
-    <Verification><![CDATA[grep -q "RequestReadTimeout body=20" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Correction><![CDATA[grep -q "^RequestReadTimeout body=" /etc/apache2/apache2.conf && sed -i 's|^RequestReadTimeout body=.*|RequestReadTimeout body=20|' /etc/apache2/apache2.conf || echo 'RequestReadTimeout body=20' >> /etc/apache2/apache2.conf; service apache2 restart]]></Correction>
+    <Verification><![CDATA[grep -q "RequestReadTimeout body=20" /etc/apache2/apache2.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 </RulesCIS>
