@@ -9,12 +9,12 @@
       <Profile level="1" type="Server"/>
     </Profiles>
 
-    <BasePath>/etc/httpd/conf</BasePath>
-    <FileName>httpd.conf</FileName>
+    <BasePath>/etc/apache2</BasePath>
+    <FileName>apache2.conf</FileName>
     <NonCompliantComment>Error log filename and severity level are not configured per best practices.</NonCompliantComment>
     <CorrectiveComment>Set LogLevel to "notice core:info" and configure the ErrorLog directive appropriately.</CorrectiveComment>
-    <Correction><![CDATA[sed -i 's/^LogLevel .*/LogLevel notice core:info/' /usr/local/apache2/conf/httpd.conf; echo 'ErrorLog "logs/error_log"' >> /usr/local/apache2/conf/httpd.conf; systemctl restart httpd]]></Correction>
-    <Verification><![CDATA[grep -q "^LogLevel notice core:info" /usr/local/apache2/conf/httpd.conf && grep -q "ErrorLog" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Correction><![CDATA[sed -i 's/^LogLevel .*/LogLevel notice core:info/' /etc/apache2/apache2.conf; echo 'ErrorLog ${APACHE_LOG_DIR}/error.log' >> /etc/apache2/apache2.conf; service apache2 restart]]></Correction>
+    <Verification><![CDATA[grep -q "^LogLevel notice core:info" /etc/apache2/apache2.conf && grep -q "ErrorLog" /etc/apache2/apache2.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -28,12 +28,12 @@
       <Profile level="2" type="Server"/>
     </Profiles>
 
-    <BasePath>/etc/httpd/conf</BasePath>
-    <FileName>httpd.conf</FileName>
+    <BasePath>/etc/apache2</BasePath>
+    <FileName>apache2.conf</FileName>
     <NonCompliantComment>Error logs are not being sent to a syslog facility.</NonCompliantComment>
     <CorrectiveComment>Configure the ErrorLog directive to send logs to a syslog facility (e.g., syslog:local1).</CorrectiveComment>
-    <Correction><![CDATA[sed -i 's/^ErrorLog .*/ErrorLog "syslog:local1"/' /usr/local/apache2/conf/httpd.conf; systemctl restart httpd]]></Correction>
-    <Verification><![CDATA[grep -q '^ErrorLog "syslog:local1"' /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Correction><![CDATA[sed -i 's|^ErrorLog .*|ErrorLog "syslog:local1"|' /etc/apache2/apache2.conf; service apache2 restart]]></Correction>
+    <Verification><![CDATA[grep -q '^ErrorLog "syslog:local1"' /etc/apache2/apache2.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -47,12 +47,12 @@
       <Profile level="1" type="Server"/>
     </Profiles>
 
-    <BasePath>/etc/httpd/conf</BasePath>
-    <FileName>httpd.conf</FileName>
+    <BasePath>/etc/apache2</BasePath>
+    <FileName>apache2.conf</FileName>
     <NonCompliantComment>The server access log is not configured with the proper log format.</NonCompliantComment>
     <CorrectiveComment>Define a proper LogFormat and configure CustomLog to log all necessary tokens.</CorrectiveComment>
-    <Correction><![CDATA[echo 'LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined' >> /usr/local/apache2/conf/httpd.conf; echo 'CustomLog "logs/access_log" combined' >> /usr/local/apache2/conf/httpd.conf; systemctl restart httpd]]></Correction>
-    <Verification><![CDATA[grep -q "CustomLog \"logs/access_log\" combined" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Correction><![CDATA[echo 'LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined' >> /etc/apache2/apache2.conf; echo 'CustomLog ${APACHE_LOG_DIR}/access.log combined' >> /etc/apache2/apache2.conf; service apache2 restart]]></Correction>
+    <Verification><![CDATA[grep -q "CustomLog .*access.log combined" /etc/apache2/apache2.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -67,11 +67,11 @@
     </Profiles>
 
     <BasePath>/etc/logrotate.d</BasePath>
-    <FileName>httpd</FileName>
+    <FileName>apache2</FileName>
     <NonCompliantComment>Log rotation is not configured to retain logs for at least 3 months.</NonCompliantComment>
     <CorrectiveComment>Configure logrotate for Apache logs to rotate weekly and retain at least 13 rotations.</CorrectiveComment>
-    <Correction><![CDATA[echo "/var/log/httpd/*log { weekly rotate 13 missingok notifempty compress }" >> /etc/logrotate.d/httpd]]></Correction>
-    <Verification><![CDATA[grep -q "rotate 13" /etc/logrotate.d/httpd && echo 0 || echo 1]]></Verification>
+    <Correction><![CDATA[echo "/var/log/apache2/*log { weekly rotate 13 missingok notifempty compress }" >> /etc/logrotate.d/apache2]]></Correction>
+    <Verification><![CDATA[grep -q "rotate 13" /etc/logrotate.d/apache2 && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -85,11 +85,11 @@
       <Profile level="1" type="Server"/>
     </Profiles>
 
-    <BasePath>/etc/httpd</BasePath>
+    <BasePath>/etc/apache2</BasePath>
     <FileName>apache_version</FileName>
     <NonCompliantComment>Apache patches are not up-to-date, leaving the server vulnerable.</NonCompliantComment>
     <CorrectiveComment>Apply all available security patches within one month of release.</CorrectiveComment>
-    <Correction><![CDATA[Manual update required; verify vendor updates and apply via the package manager or source upgrade]]></Correction>
+    <Correction><![CDATA[Manual update required; verify vendor updates and apply via apt update && apt upgrade]]></Correction>
     <Verification><![CDATA[Manual verification required]]></Verification>
     <Manual>YES</Manual>
   </Rule>
@@ -104,11 +104,11 @@
       <Profile level="2" type="Server"/>
     </Profiles>
 
-    <BasePath>/etc/httpd/modules</BasePath>
-    <FileName>mod_security2.so</FileName>
+    <BasePath>/etc/modsecurity</BasePath>
+    <FileName>modsecurity.conf</FileName>
     <NonCompliantComment>ModSecurity is not installed or enabled, reducing web application firewall capabilities.</NonCompliantComment>
     <CorrectiveComment>Install and enable ModSecurity; ensure the security2_module is loaded.</CorrectiveComment>
-    <Verification><![CDATA[httpd -M | grep -q security2_module && echo 0 || echo 1]]></Verification>
+    <Verification><![CDATA[apache2ctl -M | grep -q security2_module && echo 0 || echo 1]]></Verification>
     <Manual>CORRECTION</Manual>
   </Rule>
 
@@ -122,11 +122,11 @@
       <Profile level="2" type="Server"/>
     </Profiles>
 
-    <BasePath>/etc/modsecurity.d</BasePath>
+    <BasePath>/etc/modsecurity</BasePath>
     <FileName>crs-setup.conf</FileName>
     <NonCompliantComment>OWASP ModSecurity Core Rule Set is not installed or enabled.</NonCompliantComment>
     <CorrectiveComment>Install and configure the OWASP ModSecurity Core Rule Set per best practices.</CorrectiveComment>
-    <Correction><![CDATA[Manual installation required; download the CRS from the OWASP website, configure it, and restart httpd]]></Correction>
+    <Correction><![CDATA[Manual installation required; download the CRS from the OWASP website, configure it, and restart apache2]]></Correction>
     <Verification><![CDATA[Manual verification required]]></Verification>
     <Manual>YES</Manual>
   </Rule>

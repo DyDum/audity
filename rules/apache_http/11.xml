@@ -29,11 +29,11 @@
     </Profiles>
 
     <BasePath>/usr/sbin</BasePath>
-    <FileName>httpd</FileName>
+    <FileName>apache2</FileName>
     <NonCompliantComment>Apache processes are not running in the httpd_t SELinux context.</NonCompliantComment>
     <CorrectiveComment>Restore the default SELinux context for Apache binaries.</CorrectiveComment>
-    <Correction><![CDATA[restorecon -Rv /usr/sbin/httpd]]></Correction>
-    <Verification><![CDATA[ps -eZ | grep httpd | grep -q "httpd_t" && echo 0 || echo 1]]></Verification>
+    <Correction><![CDATA[restorecon -Rv /usr/sbin/apache2]]></Correction>
+    <Verification><![CDATA[ps -eZ | grep apache2 | grep -q "httpd_t" && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 

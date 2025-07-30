@@ -9,12 +9,12 @@
       <Profile level="1" type="Server"/>
     </Profiles>
 
-    <BasePath>/etc/httpd/conf</BasePath>
-    <FileName>httpd.conf</FileName>
+    <BasePath>/etc/apache2</BasePath>
+    <FileName>apache2.conf</FileName>
     <NonCompliantComment>ServerTokens is not set to 'Prod' or 'ProductOnly', which may reveal sensitive server information.</NonCompliantComment>
     <CorrectiveComment>Set ServerTokens to 'Prod' or 'ProductOnly' to minimize information disclosure.</CorrectiveComment>
-    <Correction><![CDATA[grep -q "^ServerTokens" /usr/local/apache2/conf/httpd.conf && sed -i 's|^ServerTokens.*|ServerTokens Prod|' /usr/local/apache2/conf/httpd.conf || echo 'ServerTokens Prod' >> /usr/local/apache2/conf/httpd.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
-    <Verification><![CDATA[grep -q "^ServerTokens Prod" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Correction><![CDATA[grep -q "^ServerTokens" /etc/apache2/apache2.conf && sed -i 's|^ServerTokens.*|ServerTokens Prod|' /etc/apache2/apache2.conf || echo 'ServerTokens Prod' >> /etc/apache2/apache2.conf; service apache2 restart]]></Correction>
+    <Verification><![CDATA[grep -q "^ServerTokens Prod" /etc/apache2/apache2.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -28,12 +28,12 @@
       <Profile level="1" type="Server"/>
     </Profiles>
 
-    <BasePath>/etc/httpd/conf</BasePath>
-    <FileName>httpd.conf</FileName>
+    <BasePath>/etc/apache2</BasePath>
+    <FileName>apache2.conf</FileName>
     <NonCompliantComment>ServerSignature is enabled, potentially revealing sensitive server information.</NonCompliantComment>
     <CorrectiveComment>Disable ServerSignature to prevent information disclosure on error pages.</CorrectiveComment>
-    <Correction><![CDATA[grep -q "^ServerSignature" /usr/local/apache2/conf/httpd.conf && sed -i 's|^ServerSignature.*|ServerSignature Off|' /usr/local/apache2/conf/httpd.conf || echo 'ServerSignature Off' >> /usr/local/apache2/conf/httpd.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
-    <Verification><![CDATA[grep -q "^ServerSignature Off" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Correction><![CDATA[grep -q "^ServerSignature" /etc/apache2/apache2.conf && sed -i 's|^ServerSignature.*|ServerSignature Off|' /etc/apache2/apache2.conf || echo 'ServerSignature Off' >> /etc/apache2/apache2.conf; service apache2 restart]]></Correction>
+    <Verification><![CDATA[grep -q "^ServerSignature Off" /etc/apache2/apache2.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -66,12 +66,12 @@
       <Profile level="2" type="Server"/>
     </Profiles>
 
-    <BasePath>/etc/httpd/conf</BasePath>
-    <FileName>httpd.conf</FileName>
+    <BasePath>/etc/apache2</BasePath>
+    <FileName>apache2.conf</FileName>
     <NonCompliantComment>ETag response headers include inode information, potentially leaking filesystem details.</NonCompliantComment>
     <CorrectiveComment>Configure Apache to exclude inode numbers from the ETag header by using only modification time and size.</CorrectiveComment>
-    <Correction><![CDATA[grep -q "^FileETag" /usr/local/apache2/conf/httpd.conf && sed -i 's|^FileETag.*|FileETag MTime Size|' /usr/local/apache2/conf/httpd.conf || echo 'FileETag MTime Size' >> /usr/local/apache2/conf/httpd.conf; /usr/local/apache2/bin/apachectl restart]]></Correction>
-    <Verification><![CDATA[grep -q "^FileETag MTime Size" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Correction><![CDATA[grep -q "^FileETag" /etc/apache2/apache2.conf && sed -i 's|^FileETag.*|FileETag MTime Size|' /etc/apache2/apache2.conf || echo 'FileETag MTime Size' >> /etc/apache2/apache2.conf; service apache2 restart]]></Correction>
+    <Verification><![CDATA[grep -q "^FileETag MTime Size" /etc/apache2/apache2.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 </RulesCIS>
