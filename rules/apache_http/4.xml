@@ -8,12 +8,12 @@
     <Profiles>
       <Profile level="1" type="Server"/>
     </Profiles>
-    <BasePath>/etc/httpd/conf</BasePath>
-    <FileName>httpd.conf</FileName>
+    <BasePath>/etc/apache2</BasePath>
+    <FileName>apache2.conf</FileName>
     <NonCompliantComment>Access to OS root directory is not denied by default.</NonCompliantComment>
     <CorrectiveComment>Add a Directory directive for "/" with "Require all denied".</CorrectiveComment>
-    <Correction><![CDATA[echo "<Directory /><Require all denied></Require all denied></Directory>" >> /usr/local/apache2/conf/httpd.conf]]></Correction>
-    <Verification><![CDATA[grep -q "<Directory />" /usr/local/apache2/conf/httpd.conf && grep -q "Require all denied" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Correction><![CDATA[echo "<Directory />" >> /etc/apache2/apache2.conf; echo "  Require all denied" >> /etc/apache2/apache2.conf; echo "</Directory>" >> /etc/apache2/apache2.conf; service apache2 reload]]></Correction>
+    <Verification><![CDATA[grep -q "<Directory />" /etc/apache2/apache2.conf && grep -q "Require all denied" /etc/apache2/apache2.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -26,11 +26,11 @@
     <Profiles>
       <Profile level="1" type="Server"/>
     </Profiles>
-    <BasePath>/etc/httpd/conf</BasePath>
-    <FileName>httpd.conf</FileName>
+    <BasePath>/etc/apache2</BasePath>
+    <FileName>apache2.conf</FileName>
     <NonCompliantComment>Access to web content is not properly restricted.</NonCompliantComment>
     <CorrectiveComment>Manually configure appropriate Directory directives with proper access controls for web content.</CorrectiveComment>
-    <Correction><![CDATA[Manual review required; update Directory directives with appropriate "Require" statements.]]></Correction>
+    <Correction><![CDATA[Manual review required; update <Directory> directives in /etc/apache2/apache2.conf or sites-available/*.conf with appropriate "Require" statements.]]></Correction>
     <Verification><![CDATA[Manual verification required]]></Verification>
     <Manual>YES</Manual>
   </Rule>
@@ -44,12 +44,12 @@
     <Profiles>
       <Profile level="1" type="Server"/>
     </Profiles>
-    <BasePath>/etc/httpd/conf</BasePath>
-    <FileName>httpd.conf</FileName>
+    <BasePath>/etc/apache2</BasePath>
+    <FileName>apache2.conf</FileName>
     <NonCompliantComment>AllowOverride is not set to "None" for the OS root directory.</NonCompliantComment>
     <CorrectiveComment>Set AllowOverride to "None" for the root directory in the Apache configuration.</CorrectiveComment>
-    <Correction><![CDATA[sed -i 's/AllowOverride .*/AllowOverride None/' /usr/local/apache2/conf/httpd.conf]]></Correction>
-    <Verification><![CDATA[grep -q "AllowOverride None" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Correction><![CDATA[sed -i '/<Directory \/>/,/<\/Directory>/ s/AllowOverride .*/AllowOverride None/' /etc/apache2/apache2.conf; service apache2 reload]]></Correction>
+    <Verification><![CDATA[grep -A2 "<Directory />" /etc/apache2/apache2.conf | grep -q "AllowOverride None" && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -62,12 +62,12 @@
     <Profiles>
       <Profile level="1" type="Server"/>
     </Profiles>
-    <BasePath>/etc/httpd/conf</BasePath>
-    <FileName>httpd.conf</FileName>
+    <BasePath>/etc/apache2</BasePath>
+    <FileName>apache2.conf</FileName>
     <NonCompliantComment>One or more directories have AllowOverride enabled.</NonCompliantComment>
     <CorrectiveComment>Set AllowOverride to "None" for all directories in the Apache configuration.</CorrectiveComment>
-    <Correction><![CDATA[sed -i 's/AllowOverride .*/AllowOverride None/g' /usr/local/apache2/conf/httpd.conf]]></Correction>
-    <Verification><![CDATA[grep -q "AllowOverride None" /usr/local/apache2/conf/httpd.conf && echo 0 || echo 1]]></Verification>
+    <Correction><![CDATA[sed -i 's/AllowOverride .*/AllowOverride None/g' /etc/apache2/apache2.conf; service apache2 reload]]></Correction>
+    <Verification><![CDATA[grep -q "AllowOverride None" /etc/apache2/apache2.conf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 </RulesCIS>
