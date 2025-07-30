@@ -189,11 +189,15 @@
       <Profile level="1" type="Server"/>
     </Profiles>
     <BasePath>/etc/apache2</BasePath>
-    <FileName>ApacheDirectories</FileName>
+    <FileName>ApacheConfig</FileName>
     <NonCompliantComment>Apache directories and files have group write permissions.</NonCompliantComment>
-    <CorrectiveComment>Remove group write permissions from Apache directories and files.</CorrectiveComment>
-    <Correction><![CDATA[find /etc/apache2 -type d -perm /g=w -exec chmod g-w {} \; ; find /etc/apache2 -type f -perm /g=w -exec chmod g-w {} \;]]></Correction>
-    <Verification><![CDATA[find /etc/apache2 -perm /g=w | grep -q . && echo 1 || echo 0]]></Verification>
+    <CorrectiveComment>Remove group write permissions from Apache configuration directories and files, ignoring symlinks.</CorrectiveComment>
+    <Correction><![CDATA[
+      find /etc/apache2 ! -type l -perm /g=w -exec chmod g-w {} +
+    ]]></Correction>
+    <Verification><![CDATA[
+      find /etc/apache2 ! -type l -perm /g=w | grep -q . && echo 1 || echo 0
+    ]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -228,8 +232,8 @@
     <FileName>WritableDirectories</FileName>
     <NonCompliantComment>Application writable directories are not properly restricted.</NonCompliantComment>
     <CorrectiveComment>Ensure that writable directories for applications are located outside the DocumentRoot, owned by root, and set with 750 permissions.</CorrectiveComment>
-    <Correction><![CDATA[grep -qr '/var/app_data' /etc/apache2/ && mkdir -p /var/app_data && chown root:root /var/app_data && chmod 750 /var/app_data]]></Correction>
-    <Verification><![CDATA[grep -qr '/var/app_data' /etc/apache2/ && [ "$(stat -c '%a' /var/app_data 2>/dev/null)" = "750" ] && echo 0 || echo 1]]></Verification>
+    <Correction><![CDATA[mkdir -p /var/app_data && chown root:root /var/app_data && chmod 750 /var/app_data]]></Correction>
+    <Verification><![CDATA[[ "$(stat -c '%a' /var/app_data 2>/dev/null)" = "750" ] && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 </RulesCIS>
