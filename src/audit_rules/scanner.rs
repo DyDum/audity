@@ -141,7 +141,7 @@ fn rule_matches_package(rule_name: &str, line: &str) -> bool {
         "apache_tomcat_10.1" => line.contains("name=\"tomcat10\""),
         "debian" => line.contains("name=\"debianutils\"") || line.contains("name=\"debian-faq\""),
         "nginx" => line.contains("name=\"nginx\""),
-        "mariadb" => line.contains("name=\"mariadb\""),
+        "mariadb" => line.contains("name=\"mariadb"),
         "postgresql" => line.contains("name=\"postgresql\""),
         "mongodb" => line.contains("name=\"mongodb\""),
         "sql_server" => line.contains("name=\"mssql\"") || line.contains("name=\"sql-server\""),
