@@ -291,6 +291,6 @@
     <CorrectiveComment>Ensure only approved, strong ciphers are used for SSL/TLS.</CorrectiveComment>
     <Correction><![CDATA[sed -i '/\[mysqld\]/a ssl_ciphers=ECDHE-ECDSA-AES128-GCM-SHA256' /etc/mysql/my.cnf]]></Correction>
     <Verification><![CDATA[mysql -e "SHOW VARIABLES LIKE 'ssl_ciphers';" | grep -q 'ECDHE-ECDSA-AES128-GCM-SHA256' && echo 0 || echo 1]]></Verification>
-    <Manual>NO</Manual>
+    <Manual>CORRECTION</Manual>
   </Rule>
 </RulesCIS>
