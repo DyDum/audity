@@ -27,7 +27,7 @@
     <NonCompliantComment>MariaDB is not running under a dedicated, least-privileged account, increasing security risks.</NonCompliantComment>
     <CorrectiveComment>Ensure MariaDB runs under a dedicated, non-root, least-privileged account (e.g., 'mysql').</CorrectiveComment>
     <Correction><![CDATA[usermod -s /usr/sbin/nologin mysql; chown -R mysql:mysql /var/lib/mysql/]]></Correction>
-    <Verification><![CDATA[ps aux | grep -q 'mysqld' | grep -q 'mysql' && echo 0 || echo 1]]></Verification>
+    <Verification><![CDATA[ps -eo user,comm | grep -E '^mysql\s+(mysqld|mariadbd)' >/dev/null && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -75,7 +75,7 @@
     <NonCompliantComment>Interactive login is enabled for the MariaDB account, increasing security risks.</NonCompliantComment>
     <CorrectiveComment>Disable interactive login for the MariaDB user account.</CorrectiveComment>
     <Correction><![CDATA[usermod -s /usr/sbin/nologin mysql]]></Correction>
-    <Verification><![CDATA[grep -q 'mysql' /etc/passwd | grep -q '/usr/sbin/nologin' && echo 0 || echo 1]]></Verification>
+    <Verification><![CDATA[grep -q '^mysql:.*:/usr/sbin/nologin$' /etc/passwd && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
