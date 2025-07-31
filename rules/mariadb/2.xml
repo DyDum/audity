@@ -44,7 +44,7 @@
     <CorrectiveComment>Secure backup credentials by storing them in a secure vault or encrypting them.</CorrectiveComment>
     <Correction><![CDATA[chmod 600 /etc/mysql/backup_credentials.cnf; chown mysql:mysql /etc/mysql/backup_credentials.cnf]]></Correction>
     <Verification><![CDATA[stat -c "%a %U:%G" /etc/mysql/backup_credentials.cnf | grep -q '600 mysql:mysql' && echo 0 || echo 1]]></Verification>
-    <Manual>NO</Manual>
+    <Manual>YES</Manual>
   </Rule>
 
   <Rule id="2.1.4">
@@ -60,7 +60,7 @@
     <CorrectiveComment>Ensure backup directories are secured with appropriate permissions.</CorrectiveComment>
     <Correction><![CDATA[chmod 700 /backup; chown mysql:mysql /backup]]></Correction>
     <Verification><![CDATA[stat -c "%a %U:%G" /backup | grep -q '700 mysql:mysql' && echo 0 || echo 1]]></Verification>
-    <Manual>NO</Manual>
+    <Manual>YES</Manual>
   </Rule>
 
     <Rule id="2.1.5">
@@ -75,8 +75,8 @@
     <FileName>my.cnf</FileName>
     <NonCompliantComment>Point-in-Time Recovery (PITR) is not enabled, which may prevent restoring to a specific point in time.</NonCompliantComment>
     <CorrectiveComment>Enable binary logging to allow point-in-time recovery.</CorrectiveComment>
-    <Correction><![CDATA[sed -i 's/^#log_bin/log_bin/' /etc/mysql/my.cnf; systemctl restart mariadb]]></Correction>
-    <Verification><![CDATA[grep -q '^log_bin' /etc/mysql/my.cnf && echo 0 || echo 1]]></Verification>
+    <Correction><![CDATA[grep -Eq '^\s*log_bin' /etc/mysql/my.cnf || (grep -q '^\[mysqld\]' /etc/mysql/my.cnf && sed -i '/^\[mysqld\]/a log_bin' /etc/mysql/my.cnf || echo -e '[mysqld]\nlog_bin' >> /etc/mysql/my.cnf); mysqladmin shutdown; mysqld_safe --skip-syslog &]]></Correction>
+    <Verification><![CDATA[grep -Eq '^\s*log_bin' /etc/mysql/my.cnf && echo 0 || echo 1]]></Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -93,7 +93,7 @@
     <CorrectiveComment>Establish a Disaster Recovery (DR) plan for MariaDB, including replication and failover procedures.</CorrectiveComment>
     <Correction><![CDATA[echo 'Disaster Recovery Plan: Backup, Replication, Failover' > /etc/mysql/dr_plan.txt]]></Correction>
     <Verification><![CDATA[test -f /etc/mysql/dr_plan.txt && echo 0 || echo 1]]></Verification>
-    <Manual>NO</Manual>
+    <Manual>YES</Manual>
   </Rule>
 
   <Rule id="2.1.7">
@@ -109,7 +109,7 @@
     <CorrectiveComment>Regularly backup configuration files, including my.cnf and user configuration files.</CorrectiveComment>
     <Correction><![CDATA[tar -czf /backup/mariadb-config-$(date +%F).tar.gz /etc/mysql/]]></Correction>
     <Verification><![CDATA[test -f /backup/mariadb-config-$(date +%F).tar.gz && echo 0 || echo 1]]></Verification>
-    <Manual>NO</Manual>
+    <Manual>YES</Manual>
   </Rule>
 
   <Rule id="2.2">
