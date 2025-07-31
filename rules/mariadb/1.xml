@@ -11,7 +11,7 @@
     <NonCompliantComment>MariaDB databases are stored on the system partition, which may impact performance and security.</NonCompliantComment>
     <CorrectiveComment>Place MariaDB databases on a non-system partition for improved security and performance.</CorrectiveComment>
     <Correction>sed -i 's|datadir=.*|datadir=/mnt/data/mysql|' /etc/mysql/mariadb.conf.d/50-server.cnf; systemctl restart mariadb</Correction>
-    <Verification>grep 'datadir=/mnt/data/mysql' /etc/mysql/mariadb.conf.d/50-server.cnf &amp;&amp; echo 0 || echo 1</Verification>
+    <Verification>grep -q 'datadir=/mnt/data/mysql' /etc/mysql/mariadb.conf.d/50-server.cnf &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -43,7 +43,7 @@
     <NonCompliantComment>MariaDB command history is enabled, which may expose sensitive commands and passwords.</NonCompliantComment>
     <CorrectiveComment>Disable MariaDB command history by setting 'HISTFILE' to '/dev/null' in the configuration.</CorrectiveComment>
     <Correction>echo 'export HISTFILE=/dev/null' &gt;&gt; /etc/profile.d/mariadb.sh; chmod +x /etc/profile.d/mariadb.sh</Correction>
-    <Verification>grep 'HISTFILE=/dev/null' /etc/profile.d/mariadb.sh &amp;&amp; echo 0 || echo 1</Verification>
+    <Verification>grep -q 'HISTFILE=/dev/null' /etc/profile.d/mariadb.sh &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -75,7 +75,7 @@
     <NonCompliantComment>Interactive login is enabled for the MariaDB account, increasing security risks.</NonCompliantComment>
     <CorrectiveComment>Disable interactive login for the MariaDB user account.</CorrectiveComment>
     <Correction>usermod -s /usr/sbin/nologin mysql</Correction>
-    <Verification>grep 'mysql' /etc/passwd | grep -q '/usr/sbin/nologin' &amp;&amp; echo 0 || echo 1</Verification>
+    <Verification>grep -q 'mysql' /etc/passwd | grep -q '/usr/sbin/nologin' &amp;&amp; echo 0 || echo 1</Verification>
     <Manual>NO</Manual>
   </Rule>
 
@@ -91,7 +91,7 @@
     <NonCompliantComment>The MYSQL_PWD variable is set in user profiles, which may expose passwords.</NonCompliantComment>
     <CorrectiveComment>Ensure MYSQL_PWD is not set in any user profiles.</CorrectiveComment>
     <Correction>sed -i '/MYSQL_PWD/d' /etc/profile /etc/profile.d/*</Correction>
-    <Verification>grep -R 'MYSQL_PWD' /etc/profile /etc/profile.d/ &amp;&amp; echo 1 || echo 0</Verification>
+    <Verification>grep -Rq 'MYSQL_PWD' /etc/profile /etc/profile.d/ &amp;&amp; echo 1 || echo 0</Verification>
     <Manual>NO</Manual>
   </Rule>
 
