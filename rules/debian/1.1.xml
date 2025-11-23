@@ -480,7 +480,7 @@
         <CorrectiveComment>Add the nodev option to the /var/tmp entry in /etc/fstab and remount /var/tmp.</CorrectiveComment>
         <Correction><![CDATA[sudo sed -i '/[[:space:]]\/var\/tmp[[:space:]]/ s/\(\S\+\)/\1,nodev/' /etc/fstab; sudo mount -o remount,nodev /var/tmp 2>/dev/null || sudo mount /var/tmp; echo 0]]></Correction>
         <Verification><![CDATA[findmnt -n -o OPTIONS /var/tmp 2>/dev/null | grep -qw nodev && echo 0 || echo 1]]></Verification>
-        <Manual>NO</Manual>
+        <Manual>CORRECTION</Manual>
     </Rule>
 
     <Rule id="1.1.2.5.3">

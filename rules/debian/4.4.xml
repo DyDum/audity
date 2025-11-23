@@ -139,8 +139,8 @@
         <NonCompliantComment>The default policy for ip6tables is not set to deny, which may allow unauthorized IPv6 traffic.</NonCompliantComment>
         <CorrectiveComment>Set the default ip6tables policy for INPUT and FORWARD chains to DROP, and OUTPUT to ACCEPT.</CorrectiveComment>
         <Correction><![CDATA[iptables -P INPUT DROP; iptables -P FORWARD DROP; iptables -P OUTPUT DROP]]></Correction>
-        <Verification><![CDATA[iptables -P INPUT DROP && iptables -P FORWARD DROP && iptables -P OUTPUT DROP && echo 0 || echo 1]]></Verification>
-        <Manual>NO</Manual>
+        <Verification><![CDATA[iptables -L -n | grep -E "^Chain (INPUT|FORWARD|OUTPUT) \(policy DROP" | wc -l | grep -q 3 && echo 0 || echo 1]]></Verification>
+        <Manual>CORRECTION</Manual>
     </Rule>
 
     <Rule id="4.4.3.2">
