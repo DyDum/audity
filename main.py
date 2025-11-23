@@ -165,8 +165,8 @@ def run_scan(args, config, logger):
         return 1
 
     logger.info(f"\n[3/5] Running security checks ({max_threads} threads)...")
-    checker = VulnerabilityChecker(logger, max_workers=max_threads)
-    results = checker.check_rules(rules, parallel=True)
+    checker = VulnerabilityChecker(logger, max_workers=1)
+    results = checker.check_rules(rules, parallel=False)
 
     stats = checker.get_statistics()
 
