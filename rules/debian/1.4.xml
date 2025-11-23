@@ -1,4 +1,5 @@
 <RulesCIS>
+
     <Rule id="1.4.1">
         <Name>Ensure bootloader password is set (Automated)</Name>
         <Chapter id="1">Initial Setup</Chapter>
