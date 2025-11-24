@@ -177,9 +177,9 @@
         <FileName>common-auth</FileName>
         <NonCompliantComment>Root account is exempt from faillock.</NonCompliantComment>
         <CorrectiveComment>Add "even_deny_root".</CorrectiveComment>
-        <Correction><![CDATA[grep -q '^\s*even_deny_root\b' /etc/security/faillock.conf || echo 'even_deny_root' >> /etc/security/faillock.conf && if grep -q '^\s*root_unlock_time\s*=' /etc/security/faillock.conf; then   sed -i 's/^\s*root_unlock_time\s*=.*/root_unlock_time = 60/' /etc/security/faillock.conf; else   echo 'root_unlock_time = 60' >> /etc/security/faillock.conf; fi && grep -Pl -- '\bpam_faillock\.so\s+[^#\n\r]*root_unlock_time=([0-9]|[1-5][0-9])\b' /usr/share/pam-configs/* | xargs -r sed -i 's/\s*root_unlock_time=\S\+\b//g' && pam-auth-update --force]]></Correction>
+        <Correction><![CDATA[grep -q '^\s*even_deny_root\b' /etc/security/faillock.conf || echo 'even_deny_root' >> /etc/security/faillock.conf; if grep -q '^\s*root_unlock_time\s*=' /etc/security/faillock.conf; then sed -i 's/^\s*root_unlock_time\s*=.*/root_unlock_time = 60/' /etc/security/faillock.conf; else echo 'root_unlock_time = 60' >> /etc/security/faillock.conf; fi; grep -Pl -- '\bpam_faillock\.so\s+[^#\n\r]*root_unlock_time=([0-9]|[1-5][0-9])\b' /usr/share/pam-configs/* | xargs -r sed -i 's/\s*root_unlock_time=\S\+\b//g'; DEBIAN_FRONTEND=noninteractive pam-auth-update --force]]></Correction>
         <Verification><![CDATA[grep -Pq '^\s*(even_deny_root|root_unlock_time\s*=\s*[6-9][0-9]+|[1-9][0-9]{2,})\b' /etc/security/faillock.conf && ! grep -Pq '^\s*root_unlock_time\s*=\s*([1-9]|[1-5][0-9])\b' /etc/security/faillock.conf && ! grep -Pq '^\s*auth\s+[^#\n\r]+\s+pam_faillock\.so\s+[^#\n\r]*\s*root_unlock_time\s*=\s*([1-9]|[1-5][0-9])\b' /etc/pam.d/common-auth && echo 0 || echo 1]]></Verification>
-        <Manual>NO</Manual>
+        <Manual>CORRECTION</Manual>
     </Rule>
 
     <Rule id="5.3.3.2.1">
