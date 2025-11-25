@@ -75,15 +75,19 @@ class RemediationEngine:
                     risky = True
                     risky_reason = "SSH access configuration (5.1.4)"
 
-            # Check 2: Corrections affecting critical system paths
-            if "/usr/lib" in correction or "/usr/bin" in correction:
-                risky = True
-                risky_reason = "Modifies critical system paths (/usr/lib or /usr/bin)"
+                # Check 2: Corrections affecting critical system paths
+                if "/usr/lib" in correction or "/usr/bin" in correction:
+                    risky = True
+                    risky_reason = "Modifies critical system paths (/usr/lib or /usr/bin)"
 
-            # Check 3: Dangerous chmod -R outside /usr/local
-            if "chmod -R" in correction and "/usr/local" not in correction:
-                risky = True
-                risky_reason = "Recursive chmod outside /usr/local"
+                # Check 3: Dangerous chmod -R outside /usr/local
+                if "chmod -R" in correction and "/usr/local" not in correction:
+                    risky = True
+                    risky_reason = "Recursive chmod outside /usr/local"
+                    
+                if rule_id in ["5.4.2.7", "5.4.2.8"]:
+                    risky = True
+                    risky_reason = "Modifies user shells or locks accounts (5.4.2.7/5.4.2.8)"
 
             if risky:
                 if self.logger:
