@@ -3,3 +3,5 @@ sudo ./venv/bin/python main.py --verbose scan --rules ./rules --output ./reports
 
 # AUdit script with automatic correction
 #sudo ./venv/bin/python main.py --verbose scan --rules ./rules --output ./reports_correction --fix
+# sudo ./venv/bin/python main.py scan --rules ./rules --output ./reports_autofix --fix --no-interactive
+
