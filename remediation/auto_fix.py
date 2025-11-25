@@ -76,7 +76,7 @@ class RemediationEngine:
                     risky_reason = "SSH access configuration (5.1.4)"
 
                 # Check 2: Corrections affecting critical system paths
-                if "/usr/lib" in correction or "/usr/bin" in correction:
+                if "/usr/lib" in correction or "/usr/bin" or "/usr/sbin" in correction:
                     risky = True
                     risky_reason = "Modifies critical system paths (/usr/lib or /usr/bin)"
 
