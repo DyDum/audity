@@ -34,7 +34,7 @@ def load_config(config_file: str) -> configparser.ConfigParser:
         'output_dir': './reports',
         'log_level': 'INFO',
         'log_file': './logs/audity.log',
-        'max_threads': '4'
+        'max_threads': '1'
     }
     config['reports'] = {
         'generate_html': 'true',
