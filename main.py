@@ -202,23 +202,29 @@ def run_scan(args, config, logger):
         if not failed_results:
             logger.info("No failed checks to remediate.")
         else:
-            rules_map = {rule.id: rule for rule in rules}
+            # Utilitaire pour retrouver la règle à partir de l'ID
+            def get_rule_by_id(rule_id):
+                return next((rule for rule in rules if rule.id == rule_id), None)
 
-            backup_dir = config.get('remediation', 'backup_dir')
-            interactive = not args.no_interactive
-
-            engine = RemediationEngine(logger, backup_dir, interactive)
-            summary = engine.apply_fixes(failed_results, rules_map)
+            # Initialisation du moteur de remediation
+            engine = RemediationEngine(logger)
+            engine.apply_fixes_for_failed_rules(failed_results, get_rule_by_id, interactive=not args.no_interactive)
 
             remediation_log = os.path.join(output_dir, f"remediation_{timestamp}.log")
-            engine.generate_remediation_log(remediation_log)
+            if hasattr(engine, "generate_remediation_log"):
+                engine.generate_remediation_log(remediation_log)
+
+            # Résumé/remplissage basique si pas d'attribut summary
+            summary = {"total_attempted": len(failed_results), "successful": "N/A", "failed": "N/A"}
+            if hasattr(engine, "summary"):
+                summary = engine.summary
 
             logger.info("\n" + "="*60)
             logger.info("REMEDIATION SUMMARY")
             logger.info("="*60)
-            logger.info(f"Total attempted: {summary['total_attempted']}")
-            logger.success(f"Successful: {summary['successful']}")
-            logger.error(f"Failed: {summary['failed']}")
+            logger.info(f"Total attempted: {summary.get('total_attempted')}")
+            logger.success(f"Successful: {summary.get('successful')}")
+            logger.error(f"Failed: {summary.get('failed')}")
             logger.info("="*60)
     else:
         logger.info("\n[5/5] Skipping remediation (use --fix to apply fixes)")
