@@ -200,7 +200,7 @@
     <CorrectiveComment>Find and re-assign or remove orphan files.</CorrectiveComment>
     <Correction><![CDATA[echo "Manual review required"]]></Correction>
     <Verification><![CDATA[find / -xdev \( -nouser -o -nogroup \) ! -path "/proc/*" ! -path "/sys/*" ! -path "/run/user/*" ! -path "/var/*/private/*" ! -path "*/containerd/*" ! -path "*/kubelet/*" -print -quit 2>/dev/null | grep -q . && echo 1 || echo 0]]></Verification>
-    <Manual>CORRECTION</Manual>
+    <Manual>YES</Manual>
   </Rule>
 
   <Rule id="7.1.13">

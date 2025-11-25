@@ -12,7 +12,7 @@
         <CorrectiveComment>Remove the GDM package to disable the graphical login manager.</CorrectiveComment>
         <Correction><![CDATA[sudo apt purge -y gdm3 && sudo apt autoremove -y && echo 0]]></Correction>
         <Verification><![CDATA[dpkg-query -s gdm3 &>/dev/null && echo 1 || echo 0]]></Verification>
-        <Manual>NO</Manual>
+        <Manual>YES</Manual>
     </Rule>
 
     <Rule id="1.7.2">
