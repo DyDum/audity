@@ -71,6 +71,9 @@ class RemediationEngine:
                 elif rule_id.startswith("4."):
                     risky = True
                     risky_reason = "Debian firewall rule (4.*)"
+                elif rule_id.startswith("5.3."):
+                    risky = True
+                    risky_reason = "Pam configuration (5.3.*)"
                 elif "5.1.4" in rule_id:
                     risky = True
                     risky_reason = "SSH access configuration (5.1.4)"
