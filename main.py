@@ -24,6 +24,7 @@ from scanner.vulnerability_checker import VulnerabilityChecker, CheckResult
 from reports.xml_generator import XMLReportGenerator
 from reports.html_generator import HTMLReportGenerator
 from remediation.auto_fix import RemediationEngine
+from integrity.rules_integrity import RulesIntegrityChecker
 
 def load_config(config_file: str) -> configparser.ConfigParser:
     """Load configuration from file"""
@@ -126,7 +127,7 @@ Examples:
     return parser.parse_args()
 
 def run_scan(args, config, logger):
-    """Execute security scan"""
+    """Execute security scan with integrity check"""
     logger.info("="*60)
     logger.info("AUDITY SECURITY SCANNER")
     logger.info("="*60)
@@ -134,18 +135,47 @@ def run_scan(args, config, logger):
     logger.info(f"Start time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     logger.info("="*60)
 
+    # ═══════════════════════════════════════════════════════════
+    # STEP 0: Rules Integrity Check (NEW)
+    # ═══════════════════════════════════════════════════════════
+    logger.info("\n[0/6] Checking rules integrity...")
+    
+    rules_dir_for_integrity = args.rules or config.get('scanner', 'rules_dir')
+    integrity_checker = RulesIntegrityChecker(rules_dir=rules_dir_for_integrity, logger=logger)
+    
+    if not integrity_checker.verify_integrity():
+        logger.error("\n" + "="*60)
+        logger.error("⚠️  CRITICAL: Rules integrity check failed!")
+        logger.error("="*60)
+        logger.error("Possible causes:")
+        logger.error("  - Rules files have been modified")
+        logger.error("  - Rules files have been deleted")
+        logger.error("  - Unauthorized changes detected")
+        logger.error("\nAborting scan.")
+        logger.error("If changes are intentional, regenerate rules_integrity.txt")
+        logger.error("="*60 + "\n")
+        return 1
+
+    logger.success("✓ Integrity check passed - All rules are unchanged\n")
+
+    # ═══════════════════════════════════════════════════════════
+    # STEP 1: System Detection
+    # ═══════════════════════════════════════════════════════════
     rules_dir = args.rules or config.get('scanner', 'rules_dir')
     output_dir = args.output or config.get('scanner', 'output_dir')
     max_threads = args.threads or config.getint('scanner', 'max_threads')
 
     os.makedirs(output_dir, exist_ok=True)
 
-    logger.info("\n[1/5] Detecting system configuration...")
+    logger.info("[1/6] Detecting system configuration...")
     detector = SystemDetector(logger)
     os_info = detector.detect_os()
     packages = detector.detect_packages()
 
-    logger.info("\n[2/5] Loading CIS rules...")
+    # ═══════════════════════════════════════════════════════════
+    # STEP 2: Load Rules
+    # ═══════════════════════════════════════════════════════════
+    logger.info("\n[2/6] Loading CIS rules...")
     applicable_dirs = detector.get_applicable_rules_dirs(rules_dir)
 
     if not applicable_dirs:
@@ -164,7 +194,10 @@ def run_scan(args, config, logger):
         logger.error("No rules loaded. Cannot proceed with scan.")
         return 1
 
-    logger.info(f"\n[3/5] Running security checks ({max_threads} threads)...")
+    # ═══════════════════════════════════════════════════════════
+    # STEP 3: Run Security Checks
+    # ═══════════════════════════════════════════════════════════
+    logger.info(f"\n[3/6] Running security checks ({max_threads} threads)...")
     checker = VulnerabilityChecker(logger, max_workers=1)
     results = checker.check_rules(rules, parallel=False)
 
@@ -181,7 +214,10 @@ def run_scan(args, config, logger):
     logger.info(f"Compliance: {stats['compliance_percentage']:.2f}%")
     logger.info("="*60)
 
-    logger.info("\n[4/5] Generating reports...")
+    # ═══════════════════════════════════════════════════════════
+    # STEP 4: Generate Reports
+    # ═══════════════════════════════════════════════════════════
+    logger.info("\n[4/6] Generating reports...")
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
     if config.getboolean('reports', 'generate_xml'):
@@ -194,8 +230,11 @@ def run_scan(args, config, logger):
         html_generator = HTMLReportGenerator(logger)
         html_generator.generate_report(results, html_file, os_info)
 
+    # ═══════════════════════════════════════════════════════════
+    # STEP 5: Apply Remediation (if --fix)
+    # ═══════════════════════════════════════════════════════════
     if args.fix:
-        logger.info("\n[5/5] Applying remediation fixes...")
+        logger.info("\n[5/6] Applying remediation fixes...")
 
         failed_results = [r for r in results if r.status == CheckResult.STATUS_FAIL]
 
@@ -208,14 +247,23 @@ def run_scan(args, config, logger):
 
             # Initialisation du moteur de remediation
             engine = RemediationEngine(logger)
-            engine.apply_fixes_for_failed_rules(failed_results, get_rule_by_id, interactive=not args.no_interactive)
+            engine.apply_fixes_for_failed_rules(
+                failed_results, 
+                get_rule_by_id, 
+                interactive=not args.no_interactive
+            )
 
             remediation_log = os.path.join(output_dir, f"remediation_{timestamp}.log")
             if hasattr(engine, "generate_remediation_log"):
                 engine.generate_remediation_log(remediation_log)
 
             # Résumé/remplissage basique si pas d'attribut summary
-            summary = {"total_attempted": len(failed_results), "successful": "N/A", "failed": "N/A"}
+            summary = {
+                "total_attempted": len(failed_results),
+                "successful": "N/A",
+                "failed": "N/A",
+                "skipped": "N/A"
+            }
             if hasattr(engine, "summary"):
                 summary = engine.summary
 
@@ -225,14 +273,26 @@ def run_scan(args, config, logger):
             logger.info(f"Total attempted: {summary.get('total_attempted')}")
             logger.success(f"Successful: {summary.get('successful')}")
             logger.error(f"Failed: {summary.get('failed')}")
+            logger.warning(f"Skipped: {summary.get('skipped')}")
             logger.info("="*60)
+
+            # ═══════════════════════════════════════════════════════════
+            # STEP 6: Update Integrity File (after fixes applied)
+            # ═══════════════════════════════════════════════════════════
+            if summary.get('successful', 0) > 0:
+                logger.info("\n[6/6] Updating rules integrity file...")
+                integrity_checker.scan_rules_directory()
+                integrity_checker.update_integrity_file()
+                logger.success("✓ Integrity file updated with new hashes")
     else:
-        logger.info("\n[5/5] Skipping remediation (use --fix to apply fixes)")
+        logger.info("\n[5/6] Skipping remediation (use --fix to apply fixes)")
+        logger.info("[6/6] Skipping integrity update")
 
     logger.info("\n" + "="*60)
     logger.success("SCAN COMPLETED SUCCESSFULLY")
     logger.info("="*60)
     logger.info(f"End time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    logger.info("="*60 + "\n")
 
     return 0
 
