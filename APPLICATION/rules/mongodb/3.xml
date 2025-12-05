@@ -1,0 +1,71 @@
+<RulesCIS>
+  <Rule id="3.1">
+    <Name>Ensure Least Privilege for Database Accounts (Manual)</Name>
+    <Chapter id="3">MongoDB User and Role Management</Chapter>
+    <Section id="3.1">Ensure Least Privilege for Database Accounts</Section>
+    <Profiles>
+      <Profile level="1" type="MongoDB"/>
+    </Profiles>
+    <BasePath>/etc/mongod.conf</BasePath>
+    <FileName>mongod.conf</FileName>
+    <NonCompliantComment>Database accounts are configured with more privileges than necessary, increasing security risks.</NonCompliantComment>
+    <CorrectiveComment>Ensure least privilege for database accounts. Manually review each account's permissions and remove unnecessary privileges. Use the following command to list user roles: mongo --eval "db.getSiblingDB('admin').runCommand({ usersInfo: 1 })";</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="3.2">
+    <Name>Ensure Role-Based Access Control (RBAC) is Enabled and Configured (Manual)</Name>
+    <Chapter id="3">MongoDB User and Role Management</Chapter>
+    <Section id="3.2">Ensure Role-Based Access Control (RBAC) is Enabled and Configured</Section>
+    <Profiles>
+      <Profile level="1" type="MongoDB"/>
+    </Profiles>
+    <BasePath>/etc/mongod.conf</BasePath>
+    <FileName>mongod.conf</FileName>
+    <NonCompliantComment>Role-based access control (RBAC) is not enabled or not configured properly, which may allow unauthorized actions.</NonCompliantComment>
+    <CorrectiveComment>Ensure that role-based access control is enabled and configured appropriately. Manually review roles and permissions using the following command: mongo --eval "db.getSiblingDB('admin').getRoles({ showPrivileges: true })";</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="3.3">
+    <Name>Ensure MongoDB is Run Using a Non-Privileged, Dedicated Service Account (Manual)</Name>
+    <Chapter id="3">MongoDB User and Role Management</Chapter>
+    <Section id="3.3">Ensure MongoDB is Run Using a Non-Privileged, Dedicated Service Account</Section>
+    <Profiles>
+      <Profile level="1" type="MongoDB"/>
+    </Profiles>
+    <BasePath>/etc/mongod.conf</BasePath>
+    <FileName>mongod.conf</FileName>
+    <NonCompliantComment>MongoDB is running using a privileged or shared service account, which may allow unauthorized access or privilege escalation.</NonCompliantComment>
+    <CorrectiveComment>Ensure that MongoDB is run using a non-privileged, dedicated service account. Manually configure the MongoDB service to use a dedicated, unprivileged user. Command: sudo useradd -r -s /bin/false mongodb; sudo chown -R mongodb:mongodb /var/lib/mongodb;</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="3.4">
+    <Name>Ensure Roles for MongoDB Databases Are Properly Defined (Manual)</Name>
+    <Chapter id="3">MongoDB User and Role Management</Chapter>
+    <Section id="3.4">Ensure Roles for MongoDB Databases Are Properly Defined</Section>
+    <Profiles>
+      <Profile level="1" type="MongoDB"/>
+    </Profiles>
+    <BasePath>/etc/mongod.conf</BasePath>
+    <FileName>mongod.conf</FileName>
+    <NonCompliantComment>Roles for MongoDB databases are not properly defined or are overly permissive.</NonCompliantComment>
+    <CorrectiveComment>Ensure that each role for each MongoDB database is necessary and grants only the required privileges. Use the following command to list database roles: mongo --eval "db.getSiblingDB('admin').getRoles({ showPrivileges: true })";</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="3.5">
+    <Name>Review Superuser/Admin Roles and Assigned Privileges (Manual)</Name>
+    <Chapter id="3">MongoDB User and Role Management</Chapter>
+    <Section id="3.5">Review Superuser/Admin Roles and Assigned Privileges</Section>
+    <Profiles>
+      <Profile level="2" type="MongoDB"/>
+    </Profiles>
+    <BasePath>/etc/mongod.conf</BasePath>
+    <FileName>mongod.conf</FileName>
+    <NonCompliantComment>Superuser or admin roles are not regularly reviewed, which may allow unauthorized access.</NonCompliantComment>
+    <CorrectiveComment>Regularly review Superuser/Admin roles and their assigned privileges. Use the following command: mongo --eval "db.getSiblingDB('admin').getUsers({ showCredentials: false })";</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+</RulesCIS>

@@ -1,0 +1,676 @@
+<RulesCIS>
+    <Rule id="1.1.1.1">
+        <Name>Ensure cramfs kernel module is not available (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.1">Disable unused filesystems</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/modprobe.d/</BasePath>
+        <FileName>cramfs.conf</FileName>
+        <NonCompliantComment>The cramfs module is available and can be loaded, increasing the attack surface.</NonCompliantComment>
+        <CorrectiveComment>The module must be disabled by blacklisting it and preventing automatic loading.</CorrectiveComment>
+        <Correction><![CDATA[mod=cramfs; echo -e "install $mod /bin/false\nblacklist $mod" | sudo tee /etc/modprobe.d/${mod}.conf >/dev/null; sudo modprobe -r $mod 2>/dev/null || true; sudo rmmod $mod 2>/dev/null || true]]></Correction>
+        <Verification><![CDATA[mod=cramfs; if modprobe -l "$mod" &>/dev/null; then lsmod | grep -qE "^${mod}\b" && echo 1; grep -RqsE "^\s*install\s+${mod}\s+(/usr)?/bin/(true|false)\b" /etc/modprobe.d || echo 1; grep -RqsE "^\s*blacklist\s+${mod}\b" /etc/modprobe.d || echo 1; fi; echo 0]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.1.1.2">
+        <Name>Ensure freevxfs kernel module is not available (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.1">Disable unused filesystems</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/modprobe.d/</BasePath>
+        <FileName>freevxfs.conf</FileName>
+        <NonCompliantComment>The freevxfs module is available, which is unnecessary and increases risk.</NonCompliantComment>
+        <CorrectiveComment>Disable the module by blacklisting it and preventing its loading.</CorrectiveComment>
+        <Correction><![CDATA[mod=freevxfs; echo -e "install $mod /bin/false\nblacklist $mod" | sudo tee /etc/modprobe.d/${mod}.conf >/dev/null; sudo modprobe -r $mod 2>/dev/null || true; sudo rmmod $mod 2>/dev/null || true; echo 0]]></Correction>
+        <Verification><![CDATA[mod=freevxfs; st=0; if sudo modprobe -l "$mod" &>/dev/null; then sudo lsmod | grep -qE "^${mod}\b" && st=1; sudo grep -RqsE "^\s*install\s+${mod}\s+(/usr)?/bin/(true|false)\b" /etc/modprobe.d || st=1; sudo grep -RqsE "^\s*blacklist\s+${mod}\b" /etc/modprobe.d || st=1; fi; echo $st]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.1.1.3">
+        <Name>Ensure hfs kernel module is not available (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.1">Disable unused filesystems</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/modprobe.d/</BasePath>
+        <FileName>hfs.conf</FileName>
+        <NonCompliantComment>The hfs module is available, which could allow mounting of Mac OS filesystems.</NonCompliantComment>
+        <CorrectiveComment>Disable the module by blacklisting it and preventing its loading.</CorrectiveComment>
+        <Correction><![CDATA[mod=hfs; echo -e "install $mod /bin/false\nblacklist $mod" | sudo tee /etc/modprobe.d/${mod}.conf >/dev/null; sudo modprobe -r $mod 2>/dev/null || true; sudo rmmod $mod 2>/dev/null || true; echo 0]]></Correction>
+        <Verification><![CDATA[mod=hfs; st=0; if sudo modprobe -l "$mod" &>/dev/null; then sudo lsmod | grep -qE "^${mod}\b" && st=1; sudo grep -RqsE "^\s*install\s+${mod}\s+(/usr)?/bin/(true|false)\b" /etc/modprobe.d || st=1; sudo grep -RqsE "^\s*blacklist\s+${mod}\b" /etc/modprobe.d || st=1; fi; echo $st]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.1.1.4">
+        <Name>Ensure hfsplus kernel module is not available (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.1">Disable unused filesystems</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/modprobe.d/</BasePath>
+        <FileName>hfsplus.conf</FileName>
+        <NonCompliantComment>The hfsplus module is available, which may not be required and increases risk.</NonCompliantComment>
+        <CorrectiveComment>Disable the module by blacklisting it and preventing its automatic loading.</CorrectiveComment>
+        <Correction><![CDATA[mod=hfsplus; echo -e "install $mod /bin/false\nblacklist $mod" | sudo tee /etc/modprobe.d/${mod}.conf >/dev/null; sudo modprobe -r $mod 2>/dev/null || true; sudo rmmod $mod 2>/dev/null || true; echo 0]]></Correction>
+        <Verification><![CDATA[mod=hfsplus; st=0; if sudo modprobe -l "$mod" &>/dev/null; then sudo lsmod | grep -qE "^${mod}\b" && st=1; sudo grep -RqsE "^\s*install\s+${mod}\s+(/usr)?/bin/(true|false)\b" /etc/modprobe.d || st=1; sudo grep -RqsE "^\s*blacklist\s+${mod}\b" /etc/modprobe.d || st=1; fi; echo $st]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.1.1.5">
+        <Name>Ensure jffs2 kernel module is not available (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.1">Disable unused filesystems</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/modprobe.d/</BasePath>
+        <FileName>jffs2.conf</FileName>
+        <NonCompliantComment>The jffs2 module is available, increasing the attack surface.</NonCompliantComment>
+        <CorrectiveComment>Disable the module by blacklisting it and preventing its loading.</CorrectiveComment>
+        <Correction><![CDATA[mod=jffs2; echo -e "install $mod /bin/false\nblacklist $mod" | sudo tee /etc/modprobe.d/${mod}.conf >/dev/null; sudo modprobe -r $mod 2>/dev/null || true; sudo rmmod $mod 2>/dev/null || true; echo 0]]></Correction>
+        <Verification><![CDATA[mod=jffs2; echo -e "install $mod /bin/false\nblacklist $mod" | sudo tee /etc/modprobe.d/${mod}.conf >/dev/null; sudo modprobe -r $mod 2>/dev/null || true; sudo rmmod $mod 2>/dev/null || true; echo 0]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.1.1.6">
+        <Name>Ensure overlayfs kernel module is not available (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.1">Disable unused filesystems</SubSection>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/modprobe.d/</BasePath>
+        <FileName>overlayfs.conf</FileName>
+        <NonCompliantComment>The overlayfs module is available, which may affect container functionality if disabled.</NonCompliantComment>
+        <CorrectiveComment>Disable the module by blacklisting it and preventing its loading unless container use is required.</CorrectiveComment>
+        <Correction><![CDATA[mod=overlay; echo -e "install $mod /bin/false\nblacklist $mod" | sudo tee /etc/modprobe.d/${mod}.conf >/dev/null; sudo modprobe -r $mod 2>/dev/null || true; sudo rmmod $mod 2>/dev/null || true; echo 0]]></Correction>
+        <Verification><![CDATA[mod=overlay; st=0; if sudo modprobe -l "$mod" &>/dev/null; then sudo lsmod | grep -qE "^${mod}\b" && st=1; sudo grep -RqsE "^\s*install\s+${mod}\s+(/usr)?/bin/(true|false)\b" /etc/modprobe.d || st=1; sudo grep -RqsE "^\s*blacklist\s+${mod}\b" /etc/modprobe.d || st=1; fi; echo $st]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.1.1.7">
+        <Name>Ensure squashfs kernel module is not available (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.1">Disable unused filesystems</SubSection>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/modprobe.d/</BasePath>
+        <FileName>squashfs.conf</FileName>
+        <NonCompliantComment>The squashfs module is available, which may interfere with Snap packages if disabled.</NonCompliantComment>
+        <CorrectiveComment>Disable the module by blacklisting it if Snap packages are not in use.</CorrectiveComment>
+        <Correction><![CDATA[mod=squashfs; echo -e "install $mod /bin/false\nblacklist $mod" | sudo tee /etc/modprobe.d/${mod}.conf >/dev/null; sudo modprobe -r $mod 2>/dev/null || true; sudo rmmod $mod 2>/dev/null || true; echo 0]]></Correction>
+        <Verification><![CDATA[mod=squashfs; st=0; if sudo modprobe -l "$mod" &>/dev/null; then sudo lsmod | grep -qE "^${mod}\b" && st=1; sudo grep -RqsE "^\s*install\s+${mod}\s+(/usr)?/bin/(true|false)\b" /etc/modprobe.d || st=1; sudo grep -RqsE "^\s*blacklist\s+${mod}\b" /etc/modprobe.d || st=1; fi; echo $st]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.1.1.8">
+        <Name>Ensure udf kernel module is not available (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.1">Disable unused filesystems</SubSection>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/modprobe.d/</BasePath>
+        <FileName>udf.conf</FileName>
+        <NonCompliantComment>The udf module is available, which is generally unnecessary unless optical media support is required or on specific platforms.</NonCompliantComment>
+        <CorrectiveComment>Disable the module by blacklisting it unless explicitly needed.</CorrectiveComment>
+        <Correction><![CDATA[mod=udf; echo -e "install $mod /bin/false\nblacklist $mod" | sudo tee /etc/modprobe.d/${mod}.conf >/dev/null; sudo modprobe -r $mod 2>/dev/null || true; sudo rmmod $mod 2>/dev/null || true; echo 0]]></Correction>
+        <Verification><![CDATA[mod=udf; st=0; if sudo modprobe -l "$mod" &>/dev/null; then sudo lsmod | grep -qE "^${mod}\b" && st=1; sudo grep -RqsE "^\s*install\s+${mod}\s+(/usr)?/bin/(true|false)\b" /etc/modprobe.d || st=1; sudo grep -RqsE "^\s*blacklist\s+${mod}\b" /etc/modprobe.d || st=1; fi; echo $st]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.1.1.9">
+        <Name>Ensure usb-storage kernel module is not available (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.1">Disable unused filesystems</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/modprobe.d/</BasePath>
+        <FileName>usb-storage.conf</FileName>
+        <NonCompliantComment>The usb-storage module is available, potentially allowing unauthorized data transfer via USB devices.</NonCompliantComment>
+        <CorrectiveComment>Disable the module by blacklisting it if USB storage is not permitted by policy.</CorrectiveComment>
+        <Correction><![CDATA[mod=usb-storage; echo -e "install $mod /bin/false\nblacklist $mod" | sudo tee /etc/modprobe.d/${mod}.conf >/dev/null; sudo modprobe -r $mod 2>/dev/null || true; sudo rmmod ${mod//-/_} 2>/dev/null || true; echo 0]]></Correction>
+        <Verification><![CDATA[mod=usb-storage; echo -e "install $mod /bin/false\nblacklist $mod" | sudo tee /etc/modprobe.d/${mod}.conf >/dev/null; sudo modprobe -r $mod 2>/dev/null || true; sudo rmmod ${mod//-/_} 2>/dev/null || true; echo 0]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.1.1.10">
+        <Name>Ensure unused filesystems kernel modules are not available (Manual)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.1">Disable unused filesystems</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/modprobe.d/</BasePath>
+        <FileName>usb-storage.conf</FileName>
+        <NonCompliantComment>One or more filesystem kernel modules with known CVEs (afs, ceph, cifs, exfat, fat, fscache, fuse, gfs2) are still loadable or currently loaded.</NonCompliantComment>
+        <CorrectiveComment>Review dependencies; for every truly unused module, unload it and add both “install &lt;module&gt; /bin/false” and “blacklist &lt;module&gt;” lines in a .conf file.</CorrectiveComment>
+        <Correction><![CDATA[modules="afs ceph cifs exfat fat fscache fuse gfs2"; for mod in $modules; do echo -e "install $mod /bin/false\nblacklist $mod" | sudo tee /etc/modprobe.d/${mod}.conf >/dev/null; sudo modprobe -r $mod 2>/dev/null || true; sudo rmmod $mod 2>/dev/null || true; done; echo 0]]></Correction>
+        <Verification><![CDATA[modules="afs ceph cifs exfat fat fscache fuse gfs2"; st=0; for mod in $modules; do if sudo modprobe -l "$mod" &>/dev/null; then sudo lsmod | grep -qE "^${mod//-/_}\b" && st=1; sudo grep -RqsE "^\s*install\s+${mod}\s+(/usr)?/bin/(true|false)\b" /etc/modprobe.d || st=1; sudo grep -RqsE "^\s*blacklist\s+${mod}\b" /etc/modprobe.d || st=1; fi; done; echo $st]]></Verification>
+        <Manual>Yes</Manual>
+    </Rule>
+
+    <Rule id="1.1.2.1.1">
+        <Name>Ensure /tmp is a separate partition (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.2">Configure Filesystem Partitions</SubSection>
+        <SubSubSection id="1.1.2.1">Configure /tmp</SubSubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/fstab</BasePath>
+        <FileName>fstab</FileName>
+        <NonCompliantComment>/tmp is not mounted on a separate partition, risking resource exhaustion and security issues.</NonCompliantComment>
+        <CorrectiveComment>Create a separate partition entry for /tmp in /etc/fstab and remount /tmp.</CorrectiveComment>
+        <Correction><![CDATA[st=0; [ "$(findmnt -n -o TARGET /tmp 2>/dev/null)" = "/tmp" ] || st=1; systemctl is-enabled tmp.mount 2>/dev/null | grep -Eq 'enabled|generated' || st=1; echo $st]]></Correction>
+        <Verification><![CDATA[echo 'tmpfs /tmp tmpfs rw,nosuid,nodev,noexec,relatime,size=1G 0 0' | sudo tee -a /etc/fstab >/dev/null; sudo systemctl unmask tmp.mount; (sudo mount -o remount /tmp 2>/dev/null || sudo mount /tmp); echo 0]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.1.2.1.2">
+        <Name>Ensure nodev option set on /tmp partition (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.2">Configure Filesystem Partitions</SubSection>
+        <SubSubSection id="1.1.2.1">Configure /tmp</SubSubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/fstab</BasePath>
+        <FileName>fstab</FileName>
+        <NonCompliantComment>The nodev option is not set on the /tmp partition.</NonCompliantComment>
+        <CorrectiveComment>Add the nodev option to the /tmp entry in /etc/fstab and remount /tmp.</CorrectiveComment>
+        <Correction><![CDATA[echo 'tmpfs /tmp tmpfs rw,nosuid,nodev,noexec,relatime 0 0' | sudo tee -a /etc/fstab >/dev/null; sudo mount -o remount,nodev /tmp 2>/dev/null || sudo mount /tmp; echo 0]]></Correction>
+        <Verification><![CDATA[findmnt -n -o OPTIONS /tmp 2>/dev/null | grep -qw nodev && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.1.2.1.3">
+        <Name>Ensure nosuid option set on /tmp partition (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.2">Configure Filesystem Partitions</SubSection>
+        <SubSubSection id="1.1.2.1">Configure /tmp</SubSubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/fstab</BasePath>
+        <FileName>fstab</FileName>
+        <NonCompliantComment>The nosuid option is not set on the /tmp partition.</NonCompliantComment>
+        <CorrectiveComment>Add the nosuid option to the /tmp entry in /etc/fstab and remount /tmp.</CorrectiveComment>
+        <Correction><![CDATA[echo 'tmpfs /tmp tmpfs rw,nosuid,nodev,noexec,relatime 0 0' | sudo tee -a /etc/fstab >/dev/null; sudo mount -o remount,nosuid /tmp 2>/dev/null || sudo mount /tmp; echo 0]]></Correction>
+        <Verification><![CDATA[findmnt -n -o OPTIONS /tmp 2>/dev/null | grep -qw nosuid && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.1.2.1.4">
+        <Name>Ensure noexec option set on /tmp partition (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.2">Configure Filesystem Partitions</SubSection>
+        <SubSubSection id="1.1.2.1">Configure /tmp</SubSubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/fstab</BasePath>
+        <FileName>fstab</FileName>
+        <NonCompliantComment>The noexec option is not set on the /tmp partition.</NonCompliantComment>
+        <CorrectiveComment>Add the noexec option to the /tmp entry in /etc/fstab and remount /tmp.</CorrectiveComment>
+        <Correction><![CDATA[echo 'tmpfs /tmp tmpfs rw,nosuid,nodev,noexec,relatime 0 0' | sudo tee -a /etc/fstab >/dev/null; sudo mount -o remount,noexec /tmp 2>/dev/null || sudo mount /tmp; echo 0]]></Correction>
+        <Verification><![CDATA[findmnt -n -o OPTIONS /tmp 2>/dev/null | grep -qw noexec && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.1.2.2.1">
+        <Name>Ensure /dev/shm is a separate partition (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.2">Configure Filesystem Partitions</SubSection>
+        <SubSubSection id="1.1.2.2">Configure /dev/shm</SubSubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/fstab</BasePath>
+        <FileName>fstab</FileName>
+        <NonCompliantComment>/dev/shm is not mounted as a separate tmpfs partition.</NonCompliantComment>
+        <CorrectiveComment>Add a separate tmpfs entry for /dev/shm in /etc/fstab and remount /dev/shm.</CorrectiveComment>
+        <Correction><![CDATA[echo 'tmpfs /dev/shm tmpfs rw,nosuid,nodev,noexec,relatime 0 0' | sudo tee -a /etc/fstab >/dev/null; sudo mount -o remount /dev/shm 2>/dev/null || sudo mount /dev/shm; echo 0]]></Correction>
+        <Verification><![CDATA[[ "$(findmnt -n -o TARGET /dev/shm 2>/dev/null)" = "/dev/shm" ] && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.1.2.2.2">
+        <Name>Ensure nodev option set on /dev/shm partition (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.2">Configure Filesystem Partitions</SubSection>
+        <SubSubSection id="1.1.2.2">Configure /dev/shm</SubSubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/fstab</BasePath>
+        <FileName>fstab</FileName>
+        <NonCompliantComment>The nodev option is not set on the /dev/shm partition.</NonCompliantComment>
+        <CorrectiveComment>Add the nodev option to the /dev/shm entry in /etc/fstab and remount /dev/shm.</CorrectiveComment>
+        <Correction><![CDATA[sudo sed -i '/[[:space:]]\/dev\/shm[[:space:]]/ s/\([^,]*\)/\1,nodev/' /etc/fstab; sudo mount -o remount,nodev /dev/shm 2>/dev/null || sudo mount /dev/shm; echo 0]]></Correction>
+        <Verification><![CDATA[findmnt -n -o OPTIONS /dev/shm 2>/dev/null | grep -qw nodev && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.1.2.2.3">
+        <Name>Ensure nosuid option set on /dev/shm partition (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.2">Configure Filesystem Partitions</SubSection>
+        <SubSubSection id="1.1.2.2">Configure /dev/shm</SubSubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/fstab</BasePath>
+        <FileName>fstab</FileName>
+        <NonCompliantComment>The nosuid option is not set on the /dev/shm partition.</NonCompliantComment>
+        <CorrectiveComment>Add the nosuid option to the /dev/shm entry in /etc/fstab and remount /dev/shm.</CorrectiveComment>
+        <Correction><![CDATA[sudo sed -i '/[[:space:]]\/dev\/shm[[:space:]]/ s/\([^,]*\)/\1,nosuid/' /etc/fstab; sudo mount -o remount,nosuid /dev/shm 2>/dev/null || sudo mount /dev/shm; echo 0]]></Correction>
+        <Verification><![CDATA[findmnt -n -o OPTIONS /dev/shm 2>/dev/null | grep -qw nosuid && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.1.2.2.4">
+        <Name>Ensure noexec option set on /dev/shm partition (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.2">Configure Filesystem Partitions</SubSection>
+        <SubSubSection id="1.1.2.2">Configure /dev/shm</SubSubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/fstab</BasePath>
+        <FileName>fstab</FileName>
+        <NonCompliantComment>The noexec option is not set on the /dev/shm partition.</NonCompliantComment>
+        <CorrectiveComment>Add the noexec option to the /dev/shm entry in /etc/fstab and remount /dev/shm.</CorrectiveComment>
+        <Correction><![CDATA[sudo sed -i '/[[:space:]]\/dev\/shm[[:space:]]/ s/\([^,]*\)/\1,noexec/' /etc/fstab; sudo mount -o remount,noexec /dev/shm 2>/dev/null || sudo mount /dev/shm; echo 0]]></Correction>
+        <Verification><![CDATA[findmnt -n -o OPTIONS /dev/shm 2>/dev/null | grep -qw noexec && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.1.2.3.1">
+        <Name>Ensure separate partition exists for /home (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.2">Configure Filesystem Partitions</SubSection>
+        <SubSubSection id="1.1.2.3">Configure /home</SubSubSection>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/fstab</BasePath>
+        <FileName>fstab</FileName>
+        <NonCompliantComment>/home is not mounted on a separate partition.</NonCompliantComment>
+        <CorrectiveComment>Create a separate partition entry for /home in /etc/fstab and remount /home.</CorrectiveComment>
+        <Correction><![CDATA[echo "A dedicated /home partition must be created and added to /etc/fstab – manual action required"]]></Correction>
+        <Verification><![CDATA[[[ "$(findmnt -n -o TARGET /home 2>/dev/null)" = "/home" ] && echo 0 || echo 1]]></Verification>
+        <Manual>CORRECTION</Manual>
+    </Rule>
+
+    <Rule id="1.1.2.3.2">
+        <Name>Ensure nodev option set on /home partition (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.2">Configure Filesystem Partitions</SubSection>
+        <SubSubSection id="1.1.2.3">Configure /home</SubSubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/fstab</BasePath>
+        <FileName>fstab</FileName>
+        <NonCompliantComment>The nodev option is not set on the /home partition.</NonCompliantComment>
+        <CorrectiveComment>Add the nodev option to the /home entry in /etc/fstab and remount /home.</CorrectiveComment>
+        <Correction><![CDATA[sudo sed -i '/[[:space:]]\/home[[:space:]]/ s/\([^,]*\)/\1,nodev/' /etc/fstab; sudo mount -o remount,nodev /home 2>/dev/null || sudo mount /home; echo 0]]></Correction>
+        <Verification><![CDATA[findmnt -n -o OPTIONS /home 2>/dev/null | grep -qw nodev && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.1.2.3.3">
+        <Name>Ensure nosuid option set on /home partition (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.2">Configure Filesystem Partitions</SubSection>
+        <SubSubSection id="1.1.2.3">Configure /home</SubSubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/fstab</BasePath>
+        <FileName>fstab</FileName>
+        <NonCompliantComment>The nosuid option is not set on the /home partition.</NonCompliantComment>
+        <CorrectiveComment>Add the nosuid option to the /home entry in /etc/fstab and remount /home.</CorrectiveComment>
+        <Correction><![CDATA[sudo sed -i '/[[:space:]]\/home[[:space:]]/ s/\([^,]*\)/\1,nosuid/' /etc/fstab; sudo mount -o remount,nosuid /home 2>/dev/null || sudo mount /home; echo 0]]></Correction>
+        <Verification><![CDATA[findmnt -n -o OPTIONS /home 2>/dev/null | grep -qw nosuid && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.1.2.4.1">
+        <Name>Ensure separate partition exists for /var (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.2">Configure Filesystem Partitions</SubSection>
+        <SubSubSection id="1.1.2.4">Configure /var</SubSubSection>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/fstab</BasePath>
+        <FileName>fstab</FileName>
+        <NonCompliantComment>/var is not mounted on a separate partition.</NonCompliantComment>
+        <CorrectiveComment>Create a separate partition entry for /var in /etc/fstab and remount /var.</CorrectiveComment>
+        <Correction><![CDATA[echo "Create a dedicated /var partition, add it to /etc/fstab, migrate data — manual step"]]></Correction>
+        <Verification><![CDATA[[ "$(findmnt -n -o TARGET /var 2>/dev/null)" = "/var" ] && echo 0 || echo 1]]></Verification>
+        <Manual>CORRECTION</Manual>
+    </Rule>
+
+    <Rule id="1.1.2.4.2">
+        <Name>Ensure nodev option set on /var partition (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.2">Configure Filesystem Partitions</SubSection>
+        <SubSubSection id="1.1.2.4">Configure /var</SubSubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/fstab</BasePath>
+        <FileName>fstab</FileName>
+        <NonCompliantComment>The nodev option is not set on the /var partition.</NonCompliantComment>
+        <CorrectiveComment>Add the nodev option to the /var entry in /etc/fstab and remount /var.</CorrectiveComment>
+        <Correction><![CDATA[sudo sed -i '/[[:space:]]\/var[[:space:]]/ s/\(\S\+\)/\1,nodev/' /etc/fstab; sudo mount -o remount,nodev /var 2>/dev/null || sudo mount /var; echo 0]]></Correction>
+        <Verification><![CDATA[findmnt -n -o OPTIONS /var 2>/dev/null | grep -qw nodev && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.1.2.4.3">
+        <Name>Ensure nosuid option set on /var partition (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.2">Configure Filesystem Partitions</SubSection>
+        <SubSubSection id="1.1.2.4">Configure /var</SubSubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/fstab</BasePath>
+        <FileName>fstab</FileName>
+        <NonCompliantComment>The nosuid option is not set on the /var partition.</NonCompliantComment>
+        <CorrectiveComment>Add the nosuid option to the /var entry in /etc/fstab and remount /var.</CorrectiveComment>
+        <Correction><![CDATA[sudo sed -i '/[[:space:]]\/var[[:space:]]/ s/\(\S\+\)/\1,nosuid/' /etc/fstab; sudo mount -o remount,nosuid /var 2>/dev/null || sudo mount /var; echo 0]]></Correction>
+        <Verification><![CDATA[findmnt -n -o OPTIONS /var 2>/dev/null | grep -qw nosuid && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.1.2.5.1">
+        <Name>Ensure separate partition exists for /var/tmp (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.2">Configure Filesystem Partitions</SubSection>
+        <SubSubSection id="1.1.2.5">Configure /var/tmp</SubSubSection>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/fstab</BasePath>
+        <FileName>fstab</FileName>
+        <NonCompliantComment>/var/tmp is not mounted on a separate partition.</NonCompliantComment>
+        <CorrectiveComment>Create a separate partition entry for /var/tmp in /etc/fstab and remount /var/tmp.</CorrectiveComment>
+        <Correction><![CDATA[echo '/dev/sdX /var/tmp ext4 defaults,rw,nosuid,nodev,noexec,relatime 0 0' >> /etc/fstab; mount -o remount /var/tmp]]></Correction>
+        <Verification><![CDATA[[ "$(findmnt -n -o TARGET /var/tmp 2>/dev/null)" = "/var/tmp" ] && echo 0 || echo 1]]></Verification>
+        <Manual>CORRECTION</Manual>
+    </Rule>
+
+    <Rule id="1.1.2.5.2">
+        <Name>Ensure nodev option set on /var/tmp partition (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.2">Configure Filesystem Partitions</SubSection>
+        <SubSubSection id="1.1.2.5">Configure /var/tmp</SubSubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/fstab</BasePath>
+        <FileName>fstab</FileName>
+        <NonCompliantComment>The nodev option is not set on the /var/tmp partition.</NonCompliantComment>
+        <CorrectiveComment>Add the nodev option to the /var/tmp entry in /etc/fstab and remount /var/tmp.</CorrectiveComment>
+        <Correction><![CDATA[sudo sed -i '/[[:space:]]\/var\/tmp[[:space:]]/ s/\(\S\+\)/\1,nodev/' /etc/fstab; sudo mount -o remount,nodev /var/tmp 2>/dev/null || sudo mount /var/tmp; echo 0]]></Correction>
+        <Verification><![CDATA[findmnt -n -o OPTIONS /var/tmp 2>/dev/null | grep -qw nodev && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.1.2.5.3">
+        <Name>Ensure nosuid option set on /var/tmp partition (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.2">Configure Filesystem Partitions</SubSection>
+        <SubSubSection id="1.1.2.5">Configure /var/tmp</SubSubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/fstab</BasePath>
+        <FileName>fstab</FileName>
+        <NonCompliantComment>The nosuid option is not set on the /var/tmp partition.</NonCompliantComment>
+        <CorrectiveComment>Add the nosuid option to the /var/tmp entry in /etc/fstab and remount /var/tmp.</CorrectiveComment>
+        <Correction><![CDATA[sudo sed -i '/[[:space:]]\/var\/tmp[[:space:]]/ s/\(\S\+\)/\1,nosuid/' /etc/fstab; sudo mount -o remount,nosuid /var/tmp 2>/dev/null || sudo mount /var/tmp; echo 0]]></Correction>
+        <Verification><![CDATA[findmnt -n -o OPTIONS /var/tmp 2>/dev/null | grep -qw nosuid && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.1.2.5.4">
+        <Name>Ensure noexec option set on /var/tmp partition (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.2">Configure Filesystem Partitions</SubSection>
+        <SubSubSection id="1.1.2.5">Configure /var/tmp</SubSubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/fstab</BasePath>
+        <FileName>fstab</FileName>
+        <NonCompliantComment>The noexec option is not set on the /var/tmp partition.</NonCompliantComment>
+        <CorrectiveComment>Add the noexec option to the /var/tmp entry in /etc/fstab and remount /var/tmp.</CorrectiveComment>
+        <Correction><![CDATA[sudo sed -i '/[[:space:]]\/var\/tmp[[:space:]]/ s/\(\S\+\)/\1,noexec/' /etc/fstab; sudo mount -o remount,noexec /var/tmp 2>/dev/null || sudo mount /var/tmp; echo 0]]></Correction>
+        <Verification><![CDATA[findmnt -n -o OPTIONS /var/tmp 2>/dev/null | grep -qw noexec && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.1.2.6.1">
+        <Name>Ensure separate partition exists for /var/log (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.2">Configure Filesystem Partitions</SubSection>
+        <SubSubSection id="1.1.2.6">Configure /var/log</SubSubSection>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/fstab</BasePath>
+        <FileName>fstab</FileName>
+        <NonCompliantComment>/var/log is not mounted on a separate partition.</NonCompliantComment>
+        <CorrectiveComment>Create a separate partition entry for /var/log in /etc/fstab and remount /var/log.</CorrectiveComment>
+        <Correction><![CDATA[echo "Create a dedicated /var/log partition, add it to /etc/fstab, migrate logs — manual action required"]]></Correction>
+        <Verification><![CDATA[[ "$(findmnt -n -o TARGET /var/log 2>/dev/null)" = "/var/log" ] && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.1.2.6.2">
+        <Name>Ensure nodev option set on /var/log partition (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.2">Configure Filesystem Partitions</SubSection>
+        <SubSubSection id="1.1.2.6">Configure /var/log</SubSubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/fstab</BasePath>
+        <FileName>fstab</FileName>
+        <NonCompliantComment>The nodev option is not set on the /var/log partition.</NonCompliantComment>
+        <CorrectiveComment>Add the nodev option to the /var/log entry in /etc/fstab and remount /var/log.</CorrectiveComment>
+        <Correction><![CDATA[sudo sed -i '/[[:space:]]\/var\/log[[:space:]]/ s/\(\S\+\)/\1,nodev/' /etc/fstab; sudo mount -o remount,nodev /var/log 2>/dev/null || sudo mount /var/log; echo 0]]></Correction>
+        <Verification><![CDATA[findmnt -n -o OPTIONS /var/log 2>/dev/null | grep -qw nodev && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.1.2.6.3">
+        <Name>Ensure nosuid option set on /var/log partition (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.2">Configure Filesystem Partitions</SubSection>
+        <SubSubSection id="1.1.2.6">Configure /var/log</SubSubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/fstab</BasePath>
+        <FileName>fstab</FileName>
+        <NonCompliantComment>The nosuid option is not set on the /var/log partition.</NonCompliantComment>
+        <CorrectiveComment>Add the nosuid option to the /var/log entry in /etc/fstab and remount /var/log.</CorrectiveComment>
+        <Correction><![CDATA[sudo sed -i '/[[:space:]]\/var\/log[[:space:]]/ s/\(\S\+\)/\1,nosuid/' /etc/fstab; sudo mount -o remount,nosuid /var/log 2>/dev/null || sudo mount /var/log; echo 0]]></Correction>
+        <Verification><![CDATA[findmnt -n -o OPTIONS /var/log 2>/dev/null | grep -qw nosuid && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.1.2.6.4">
+        <Name>Ensure noexec option set on /var/log partition (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.2">Configure Filesystem Partitions</SubSection>
+        <SubSubSection id="1.1.2.6">Configure /var/log</SubSubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/fstab</BasePath>
+        <FileName>fstab</FileName>
+        <NonCompliantComment>The noexec option is not set on the /var/log partition.</NonCompliantComment>
+        <CorrectiveComment>Add the noexec option to the /var/log entry in /etc/fstab and remount /var/log.</CorrectiveComment>
+        <Correction><![CDATA[sudo sed -i '/[[:space:]]\/var\/log[[:space:]]/ s/\(\S\+\)/\1,noexec/' /etc/fstab; sudo mount -o remount,noexec /var/log 2>/dev/null || sudo mount /var/log; echo 0]]></Correction>
+        <Verification><![CDATA[findmnt -n -o OPTIONS /var/log 2>/dev/null | grep -qw noexec && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.1.2.7.1">
+        <Name>Ensure separate partition exists for /var/log/audit (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.2">Configure Filesystem Partitions</SubSection>
+        <SubSubSection id="1.1.2.7">Configure /var/log/audit</SubSubSection>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/fstab</BasePath>
+        <FileName>fstab</FileName>
+        <NonCompliantComment>/var/log/audit is not mounted on a separate partition.</NonCompliantComment>
+        <CorrectiveComment>Create a separate partition entry for /var/log/audit in /etc/fstab and remount /var/log/audit.</CorrectiveComment>
+        <Correction><![CDATA[echo "Create a dedicated /var/log/audit partition, add it to /etc/fstab, migrate logs — manual action required"]]></Correction>
+        <Verification><![CDATA[[ "$(findmnt -n -o TARGET /var/log/audit 2>/dev/null)" = "/var/log/audit" ] && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.1.2.7.2">
+        <Name>Ensure nodev option set on /var/log/audit partition (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.2">Configure Filesystem Partitions</SubSection>
+        <SubSubSection id="1.1.2.7">Configure /var/log/audit</SubSubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/fstab</BasePath>
+        <FileName>fstab</FileName>
+        <NonCompliantComment>The nodev option is not set on the /var/log/audit partition.</NonCompliantComment>
+        <CorrectiveComment>Add the nodev option to the /var/log/audit entry in /etc/fstab and remount /var/log/audit.</CorrectiveComment>
+        <Correction><![CDATA[sudo sed -i '/[[:space:]]\/var\/log\/audit[[:space:]]/ s/\(\S\+\)/\1,nodev/' /etc/fstab; sudo mount -o remount,nodev /var/log/audit 2>/dev/null || sudo mount /var/log/audit; echo 0]]></Correction>
+        <Verification><![CDATA[findmnt -n -o OPTIONS /var/log/audit 2>/dev/null | grep -qw nodev && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.1.2.7.3">
+        <Name>Ensure nosuid option set on /var/log/audit partition (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.2">Configure Filesystem Partitions</SubSection>
+        <SubSubSection id="1.1.2.7">Configure /var/log/audit</SubSubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/fstab</BasePath>
+        <FileName>fstab</FileName>
+        <NonCompliantComment>The nosuid option is not set on the /var/log/audit partition.</NonCompliantComment>
+        <CorrectiveComment>Add the nosuid option to the /var/log/audit entry in /etc/fstab and remount /var/log/audit.</CorrectiveComment>
+        <Correction><![CDATA[sudo sed -i '/[[:space:]]\/var\/log\/audit[[:space:]]/ s/\(\S\+\)/\1,nosuid/' /etc/fstab; sudo mount -o remount,nosuid /var/log/audit 2>/dev/null || sudo mount /var/log/audit; echo 0]]></Correction>
+        <Verification><![CDATA[findmnt -n -o OPTIONS /var/log/audit 2>/dev/null | grep -qw nosuid && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.1.2.7.4">
+        <Name>Ensure noexec option set on /var/log/audit partition (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.1">Filesystem Configuration</Section>
+        <SubSection id="1.1.2">Configure Filesystem Partitions</SubSection>
+        <SubSubSection id="1.1.2.7">Configure /var/log/audit</SubSubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/fstab</BasePath>
+        <FileName>fstab</FileName>
+        <NonCompliantComment>The noexec option is not set on the /var/log/audit partition.</NonCompliantComment>
+        <CorrectiveComment>Add the noexec option to the /var/log/audit entry in /etc/fstab and remount /var/log/audit.</CorrectiveComment>
+        <Correction><![CDATA[sudo sed -i '/[[:space:]]\/var\/log\/audit[[:space:]]/ s/\(\S\+\)/\1,noexec/' /etc/fstab; sudo mount -o remount,noexec /var/log/audit 2>/dev/null || sudo mount /var/log/audit; echo 0]]></Correction>
+        <Verification><![CDATA[findmnt -n -o OPTIONS /var/log/audit 2>/dev/null | grep -qw noexec && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+</RulesCIS>

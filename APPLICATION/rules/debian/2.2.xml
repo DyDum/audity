@@ -1,0 +1,103 @@
+<RulesCIS>
+    <Rule id="2.2.1">
+        <Name>Ensure NIS Client is not installed (Automated)</Name>
+        <Chapter id="2">Services</Chapter>
+        <Section id="2.2">Configure Client Services</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/usr/bin/</BasePath>
+        <FileName>nis</FileName>
+        <NonCompliantComment>The NIS client is installed, increasing the potential attack surface.</NonCompliantComment>
+        <CorrectiveComment>Uninstall the NIS client package.</CorrectiveComment>
+        <Correction><![CDATA[sudo apt purge -y nis]]></Correction>
+        <Verification><![CDATA[dpkg -l | grep -q '^ii\s*nis\s' && echo 1 || echo 0]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="2.2.2">
+        <Name>Ensure rsh client is not installed (Automated)</Name>
+        <Chapter id="2">Services</Chapter>
+        <Section id="2.2">Configure Client Services</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/usr/bin/</BasePath>
+        <FileName>rsh-client</FileName>
+        <NonCompliantComment>The rsh client is installed, which may allow insecure remote shell access.</NonCompliantComment>
+        <CorrectiveComment>Uninstall the rsh client package.</CorrectiveComment>
+        <Correction><![CDATA[sudo apt purge -y rsh-client]]></Correction>
+        <Verification><![CDATA[dpkg -l | grep -q '^ii\s*rsh-client\s' && echo 1 || echo 0]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="2.2.3">
+        <Name>Ensure talk client is not installed (Automated)</Name>
+        <Chapter id="2">Services</Chapter>
+        <Section id="2.2">Configure Client Services</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/usr/bin/</BasePath>
+        <FileName>talk</FileName>
+        <NonCompliantComment>The talk client is installed, which could be used for unauthorized communication.</NonCompliantComment>
+        <CorrectiveComment>Uninstall the talk client package.</CorrectiveComment>
+        <Correction><![CDATA[sudo apt purge -y talk]]></Correction>
+        <Verification><![CDATA[dpkg -l | grep -q '^ii\s*talk\s' && echo 1 || echo 0]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="2.2.4">
+        <Name>Ensure telnet client is not installed (Automated)</Name>
+        <Chapter id="2">Services</Chapter>
+        <Section id="2.2">Configure Client Services</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/usr/bin/</BasePath>
+        <FileName>telnet</FileName>
+        <NonCompliantComment>The telnet client is installed, which transmits data in clear text.</NonCompliantComment>
+        <CorrectiveComment>Uninstall the telnet client package.</CorrectiveComment>
+        <Correction><![CDATA[sudo apt purge -y telnet]]></Correction>
+        <Verification><![CDATA[dpkg -l | grep -q '^ii\s*telnet\s' && echo 1 || echo 0]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="2.2.5">
+        <Name>Ensure LDAP client is not installed (Automated)</Name>
+        <Chapter id="2">Services</Chapter>
+        <Section id="2.2">Configure Client Services</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/usr/bin/</BasePath>
+        <FileName>ldap-utils</FileName>
+        <NonCompliantComment>The LDAP client is installed, which may expose sensitive directory queries.</NonCompliantComment>
+        <CorrectiveComment>Uninstall the LDAP client package if it is not required.</CorrectiveComment>
+        <Correction><![CDATA[sudo apt purge -y ldap-utils]]></Correction>
+        <Verification><![CDATA[dpkg -l | grep -q '^ii\s*ldap-utils\s' && echo 1 || echo 0]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="2.2.6">
+        <Name>Ensure FTP client is not installed (Automated)</Name>
+        <Chapter id="2">Services</Chapter>
+        <Section id="2.2">Configure Client Services</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/usr/bin/</BasePath>
+        <FileName>ftp</FileName>
+        <NonCompliantComment>The FTP client is installed, which may transmit data insecurely.</NonCompliantComment>
+        <CorrectiveComment>Uninstall the FTP client package.</CorrectiveComment>
+        <Correction><![CDATA[sudo apt purge -y ftp tnftp]]></Correction>
+        <Verification><![CDATA[if dpkg -s ftp >/dev/null 2>&1 || dpkg -s tnftp >/dev/null 2>&1; then echo 1; else echo 0; fi]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+</RulesCIS>

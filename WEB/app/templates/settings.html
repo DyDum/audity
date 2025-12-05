@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block page_title %}Paramètres{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Configuration de l'Authentification</h5>
+    </div>
+    <div class="card-body">
+        <form id="auth-settings-form">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>Azure Active Directory</h6>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="azure_enabled">
+                        <label class="form-check-label" for="azure_enabled">Activer Azure AD</label>
+                    </div>
+                    <div class="mb-3" id="azure-config" style="display:none;">
+                        <input type="text" class="form-control mb-2" id="azure_client_id" placeholder="Client ID">
+                        <input type="text" class="form-control mb-2" id="azure_client_secret" placeholder="Client Secret">
+                        <input type="text" class="form-control mb-4" id="azure_tenant_id" placeholder="Tenant ID">
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="testAzure()">
+                            Tester
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <h6>Windows AD / LDAP</h6>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="ldap_enabled">
+                        <label class="form-check-label" for="ldap_enabled">Activer LDAP</label>
+                    </div>
+                    <div class="mb-3" id="ldap-config" style="display:none;">
+                        <input type="text" class="form-control mb-2" id="ldap_server" placeholder="Serveur LDAP">
+                        <input type="text" class="form-control mb-2" id="ldap_domain" placeholder="Domaine">
+                        <input type="text" class="form-control mb-4" id="ldap_base_dn" placeholder="Base DN">
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="testLDAP()">
+                            Tester
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <hr>
+            
+            <div class="mb-3">
+                <h6>MFA (Multi-Factor Authentication)</h6>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="mfa_required_for_admins">
+                    <label class="form-check-label" for="mfa_required_for_admins">MFA obligatoire pour les administrateurs</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="mfa_required_for_users">
+                    <label class="form-check-label" for="mfa_required_for_users">MFA obligatoire pour tous les utilisateurs</label>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="../static/js/settings/auth_settings.js"></script>
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block page_title %}Gestion des Utilisateurs{% endblock %}
+
+{% block page_actions %}
+<button class="btn btn-primary" onclick="openAddUserModal()">
+    <i class="fas fa-user-plus"></i> Ajouter utilisateur
+</button>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Utilisateurs</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover" id="users-table">
+                <thead>
+                    <tr>
+                        <th>Nom d'utilisateur</th>
+                        <th>Email</th>
+                        <th>Rôle</th>
+                        <th>Statut</th>
+                        <th>Créé le</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="6" class="text-center">Chargement...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Ajouter Utilisateur -->
+<div class="modal fade" id="userModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ajouter un utilisateur</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="user-form">
+                <div class="modal-body">
+                    <!-- USERNAME - CHAMP OBLIGATOIRE -->
+                    <div class="mb-3">
+                        <label class="form-label">Nom d'utilisateur <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="username_form" placeholder="ex: john.doe" required>
+                        <small class="text-muted">3 caractères minimum</small>
+                    </div>
+
+                    <!-- EMAIL - CHAMP OBLIGATOIRE -->
+                    <div class="mb-3">
+                        <label class="form-label">Email <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" id="email" placeholder="ex: user@example.com" required>
+                    </div>
+
+                    <!-- PASSWORD - CHAMP OBLIGATOIRE (minimum 8 caractères) -->
+                    <div class="mb-3">
+                        <label class="form-label">Mot de passe <span class="text-danger">*</span></label>
+                        <input type="password" class="form-control" id="password" placeholder="Minimum 8 caractères" required>
+                        <small class="text-muted">Minimum 8 caractères</small>
+                    </div>
+
+                    <!-- NOM COMPLET - OPTIONNEL -->
+                    <div class="mb-3">
+                        <label class="form-label">Nom complet (optionnel)</label>
+                        <input type="text" class="form-control" id="full_name" placeholder="ex: John Doe">
+                    </div>
+
+                    <!-- ADMINISTRATEUR - CHECKBOX -->
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="is_admin">
+                            <label class="form-check-label" for="is_admin">
+                                Donner les droits d'administrateur
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Créer l'utilisateur
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="../static/js/base/api.js"></script>
+<script src="../static/js/users/users.js"></script>
+{% endblock %}

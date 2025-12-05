@@ -1,0 +1,249 @@
+<RulesCIS>
+  <Rule id="4.1.1">
+    <Name>Ensure HTTP is redirected to HTTPS (Automated)</Name>
+    <Chapter id="4">TLS Settings</Chapter>
+    <Section id="4.1.1">Ensure HTTP is redirected to HTTPS</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
+    <BasePath>/etc/nginx/</BasePath>
+    <FileName>nginx.conf</FileName>
+    <NonCompliantComment>HTTP is not redirected to HTTPS, which exposes unencrypted traffic to interception.</NonCompliantComment>
+    <CorrectiveComment>Configure a 301 redirect from HTTP to HTTPS in the NGINX configuration.</CorrectiveComment>
+    <Correction>echo 'server { listen 80; return 301 https://$host$request_uri; }' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>curl -I http://localhost | grep -q '301 Moved Permanently' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.1.2">
+    <Name>Ensure Trusted SSL Certificate is Installed (Automated)</Name>
+    <Chapter id="4">TLS Settings</Chapter>
+    <Section id="4.1.2">Ensure Trusted SSL Certificate is Installed</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
+    <BasePath>/etc/ssl/certs/</BasePath>
+    <FileName>nginx-selfsigned.crt</FileName>
+    <NonCompliantComment>A self-signed or untrusted SSL certificate is used, which reduces trust.</NonCompliantComment>
+    <CorrectiveComment>Install a trusted SSL certificate from a trusted Certificate Authority (CA).</CorrectiveComment>
+    <Correction>openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/nginx-selfsigned.key -out /etc/ssl/certs/nginx-selfsigned.crt</Correction>
+    <Verification>openssl x509 -in /etc/ssl/certs/nginx-selfsigned.crt -noout -issuer | grep -q 'CA' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.1.3">
+    <Name>Ensure Private Key Permissions are Set Appropriately (Automated)</Name>
+    <Chapter id="4">TLS Settings</Chapter>
+    <Section id="4.1.3">Ensure Private Key Permissions are Set Appropriately</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
+    <BasePath>/etc/ssl/private/</BasePath>
+    <FileName>nginx-selfsigned.key</FileName>
+    <NonCompliantComment>The private key has weak or improper permissions, making it vulnerable to unauthorized access.</NonCompliantComment>
+    <CorrectiveComment>Restrict the private key permissions to root only (600).</CorrectiveComment>
+    <Correction>chmod 600 /etc/ssl/private/nginx-selfsigned.key; chown root:root /etc/ssl/private/nginx-selfsigned.key</Correction>
+    <Verification>stat -c "%a %U:%G" /etc/ssl/private/nginx-selfsigned.key | grep -q '600 root:root' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.1.4">
+    <Name>Ensure SSL/TLS Protocols Are Configured Appropriately (Automated)</Name>
+    <Chapter id="4">TLS Settings</Chapter>
+    <Section id="4.1.4">Ensure SSL/TLS Protocols Are Configured Appropriately</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
+    <BasePath>/etc/nginx/</BasePath>
+    <FileName>nginx.conf</FileName>
+    <NonCompliantComment>Weak or deprecated SSL/TLS protocols are enabled, increasing vulnerability to attacks.</NonCompliantComment>
+    <CorrectiveComment>Restrict SSL/TLS protocols to TLS 1.2 and TLS 1.3 only.</CorrectiveComment>
+    <Correction>echo 'ssl_protocols TLSv1.2 TLSv1.3;' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'ssl_protocols TLSv1.2 TLSv1.3;' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.1.5">
+    <Name>Ensure SSL/TLS Ciphers Are Configured Appropriately (Automated)</Name>
+    <Chapter id="4">TLS Settings</Chapter>
+    <Section id="4.1.5">Ensure SSL/TLS Ciphers Are Configured Appropriately</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
+    <BasePath>/etc/nginx/</BasePath>
+    <FileName>nginx.conf</FileName>
+    <NonCompliantComment>Weak SSL/TLS ciphers are enabled, increasing the risk of exploitation.</NonCompliantComment>
+    <CorrectiveComment>Disable weak SSL/TLS ciphers in the configuration.</CorrectiveComment>
+    <Correction>echo 'ssl_ciphers "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256";' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'ssl_ciphers' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.1.6">
+    <Name>Ensure Diffie-Hellman Parameters Are Configured (Automated)</Name>
+    <Chapter id="4">TLS Settings</Chapter>
+    <Section id="4.1.6">Ensure Diffie-Hellman Parameters Are Configured</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
+    <BasePath>/etc/nginx/</BasePath>
+    <FileName>nginx.conf</FileName>
+    <NonCompliantComment>Custom Diffie-Hellman parameters are not used, reducing security.</NonCompliantComment>
+    <CorrectiveComment>Use custom Diffie-Hellman parameters for secure key exchange.</CorrectiveComment>
+    <Correction>openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048; echo 'ssl_dhparam /etc/ssl/certs/dhparam.pem;' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'ssl_dhparam' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.1.7">
+    <Name>Ensure OCSP Stapling Is Configured (Automated)</Name>
+    <Chapter id="4">TLS Settings</Chapter>
+    <Section id="4.1.7">Ensure OCSP Stapling Is Configured</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
+    <BasePath>/etc/nginx/</BasePath>
+    <FileName>nginx.conf</FileName>
+    <NonCompliantComment>OCSP stapling is not enabled, increasing SSL handshake time and reducing security.</NonCompliantComment>
+    <CorrectiveComment>Enable OCSP Stapling in the SSL configuration.</CorrectiveComment>
+    <Correction>echo 'ssl_stapling on; ssl_stapling_verify on; ssl_trusted_certificate /etc/ssl/certs/nginx-selfsigned.crt;' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'ssl_stapling on;' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.1.8">
+    <Name>Ensure HTTP Strict Transport Security Is Enabled (Automated)</Name>
+    <Chapter id="4">TLS Settings</Chapter>
+    <Section id="4.1.8">Ensure HTTP Strict Transport Security Is Enabled</Section>
+    <Profiles>
+      <Profile level="1" type="Webserver"/>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
+    <BasePath>/etc/nginx/</BasePath>
+    <FileName>nginx.conf</FileName>
+    <NonCompliantComment>HTTP Strict Transport Security (HSTS) is not enabled, reducing HTTPS security.</NonCompliantComment>
+    <CorrectiveComment>Enable HSTS in the NGINX configuration.</CorrectiveComment>
+    <Correction>echo 'add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload";' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'Strict-Transport-Security' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.1.9">
+    <Name>Ensure Client Certificate Authentication Is Configured for Upstream Servers (Automated)</Name>
+    <Chapter id="4">TLS Settings</Chapter>
+    <Section id="4.1.9">Ensure Client Certificate Authentication Is Configured for Upstream Servers</Section>
+    <Profiles>
+      <Profile level="1" type="Proxy"/>
+      <Profile level="1" type="LoadBalancer"/>
+    </Profiles>
+    <BasePath>/etc/nginx/</BasePath>
+    <FileName>nginx.conf</FileName>
+    <NonCompliantComment>Upstream server traffic is not authenticated with a client certificate, reducing security.</NonCompliantComment>
+    <CorrectiveComment>Configure client certificate authentication for upstream server traffic.</CorrectiveComment>
+    <Correction>echo 'proxy_ssl_certificate /etc/ssl/certs/client.crt; proxy_ssl_certificate_key /etc/ssl/private/client.key;' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'proxy_ssl_certificate' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.1.10">
+    <Name>Ensure Upstream Server Certificate Is Verified (Automated)</Name>
+    <Chapter id="4">TLS Settings</Chapter>
+    <Section id="4.1.10">Ensure Upstream Server Certificate Is Verified</Section>
+    <Profiles>
+      <Profile level="2" type="Proxy"/>
+      <Profile level="2" type="LoadBalancer"/>
+    </Profiles>
+    <BasePath>/etc/nginx/</BasePath>
+    <FileName>nginx.conf</FileName>
+    <NonCompliantComment>The upstream server certificate is not verified, making the server vulnerable to Man-in-the-Middle attacks.</NonCompliantComment>
+    <CorrectiveComment>Configure NGINX to verify the upstream server certificate using a trusted CA certificate.</CorrectiveComment>
+    <Correction>echo 'proxy_ssl_trusted_certificate /etc/ssl/certs/ca-certificates.crt; proxy_ssl_verify on;' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'proxy_ssl_verify on;' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.1.11">
+    <Name>Ensure HSTS Preload Is Configured (Automated)</Name>
+    <Chapter id="4">TLS Settings</Chapter>
+    <Section id="4.1.11">Ensure HSTS Preload Is Configured</Section>
+    <Profiles>
+      <Profile level="2" type="Webserver"/>
+      <Profile level="2" type="Proxy"/>
+      <Profile level="2" type="LoadBalancer"/>
+    </Profiles>
+    <BasePath>/etc/nginx/</BasePath>
+    <FileName>nginx.conf</FileName>
+    <NonCompliantComment>Your domain is not preloaded in HSTS, reducing the effectiveness of HTTPS.</NonCompliantComment>
+    <CorrectiveComment>Configure HSTS with the preload directive and submit your domain for HSTS preload.</CorrectiveComment>
+    <Correction>echo 'add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload";' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'Strict-Transport-Security.*preload' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.1.12">
+    <Name>Ensure SSL Session Resumption Is Disabled (Automated)</Name>
+    <Chapter id="4">TLS Settings</Chapter>
+    <Section id="4.1.12">Ensure SSL Session Resumption Is Disabled</Section>
+    <Profiles>
+      <Profile level="2" type="Webserver"/>
+      <Profile level="2" type="Proxy"/>
+      <Profile level="2" type="LoadBalancer"/>
+    </Profiles>
+    <BasePath>/etc/nginx/</BasePath>
+    <FileName>nginx.conf</FileName>
+    <NonCompliantComment>SSL session resumption is enabled, reducing the benefits of Perfect Forward Secrecy (PFS).</NonCompliantComment>
+    <CorrectiveComment>Disable SSL session resumption for PFS.</CorrectiveComment>
+    <Correction>echo 'ssl_session_cache off;' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'ssl_session_cache off;' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.1.13">
+    <Name>Ensure HTTP/2 Is Enabled (Automated)</Name>
+    <Chapter id="4">TLS Settings</Chapter>
+    <Section id="4.1.13">Ensure HTTP/2 Is Enabled</Section>
+    <Profiles>
+      <Profile level="2" type="Webserver"/>
+    </Profiles>
+    <BasePath>/etc/nginx/</BasePath>
+    <FileName>nginx.conf</FileName>
+    <NonCompliantComment>HTTP/2.0 is not enabled, which reduces the performance of HTTPS connections.</NonCompliantComment>
+    <CorrectiveComment>Enable HTTP/2.0 for HTTPS connections in NGINX.</CorrectiveComment>
+    <Correction>sed -i 's/listen 443 ssl;/listen 443 ssl http2;/' /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'listen 443 ssl http2;' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.1.14">
+    <Name>Ensure Only Perfect Forward Secrecy Ciphers Are Used (Automated)</Name>
+    <Chapter id="4">TLS Settings</Chapter>
+    <Section id="4.1.14">Ensure Only Perfect Forward Secrecy Ciphers Are Used</Section>
+    <Profiles>
+      <Profile level="2" type="Webserver"/>
+      <Profile level="2" type="Proxy"/>
+      <Profile level="2" type="LoadBalancer"/>
+    </Profiles>
+    <BasePath>/etc/nginx/</BasePath>
+    <FileName>nginx.conf</FileName>
+    <NonCompliantComment>Perfect Forward Secrecy (PFS) ciphers are not enforced, reducing SSL/TLS security.</NonCompliantComment>
+    <CorrectiveComment>Restrict SSL/TLS ciphers to only PFS-compatible ciphers (ECDHE).</CorrectiveComment>
+    <Correction>echo 'ssl_ciphers "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256";' &gt;&gt; /etc/nginx/nginx.conf</Correction>
+    <Verification>nginx -T | grep -q 'ssl_ciphers' &amp;&amp; echo 0 || echo 1</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+</RulesCIS>

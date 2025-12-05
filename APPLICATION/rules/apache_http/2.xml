@@ -1,0 +1,163 @@
+<RulesCIS>
+  <Rule id="2.1">
+    <Name>Ensure unnecessary authentication and authorization modules are disabled (Manual)</Name>
+    <Chapter id="2">Configuration</Chapter>
+    <Section id="2.1">Modules Configuration</Section>
+    <SubSection id="2.1.1">Authentication and Authorization Modules</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+    <BasePath>/etc/apache2/mods-enabled</BasePath>
+    <FileName>*auth*.load</FileName>
+    <NonCompliantComment>Unnecessary authentication and authorization modules are enabled.</NonCompliantComment>
+    <CorrectiveComment>Disable unused authentication and authorization modules using a2dismod.</CorrectiveComment>
+    <Correction><![CDATA[Manual review required; run a2dismod <module_name> for unused auth modules.]]></Correction>
+    <Verification><![CDATA[ls /etc/apache2/mods-enabled | grep auth && echo 1 || echo 0]]></Verification>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="2.2">
+    <Name>Ensure log_config module is enabled (Automated)</Name>
+    <Chapter id="2">Configuration</Chapter>
+    <Section id="2.1">Modules Configuration</Section>
+    <SubSection id="2.1.2">Logging Module</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+    <BasePath>/etc/apache2/mods-enabled</BasePath>
+    <FileName>log_config.load</FileName>
+    <NonCompliantComment>The log configuration module is not enabled, which may lead to misconfigured logging.</NonCompliantComment>
+    <CorrectiveComment>Enable the log_config module using a2enmod.</CorrectiveComment>
+    <Correction><![CDATA[a2enmod log_config && systemctl reload apache2]]></Correction>
+    <Verification><![CDATA[apache2ctl -M | grep -q log_config_module && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="2.3">
+    <Name>Ensure WebDAV modules are disabled (Automated)</Name>
+    <Chapter id="2">Configuration</Chapter>
+    <Section id="2.1">Modules Configuration</Section>
+    <SubSection id="2.1.3">WebDAV Modules</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+    <BasePath>/etc/apache2/mods-enabled</BasePath>
+    <FileName>dav*.load</FileName>
+    <NonCompliantComment>WebDAV modules are enabled, increasing the risk of unauthorized file manipulation.</NonCompliantComment>
+    <CorrectiveComment>Disable WebDAV modules using a2dismod.</CorrectiveComment>
+    <Correction><![CDATA[a2dismod dav dav_fs && systemctl reload apache2]]></Correction>
+    <Verification><![CDATA[apache2ctl -M | grep -E 'dav_module|dav_fs_module' && echo 1 || echo 0]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="2.4">
+    <Name>Ensure mod_status is disabled (Automated)</Name>
+    <Chapter id="2">Configuration</Chapter>
+    <Section id="2.1">Modules Configuration</Section>
+    <SubSection id="2.1.4">Status Module</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+    <BasePath>/etc/apache2/mods-enabled</BasePath>
+    <FileName>status.load</FileName>
+    <NonCompliantComment>The status module is enabled, which can expose sensitive server performance information.</NonCompliantComment>
+    <CorrectiveComment>Disable mod_status using a2dismod.</CorrectiveComment>
+    <Correction><![CDATA[a2dismod status && systemctl reload apache2]]></Correction>
+    <Verification><![CDATA[apache2ctl -M | grep -q status_module && echo 1 || echo 0]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="2.5">
+    <Name>Ensure mod_autoindex is disabled (Automated)</Name>
+    <Chapter id="2">Configuration</Chapter>
+    <Section id="2.1">Modules Configuration</Section>
+    <SubSection id="2.1.5">AutoIndex Module</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+    <BasePath>/etc/apache2/mods-enabled</BasePath>
+    <FileName>autoindex.load</FileName>
+    <NonCompliantComment>The autoindex module is enabled, which may expose directory listings.</NonCompliantComment>
+    <CorrectiveComment>Disable mod_autoindex using a2dismod.</CorrectiveComment>
+    <Correction><![CDATA[a2dismod autoindex -f && systemctl reload apache2]]></Correction>
+    <Verification><![CDATA[apache2ctl -M | grep -q autoindex_module && echo 1 || echo 0]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="2.6">
+    <Name>Ensure proxy modules are disabled (Automated)</Name>
+    <Chapter id="2">Configuration</Chapter>
+    <Section id="2.1">Modules Configuration</Section>
+    <SubSection id="2.1.6">Proxy Modules</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+    <BasePath>/etc/apache2/mods-enabled</BasePath>
+    <FileName>proxy.load</FileName>
+    <NonCompliantComment>Unnecessary proxy modules are enabled, increasing the attack surface.</NonCompliantComment>
+    <CorrectiveComment>Disable proxy modules using a2dismod.</CorrectiveComment>
+    <Correction><![CDATA[a2dismod proxy -f && systemctl reload apache2]]></Correction>
+    <Verification><![CDATA[apache2ctl -M | grep -q proxy_module && echo 1 || echo 0]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="2.7">
+    <Name>Ensure mod_userdir is disabled (Automated)</Name>
+    <Chapter id="2">Configuration</Chapter>
+    <Section id="2.1">Modules Configuration</Section>
+    <SubSection id="2.1.7">User Directories Module</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+    <BasePath>/etc/apache2/mods-enabled</BasePath>
+    <FileName>userdir.load</FileName>
+    <NonCompliantComment>The user directories module is enabled, which may allow access to user home directories.</NonCompliantComment>
+    <CorrectiveComment>Disable mod_userdir using a2dismod.</CorrectiveComment>
+    <Correction><![CDATA[a2dismod userdir -f && systemctl reload apache2]]></Correction>
+    <Verification><![CDATA[apache2ctl -M | grep -q userdir_module && echo 1 || echo 0]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="2.8">
+    <Name>Ensure mod_info is disabled (Automated)</Name>
+    <Chapter id="2">Configuration</Chapter>
+    <Section id="2.1">Modules Configuration</Section>
+    <SubSection id="2.1.8">Info Module</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+    <BasePath>/etc/apache2/mods-enabled</BasePath>
+    <FileName>info.load</FileName>
+    <NonCompliantComment>The info module is enabled, which can expose sensitive server configuration details.</NonCompliantComment>
+    <CorrectiveComment>Disable mod_info using a2dismod.</CorrectiveComment>
+    <Correction><![CDATA[a2dismod info -f && systemctl reload apache2]]></Correction>
+    <Verification><![CDATA[apache2ctl -M | grep -q info_module && echo 1 || echo 0]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="2.9">
+    <Name>Ensure basic and digest authentication modules are disabled (Automated)</Name>
+    <Chapter id="2">Configuration</Chapter>
+    <Section id="2.1">Modules Configuration</Section>
+    <SubSection id="2.1.9">Authentication Modules</SubSection>
+
+    <Profiles>
+      <Profile level="1" type="Server"/>
+    </Profiles>
+    <BasePath>/etc/apache2/mods-enabled</BasePath>
+    <FileName>auth_basic.load</FileName>
+    <NonCompliantComment>The basic and digest authentication modules are enabled, which are considered insecure.</NonCompliantComment>
+    <CorrectiveComment>Disable mod_auth_basic and mod_auth_digest using a2dismod.</CorrectiveComment>
+    <Correction><![CDATA[a2dismod auth_basic auth_digest -f && systemctl reload apache2]]></Correction>
+    <Verification><![CDATA[apache2ctl -M | grep -E 'auth_basic_module|auth_digest_module' && echo 1 || echo 0]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+</RulesCIS>

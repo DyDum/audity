@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block page_title %}Tableau de bord{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Stats Cards -->
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h6>Serveurs</h6>
+                    <div class="stat-value" id="stat-servers">0</div>
+                </div>
+                <i class="fas fa-server fa-3x opacity-50"></i>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h6>Scans totaux</h6>
+                    <div class="stat-value" id="stat-scans">0</div>
+                </div>
+                <i class="fas fa-search fa-3x opacity-50"></i>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h6>Score moyen</h6>
+                    <div class="stat-value" id="stat-score">-</div>
+                </div>
+                <i class="fas fa-chart-line fa-3x opacity-50"></i>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="stat-card" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h6>À risque</h6>
+                    <div class="stat-value" id="stat-risk">0</div>
+                </div>
+                <i class="fas fa-exclamation-triangle fa-3x opacity-50"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Scans -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Scans récents</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Serveur</th>
+                        <th>Date</th>
+                        <th>Score</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="recent-scans-table">
+                    <tr>
+                        <td colspan="5" class="text-center">Chargement...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="../static/js/dashboard/dashboard.js"></script>
+{% endblock %}

@@ -1,0 +1,55 @@
+<RulesCIS>
+    <Rule id="1.2.1.1">
+        <Name>Ensure GPG keys are configured (Manual)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.2">Package Management</Section>
+        <SubSection id="1.2.1">Configure Package Repositories</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/apt/trusted.gpg.d/</BasePath>
+        <FileName>package-keys.gpg</FileName>
+        <NonCompliantComment>GPG keys for package verification are not properly configured, which may allow installation of unsigned packages.</NonCompliantComment>
+        <CorrectiveComment>Import and configure the necessary GPG keys to ensure that packages are verified.</CorrectiveComment>
+        <Correction><![CDATA[echo "Review repository stanzas and attach explicit Signed-By keyrings as per site policy"]]></Correction>
+        <Verification><![CDATA[sudo awk '/^#/ {next} NF' /etc/apt/sources.list /etc/apt/sources.list.d/*.list 2>/dev/null | grep -q "Signed-By=" && echo 0 || echo 1]]></Verification>
+        <Manual>YES</Manual>
+    </Rule>
+
+    <Rule id="1.2.1.2">
+        <Name>Ensure package manager repositories are configured (Manual)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.2">Package Management</Section>
+        <SubSection id="1.2.1">Configure Package Repositories</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/apt/</BasePath>
+        <FileName>sources.list</FileName>
+        <NonCompliantComment>Package manager repositories are not correctly configured, which can lead to missing updates.</NonCompliantComment>
+        <CorrectiveComment>Configure the appropriate repository entries in the sources.list file.</CorrectiveComment>
+        <Correction><![CDATA[echo "Edit /etc/apt/sources.list(.d) to point only to approved repositories"]]></Correction>
+        <Verification><![CDATA[apt-cache policy | grep -E "http|https|file" >/dev/null && echo 0 || echo 1]]></Verification>
+        <Manual>YES</Manual>
+    </Rule>
+
+    <Rule id="1.2.2.1">
+        <Name>Ensure updates, patches, and additional security software are installed (Manual)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.2">Package Management</Section>
+        <SubSection id="1.2.2">Configure Package Updates</SubSection>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/</BasePath>
+        <FileName>update.sh</FileName>
+        <NonCompliantComment>The system is not updated with the latest patches and security updates, exposing it to vulnerabilities.</NonCompliantComment>
+        <CorrectiveComment>Install all available updates, patches, and additional security software.</CorrectiveComment>
+        <Correction><![CDATA[sudo apt-get update && apt-get upgrade -y]]></Correction>
+        <Verification><![CDATA[apt-get -s upgrade | grep -q "0 upgraded" && echo 0 || echo 1]]></Verification>
+        <Manual>YES</Manual>
+    </Rule>
+</RulesCIS>

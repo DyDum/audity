@@ -1,0 +1,204 @@
+:root {
+    --primary-bg: #14162b;
+    --secondary-bg: #232649;
+    --primary-color: #e3e6ed;
+    --secondary-color: #a2a6c7;
+    --sidebar-gradient: linear-gradient(135deg, #23254d 0%, #1e2140 100%);
+    --success-color: #00c897;
+    --danger-color: #a72424;
+    --card-bg: #191b29;
+    --table-header-bg: #25274d;
+    --active-bg: #262a4d;
+    --active-color: #00c897;
+}
+body {
+    background-color: var(--primary-bg);
+    color: var(--primary-color);
+    font-family: 'Montserrat', 'Inter', 'Open Sans', sans-serif;
+}
+.sidebar {
+    min-height: 100vh;
+    background: var(--sidebar-gradient);
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+}
+.sidebar a {
+    color: var(--secondary-color);
+    padding: 15px 20px;
+    display: block;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+.sidebar a:hover, .sidebar a.active {
+    background-color: var(--active-bg);
+    color: var(--active-color);
+    border-left: 4px solid #00c897;
+}
+.main-content {
+    padding: 30px;
+    background-color: var(--primary-bg);
+    color: var(--primary-color);
+}
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+    background: var(--card-bg);
+    color: var(--primary-color);
+}
+.stat-card {
+    background: linear-gradient(135deg, #2b2f77 0%, #492586 100%);
+    color: white;
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    text-shadow: 0 2px 12px #0003;
+}
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+.btn-primary {
+    background: linear-gradient(135deg, #2b2f77, #492586 100%);
+    color: #fff;
+    border: none;
+}
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+.btn-success {
+    background: var(--success-color);
+    color: #191b29!important;
+}
+.btn-danger {
+    background: var(--danger-color);
+}
+.btn-primary, .btn-success, .btn-danger {
+    border: none;
+}
+.alert {
+    color: #fff;
+    background: #1a2035;
+    border: none;
+}
+.alert-warning{
+    background-color: var(--danger-color);
+    color: #0d1b24!important;
+}
+.alert-success{
+    background-color: var(--success-color);
+    color: #0d1b24!important;
+}
+.badge.bg-success {
+    background-color: var(--success-color)!important;
+    color: #0d1b24!important;
+}
+.badge.bg-danger {
+    background-color: var(--danger-color)!important;
+}
+.form-control,
+.form-select,
+.form-control:focus,
+.form-select:focus {
+    background-color: #262a4d;
+    color: #fff;
+    border: 1px solid #393e60;
+}
+.form-label,
+label {
+    color: var(--secondary-color);
+}
+/* TABLE DARK MODE - corrige le fond des cases, la ligne vide, etc. */
+.table {
+    color: var(--primary-color);
+    background: transparent;
+}
+.table th, .table thead th {
+    background: var(--table-header-bg) !important;
+    color: var(--primary-color) !important;
+    border-bottom: 2px solid #393e60;
+    font-weight: 600;
+}
+.table td, .table tbody td {
+    background: transparent !important;
+    color: var(--primary-color) !important;
+    border-top: 1px solid #25274d;
+}
+.table tbody tr {
+    background: none !important;
+}
+.table-hover tbody tr:hover {
+    background: #23254d !important;
+}
+.table-bordered {
+    border: 1px solid #23254d;
+}
+.table > tbody > tr > td[colspan], .table > tbody > tr > th[colspan] {
+    background: var(--table-header-bg) !important;
+    color: var(--primary-color) !important;
+    text-align: center;
+}
+.modal-content {
+    background-color: #232649 !important;
+    color: #e3e6ed !important;
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 8px 32px #0006;
+}
+.modal-header, .modal-footer {
+    background: transparent !important;
+    border: none;
+}
+.modal-title, .modal-header label, .modal-footer .btn {
+    color: #e3e6ed !important;
+}
+.modal-body {
+    color: #e3e6ed !important;
+}
+.btn-close {
+    filter: invert(1) grayscale(1) contrast(10); /* bouton de fermeture blanc */
+}
+.form-control,
+.form-control:focus,
+.form-select,
+.form-select:focus {
+    background-color: #252849 !important;
+    color: #e3e6ed !important;
+    border: 1px solid #393e60;
+}
+::placeholder {
+    color: #a2a6c7 !important;
+    opacity: 1;
+}
+
+.modal-content .btn-primary, .modal-content .btn-success {
+    background: linear-gradient(90deg, #00c897 0%, #2b2f77 100%);
+    border: none;
+    color: #191b29!important;
+}
+.modal-content .btn-primary:hover, .modal-content .btn-success:hover {
+    background: #492586;
+    color: #fff!important;
+}
+pre {
+    background: #222;
+    color: #eee;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-x: hidden;
+}
+#log-stderr{
+    color: #ff4c4c;
+}
+#titre_stdout, #titre_stderr {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-align: center;
+}

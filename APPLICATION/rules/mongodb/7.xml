@@ -1,0 +1,39 @@
+<RulesCIS>
+  <Rule id="7.1">
+    <Name>Ensure Key File Permissions are Set Appropriately (Manual)</Name>
+    <Chapter id="7">MongoDB File Permissions</Chapter>
+    <Section id="7.1">Ensure Key File Permissions are Set Appropriately</Section>
+    <Profiles>
+      <Profile level="1" type="MongoDB"/>
+    </Profiles>
+    <BasePath>/etc/mongod.conf</BasePath>
+    <FileName>mongod.conf</FileName>
+    <NonCompliantComment>The MongoDB key file permissions are not set correctly, which may expose sensitive keys to unauthorized access.</NonCompliantComment>
+    <CorrectiveComment>Ensure appropriate key file permissions are set. Command: 
+    1. Locate the key file using: cat /etc/mongod.conf | grep "keyFile" 
+    2. Set the file permissions with the following commands: 
+       chmod 600 /etc/ssl/mongodb-keyfile 
+       chown mongodb:mongodb /etc/ssl/mongodb-keyfile 
+    3. Restart the MongoDB service using systemctl restart mongod.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="7.2">
+    <Name>Ensure Database File Permissions are Set Appropriately (Manual)</Name>
+    <Chapter id="7">MongoDB File Permissions</Chapter>
+    <Section id="7.2">Ensure Database File Permissions are Set Appropriately</Section>
+    <Profiles>
+      <Profile level="1" type="MongoDB"/>
+    </Profiles>
+    <BasePath>/var/lib/mongodb/</BasePath>
+    <FileName>database files</FileName>
+    <NonCompliantComment>The MongoDB database file permissions are not set correctly, which may expose sensitive data to unauthorized access.</NonCompliantComment>
+    <CorrectiveComment>Ensure appropriate database file permissions are set. Command: 
+    1. Locate the database file location using: cat /etc/mongod.conf | grep "dbPath" 
+    2. Set the file permissions with the following commands: 
+       chmod 770 /var/lib/mongodb 
+       chown mongodb:mongodb /var/lib/mongodb 
+    3. Restart the MongoDB service using systemctl restart mongod.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+</RulesCIS>

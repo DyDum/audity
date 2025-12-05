@@ -1,0 +1,90 @@
+<RulesCIS>
+  <Rule id="4.1">
+    <BasePath>/etc/passwd</BasePath>
+    <FileName>passwd</FileName>
+    <NonCompliantComment>Interactive login is enabled for PostgreSQL user, which may allow unauthorized access.</NonCompliantComment>
+    <CorrectiveComment>Ensure interactive login for the PostgreSQL user is disabled. Command: 
+    usermod -s /sbin/nologin postgres</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="4.2">
+    <BasePath>/etc/sudoers</BasePath>
+    <FileName>sudoers</FileName>
+    <NonCompliantComment>Sudo is not configured correctly for PostgreSQL administration, which may allow privilege escalation.</NonCompliantComment>
+    <CorrectiveComment>Ensure sudo is restricted to authorized users. Command: 
+    1. Edit the sudoers file using visudo. 
+    2. Ensure PostgreSQL administrative commands are restricted to authorized users only.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="4.3">
+    <BasePath>/etc/group</BasePath>
+    <FileName>group</FileName>
+    <NonCompliantComment>Excessive administrative privileges are granted to PostgreSQL users, which may lead to unauthorized actions.</NonCompliantComment>
+    <CorrectiveComment>Review and revoke excessive administrative privileges. Command: 
+    gpasswd -d user postgres</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="4.4">
+    <BasePath>/etc/shadow</BasePath>
+    <FileName>shadow</FileName>
+    <NonCompliantComment>Inactive PostgreSQL accounts are not locked, which may allow unauthorized access.</NonCompliantComment>
+    <CorrectiveComment>Lock out accounts if not currently in use. Command: 
+    passwd -l postgres</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="4.5">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>pg_hba.conf</FileName>
+    <NonCompliantComment>Excessive function privileges are granted, which may allow unauthorized users to execute dangerous functions.</NonCompliantComment>
+    <CorrectiveComment>Ensure excessive function privileges are revoked. Command: 
+    REVOKE EXECUTE ON FUNCTION pg_read_file, pg_write_file FROM PUBLIC;</CorrectiveComment>
+    <Correction>psql -c "REVOKE EXECUTE ON FUNCTION pg_read_file, pg_write_file FROM PUBLIC;"</Correction>
+    <Verification>psql -c "SELECT * FROM information_schema.routine_privileges WHERE specific_name IN ('pg_read_file', 'pg_write_file');"</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.6">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>pg_hba.conf</FileName>
+    <NonCompliantComment>Excessive DML (Data Manipulation Language) privileges are granted, which may lead to unauthorized modifications.</NonCompliantComment>
+    <CorrectiveComment>Ensure excessive DML privileges are revoked. Command: 
+    1. Review user roles and permissions. 
+    2. Use REVOKE statements to remove unnecessary DML privileges.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="4.7">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>pg_hba.conf</FileName>
+    <NonCompliantComment>Row Level Security (RLS) is not configured, which may allow unauthorized access to sensitive data.</NonCompliantComment>
+    <CorrectiveComment>Enable and configure Row Level Security (RLS) for sensitive tables. Command: 
+    ALTER TABLE sensitive_table ENABLE ROW LEVEL SECURITY;
+    CREATE POLICY sensitive_policy ON sensitive_table FOR SELECT USING (user_id = current_user);</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="4.8">
+    <BasePath>/usr/pgsql-17/lib/</BasePath>
+    <FileName>set_user.so</FileName>
+    <NonCompliantComment>The set_user extension is not installed, which may limit the ability to enforce user impersonation.</NonCompliantComment>
+    <CorrectiveComment>Install the set_user extension. Command: 
+    CREATE EXTENSION set_user;</CorrectiveComment>
+    <Correction>psql -c "CREATE EXTENSION set_user;"</Correction>
+    <Verification>psql -c "SELECT * FROM pg_available_extensions WHERE name = 'set_user';"</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.9">
+    <BasePath>/var/lib/pgsql/17/data/</BasePath>
+    <FileName>pg_hba.conf</FileName>
+    <NonCompliantComment>Predefined PostgreSQL roles are not being used, which may lead to excessive privileges.</NonCompliantComment>
+    <CorrectiveComment>Make use of predefined roles for access control. Command: 
+    1. Assign predefined roles (pg_read_all_data, pg_write_all_data) to users who need them. 
+    2. Avoid granting superuser privileges without justification.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+</RulesCIS>

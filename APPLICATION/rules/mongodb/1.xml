@@ -1,0 +1,20 @@
+<RulesCIS>
+  <Rule id="1.1">
+    <Name>Ensure MongoDB Software Version / Patches are Up to Date (Manual)</Name>
+    <Chapter id="1">Initial Setup</Chapter>
+    <Section id="1.1">Ensure MongoDB Software Version / Patches are Up to Date</Section>
+    <Profiles>
+      <Profile level="1" type="MongoDB"/>
+    </Profiles>
+    <BasePath>N/A</BasePath>
+    <FileName>N/A</FileName>
+    <NonCompliantComment>The MongoDB software version or patches are not up to date, which may expose the server to known vulnerabilities.</NonCompliantComment>
+    <CorrectiveComment>Ensure the appropriate MongoDB software version/patches are installed. Command: 
+    1. Backup the data set. 
+    2. Download the binaries for the latest MongoDB revision from the MongoDB Download Page (https://www.mongodb.com/alerts) and store the binaries in a temporary location. 
+    3. Shutdown the MongoDB instance. 
+    4. Replace the existing MongoDB binaries with the downloaded binaries. 
+    5. Restart the MongoDB instance.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+</RulesCIS>

@@ -1,0 +1,171 @@
+<RulesCIS>
+    <Rule id="4.3.1">
+        <Name>Ensure nftables is installed (Automated)</Name>
+        <Chapter id="4">Host Based Firewall</Chapter>
+        <Section id="4.3">Configure nftables</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/usr/sbin/</BasePath>
+        <FileName>nft</FileName>
+        <NonCompliantComment> nftables is not installed, leaving the system without modern firewall capabilities. </NonCompliantComment>
+        <CorrectiveComment> Install nftables to manage firewall rules efficiently. </CorrectiveComment>
+        <Correction><![CDATA[apt-get install -y nftables]]></Correction>
+        <Verification><![CDATA[dpkg -l | grep -q nftables && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="4.3.2">
+        <Name>Ensure ufw is uninstalled or disabled with nftables (Automated)</Name>
+        <Chapter id="4">Host Based Firewall</Chapter>
+        <Section id="4.3">Configure nftables</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/</BasePath>
+        <FileName>nftables.conf</FileName>
+        <NonCompliantComment> nftables rules are not persisted, risking loss of firewall configuration on reboot. </NonCompliantComment>
+        <CorrectiveComment> Save the current nftables ruleset to /etc/nftables.conf and enable the nftables service so it loads at boot. </CorrectiveComment>
+        <Correction><![CDATA[ufw disable && systemctl stop ufw.service && systemctl mask ufw.service]]></Correction>
+        <Verification><![CDATA[! dpkg -s ufw &>/dev/null || { ufw status | grep -q "inactive" && systemctl is-enabled ufw.service 2>/dev/null | grep -q masked; }; [ $? -eq 0 ] && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="4.3.3">
+        <Name>Ensure iptables are flushed with nftables (Manual)</Name>
+        <Chapter id="4">Host Based Firewall</Chapter>
+        <Section id="4.3">Configure nftables</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/usr/sbin/</BasePath>
+        <FileName>iptables</FileName>
+        <NonCompliantComment> iptables is installed and may be active, which can conflict with nftables. </NonCompliantComment>
+        <CorrectiveComment> Uninstall or disable iptables to avoid conflicts with nftables. </CorrectiveComment>
+        <Correction><![CDATA[apt-get purge -y iptables]]></Correction>
+        <Verification><![CDATA[dpkg -l | grep -q iptables && echo 1 || echo 0]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="4.3.4">
+        <Name>Ensure a nftables table exists (Automated)</Name>
+        <Chapter id="4">Host Based Firewall</Chapter>
+        <Section id="4.3">Configure nftables</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/</BasePath>
+        <FileName>iptables_flush.sh</FileName>
+        <NonCompliantComment> Residual iptables rules may conflict with nftables, causing unexpected firewall behavior. </NonCompliantComment>
+        <CorrectiveComment> Manually flush iptables rules to ensure nftables fully manages the firewall. </CorrectiveComment>
+        <Correction><![CDATA[nft list tables | grep -q 'table inet filter' || nft create table inet filter]]></Correction>
+        <Verification><![CDATA[nft list tables | grep -q '^table inet filter' && echo 0 || echo 1]]></Verification>
+        <Manual>VERIFICATION</Manual>
+    </Rule>
+
+    <Rule id="4.3.5">
+        <Name>Ensure nftables base chains exist (Automated)</Name>
+        <Chapter id="4">Host Based Firewall</Chapter>
+        <Section id="4.3">Configure nftables</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/nftables.conf</BasePath>
+        <FileName>nftables.conf</FileName>
+        <NonCompliantComment> The nftables base chains (input, forward, output) are not defined, leaving the firewall incomplete. </NonCompliantComment>
+        <CorrectiveComment> Define base chains in the nftables ruleset with appropriate default policies. </CorrectiveComment>
+        <Correction><![CDATA[ nft list ruleset | grep -q 'hook input' && nft list ruleset | grep -q 'hook forward' && nft list ruleset | grep -q 'hook output' && echo 0 || echo 1]]></Correction>
+        <Verification><![CDATA[nft list ruleset | grep -q 'hook input' && nft list ruleset | grep -q 'hook forward' && nft list ruleset | grep -q 'hook output' && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="4.3.6">
+        <Name>Ensure nftables loopback traffic is configured (Automated)</Name>
+        <Chapter id="4">Host Based Firewall</Chapter>
+        <Section id="4.3">Configure nftables</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/nftables.conf</BasePath>
+        <FileName>nftables.conf</FileName>
+        <NonCompliantComment> Loopback traffic is not explicitly allowed in the nftables ruleset. </NonCompliantComment>
+        <CorrectiveComment> Add a rule to allow traffic on the loopback interface. </CorrectiveComment>
+        <Correction><![CDATA[nft add rule inet filter input iif lo accept; nft add rule inet filter input ip saddr 127.0.0.0/8 counter drop; nft add rule inet filter input ip6 saddr ::1 counter drop]]></Correction>
+        <Verification><![CDATA[nft list ruleset | awk '/hook input/,/}/' | grep -q 'iif "lo" accept' && nft list ruleset | awk '/hook input/,/}/' | grep -q 'ip saddr 127.0.0.0/8.*drop' && nft list ruleset | awk '/hook input/,/}/' | grep -q 'ip6 saddr ::1.*drop' && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="4.3.7">
+        <Name>Ensure nftables outbound and established connections are configured (Manual)</Name>
+        <Chapter id="4">Host Based Firewall</Chapter>
+        <Section id="4.3">Configure nftables</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/nftables.conf</BasePath>
+        <FileName>nftables.conf</FileName>
+        <NonCompliantComment> Outbound and established connection rules are not configured, risking disruption of legitimate traffic. </NonCompliantComment>
+        <CorrectiveComment> Manually configure rules to allow established and outbound traffic. </CorrectiveComment>
+        <Correction><![CDATA[echo "Manual configuration required"]]></Correction>
+        <Verification><![CDATA[ echo "Manual verification required"]]></Verification>
+        <Manual>VERIFICATION</Manual>
+    </Rule>
+
+    <Rule id="4.3.8">
+        <Name>Ensure nftables default deny firewall policy (Automated)</Name>
+        <Chapter id="4">Host Based Firewall</Chapter>
+        <Section id="4.3">Configure nftables</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/nftables.conf</BasePath>
+        <FileName>nftables.conf</FileName>
+        <NonCompliantComment> The default policy for chains is not set to deny, potentially allowing unauthorized traffic. </NonCompliantComment>
+        <CorrectiveComment> Configure the default chain policies to drop incoming and forwarded traffic. </CorrectiveComment>
+        <Correction><![CDATA[nft chain inet filter input   { policy drop \; }; nft chain inet filter forward { policy drop \; }; nft chain inet filter output  { policy drop \; }]]></Correction>
+        <Verification><![CDATA[nft list ruleset | grep -q 'hook input.*policy drop' && nft list ruleset | grep -q 'hook forward.*policy drop' && nft list ruleset | grep -q 'hook output.*policy drop' && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="4.3.9">
+        <Name>Ensure nftables service is enabled (Automated)</Name>
+        <Chapter id="4">Host Based Firewall</Chapter>
+        <Section id="4.3">Configure nftables</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/systemd/system/</BasePath>
+        <FileName>nftables.service</FileName>
+        <NonCompliantComment> The nftables service is not enabled, risking loss of firewall configuration on reboot. </NonCompliantComment>
+        <CorrectiveComment> Enable and start the nftables service to load the ruleset at boot. </CorrectiveComment>
+        <Correction><![CDATA[systemctl enable nftables]]></Correction>
+        <Verification><![CDATA[systemctl is-enabled nftables | grep -q '^enabled$' && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="4.3.10">
+        <Name>Ensure nftables rules are permanent (Automated)</Name>
+        <Chapter id="4">Host Based Firewall</Chapter>
+        <Section id="4.3">Configure nftables</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/nftables.conf</BasePath>
+        <FileName>nftables.conf</FileName>
+        <NonCompliantComment> The nftables ruleset is not saved permanently, so configuration may be lost on reboot. </NonCompliantComment>
+        <CorrectiveComment> Save the current nftables ruleset to /etc/nftables.conf for persistence. </CorrectiveComment>
+        <Correction><![CDATA[nft list ruleset > /etc/nftables.rules && grep -q 'include "/etc/nftables.rules"' /etc/nftables.conf || echo 'include "/etc/nftables.rules"' >> /etc/nftables.conf]]></Correction>
+        <Verification><![CDATA[[ -n "$(grep -E '^\s*include' /etc/nftables.conf)" ] && file=$(awk '$1 ~ /^\s*include/ { gsub("\"","",$2);print $2 }' /etc/nftables.conf) && grep -q 'hook input' "$file" && grep -q 'hook forward' "$file" && grep -q 'hook output' "$file" && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+</RulesCIS>

@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block page_title %}Mon compte{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Informations du compte</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Nom d'utilisateur :</strong> <span id="acc-username"></span></p>
+                <p><strong>Email :</strong> <span id="acc-email-info"></span></p>
+                <p><strong>MFA :</strong> <span id="acc-mfa-status" class="badge bg-secondary"></span></p>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Adresse email</h5>
+            </div>
+            <div class="card-body">
+                <p>Actuelle : <strong><span id="acc-email"></span></strong></p>
+                <form id="change-email-form" class="mt-3">
+                <div class="mb-3">
+                    <label class="form-label">Nouvelle adresse email</label>
+                    <input type="email" class="form-control" id="new-email" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Mettre à jour l'email</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5>Authentification MFA</h5>
+                <span id="mfa-status-pill" class="badge bg-secondary">Inconnu</span>
+            </div>
+            <div class="card-body">
+                <div id="mfa-disabled-block">
+                    <p>Le MFA n’est pas activé sur votre compte.</p>
+                    <button id="btn-mfa-enable" class="btn btn-success">Activer le MFA</button>
+                </div>
+
+                <div id="mfa-enabled-block" class="d-none">
+                    <p>Le MFA est actuellement <strong>activé</strong>.</p>
+                    <button id="btn-mfa-disable" class="btn btn-danger">Désactiver le MFA</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Mot de passe</h5>
+            </div>
+            <div class="card-body">
+                <form id="change-password-form">
+                <div class="mb-3">
+                    <label class="form-label">Ancien mot de passe</label>
+                    <input type="password" class="form-control" id="old-password" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Nouveau mot de passe</label>
+                    <input type="password" class="form-control" id="new-password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Changer le mot de passe</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal setup MFA -->
+<div class="modal fade" id="mfaSetupModal" tabindex="-1" aria-labelledby="mfaSetupModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="mfaSetupModalLabel">Activer l’authentification MFA</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+        </div>
+        <div class="modal-body">
+            <p>Scannez ce QR code avec votre application d’authentification (Google Authenticator, etc.), ou saisissez le secret manuellement.</p>
+            <div class="text-center mb-3">
+            <img id="mfa-qr-img" alt="QR Code MFA" class="img-fluid border rounded p-2">
+            </div>
+            <p class="text-center">
+            Secret : de id="mfa-secret-text"></code>
+            </p>
+            <hr>
+            <form id="mfa-setup-verify-form">
+            <div class="mb-3">
+                <label for="mfa-setup-code" class="form-label">
+                Code MFA
+                </label>
+                <input type="text" class="form-control text-center" id="mfa-setup-code" maxlength="6" required>
+                <small class="text-muted">Entrez le code affiché dans votre application d’authentification.</small>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Valider et activer</button>
+            </form>
+        </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="../static/js/base/api.js"></script>
+<script src="../static/js/account/account.js"></script>
+{% endblock %}

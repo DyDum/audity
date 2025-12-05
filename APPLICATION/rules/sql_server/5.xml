@@ -1,0 +1,39 @@
+<RulesCIS>
+  <Rule id="5.1">
+    <BasePath>N/A</BasePath>
+    <FileName>N/A</FileName>
+    <NonCompliantComment>The 'Maximum number of error log files' is set to a value less than '12'.</NonCompliantComment>
+    <CorrectiveComment>Set the 'Maximum number of error log files' to '12' or greater. Command: EXEC sp_configure 'show advanced options', 1; RECONFIGURE; EXEC sp_configure 'max error logs', 12; RECONFIGURE;</CorrectiveComment>
+    <Correction>EXEC sp_configure 'show advanced options', 1; RECONFIGURE; EXEC sp_configure 'max error logs', 12; RECONFIGURE;</Correction>
+    <Verification>SELECT value_in_use FROM sys.configurations WHERE name = 'max error logs';</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="5.2">
+    <BasePath>N/A</BasePath>
+    <FileName>N/A</FileName>
+    <NonCompliantComment>The 'Default Trace Enabled' server configuration option is set to '0'.</NonCompliantComment>
+    <CorrectiveComment>Ensure 'Default Trace Enabled' is set to '1'. Command: EXEC sp_configure 'show advanced options', 1; RECONFIGURE; EXEC sp_configure 'default trace enabled', 1; RECONFIGURE;</CorrectiveComment>
+    <Correction>EXEC sp_configure 'show advanced options', 1; RECONFIGURE; EXEC sp_configure 'default trace enabled', 1; RECONFIGURE;</Correction>
+    <Verification>SELECT value_in_use FROM sys.configurations WHERE name = 'default trace enabled';</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="5.3">
+    <BasePath>N/A</BasePath>
+    <FileName>N/A</FileName>
+    <NonCompliantComment>The 'Login Auditing' setting is not set to 'Failed Logins'.</NonCompliantComment>
+    <CorrectiveComment>Set 'Login Auditing' to capture 'Failed Logins'. Command: EXEC sp_configure 'show advanced options', 1; RECONFIGURE; EXEC sp_configure 'login auditing', 2; RECONFIGURE;</CorrectiveComment>
+    <Correction>EXEC sp_configure 'show advanced options', 1; RECONFIGURE; EXEC sp_configure 'login auditing', 2; RECONFIGURE;</Correction>
+    <Verification>SELECT value_in_use FROM sys.configurations WHERE name = 'login auditing';</Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="5.4">
+    <BasePath>N/A</BasePath>
+    <FileName>N/A</FileName>
+    <NonCompliantComment>'SQL Server Audit' is not configured to capture both 'Failed' and 'Successful Logins'.</NonCompliantComment>
+    <CorrectiveComment>Configure 'SQL Server Audit' to capture both 'Failed' and 'Successful Logins'. Command: CREATE SERVER AUDIT [ServerAudit] TO FILE (FILEPATH = 'C:\\SQLAudit\\', MAXSIZE = 1 GB); CREATE SERVER AUDIT SPECIFICATION [LoginAudit] FOR SERVER AUDIT [ServerAudit] WITH (STATE = ON) ADD (FAILED_LOGIN_GROUP), ADD (SUCCESSFUL_LOGIN_GROUP);</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+</RulesCIS>
