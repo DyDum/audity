@@ -1,0 +1,241 @@
+<RulesCIS>
+  <Rule id="4.1">
+    <Name>Restrict access to $CATALINA_HOME directory (Automated)</Name>
+    <Chapter id="4">Restrict Tomcat Processes and Filesystem Access</Chapter>
+    <Section id="4.1">Restrict access to $CATALINA_HOME directory</Section>
+    <Profiles>
+      <Profile level="1"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/</BasePath>
+    <FileName>N/A</FileName>
+    <NonCompliantComment>Access to the $CATALINA_HOME directory is not restricted, which may allow unauthorized modifications.</NonCompliantComment>
+    <CorrectiveComment>Restrict access to the $CATALINA_HOME directory.</CorrectiveComment>
+    <Correction><![CDATA[chmod -R 750 $CATALINA_HOME; chown -R tomcat:tomcat $CATALINA_HOME;]]></Correction>
+    <Verification><![CDATA[[ "$(stat -c '%a %U %G' $CATALINA_HOME)" = "750 tomcat tomcat" ] && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.2">
+    <Name>Restrict access to $CATALINA_BASE directory (Automated)</Name>
+    <Chapter id="4">Restrict Tomcat Processes and Filesystem Access</Chapter>
+    <Section id="4.2">Restrict access to $CATALINA_BASE directory</Section>
+    <Profiles>
+      <Profile level="1"/>
+    </Profiles>
+    <BasePath>$CATALINA_BASE/</BasePath>
+    <FileName>N/A</FileName>
+    <NonCompliantComment>Access to the $CATALINA_BASE directory is not restricted, which may allow unauthorized modifications.</NonCompliantComment>
+    <CorrectiveComment>Restrict access to the $CATALINA_BASE directory.</CorrectiveComment>
+    <Correction><![CDATA[chmod -R 750 $CATALINA_BASE; chown -R tomcat:tomcat $CATALINA_BASE;]]></Correction>
+    <Verification><![CDATA[[ "$(stat -c '%a %U %G' $CATALINA_BASE)" = "750 tomcat tomcat" ] && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.3">
+    <Name>Restrict access to Tomcat configuration directory (Automated)</Name>
+    <Chapter id="4">Restrict Tomcat Processes and Filesystem Access</Chapter>
+    <Section id="4.3">Restrict access to Tomcat configuration directory</Section>
+    <Profiles>
+      <Profile level="1"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>N/A</FileName>
+    <NonCompliantComment>Access to the Tomcat configuration directory is not restricted, which may allow unauthorized modifications.</NonCompliantComment>
+    <CorrectiveComment>Restrict access to the Tomcat configuration directory.</CorrectiveComment>
+    <Correction><![CDATA[chmod -R 750 $CATALINA_HOME/conf; chown -R tomcat:tomcat $CATALINA_HOME/conf;]]></Correction>
+    <Verification><![CDATA[[ "$(stat -c '%a %U %G' $CATALINA_HOME/conf)" = "750 tomcat tomcat" ] && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.4">
+    <Name>Restrict access to Tomcat logs directory (Automated)</Name>
+    <Chapter id="4">Restrict Tomcat Processes and Filesystem Access</Chapter>
+    <Section id="4.4">Restrict access to Tomcat logs directory</Section>
+    <Profiles>
+      <Profile level="1"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/logs/</BasePath>
+    <FileName>N/A</FileName>
+    <NonCompliantComment>Access to the Tomcat logs directory is not restricted, which may allow unauthorized modifications.</NonCompliantComment>
+    <CorrectiveComment>Restrict access to the Tomcat logs directory.</CorrectiveComment>
+    <Correction><![CDATA[chmod -R 750 $CATALINA_HOME/logs; chown -R tomcat:tomcat $CATALINA_HOME/logs;]]></Correction>
+    <Verification><![CDATA[[ "$(stat -c '%a %U %G' $CATALINA_HOME/logs)" = "750 tomcat tomcat" ] && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.5">
+    <Name>Restrict access to Tomcat temp directory (Automated)</Name>
+    <Chapter id="4">Restrict Tomcat Processes and Filesystem Access</Chapter>
+    <Section id="4.5">Restrict access to Tomcat temp directory</Section>
+    <Profiles>
+      <Profile level="1"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/temp/</BasePath>
+    <FileName>N/A</FileName>
+    <NonCompliantComment>Access to the Tomcat temp directory is not restricted, which may allow unauthorized modifications.</NonCompliantComment>
+    <CorrectiveComment>Restrict access to the Tomcat temp directory.</CorrectiveComment>
+    <Correction><![CDATA[chmod -R 750 $CATALINA_HOME/temp; chown -R tomcat:tomcat $CATALINA_HOME/temp;]]></Correction>
+    <Verification><![CDATA[[ "$(stat -c '%a %U %G' $CATALINA_HOME/temp)" = "750 tomcat tomcat" ] && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.6">
+    <Name>Restrict access to Tomcat binaries directory (Automated)</Name>
+    <Chapter id="4">Restrict Tomcat Processes and Filesystem Access</Chapter>
+    <Section id="4.6">Restrict access to Tomcat binaries directory</Section>
+    <Profiles>
+      <Profile level="1"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/bin/</BasePath>
+    <FileName>N/A</FileName>
+    <NonCompliantComment>Access to the Tomcat binaries directory is not restricted, which may allow unauthorized modifications.</NonCompliantComment>
+    <CorrectiveComment>Restrict access to the Tomcat binaries directory.</CorrectiveComment>
+    <Correction><![CDATA[chmod -R 750 $CATALINA_HOME/bin; chown -R tomcat:tomcat $CATALINA_HOME/bin;]]></Correction>
+    <Verification><![CDATA[[ "$(stat -c '%a %U %G' $CATALINA_HOME/bin)" = "750 tomcat tomcat" ] && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.7">
+    <Name>Restrict access to Tomcat webapps directory (Automated)</Name>
+    <Chapter id="4">Restrict Tomcat Processes and Filesystem Access</Chapter>
+    <Section id="4.7">Restrict access to Tomcat webapps directory</Section>
+    <Profiles>
+      <Profile level="1"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/webapps/</BasePath>
+    <FileName>N/A</FileName>
+    <NonCompliantComment>Access to the Tomcat web application directory is not restricted, which may allow unauthorized modifications.</NonCompliantComment>
+    <CorrectiveComment>Restrict access to the Tomcat web application directory.</CorrectiveComment>
+    <Correction><![CDATA[chmod -R 750 $CATALINA_HOME/webapps; chown -R tomcat:tomcat $CATALINA_HOME/webapps;]]></Correction>
+    <Verification><![CDATA[[ "$(stat -c '%a %U %G' $CATALINA_HOME/webapps)" = "750 tomcat tomcat" ] && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+  
+  <Rule id="4.8">
+    <Name>Restrict access to Tomcat catalina.properties (Automated)</Name>
+    <Chapter id="4">Restrict Tomcat Processes and Filesystem Access</Chapter>
+    <Section id="4.8">Restrict access to Tomcat catalina.properties</Section>
+    <Profiles>
+      <Profile level="1"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>catalina.properties</FileName>
+    <NonCompliantComment>Access to catalina.properties is not restricted, which may allow unauthorized modifications.</NonCompliantComment>
+    <CorrectiveComment>Restrict access to catalina.properties to prevent unauthorized modifications.</CorrectiveComment>
+    <Correction><![CDATA[chown tomcat_admin:tomcat $CATALINA_HOME/conf/catalina.properties; chmod 600 $CATALINA_HOME/conf/catalina.properties]]></Correction>
+    <Verification><![CDATA[[ "$(stat -c '%a %U %G' $CATALINA_HOME/conf/catalina.properties)" = "600 tomcat_admin tomcat" ] && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.9">
+    <Name>Restrict access to Tomcat catalina.policy (Automated)</Name>
+    <Chapter id="4">Restrict Tomcat Processes and Filesystem Access</Chapter>
+    <Section id="4.9">Restrict access to Tomcat catalina.policy</Section>
+    <Profiles>
+      <Profile level="1"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>catalina.policy</FileName>
+    <NonCompliantComment>Access to catalina.policy is not restricted, exposing security policy configurations to tampering.</NonCompliantComment>
+    <CorrectiveComment>Restrict access to catalina.policy to secure Tomcat security policy configuration.</CorrectiveComment>
+    <Correction><![CDATA[chown tomcat_admin:tomcat $CATALINA_HOME/conf/catalina.policy; chmod 600 $CATALINA_HOME/conf/catalina.policy]]></Correction>
+    <Verification><![CDATA[[ "$(stat -c '%a %U %G' $CATALINA_HOME/conf/catalina.policy)" = "600 tomcat_admin tomcat" ] && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.10">
+    <Name>Restrict access to Tomcat context.xml (Automated)</Name>
+    <Chapter id="4">Restrict Tomcat Processes and Filesystem Access</Chapter>
+    <Section id="4.10">Restrict access to Tomcat context.xml</Section>
+    <Profiles>
+      <Profile level="1"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>context.xml</FileName>
+    <NonCompliantComment>Access to context.xml is not restricted, which may allow unauthorized changes to application context settings.</NonCompliantComment>
+    <CorrectiveComment>Restrict access to context.xml to protect application configuration settings.</CorrectiveComment>
+    <Correction><![CDATA[chown tomcat_admin:tomcat $CATALINA_HOME/conf/context.xml; chmod 600 $CATALINA_HOME/conf/context.xml]]></Correction>
+    <Verification><![CDATA[[ "$(stat -c '%a %U %G' $CATALINA_HOME/conf/context.xml)" = "600 tomcat_admin tomcat" ] && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.11">
+    <Name>Restrict access to Tomcat logging.properties (Automated)</Name>
+    <Chapter id="4">Restrict Tomcat Processes and Filesystem Access</Chapter>
+    <Section id="4.11">Restrict access to Tomcat logging.properties</Section>
+    <Profiles>
+      <Profile level="1"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>logging.properties</FileName>
+    <NonCompliantComment>Access to logging.properties is not restricted, risking unauthorized modifications to logging configurations.</NonCompliantComment>
+    <CorrectiveComment>Restrict access to logging.properties to prevent tampering with logging settings.</CorrectiveComment>
+    <Correction><![CDATA[chown tomcat_admin:tomcat $CATALINA_HOME/conf/logging.properties; chmod 600 $CATALINA_HOME/conf/logging.properties]]></Correction>
+    <Verification><![CDATA[[ "$(stat -c '%a %U %G' $CATALINA_HOME/conf/logging.properties)" = "600 tomcat_admin tomcat" ] && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.12">
+    <Name>Restrict access to Tomcat server.xml (Automated)</Name>
+    <Chapter id="4">Restrict Tomcat Processes and Filesystem Access</Chapter>
+    <Section id="4.12">Restrict access to Tomcat server.xml</Section>
+    <Profiles>
+      <Profile level="1"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>server.xml</FileName>
+    <NonCompliantComment>Access to server.xml is not restricted, allowing unauthorized users to alter server configuration.</NonCompliantComment>
+    <CorrectiveComment>Restrict access to server.xml to protect critical Tomcat configuration.</CorrectiveComment>
+    <Correction><![CDATA[chown tomcat_admin:tomcat $CATALINA_HOME/conf/server.xml; chmod 600 $CATALINA_HOME/conf/server.xml]]></Correction>
+    <Verification><![CDATA[[ "$(stat -c '%a %U %G' $CATALINA_HOME/conf/server.xml)" = "600 tomcat_admin tomcat" ] && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.13">
+    <Name>Restrict access to Tomcat tomcat-users.xml (Automated)</Name>
+    <Chapter id="4">Restrict Tomcat Processes and Filesystem Access</Chapter>
+    <Section id="4.13">Restrict access to Tomcat tomcat-users.xml</Section>
+    <Profiles>
+      <Profile level="1"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>tomcat-users.xml</FileName>
+    <NonCompliantComment>Access to tomcat-users.xml is not restricted, which may expose authentication credentials.</NonCompliantComment>
+    <CorrectiveComment>Restrict access to tomcat-users.xml to prevent unauthorized disclosure or modification of user credentials.</CorrectiveComment>
+    <Correction><![CDATA[chown tomcat_admin:tomcat $CATALINA_HOME/conf/tomcat-users.xml; chmod 600 $CATALINA_HOME/conf/tomcat-users.xml]]></Correction>
+    <Verification><![CDATA[[ "$(stat -c '%a %U %G' $CATALINA_HOME/conf/tomcat-users.xml)" = "600 tomcat_admin tomcat" ] && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.14">
+    <Name>Restrict access to Tomcat web.xml (Automated)</Name>
+    <Chapter id="4">Restrict Tomcat Processes and Filesystem Access</Chapter>
+    <Section id="4.14">Restrict access to Tomcat web.xml</Section>
+    <Profiles>
+      <Profile level="1"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>web.xml</FileName>
+    <NonCompliantComment>Access to web.xml is not restricted, risking modification of application configuration definitions.</NonCompliantComment>
+    <CorrectiveComment>Restrict access to web.xml to protect deployment descriptors.</CorrectiveComment>
+    <Correction><![CDATA[chown tomcat_admin:tomcat $CATALINA_HOME/conf/web.xml; chmod 400 $CATALINA_HOME/conf/web.xml]]></Correction>
+    <Verification><![CDATA[[ "$(stat -c '%a %U %G' $CATALINA_HOME/conf/web.xml)" = "400 tomcat_admin tomcat" ] && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="4.15">
+    <Name>Restrict access to jaspic-providers.xml (Automated)</Name>
+    <Chapter id="4">Restrict Tomcat Processes and Filesystem Access</Chapter>
+    <Section id="4.15">Restrict access to jaspic-providers.xml</Section>
+    <Profiles>
+      <Profile level="1"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>jaspic-providers.xml</FileName>
+    <NonCompliantComment>Access to jaspic-providers.xml is not restricted, exposing authentication configuration to tampering.</NonCompliantComment>
+    <CorrectiveComment>Restrict access to jaspic-providers.xml to secure authentication configuration.</CorrectiveComment>
+    <Correction><![CDATA[chown tomcat_admin:tomcat $CATALINA_HOME/conf/jaspic-providers.xml; chmod 600 $CATALINA_HOME/conf/jaspic-providers.xml]]></Correction>
+    <Verification><![CDATA[[ "$(stat -c '%a %U %G' $CATALINA_HOME/conf/jaspic-providers.xml)" = "600 tomcat_admin tomcat" ] && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+</RulesCIS>

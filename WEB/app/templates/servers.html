@@ -1,0 +1,283 @@
+{% extends "base.html" %}
+
+{% block page_title %}Gestion des Serveurs{% endblock %}
+
+{% block page_actions %}
+<div id="server-page-actions">
+    <button class="btn btn-primary me-3" onclick="openAddServerModal()">
+        <i class="fas fa-plus"></i> Ajouter un serveur
+    </button>
+    <button class="btn btn-success" onclick="smartDiscoverNetwork()">
+        <i class="fas fa-search-location"></i> Découvrir des serveurs
+    </button>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Liste des serveurs</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover" id="servers-table">
+                <thead>
+                    <tr>
+                        <th>Nom d'hôte</th>
+                        <th>IP</th>
+                        <th>Port</th>
+                        <th>Type OS</th>
+                        <th>Statut</th>
+                        <th>Groupe</th>
+                        <th>Dernière connexion</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="8" class="text-center">Chargement...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Ajouter Serveur -->
+<div class="modal fade" id="serverModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ajouter un serveur</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="server-form">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Hostname</label>
+                        <input type="text" class="form-control" id="hostname" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">IP Address</label>
+                        <input type="text" class="form-control" id="ip_address" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">OS Type</label>
+                        <input type="text" class="form-control" id="os_type" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Port SSH</label>
+                        <input type="number" class="form-control" id="ssh_port" value="22">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <input type="text" class="form-control" id="ssh_username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" id="ssh_password">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Groupe</label>
+                        <input type="text" class="form-control" id="group_name">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Créer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Découverte Serveurs -->
+<div class="modal fade" id="discoveryModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <form id="discovery-form">
+            <div class="modal-header">
+            <h5 class="modal-title">Découverte automatique des serveurs</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+            <label class="form-label">Plage IP privée à scanner (ex: 192.168.1.0/24):</label>
+            <input type="text" id="network_range" class="form-control" required placeholder="10.0.0.0/24">
+            <small class="text-muted">Uniquement réseaux privés (10, 172.16-31, 192.168.xx.xx)</small>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+            <button type="submit" class="btn btn-success">Lancer le scan</button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Deploy Clé SSH -->
+<div class="modal fade" id="deploySshModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <form id="deploy-ssh-form">
+            <div class="modal-header">
+            <h5 class="modal-title">Déployer une clé SSH</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+            <input type="hidden" id="ssh-server-id">
+            <div class="mb-3">
+                <label class="form-label">Serveur</label>
+                <input type="text" id="ssh-server-host" class="form-control" readonly>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Utilisateur SSH</label>
+                <input type="text" id="ssh-username" class="form-control" required autocomplete="username">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Mot de passe SSH</label>
+                <input type="password" id="ssh-password" class="form-control" required autocomplete="current-password">
+            </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+            <button type="submit" class="btn btn-primary">Déployer la clé</button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal editer serveur -->
+<div class="modal fade" id="editServerModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form id="edit-server-form" class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Modifier le serveur</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="edit-server-id">
+            <div class="mb-3">
+            <label class="form-label">Nom d'hôte</label>
+            <input type="text" class="form-control" id="edit-hostname">
+            </div>
+            <div class="mb-3">
+            <label class="form-label">Adresse IP</label>
+            <input type="text" class="form-control" id="edit-ip" disabled>
+            </div>
+            <div class="mb-3">
+            <label class="form-label">Port</label>
+            <input type="number" class="form-control" id="edit-ssh-port">
+            </div>
+            <div class="mb-3">
+            <label class="form-label">Type d’OS</label>
+            <select class="form-select" id="edit-os-type">
+                <option value="">Inconnu</option>
+                <option value="linux">Linux</option>
+                <option value="windows">Windows</option>
+            </select>
+            </div>
+            <div class="mb-3">
+            <label class="form-label">Groupe</label>
+            <div class="d-flex gap-2">
+                <select class="form-select" id="edit-group"></select>
+                <button type="button" class="btn btn-outline-secondary" onclick="openCreateGroup()">Nouveau</button>
+            </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="submit" id="edit-server-save-btn">Enregistrer</button>
+        </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal créer groupe -->
+<div class="modal fade" id="createGroupModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form id="create-group-form" class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Nouveau groupe</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+            <label class="form-label">Nom du groupe</label>
+            <input type="text" class="form-control" id="create-group-name">
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="submit">Créer</button>
+        </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal choix OS -->
+<div class="modal fade" id="osChoiceModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="os-choice-form" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Définir le type d'OS</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="os-choice-server-id">
+                <p id="os-choice-text" class="mb-3"></p>
+                <div class="mb-3">
+                <label class="form-label">Type d'OS</label>
+                <select class="form-select" id="os-choice-select" required>
+                    <option value="">Choisir...</option>
+                    <option value="linux">Linux (SSH)</option>
+                    <option value="windows">Windows (WinRM)</option>
+                </select>
+                </div>
+                <small class="text-muted">
+                Vous pourrez ensuite configurer les accès (clé SSH pour Linux ou credentials WinRM pour Windows).
+                </small>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="submit" class="btn btn-primary">Valider</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Credentials WinRM -->
+<div class="modal fade" id="winrmModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <form id="winrm-form">
+            <div class="modal-header">
+                <h5 class="modal-title">Identifiants WinRM</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                <input type="hidden" id="winrm-server-id">
+                <div class="mb-3">
+                    <label class="form-label">Serveur</label>
+                    <input type="text" id="winrm-server-host" class="form-control" readonly>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Utilisateur WinRM</label>
+                    <input type="text" id="winrm-username" class="form-control" required autocomplete="username">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Mot de passe WinRM</label>
+                    <input type="password" id="winrm-password" class="form-control" required autocomplete="current-password">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="../static/js/servers/servers-page-init.js"></script>
+<script src="../static/js/servers/servers-actions.js"></script>
+<script src="../static/js/servers/servers-groups.js"></script>
+{% endblock %}

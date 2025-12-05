@@ -1,0 +1,120 @@
+<RulesCIS>
+    <Rule id="4.2.1">
+        <Name>Ensure ufw is installed (Automated)</Name>
+        <Chapter id="4">Host Based Firewall</Chapter>
+        <Section id="4.2">Configure UncomplicatedFirewall</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/usr/sbin/</BasePath>
+        <FileName>ufw</FileName>
+        <NonCompliantComment>UFW is not installed, leaving the system without a basic firewall solution.</NonCompliantComment>
+        <CorrectiveComment>Install UFW to provide host-based firewall functionality.</CorrectiveComment>
+        <Correction><![CDATA[apt install -y ufw]]></Correction>
+        <Verification><![CDATA[dpkg -l | grep -q '^ii\s*ufw\s' && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="4.2.2">
+        <Name>Ensure iptables-persistent is not installed with ufw (Automated)</Name>
+        <Chapter id="4">Host Based Firewall</Chapter>
+        <Section id="4.2">Configure UncomplicatedFirewall</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/usr/sbin/</BasePath>
+        <FileName>iptables-persistent</FileName>
+        <NonCompliantComment>iptables-persistent is installed alongside UFW, which may create conflicting firewall rules.</NonCompliantComment>
+        <CorrectiveComment>Remove iptables-persistent when UFW is the chosen firewall utility.</CorrectiveComment>
+        <Correction><![CDATA[apt-get purge -y iptables-persistent]]></Correction>
+        <Verification><![CDATA[dpkg -l | grep -q '^ii\s*iptables-persistent\s' && echo 1 || echo 0]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="4.2.3">
+        <Name>Ensure ufw service is enabled (Automated)</Name>
+        <Chapter id="4">Host Based Firewall</Chapter>
+        <Section id="4.2">Configure UncomplicatedFirewall</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/systemd/system/</BasePath>
+        <FileName>ufw.service</FileName>
+        <NonCompliantComment>The UFW service is not enabled or running; firewall rules may not be enforced.</NonCompliantComment>
+        <CorrectiveComment>Enable and start the UFW service.</CorrectiveComment>
+        <Correction><![CDATA[ufw allow proto tcp from any to any port 22; systemctl unmask ufw.service; systemctl enable --now ufw.service; ufw --force enable]]></Correction>
+        <Verification><![CDATA[systemctl is-enabled ufw.service | grep -q '^enabled$' && systemctl is-active ufw.service | grep -q '^active$' && ufw status | grep -q '^Status: active' && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="4.2.4">
+        <Name>Ensure ufw loopback traffic is configured (Automated)</Name>
+        <Chapter id="4">Host Based Firewall</Chapter>
+        <Section id="4.2">Configure UncomplicatedFirewall</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/ufw/</BasePath>
+        <FileName>rules</FileName>
+        <NonCompliantComment>Loopback traffic is not explicitly allowed, potentially blocking local inter-process communication.</NonCompliantComment>
+        <CorrectiveComment>Allow all incoming and outgoing traffic on the loopback interface.</CorrectiveComment>
+        <Correction><![CDATA[sed -i 's/^ allow all on loopback$/# allow all on loopback/' /etc/ufw/before.rules && grep -q '^-A ufw-before-input -i lo -j ACCEPT' /etc/ufw/before.rules || echo '-A ufw-before-input -i lo -j ACCEPT' >> /etc/ufw/before.rules && grep -q '^-A ufw-before-output -o lo -j ACCEPT' /etc/ufw/before.rules || echo '-A ufw-before-output -o lo -j ACCEPT' >> /etc/ufw/before.rules && ufw allow in on lo && ufw allow out on lo && ufw deny in from 127.0.0.0/8 && ufw deny in from ::1 && ufw reload]]></Correction>
+        <Verification><![CDATA[ufw status verbose | grep '127.0.0.0/8' | grep -q 'DENY IN' && ufw status verbose | grep '::1' | grep -q 'DENY IN' && grep -qP '^-A ufw-before-input -i lo -j ACCEPT' /etc/ufw/before.rules && grep -qP '^-A ufw-before-output -o lo -j ACCEPT' /etc/ufw/before.rules && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="4.2.5">
+        <Name>Ensure ufw outbound connections are configured (Manual)</Name>
+        <Chapter id="4">Host Based Firewall</Chapter>
+        <Section id="4.2">Configure UncomplicatedFirewall</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/ufw/</BasePath>
+        <FileName>rules</FileName>
+        <NonCompliantComment>Outbound connection policy is not explicitly defined, which may block legitimate traffic.</NonCompliantComment>
+        <CorrectiveComment>Manually review business requirements and create outbound allow/deny rules accordingly.</CorrectiveComment>
+        <Correction><![CDATA[echo "Manual configuration required: define UFW outbound rules"]]></Correction>
+        <Verification><![CDATA[echo "Manual verification required"]]></Verification>
+        <Manual>YES</Manual>
+    </Rule>
+
+    <Rule id="4.2.6">
+        <Name>Ensure ufw firewall rules exist for all open ports (Automated)</Name>
+        <Chapter id="4">Host Based Firewall</Chapter>
+        <Section id="4.2">Configure UncomplicatedFirewall</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/ufw/</BasePath>
+        <FileName>rules</FileName>
+        <NonCompliantComment>Some listening ports lack corresponding UFW rules, exposing services unintentionally.</NonCompliantComment>
+        <CorrectiveComment>Add UFW rules for every TCP/UDP port reported by ss -tuln (or netstat -tuln).</CorrectiveComment>
+        <Correction><![CDATA[echo "Manual configuration required: define UFW outbound rules"]]></Correction>
+        <Verification><![CDATA[missing=$(ss -H -tuln | awk '{print $5}' | grep -oE '[0-9]+$' | sort -u | while read p; do ufw status numbered | grep -q ":.*ALLOW.*$p" || echo $p; done); [ -z "$missing" ] && echo 0 || echo 1]]></Verification>
+        <Manual>CORRECTION</Manual>
+    </Rule>
+
+    <Rule id="4.2.7">
+        <Name>Ensure ufw default deny firewall policy (Automated)</Name>
+        <Chapter id="4">Host Based Firewall</Chapter>
+        <Section id="4.2">Configure UncomplicatedFirewall</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/ufw/</BasePath>
+        <FileName>ufw.conf</FileName>
+        <NonCompliantComment>The default incoming policy is not set to deny, exposing the system to unsolicited connections.</NonCompliantComment>
+        <CorrectiveComment>Set UFW default policies to deny incoming and allow outgoing traffic.</CorrectiveComment>
+        <Correction><![CDATA[ufw default deny incoming; ufw default allow outgoing; ufw reload]]></Correction>
+        <Verification><![CDATA[ufw status verbose | grep -q 'Default: deny (incoming), deny (outgoing), disabled (routed)' && echo 0 || echo 1]]></Verification>
+        <Manual>CORRECTION</Manual>
+    </Rule>
+</RulesCIS>

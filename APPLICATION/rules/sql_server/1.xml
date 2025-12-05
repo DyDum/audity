@@ -1,0 +1,37 @@
+<RulesCIS>
+  <Rule id="1.1">
+    <BasePath>N/A</BasePath>
+    <FileName>N/A</FileName>
+    <NonCompliantComment>The latest SQL Server cumulative and security updates are not installed, leaving the server vulnerable to known vulnerabilities.</NonCompliantComment>
+    <CorrectiveComment>Ensure the latest SQL Server cumulative and security updates are installed to protect against known vulnerabilities.</CorrectiveComment>
+    <Correction>
+      1. Visit the Microsoft SQL Server updates page: https://learn.microsoft.com/en-us/troubleshoot/sql/releases/download-and-install-latest-updates
+      2. Download and install the latest cumulative and security updates.
+      3. Restart the SQL Server service to apply the updates.
+    </Correction>
+    <Verification>
+      SELECT SERVERPROPERTY('ProductLevel') AS SP_installed, 
+             SERVERPROPERTY('ProductVersion') AS Version, 
+             SERVERPROPERTY('ProductUpdateLevel') AS 'ProductUpdate_Level', 
+             SERVERPROPERTY('ProductUpdateReference') AS 'KB_Number';
+    </Verification>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="1.2">
+    <BasePath>N/A</BasePath>
+    <FileName>N/A</FileName>
+    <NonCompliantComment>SQL Server is installed on a multi-function server, which increases the attack surface and may impact performance.</NonCompliantComment>
+    <CorrectiveComment>Ensure SQL Server is installed on a single-function member server dedicated to database operations only.</CorrectiveComment>
+    <Correction>
+      1. Review the server roles and installed applications.
+      2. Migrate unrelated applications and services to other servers.
+      3. Restrict the server's role to database operations.
+    </Correction>
+    <Verification>
+      SELECT SERVERPROPERTY('IsClustered') AS IsClustered, 
+             SERVERPROPERTY('EngineEdition') AS EngineEdition;
+    </Verification>
+    <Manual>YES</Manual>
+  </Rule>
+</RulesCIS>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - {{ app_name }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/login.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
+            <h2>{{ app_name }}</h2>
+            <p class="text-muted">Gestion des CIS Benchmarks</p>
+        </div>
+        
+        <div id="alert-container"></div>
+        
+        <!-- Login Form -->
+        <form id="login-form">
+            <div class="mb-3">
+                <label for="username" class="form-label">
+                    <i class="fas fa-user"></i> Nom d'utilisateur
+                </label>
+                <input type="text" class="form-control" id="username" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="password" class="form-label">
+                    <i class="fas fa-lock"></i> Mot de passe
+                </label>
+                <input type="password" class="form-control" id="password" required>
+            </div>
+            
+            <button type="submit" class="btn btn-login">
+                <i class="fas fa-sign-in-alt"></i> Se connecter
+            </button>
+        </form>
+        
+        <!-- MFA Form -->
+        <div id="mfa-section">
+            <hr class="my-4">
+            <h5 class="text-center mb-3">Authentification à deux facteurs</h5>
+            <form id="mfa-form">
+                <div class="mb-3">
+                    <label for="mfa-token" class="form-label">
+                        <i class="fas fa-mobile-alt"></i> Code de vérification
+                    </label>
+                    <input type="text" class="form-control text-center" id="mfa-token" 
+                           placeholder="000000" maxlength="6" required>
+                    <small class="text-muted">Entrez le code depuis votre application d'authentification</small>
+                </div>
+                
+                <button type="submit" class="btn btn-login">
+                    <i class="fas fa-check"></i> Vérifier
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../static/js/base/api.js"></script>
+    <script src="../static/js/login/login.js"></script>
+</body>
+</html>

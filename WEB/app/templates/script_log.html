@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block page_title %}Log script{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h4 id="log-title">Log du script</h4>
+    <ul id="log-meta">
+        <li>Serveur : <strong><span id="log-server"></span></strong></li>
+        <li>Date début : <span id="log-start"></span></li>
+        <li>Date fin : <span id="log-end"></span></li>
+        <li>Statut : <span id="log-status"></span></li>
+        <li>Lancé par : <strong><span id="log-user"></span></strong></li>
+    </ul>
+    <hr>
+    <h5>Sortie du script :</h5>
+
+    <div id="log-rows">
+        <div id="stdout-block" class="mb-3">
+            <div id="titre_stdout"></div>
+            <pre id="log-stdout"></pre>
+        </div>
+
+        <div id="stderr-block" class="mb-3">
+            <div id="titre_stderr"></div>
+            <pre id="log-stderr"></pre>
+        </div>
+
+        <!-- fallback si pas de stdout/stderr séparés -->
+        <div id="output-block" class="mb-3">
+            <pre id="log-output">Chargement...</pre>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="../static/js/base/api.js"></script>
+<script src="../static/js/scripts/script_log.js"></script>
+{% endblock %}

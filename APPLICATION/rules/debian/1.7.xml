@@ -1,0 +1,170 @@
+<RulesCIS>
+    <Rule id="1.7.1">
+        <Name>Ensure GDM is removed (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.7">Configure GNOME Display Manager</Section>
+        <Profiles>
+            <Profile level="2" type="Server"/>
+        </Profiles>
+        <BasePath>/usr/sbin/</BasePath>
+        <FileName>gdm3</FileName>
+        <NonCompliantComment>GDM is installed on the system, which may allow unauthorized graphical logins.</NonCompliantComment>
+        <CorrectiveComment>Remove the GDM package to disable the graphical login manager.</CorrectiveComment>
+        <Correction><![CDATA[sudo apt purge -y gdm3 && sudo apt autoremove -y && echo 0]]></Correction>
+        <Verification><![CDATA[dpkg-query -s gdm3 &>/dev/null && echo 1 || echo 0]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.7.2">
+        <Name>Ensure GDM login banner is configured (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.7">Configure GNOME Display Manager</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/gdm3/</BasePath>
+        <FileName>custom.conf</FileName>
+        <NonCompliantComment>The GDM login banner is not configured, leaving users without a proper warning.</NonCompliantComment>
+        <CorrectiveComment>Configure a login banner in /etc/gdm3/custom.conf to display an appropriate message.</CorrectiveComment>
+        <Correction><![CDATA[sudo mkdir -p /etc/dconf/profile /etc/dconf/db/gdm.d /etc/dconf/db/local.d/locks && printf 'user-db:user\nsystem-db:gdm\nfile-db:/usr/share/gdm/greeter-dconf-defaults\n' | sudo tee /etc/dconf/profile/gdm >/dev/null && printf '[org/gnome/login-screen]\nbanner-message-enable=true\nbanner-message-text='\''Authorized users only. All activity may be monitored and reported.'\''\n' | sudo tee /etc/dconf/db/gdm.d/01-banner-message >/dev/null && printf '/org/gnome/login-screen/banner-message-enable\n/org/gnome/login-screen/banner-message-text\n' | sudo tee /etc/dconf/db/local.d/locks/00-banner-lock >/dev/null && sudo dconf update]]></Correction>
+        <Verification><![CDATA[st=0; grep -q "banner-message-enable=true" /etc/dconf/db/gdm.d/01-banner-message || st=1 ;grep -q "banner-message-text='Authorized users only" /etc/dconf/db/gdm.d/01-banner-message || st=1; echo $st]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.7.3">
+        <Name>Ensure GDM disable-user-list option is enabled (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.7">Configure GNOME Display Manager</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/gdm3/</BasePath>
+        <FileName>custom.conf</FileName>
+        <NonCompliantComment>The GDM user list is not disabled, potentially exposing local user information.</NonCompliantComment>
+        <CorrectiveComment>Disable the user list in GDM by setting the disable-user-list option to true.</CorrectiveComment>
+        <Correction><![CDATA[dpkg -s gdm3 >/dev/null 2>&1 || { exit 0; }; sudo mkdir -p /etc/dconf/profile /etc/dconf/db/gdm.d /etc/dconf/db/gdm.d/locks && printf 'user-db:user\nsystem-db:gdm\nfile-db:/usr/share/gdm/greeter-dconf-defaults\n' | sudo tee /etc/dconf/profile/gdm >/dev/null && printf '[org/gnome/login-screen]\ndisable-user-list=true\n' | sudo tee /etc/dconf/db/gdm.d/00-login-screen >/dev/null && printf '/org/gnome/login-screen/disable-user-list\n' | sudo tee /etc/dconf/db/gdm.d/locks/00-login-screen >/dev/null && sudo dconf update && sudo systemctl try-restart gdm3]]></Correction>
+        <Verification><![CDATA[( dpkg -s gdm3 >/dev/null 2>&1 ) || { echo 0; exit; }; gsettings get org.gnome.login-screen disable-user-list 2>/dev/null | grep -qx true && echo 0 || echo 1]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.7.4">
+        <Name>Ensure GDM screen locks when the user is idle (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.7">Configure GNOME Display Manager</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/gdm3/</BasePath>
+        <FileName>custom.conf</FileName>
+        <NonCompliantComment>GDM is not configured to lock the screen when idle, which may allow unauthorized access.</NonCompliantComment>
+        <CorrectiveComment>Configure GDM to automatically lock the screen when the user is idle.</CorrectiveComment>
+        <Correction><![CDATA[sudo mkdir -p /etc/dconf/profile /etc/dconf/db/local.d /etc/dconf/db/local.d/locks && grep -qxF 'system-db:local' /etc/dconf/profile/user 2>/dev/null || echo 'system-db:local' | sudo tee -a /etc/dconf/profile/user >/dev/null && printf '[org/gnome/desktop/session]\nidle-delay=uint32 900\n\n[org/gnome/desktop/screensaver]\nlock-delay=uint32 5\n' | sudo tee /etc/dconf/db/local.d/00-screensaver >/dev/null && printf '/org/gnome/desktop/session/idle-delay\n/org/gnome/desktop/screensaver/lock-delay\n' | sudo tee /etc/dconf/db/local.d/locks/00-screensaver >/dev/null && sudo dconf update]]></Correction>
+        <Verification><![CDATA[( gsettings get org.gnome.desktop.screensaver lock-delay 2>/dev/null | grep -qx 'uint32 5' ) && ( gsettings get org.gnome.desktop.session    idle-delay 2>/dev/null | grep -qx 'uint32 900' ) && printf "0\n" || printf "1\n"]]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.7.5">
+        <Name>Ensure GDM screen locks cannot be overridden (Manual)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.7">Configure GNOME Display Manager</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/gdm3/</BasePath>
+        <FileName>custom.conf</FileName>
+        <NonCompliantComment>The GDM screen lock settings may be overridden by users.</NonCompliantComment>
+        <CorrectiveComment>Enforce screen lock settings in GDM so that they cannot be overridden.</CorrectiveComment>
+        <Correction><![CDATA[(Manual enforcement required: review and lock down the settings via policy)]]></Correction>
+        <Verification><![CDATA[echo "Manual review required"]]></Verification>
+        <Manual>YES</Manual>
+    </Rule>
+
+    <Rule id="1.7.6">
+        <Name>Ensure GDM automatic mounting of removable media is disabled (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.7">Configure GNOME Display Manager</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/gdm3/</BasePath>
+        <FileName>custom.conf</FileName>
+        <NonCompliantComment>Automatic mounting of removable media is enabled in GDM.</NonCompliantComment>
+        <CorrectiveComment>Disable automatic mounting of removable media in GDM.</CorrectiveComment>
+        <Correction><![CDATA[sudo mkdir -p /etc/dconf/db/local.d && printf '[org/gnome/desktop/media-handling]\nautomount=false\nautomount-open=false\n' | sudo tee /etc/dconf/db/local.d/00-media-automount >/dev/null && sudo dconf update]]></Correction>
+        <Verification><![CDATA[dpkg -s gdm3 >/dev/null 2>&1 || { printf '0\n'; exit; }; gsettings get org.gnome.desktop.media-handling automount 2>/dev/null | grep -qx false && gsettings get org.gnome.desktop.media-handling automount-open 2>/dev/null | grep -qx false && printf '0\n' || printf '1\n']]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.7.7">
+        <Name>Ensure GDM disabling automatic mounting of removable media is not overridden (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.7">Configure GNOME Display Manager</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="2" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/gdm3/</BasePath>
+        <FileName>custom.conf</FileName>
+        <NonCompliantComment>The setting to disable automatic mounting of removable media might be overridden.</NonCompliantComment>
+        <CorrectiveComment>Ensure that the disable setting for automount is enforced in GDM.</CorrectiveComment>
+        <Correction><![CDATA[sudo mkdir -p /etc/dconf/db/local.d /etc/dconf/db/local.d/locks && printf '[org/gnome/desktop/media-handling]\nautomount=false\nautomount-open=false\n' | sudo tee /etc/dconf/db/local.d/00-media-automount > /dev/null && printf '/org/gnome/desktop/media-handling/automount\n/org/gnome/desktop/media-handling/automount-open\n' | sudo tee /etc/dconf/db/local.d/locks/00-media-automount > /dev/null && sudo dconf update]]></Correction>
+        <Verification><![CDATA[dpkg -s gdm3 >/dev/null 2>&1 || { printf '0\n'; exit; }; grep -Rqs '^/org/gnome/desktop/media-handling/automount$'       /etc/dconf/db/local.d/locks && grep -Rqs '^/org/gnome/desktop/media-handling/automount-open$' /etc/dconf/db/local.d/locks && grep -Rqs '^\s*automount\s*=\s*false\b'        /etc/dconf/db/local.d && grep -Rqs '^\s*automount-open\s*=\s*false\b'   /etc/dconf/db/local.d && printf '0\n' || printf '1\n']]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.7.8">
+        <Name>Ensure GDM autorun-never is enabled (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.7">Configure GNOME Display Manager</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/gdm3/</BasePath>
+        <FileName>custom.conf</FileName>
+        <NonCompliantComment>GDM is not configured to disable autorun, potentially exposing the system.</NonCompliantComment>
+        <CorrectiveComment>Enable the autorun-never option in GDM.</CorrectiveComment>
+        <Correction><![CDATA[sudo mkdir -p /etc/dconf/db/local.d /etc/dconf/db/local.d/locks && printf '[org/gnome/desktop/media-handling]\nautorun-never=true\n' | sudo tee /etc/dconf/db/local.d/00-media-autorun > /dev/null && printf '/org/gnome/desktop/media-handling/autorun-never\n' | sudo tee /etc/dconf/db/local.d/locks/00-media-autorun > /dev/null && sudo dconf update]]></Correction>
+        <Verification><![CDATA[dpkg -s gdm3 >/dev/null 2>&1 || { printf '0\n'; exit; }; grep -Rqs '^/org/gnome/desktop/media-handling/autorun-never$' /etc/dconf/db/local.d/locks && grep -Rqs '^\s*autorun-never\s*=\s*true\b'/etc/dconf/db/local.d && printf '0\n' || printf '1\n']]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.7.9">
+        <Name>Ensure GDM autorun-never option cannot be overridden (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.7">Configure GNOME Display Manager</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/gdm3/</BasePath>
+        <FileName>custom.conf</FileName>
+        <NonCompliantComment>The autorun-never setting in GDM is not enforced.</NonCompliantComment>
+        <CorrectiveComment>Ensure the autorun-never option remains enabled and cannot be overridden.</CorrectiveComment>
+        <Correction><![CDATA[sudo mkdir -p /etc/dconf/db/local.d /etc/dconf/db/local.d/locks && printf '[org/gnome/desktop/media-handling]\nautorun-never=true\n' | sudo tee  /etc/dconf/db/local.d/00-media-autorun >/dev/null && printf '/org/gnome/desktop/media-handling/autorun-never\n' | sudo tee  /etc/dconf/db/local.d/locks/00-media-autorun > /dev/null && sudo dconf update]]></Correction>
+        <Verification><![CDATA[dpkg -s gdm3 >/dev/null 2>&1 || { printf '0\n'; exit; }; grep -Rqs '^/org/gnome/desktop/media-handling/autorun-never$' /etc/dconf/db/local.d/locks && grep -Rqs '^\s*autorun-never\s*=\s*true\b' /etc/dconf/db/local.d && printf '0\n' || printf '1\n']]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+
+    <Rule id="1.7.10">
+        <Name>Ensure XDMCP is not enabled (Automated)</Name>
+        <Chapter id="1">Initial Setup</Chapter>
+        <Section id="1.7">Configure GNOME Display Manager</Section>
+        <Profiles>
+            <Profile level="1" type="Server"/>
+            <Profile level="1" type="Workstation"/>
+        </Profiles>
+        <BasePath>/etc/gdm3/</BasePath>
+        <FileName>daemon.conf</FileName>
+        <NonCompliantComment>XDMCP is enabled, potentially exposing the system to remote graphical logins.</NonCompliantComment>
+        <CorrectiveComment>Disable XDMCP in GDM to secure remote access.</CorrectiveComment>
+        <Correction><![CDATA[sudo sed -Ei '/^\s*\[xdmcp\]/, /^\s*\[/{s/^\s*Enable\s*=\s*true/#&/}'     /etc/gdm3/{custom,daemon}.conf 2>/dev/null; sudo dconf update]]></Correction>
+        <Verification><![CDATA[dpkg -s gdm3 >/dev/null 2>&1 || { printf '0\n'; exit; }; grep -Psil '^\h*\[xdmcp\]' /etc/gdm3/{custom,daemon}.conf 2>/dev/null | xargs -r awk '/\[xdmcp\]/{f=1;next}/\[/{f=0}f && /^\s*Enable\s*=\s*true/' | grep -q . && printf '1\n' || printf '0\n']]></Verification>
+        <Manual>NO</Manual>
+    </Rule>
+</RulesCIS>

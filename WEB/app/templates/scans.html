@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block page_title %}Gestion des Scans{% endblock %}
+
+{% block page_actions %}
+<button class="btn btn-primary" onclick="openNewScanModal()">
+    <i class="fas fa-play"></i> Nouveau scan
+</button>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Historique des scans</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover" id="scans-table">
+                <thead>
+                    <tr>
+                        <th>Serveur</th>
+                        <th>Date</th>
+                        <th>Niveau</th>
+                        <th>Score</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="6" class="text-center">Chargement...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Nouveau Scan -->
+<div class="modal fade" id="scanModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Lancer un scan CIS</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="scan-form">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Serveurs</label>
+                        <select class="form-select" id="server-select" multiple required>
+                            <option>Chargement...</option>
+                        </select>
+                        <small class="text-muted">Sélectionnez un ou plusieurs serveurs</small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Niveau CIS</label>
+                        <select class="form-select" id="benchmark-level">
+                            <option value="1">Niveau 1</option>
+                            <option value="2">Niveau 2</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Lancer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="../static/js/scans/scans.js"></script>
+{% endblock %}

@@ -1,0 +1,107 @@
+<RulesCIS>
+  <Rule id="2.1">
+    <Name>Alter the Advertised server.info String (Manual)</Name>
+    <Chapter id="2">Limit Server Platform Information Leaks</Chapter>
+    <Section id="2.1">Alter the Advertised server.info String</Section>
+    <Profiles>
+      <Profile level="2"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/lib/</BasePath>
+    <FileName>catalina.jar (ServerInfo.properties)</FileName>
+    <NonCompliantComment>The 'server.info' string is not customized, which may expose server information.</NonCompliantComment>
+    <CorrectiveComment>Alter the 'server.info' string to a custom value.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="2.2">
+    <Name>Alter the Advertised server.number String (Manual)</Name>
+    <Chapter id="2">Limit Server Platform Information Leaks</Chapter>
+    <Section id="2.2">Alter the Advertised server.number String</Section>
+    <Profiles>
+      <Profile level="2"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/lib/</BasePath>
+    <FileName>catalina.jar (ServerInfo.properties)</FileName>
+    <NonCompliantComment>The 'server.number' string is not customized, which may expose server information.</NonCompliantComment>
+    <CorrectiveComment>Alter the 'server.number' string to a custom value.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="2.3">
+    <Name>Alter the Advertised server.built Date (Manual)</Name>
+    <Chapter id="2">Limit Server Platform Information Leaks</Chapter>
+    <Section id="2.3">Alter the Advertised server.built Date</Section>
+    <Profiles>
+      <Profile level="2"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/lib/</BasePath>
+    <FileName>catalina.jar (ServerInfo.properties)</FileName>
+    <NonCompliantComment>The 'server.built' date is not customized, which may expose server build information.</NonCompliantComment>
+    <CorrectiveComment>Alter the 'server.built' date to a custom value.</CorrectiveComment>
+    <Manual>YES</Manual>
+  </Rule>
+
+  <Rule id="2.4">
+    <Name>Disable X-Powered-By HTTP Header and Rename the Server Value (Automated)</Name>
+    <Chapter id="2">Limit Server Platform Information Leaks</Chapter>
+    <Section id="2.4">Disable X-Powered-By HTTP Header and Rename the Server Value</Section>
+    <Profiles>
+      <Profile level="2"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>server.xml</FileName>
+    <NonCompliantComment>The X-Powered-By HTTP header is enabled, which may expose server information.</NonCompliantComment>
+    <CorrectiveComment>Disable the X-Powered-By HTTP header by configuring the server attribute in the Connector.</CorrectiveComment>
+    <Correction><![CDATA[grep -q 'server=' $CATALINA_HOME/conf/server.xml && sed -i 's|server="[^"]*"|server="SecureServer"|' $CATALINA_HOME/conf/server.xml || sed -i '/<Connector/ s|<Connector|<Connector server="SecureServer"|' $CATALINA_HOME/conf/server.xml]]></Correction>
+    <Verification><![CDATA[grep -qE '<Connector.*server="SecureServer"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="2.5">
+    <Name>Disable client facing Stack Traces (Automated)</Name>
+    <Chapter id="2">Limit Server Platform Information Leaks</Chapter>
+    <Section id="2.5">Disable client facing Stack Traces</Section>
+    <Profiles>
+      <Profile level="1"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>web.xml</FileName>
+    <NonCompliantComment>Client-facing stack traces are enabled, which may expose sensitive information to users.</NonCompliantComment>
+    <CorrectiveComment>Disable client-facing stack traces by defining proper error pages.</CorrectiveComment>
+    <Correction><![CDATA[sed -i '/<\/web-app>/i <context-param>\n    <param-name>showServerInfo</param-name>\n    <param-value>false</param-value>\n  </context-param>' $CATALINA_HOME/conf/web.xml; systemctl restart tomcat10]]></Correction>
+    <Verification><![CDATA[awk '/<param-name>showServerInfo<\/param-name>/ {show=1} show && /<param-value>false<\/param-value>/ {found=1} END {exit !found}' $CATALINA_HOME/conf/web.xml && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="2.6">
+    <Name>Turn off TRACE (Automated)</Name>
+    <Chapter id="2">Limit Server Platform Information Leaks</Chapter>
+    <Section id="2.6">Turn off TRACE</Section>
+    <Profiles>
+      <Profile level="1"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>web.xml</FileName>
+    <NonCompliantComment>The HTTP TRACE method is enabled, which may allow cross-site tracing attacks.</NonCompliantComment>
+    <CorrectiveComment>Turn off the TRACE method in web.xml.</CorrectiveComment>
+    <Correction><![CDATA[sed -i '/<LimitExcept GET POST HEAD>/!b;n;cDeny from all' $CATALINA_HOME/conf/web.xml]]></Correction>
+    <Verification><![CDATA[grep -A 5 '<LimitExcept GET POST HEAD>' $CATALINA_HOME/conf/web.xml | grep -q 'Deny from all' && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+
+  <Rule id="2.7">
+    <Name>Ensure Server Header is Modified To Prevent Information Disclosure (Automated)</Name>
+    <Chapter id="2">Limit Server Platform Information Leaks</Chapter>
+    <Section id="2.7">Ensure Server Header is Modified</Section>
+    <Profiles>
+      <Profile level="2"/>
+    </Profiles>
+    <BasePath>$CATALINA_HOME/conf/</BasePath>
+    <FileName>server.xml</FileName>
+    <NonCompliantComment>The 'Server' header is not modified, which may expose server information to clients.</NonCompliantComment>
+    <CorrectiveComment>Ensure the 'Server' header is modified to prevent information disclosure.</CorrectiveComment>
+    <Correction><![CDATA[sed -i '/<Connector/s/server=".*"/server="SecureServer"/' $CATALINA_HOME/conf/server.xml]]></Correction>
+    <Verification><![CDATA[grep -qE '<Connector.*server="SecureServer"' $CATALINA_HOME/conf/server.xml && echo 0 || echo 1]]></Verification>
+    <Manual>NO</Manual>
+  </Rule>
+</RulesCIS>

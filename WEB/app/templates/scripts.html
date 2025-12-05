@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block page_title %}Scripts{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Scripts automatisés</h3>
+    <button class="btn btn-primary" onclick="openCreateScriptModal()">
+        <i class="fas fa-plus"></i> Nouveau script
+    </button>
+    </div>
+
+    <table class="table table-striped" id="scripts-table">
+    <thead>
+        <tr>
+        <th>Nom</th>
+        <th>Description</th>
+        <th>OS</th>
+        <th>Actif</th>
+        <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<!-- Modal création/édition -->
+<div class="modal fade" id="scriptModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        <form id="script-form">
+            <div class="modal-header">
+            <h5 class="modal-title" id="scriptModalLabel">Script</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+            <input type="hidden" id="script-id">
+            <div class="mb-3">
+                <label class="form-label">Nom</label>
+                <input type="text" class="form-control" id="script-name" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Description</label>
+                <textarea class="form-control" id="script-description" rows="2"></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">OS cible</label>
+                <select class="form-select" id="script-os">
+                <option value="any">Tous</option>
+                <option value="linux">Linux</option>
+                <option value="windows">Windows</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Contenu du script</label>
+                <textarea class="form-control font-monospace" id="script-content" rows="8" required></textarea>
+            </div>
+            </div>
+            <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal exécution: sélection de serveurs -->
+<div class="modal fade" id="runScriptModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        <form id="run-script-form">
+            <div class="modal-header">
+            <h5 class="modal-title">Exécuter le script</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+            <input type="hidden" id="run-script-id">
+            <p>Sélectionnez les serveurs cibles :</p>
+            <div id="run-script-servers-list" style="max-height:300px; overflow:auto;"></div>
+            </div>
+            <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Lancer</button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal historique script -->
+<div class="modal fade" id="scriptHistoryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Historique du script <span id="hist-script-name"></span></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+            <div class="mb-3">
+            <span class="badge bg-secondary me-1">Total: <span id="se-total">0</span></span>
+            <span class="badge bg-success me-1">Succès: <span id="se-success">0</span></span>
+            <span class="badge bg-danger me-1">Échecs: <span id="se-failed">0</span></span>
+            <span class="badge bg-info text-dark me-1">En cours: <span id="se-running">0</span></span>
+            <span class="badge bg-warning text-dark me-1">En attente: <span id="se-pending">0</span></span>
+            </div>
+            <table class="table table-sm" id="script-exec-table">
+            <thead>
+                <tr>
+                <th>Serveur</th>
+                <th>Statut</th>
+                <th>Début</th>
+                <th>Fin</th>
+                <th>Log</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+            </table>
+        </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="../static/js/base/api.js"></script>
+<script src="../static/js/scripts/scripts.js"></script>
+{% endblock %}
